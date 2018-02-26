@@ -1,0 +1,25 @@
+{
+  "name": "g3d",
+  "version": "0.0.3",
+  "description": "webgl render engine compatible with both browser and gcanvas",
+  "main": "dist/g3d.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/G3D"
+  },
+  "devDependencies": {
+    "expect": "^21.2.1",
+    "glob": "^7.1.2",
+    "gulp": "3.9.1",
+    "dalaran": "^0.1.5",
+    "raw-loader": "^0.5.1",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "prepublishOnly": "gulp build",
+    "dev": "gulp dev",
+    "test": "gulp test"
+  },
+  "keywords": [],
+  "author": "xieguanglei@hotmail.com"
+}
