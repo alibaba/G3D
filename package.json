@@ -23,7 +23,7 @@
     "prepublishOnly": "gulp build",
     "dev": "gulp dev",
     "test": "gulp test",
-    "deploy": "git co gh-pages && gulp website && git add . && git ci 'build' && git push origin gh-pages && git co dev"
+    "deploy": "git co gh-pages && gulp merge dev && gulp website && git add . && git ci 'build' && git push origin gh-pages && git co dev"
   },
   "keywords": [],
   "author": "xieguanglei@hotmail.com",
