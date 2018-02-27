@@ -1,0 +1,24 @@
+extends layout
+
+block meta
+    title G3D - A pure WebGL-compatible 3D render engine, works without DOM API
+    link(rel="icon" href=root+"assets/favicon-g3d.png" type="image/x-icon")
+    link(rel="stylesheet" href=root+"index.css")
+
+block main
+    .g3d
+        .banner
+            .content
+                .title G3D
+                .description A pure WebGL-compatible 3D render engine
+        .intro
+            .content
+                .logo
+                    img(src=root+"../assets/logo-g3d.png")
+                .title G3D, A pure WebGL-compatible 3D render engine
+                .description G3D is a javascript 3D engine based on WebGL, helping users to create and render 3D scenes easily. Compared with other WebGL 3D engines, G3D is a pure render engine, which means it depends on no DOM APIs but just a canvas(or canvas-like) object. This feature makes it possible that G3D works not only in browser but also in some hybrid environments like GCanvas (Weex or ReactNative).
+                .blueprint
+                    .title Try play with G3D
+                    iframe.playground(src="https://gplatformteam.github.io/g3d-playground/docs/?embed", frameborder="0")
+        .usage
+            .content

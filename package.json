@@ -8,10 +8,14 @@
     "url": "https://github.com/alibaba/G3D"
   },
   "devDependencies": {
+    "dalaran": "^0.1.5",
     "expect": "^21.2.1",
+    "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
     "gulp": "3.9.1",
-    "dalaran": "^0.1.5",
+    "gulp-less": "^4.0.0",
+    "marked": "^0.3.16",
+    "pug": "^2.0.0-rc.4",
     "raw-loader": "^0.5.1",
     "webpack": "^3.8.1"
   },
@@ -21,5 +25,8 @@
     "test": "gulp test"
   },
   "keywords": [],
-  "author": "xieguanglei@hotmail.com"
+  "author": "xieguanglei@hotmail.com",
+  "dependencies": {
+    "yaml-js": "^0.2.3"
+  }
 }

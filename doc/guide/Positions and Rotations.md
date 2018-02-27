@@ -8,7 +8,7 @@ We could call `G3D.MeshBuilder.createCoordinate` to create a coordinate marker i
 
 Take a look at this example:
 
-<iframe class="playground" src="https://gplatformteam.github.io/g3d-playground/docs/?embed#item=positions-and-rotations"></iframe>
+<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=positions-and-rotations"></iframe>
 
 Basiclly, you can locate meshes by assigning to `mesh.position`, `mesh.rotation` and `mesh.scale`.
 

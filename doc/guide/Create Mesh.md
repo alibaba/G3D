@@ -14,7 +14,7 @@ Last chapter we created a cube-shape mesh. Actually G3D allows us to create a nu
 
 See the following case:
 
-<iframe class="playground" src="https://gplatformteam.github.io/g3d-playground/docs/?embed#item=shapes"></iframe>
+<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=shapes"></iframe>
 
 We created a sphere mesh by callding `G3D.MeshBuilder.createSphere`. The first argument is the `scene` object, the second is sphere's radius. There's two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.
 
@@ -46,7 +46,7 @@ You can also create custom mesh by mannually specify the mesh's geometry vertice
 
 See the following example:
 
-<iframe class="playground" src="https://gplatformteam.github.io/g3d-playground/docs/?embed#item=custom-geometry"></iframe>
+<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=custom-geometry"></iframe>
 
 In `createCustomTriangleMesh` method, we call `new G3D.Mesh` to create an empty mesh.
 
@@ -100,7 +100,7 @@ When your 3D project grows larger, you should consider creating 3D models using 
 
 See the following example, check how to use G3D to load obj format 3D model files.
 
-<iframe class="playground" src="https://gplatformteam.github.io/g3d-playground/docs/?embed#item=create-from-model"></iframe>
+<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=create-from-model"></iframe>
 
 As we mentioned above, G3D is a pure render engine and the 'load' thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the 'load' thing yourself, and pass the loaded text to `MeshBuilder.createFromObjModel`.
 

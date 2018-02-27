@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../docs/Engine.html">Docs</a></div>
+        <div class="item"><a class="link" href="../guide/First Steps.html">Guide</a></div>
+        <div class="item"><a class="link" target="_blank" href="https://g-platform.github.io/g3d-playground/docs/">Playground</a></div>
+        <div class="item-right item"><a class="link" href="/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First Steps.html">First Steps</a></li>
+              <li class="item"><a href="./Positions and Rotations.html">Positions and Rotations</a></li>
+              <li class="item"><a href="./Create Mesh.html">Create Mesh</a></li>
+              <li class="item"><a href="./Raw Material.html">Raw Material</a></li>
+              <li class="item"><a href="./Standard Material.html">Standard Material</a></li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="first-steps">First Steps</h1>
+<p>G3D is a pure javascript 3D render engine compatible with WebGL. It depends on no DOM APIs but just a canvas(or canvas-like) object. This feature makes it possible to run on both browser environment and hybrid enviroment(such as Weex or ReactNative), using <a href="https://g-platform.github.io/gplatform-website/docs/gcanvas.html">GCanvas</a>.</p>
+<h2 id="playground">Playground</h2>
+<p>The quickest way to try G3D is through the <a href="https://g-platform.github.io/g3d-playground/docs/">Playground</a>. Simply create a 3D scene, create a camera, create lights and meshes as you will. You may create your own scene, or edit an existing one (in Storage -&gt; Sample Examples menu).</p>
+<p>In this series of guide, playground will appear as parts of the page. Just as the following:</p>
+<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed"></iframe>
+
+<p>You can edit the code, and the scene rendered on the up-left corner will react quickly. If your code leads to error, the error message will be printed on the left-bottom block.</p>
+<p>The playground code must be a function named <code>run</code>, which returns the <code>render</code> function. The <code>run</code> function will be called once and the <code>render</code> function will be called frequently (about 16ms once).</p>
+<pre><code class="lang-javascript">function run(G3D, canvas){
+
+    // initialize code
+
+    return function () {
+
+        // animation code
+
+        scene.render();
+    }
+}
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>G3D library is published on <a href="https://www.npmjs.com/package/g3d">NPM</a>. You need to install G3D first.</p>
+<pre><code class="lang-dash">npm install g3d
+</code></pre>
+<p>And involve G3D in your own building progress(using Webpack, eg).</p>
+<pre><code class="lang-javascript">import G3D from &#39;g3d&#39;;
+</code></pre>
+<p>If you want to load G3D through a <code>&lt;script&gt;</code> tag (thought we don&#39;t recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside package. You need to put it on your server and load it using a <code>&lt;script&gt;</code> tag.</p>
+<pre><code class="lang-html">&lt;script src=&quot;g3d.min.jd&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    console.log(window.G3D);
+&lt;/script&gt;
+</code></pre>
+<h2 id="basics">Basics</h2>
+<p>To create and render a 3D scene, you need to follow the progress:</p>
+<ol>
+<li>Create an <a href="../docs/Engine">engine</a>, specify the canvas (a <code>CanvasHTMLElement</code> in web environment or a canvas-like object in hybrid environment).</li>
+<li>Create a <a href="../docs/Scene">scene</a>, specify the engine you just created.</li>
+<li>Create a <a href="../docs/Camera">camera</a>. In most situations, we need to create a <a href="../docs/PerspectiveCamera">perspective camera</a>, and here we create a <a href="../docs/ArcRotateCamera">arc rotate camera</a> which extends from perspective camera.</li>
+<li>Create some <a href="../docs/light">lights</a>. There&#39;re several types of light, here wo create a <a href="../docs/DirectionalLight">directional light</a> and a <a href="../docs/HemisphereLight">hemisphere light</a>.</li>
+<li>Create some <a href="../docs/mesh">meshes</a>. Here, we use <a href="../docs/MeshBuilder">MeshBuilder</a> and create a cube mesh, and specify some <a href="../docs/StandardMaterial">Material</a> options.</li>
+<li>Tell scene to render.</li>
+</ol>
+<pre><code class="lang-javascript">function run(G3D, canvas){
+
+    // create 3d engine
+    const engine = new G3D.Engine(canvas);
+
+    // create a scene
+    const scene = new G3D.Scene(engine);
+
+    // create camera
+    const camera = new G3D.ArcRotateCamera(scene);
+    camera.alpha = 45;
+    camera.beta = 30;
+    camera.radius = 12;
+    camera.fov = 60;
+
+    // create 3 lights
+    const light1 = new G3D.DirectionalLight(scene);
+    light1.direction.x = -1;
+    light1.direction.y = 0;
+    light1.direction.z = 1;
+
+    const light2 = new G3D.HemisphereLight(scene);
+
+    // create mesh
+    const mesh = G3D.MeshBuilder.createCube(scene, 6);
+
+    Object.assign(mesh.materials.default.diffuseColor, {r: 200, g: 100, b: 100});
+    Object.assign(mesh.materials.default.specularColor, {r: 200, g: 100, b: 100});
+    mesh.materials.default.glossiness = 10;
+
+    return function () {
+        mesh.rotation.y +=1;
+        scene.render();
+    }
+}
+</code></pre>
+<p>Try to change some values and see what happened.</p>
+<p><a href="./Positions and Rotations">Next Chapter</a>.</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2017 Alibaba Inc.</div>
+      </div>
+    </div>
+  </body>
+</html>
