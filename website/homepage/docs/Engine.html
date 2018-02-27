@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../docs/Engine.html">Docs</a></div>
+        <div class="item"><a class="link" href="../guide/First Steps.html">Guide</a></div>
+        <div class="item"><a class="link" target="_blank" href="https://g-platform.github.io/g3d-playground/docs/">Playground</a></div>
+        <div class="item-right item"><a class="link" href="/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./ArcRotateCamera.html">ArcRotateCamera</a></li>
+              <li class="item"><a href="./Engine.html">Engine</a></li>
+              <li class="item"><a href="./Geometry.html">Geometry</a></li>
+              <li class="item"><a href="./LineMesh.html">LineMesh</a></li>
+              <li class="item"><a href="./Material.html">Material</a></li>
+              <li class="item"><a href="./Mesh.html">Mesh</a></li>
+              <li class="item"><a href="./MeshBuilder.html">MeshBuilder</a></li>
+              <li class="item"><a href="./MorphTargetMesh.html">MorphTargetMesh</a></li>
+              <li class="item"><a href="./Node.html">Node</a></li>
+              <li class="item"><a href="./PerspectiveCamera.html">PerspectiveCamera</a></li>
+              <li class="item"><a href="./Scene.html">Scene</a></li>
+              <li class="item"><a href="./StandardMaterial.html">StandardMaterial</a></li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="engine">Engine</h1>
+<p>The render Engine of G3D.</p>
+<h2 id="constructor">Constructor</h2>
+<pre><code class="lang-javascript">new G3D.Engine(canvas);
+</code></pre>
+<h3 id="options">options</h3>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>canvas</td>
+<td>HTMLCanvasElement or GCanvas instance</td>
+<td>the canvas instance to display scene</td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties</h2>
+<p>There&#39;s no public properties for <code>Engine</code>.</p>
+<h2 id="methods">Methods</h2>
+<p>There&#39;s no public methods for <code>Engine</code>.</p>
+<h2 id="examples">Examples</h2>
+<p>The only way to use Engine is passing <code>engine</code> to <code>Scene</code> constructor as the only parameter.</p>
+<pre><code class="lang-javascript">const engine = new G3D.Engine(canvas);
+const scene = new G3D.Scene(engine);
+</code></pre>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2017 Alibaba Inc.</div>
+      </div>
+    </div>
+  </body>
+</html>
