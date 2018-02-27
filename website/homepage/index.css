@@ -1,16 +1,8 @@
-@font-face {
-  font-family: 'OpenSans';
-  src: url('assets/OpenSans-Regular.ttf') format('ttf');
-}
-@font-face {
-  font-family: 'FiraMono';
-  src: url('assets/FiraMono-Regular.ttf') format('ttf');
-}
 html,
 body {
   margin: 0;
   padding: 0;
-  font-family: 'OpenSans', 'Verdana', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+  font-family: 'Verdana', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
   overflow: auto;
 }
 .header {
@@ -373,7 +365,7 @@ body {
   background-color: #eee;
 }
 .doc pre code {
-  font-family: 'FiraMono', 'Consolas', 'Courier', sans-serif;
+  font-family: 'Consolas', 'Courier', sans-serif;
 }
 .doc code {
   padding: 5px 3px;

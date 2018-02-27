@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const glob = require('glob');
 const webpack = require('webpack');
-const tasksFactory = require('dalaran');
+const dalaran = require('dalaran');
 const path = require('path');
 const pug = require('pug');
 const fs = require('fs-extra');
@@ -15,9 +15,9 @@ glob.sync('src/**/G3D.*.js').forEach(item => {
     providePluginOptions[name] = path.join(__dirname, item);
 });
 
-const libraryTasks = tasksFactory.libraryTasks({
+const libraryTasks = dalaran.libraryTasks({
     umdName: 'G3D',
-    demo: './pages',
+    demo: './demo/pages',
     entry: './src/G3D.js',
     port: 3000,
     loaders: [{
@@ -31,11 +31,9 @@ const libraryTasks = tasksFactory.libraryTasks({
     testEntryPattern: 'test/**/*.spec.js'
 });
 
-gulp.task('test', libraryTasks.test);
-
-gulp.task('dev', libraryTasks.dev);
-
-gulp.task('build', libraryTasks.build);
+gulp.task('library-test', libraryTasks.test);
+gulp.task('library-dev', libraryTasks.dev);
+gulp.task('library-build', libraryTasks.build);
 
 
 
@@ -125,4 +123,68 @@ gulp.task('homepage-assets', homePageTasks.assets);
 gulp.task('homepage-build', ['homepage-less', 'homepage-assets'], homePageTasks.build);
 
 
-gulp.task('website', ['homepage-build'], function(){});
+const playgroundTasks = (function () {
+
+    const tasks = dalaran.applicationTasks({
+        demo: './website/playground-src',
+        dist: './website/playground',
+        port: 3001,
+        react: true,
+        loaders: [{
+            test: /\.glsl$/,
+            use: 'raw-loader'
+        }, {
+            test: /\.playground.js$/,
+            use: 'raw-loader'
+        }, {
+            test: /\.txt.vue$/,
+            use: 'raw-loader'
+        }, {
+            test: /\.txt.js$/,
+            use: 'raw-loader'
+        }],
+        plugins: [
+            new webpack.ProvidePlugin(providePluginOptions)
+        ],
+        devCors: true,
+        commonsChunk: false
+    });
+
+    function samples() {
+        const files = glob.sync('./website/playground-src/samples/**/*.playground.js');
+
+        const obj = {};
+        files.forEach(function (file) {
+            const dirs = file.split('/');
+            const fileName = dirs.pop();
+            let target = obj;
+            dirs.forEach(function (dir) {
+                if (!target[dir]) {
+                    target[dir] = {};
+                }
+                target = target[dir];
+            });
+            target[fileName] = '<<<' + file + '>>>'
+        });
+    
+        let str = JSON.stringify(obj, null, 2);
+        str = str.replace(/\"<<</g, 'require("./');
+        str = str.replace(/>>>\"/g, '.playground.js")');
+        str = 'module.exports = ' + str;
+    
+        fs.outputFileSync('./src/samples/index.js', str);
+    }
+
+    return Object.assign({samples}, tasks);
+
+})();
+
+gulp.task('playground-samples', playgroundTasks.samples);
+gulp.task('playground-dev', ['playground-samples'], playgroundTasks.dev);
+gulp.task('playground-build', ['playground-samples'], playgroundTasks.build);
+
+
+
+
+
+gulp.task('website', ['homepage-build', 'playground-build'], function () { });

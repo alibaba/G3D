@@ -1,8 +1,7 @@
-import G3D from '../src/G3D';
-import main from './shapes-main';
+import G3D from '../../src/G3D';
+import main from './standard-material-main';
 
 import { controlArcRotateCamera } from './lib/attach-control';
-
 main(G3D, {
     canvas: document.getElementById('canvas'),
     requestAnimationFrame,
