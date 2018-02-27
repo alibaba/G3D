@@ -123,3 +123,6 @@ gulp.task('homepage-less', homePageTasks.less);
 gulp.task('homepage-less-watch', homePageTasks.watchLess);
 gulp.task('homepage-assets', homePageTasks.assets);
 gulp.task('homepage-build', ['homepage-less', 'homepage-assets'], homePageTasks.build);
+
+
+gulp.task('website', ['homepage-build'], function(){});
