@@ -1,6 +1,6 @@
 # Create Mesh
 
-We can create mesh through 3 ways. 
+We can create mesh through three ways. 
 
 1. Create predefined shaped mesh.
 2. Create custom mesh, mannually specify vertices, normals and so on.
