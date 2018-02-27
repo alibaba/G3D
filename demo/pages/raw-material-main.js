@@ -62,7 +62,7 @@ function main(
         }
         render();
     };
-    image.src = '//img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png';
+    image.src = 'https://img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png';
 }
 
 export default main;
