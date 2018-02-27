@@ -187,4 +187,4 @@ gulp.task('playground-build', ['playground-samples'], playgroundTasks.build);
 
 
 
-gulp.task('website', ['homepage-build'], function () { });
+gulp.task('website', ['homepage-build', 'playground-build'], function () { });
