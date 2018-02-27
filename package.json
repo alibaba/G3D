@@ -17,7 +17,8 @@
     "marked": "^0.3.16",
     "pug": "^2.0.0-rc.4",
     "raw-loader": "^0.5.1",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "yaml-js": "^0.2.3"    
   },
   "scripts": {
     "prepublishOnly": "gulp build",
@@ -26,8 +27,5 @@
     "deploy": "git co gh-pages && git merge dev && gulp website && git add . && git ci -m 'build' && git push origin gh-pages && git co dev"
   },
   "keywords": [],
-  "author": "xieguanglei@hotmail.com",
-  "dependencies": {
-    "yaml-js": "^0.2.3"
-  }
+  "author": "xieguanglei@hotmail.com"
 }
