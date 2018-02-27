@@ -17,7 +17,7 @@ glob.sync('src/**/G3D.*.js').forEach(item => {
 
 const libraryTasks = tasksFactory.libraryTasks({
     umdName: 'G3D',
-    demo: './pages',
+    demo: './demo/pages',
     entry: './src/G3D.js',
     port: 3000,
     loaders: [{
@@ -36,6 +36,9 @@ gulp.task('test', libraryTasks.test);
 gulp.task('dev', libraryTasks.dev);
 
 gulp.task('build', libraryTasks.build);
+
+
+
 
 
 
