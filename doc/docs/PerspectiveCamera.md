@@ -1,6 +1,6 @@
 # PerspectiveCamera
 
-Perspective Camera. Extends from Node.
+Perspective Camera. Extends from [Node](./Node).
 
 ## Constructor
 

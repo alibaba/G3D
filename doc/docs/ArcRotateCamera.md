@@ -1,6 +1,6 @@
 # ArcRotateCamera
 
-The camera moving by a sphere polar coordinates. Extends from [Camera](./camera).
+The camera moving by a sphere polar coordinates. Extends from [PerspectiveCamera](./PerspectiveCamera).
 
 ## Contructor
 

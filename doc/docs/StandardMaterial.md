@@ -1,6 +1,6 @@
 # StandardMaterial
 
-Standard material, representing phong reflection face. Extends from Material.
+Standard material, representing phong reflection face. Extends from [Material](./Material).
 
 ## Constructor
 

@@ -2,18 +2,34 @@
 doc:
 
   docs:
-    ArcRotateCamera: ./doc/docs/ArcRotateCamera.md
-    Engine: ./doc/docs/Engine.md
-    Geometry: ./doc/docs/Geometry.md
-    LineMesh: ./doc/docs/LineMesh.md
-    Material: ./doc/docs/Material.md
-    Mesh: ./doc/docs/Mesh.md
-    MeshBuilder: ./doc/docs/MeshBuilder.md
-    MorphTargetMesh: ./doc/docs/MorphTargetMesh.md
-    Node: ./doc/docs/Node.md
-    PerspectiveCamera: ./doc/docs/PerspectiveCamera.md
-    Scene: ./doc/docs/Scene.md
-    StandardMaterial: ./doc/docs/StandardMaterial.md
+    Core:
+      Engine: ./doc/docs/Engine.md
+      Scene: ./doc/docs/Scene.md
+      Node: ./doc/docs/Node.md
+    Cameras:
+      PerspectiveCamera: ./doc/docs/PerspectiveCamera.md
+      ArcRotateCamera: ./doc/docs/ArcRotateCamera.md
+    Mesh:
+      Mesh: ./doc/docs/Mesh.md
+      MorphTargetMesh: ./doc/docs/MorphTargetMesh.md
+      LineMesh: ./doc/docs/LineMesh.md
+    MeshUtils:
+      MeshBuilder: ./doc/docs/MeshBuilder.md
+    Materials:
+      Material: ./doc/docs/Material.md
+      StandardMaterial: ./doc/docs/StandardMaterial.md
+      RawMaterial: ./doc/docs/RawMaterial.md
+    Texture:
+      Texture: ./doc/docs/Texture.md
+    Geometries:
+      Geometry: ./doc/docs/Geometry.md
+      LineGeometry: ./doc/docs/LineGeometry.md
+    Lights:
+      Light: ./doc/docs/Light.md
+      AmbientLight: ./doc/docs/AmbientLight.md
+      DirectionalLight: ./doc/docs/DirectionalLight.md
+      PointLight: ./doc/docs/PointLight.md
+      HemisphereLight: ./doc/docs/HemisphereLight.md
 
   guide:
     First Steps: ./doc/guide/First Steps.md
