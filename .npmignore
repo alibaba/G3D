@@ -1,9 +1,0 @@
-.DS_Store
-.vscode
-node_modules/
-package-lock.json
-website
-test
-demo
-doc
-!dist
