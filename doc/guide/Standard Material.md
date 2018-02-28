@@ -26,7 +26,7 @@ Specular pass is more complex. The specular factor is determined by light direct
 
 See the following example: 
 
-<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=light-and-standard-material"></iframe>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=light-and-standard-material"></iframe>
 
 Each face of the cube's color is different, you can easily figure out it's a 3D model. Here we add `DirectionalLight` to our scene. If we comment these create lights codes, cube will turn total black.
 
@@ -66,7 +66,7 @@ Env map is used to simulate reflection of some cube.
 
 See the example above:
 
-<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=envmap and glossiness"></iframe>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=envmap and glossiness"></iframe>
 
 We loaded a image like this:
 

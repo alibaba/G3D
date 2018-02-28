@@ -18,7 +18,7 @@ If `material.source` is `G3D.Material.COLOR`, the rendered pixel color will be `
 
 See the following example:
 
-<iframe class="playground" src="https://g-platform.github.io/g3d-playground/docs/?embed#item=raw-material"></iframe>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=envmap and glossinessembed#item=raw-material"></iframe>
 
 Notice that there's no lights in the scene. Every pixel of the cube is the same color, it's a little wired that you can hardly sense it's a 3D cube.
 
