@@ -262,8 +262,14 @@ body {
 }
 .g3d .banner {
   height: 700px;
-  background: #2b2b2b;
   position: relative;
+}
+.g3d .banner .bg {
+  position: absolute;
+  z-index: -2;
+  background-color: #000;
+  height: 700px;
+  width: 100%;
 }
 .g3d .banner .content {
   color: #fff;
