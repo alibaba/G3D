@@ -85,13 +85,27 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="node">Node</h1>
-<p>Base class for Mesh and Camera, representing something transformable in a 3d space.</p>
+          <div class="body"><h1 id="rawmaterial">RawMaterial</h1>
+<p>Raw material, whose rendered color is independent from lights. Extends from <a href="./Material">Material</a>.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.Node();
+<pre><code class="lang-javascript">new G3D.RawMaterial(mesh);
 </code></pre>
-<h3 id="options">options</h3>
-<p>There&#39;s no options for <code>Node</code> constructor.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mesh</td>
+<td>G3D.Mesh</td>
+<td>the mesh the material is on</td>
+</tr>
+</tbody>
+</table>
 <h2 id="properties">Properties</h2>
 <table>
 <thead>
@@ -103,90 +117,22 @@
 </thead>
 <tbody>
 <tr>
-<td>position</td>
-<td>{x: Number, y: Number, z: Number}</td>
-<td>position, default is {x: 0, y: 0, z: 0}</td>
+<td>color</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>ambient color</td>
 </tr>
 <tr>
-<td>rotation</td>
-<td>{x: Number, y: Number, z: Number}</td>
-<td>position, default is {x: 0, y: 0, z: 0}</td>
+<td>texture</td>
+<td>G3D.Texture</td>
+<td>ambient texture</td>
 </tr>
 <tr>
-<td>scale</td>
-<td>{x: Number, y: Number, z: Number}</td>
-<td>scale, default is {x: 1, y: 1, z: 1}</td>
-</tr>
-<tr>
-<td>parent</td>
-<td>G3D.Node</td>
-<td>parent of the node, a Node&#39;s position in world will be affected by it&#39;s parent, default is null</td>
+<td>source</td>
+<td>enum {Material.COLOR, Material.TEXTURE}</td>
+<td>whether to use ambient color or texture</td>
 </tr>
 </tbody>
 </table>
-<h2 id="methods">Methods</h2>
-<h3 id="transformcoordinate-x-y-z-">transformCoordinate(x, y, z)</h3>
-<p>Transform a position from node&#39;s local coordinate system to world coordinate system.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>position x value</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>position y value</td>
-</tr>
-<tr>
-<td>z</td>
-<td>Number</td>
-<td>position z value</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">returns</h4>
-<p>position: {x: Number, y: Number, z: Number}, the transformed position.</p>
-<h3 id="transformnormal-x-y-z-">transformNormal(x, y, z)</h3>
-<p>Transform a direction vector from node&#39;s local coordinate system to world coordinate system.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>direction x value</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>direction y value</td>
-</tr>
-<tr>
-<td>z</td>
-<td>Number</td>
-<td>direction z value</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">returns</h4>
-<p>direction: {x: Number, y: Number, z: Number}, the transformed direction.</p>
 </div>
         </div>
       </div>

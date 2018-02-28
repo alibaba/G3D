@@ -325,6 +325,7 @@ body {
 .doc .content .index {
   float: left;
   width: 300px;
+  padding-bottom: 50px;
   overflow: hidden;
 }
 .doc .content .index ol {
@@ -389,7 +390,7 @@ body {
 .doc table thead tr th:last-child {
   border-right: none;
 }
-.doc table tbody tr:nth-child(2) {
+.doc table tbody tr:nth-child(even) {
   background: #eee;
 }
 .doc table tbody tr td {

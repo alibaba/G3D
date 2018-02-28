@@ -85,13 +85,28 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="node">Node</h1>
-<p>Base class for Mesh and Camera, representing something transformable in a 3d space.</p>
+          <div class="body"><h1 id="hemispherelight">HemisphereLight</h1>
+<p>The hemisphereLight light, extends from <a href="./Light">Light</a>.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.Node();
+<pre><code class="lang-javascript">new G3D.HemisphereLight(scene);
 </code></pre>
 <h3 id="options">options</h3>
-<p>There&#39;s no options for <code>Node</code> constructor.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>the scene you want to put the light in</td>
+</tr>
+</tbody>
+</table>
 <h2 id="properties">Properties</h2>
 <table>
 <thead>
@@ -103,90 +118,30 @@
 </thead>
 <tbody>
 <tr>
-<td>position</td>
-<td>{x: Number, y: Number, z: Number}</td>
-<td>position, default is {x: 0, y: 0, z: 0}</td>
+<td>sky</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>Sky light color, default is {r: 255, g: 255, b: 255}</td>
 </tr>
 <tr>
-<td>rotation</td>
-<td>{x: Number, y: Number, z: Number}</td>
-<td>position, default is {x: 0, y: 0, z: 0}</td>
+<td>ground</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>Ground light color, default is { r: 0, g: 0, b: 0 }</td>
 </tr>
 <tr>
-<td>scale</td>
+<td>up</td>
 <td>{x: Number, y: Number, z: Number}</td>
-<td>scale, default is {x: 1, y: 1, z: 1}</td>
-</tr>
-<tr>
-<td>parent</td>
-<td>G3D.Node</td>
-<td>parent of the node, a Node&#39;s position in world will be affected by it&#39;s parent, default is null</td>
+<td>the up direction of the hemisphere light,  default is {x: 0, y: 1, z: 0}</td>
 </tr>
 </tbody>
 </table>
-<h2 id="methods">Methods</h2>
-<h3 id="transformcoordinate-x-y-z-">transformCoordinate(x, y, z)</h3>
-<p>Transform a position from node&#39;s local coordinate system to world coordinate system.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>position x value</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>position y value</td>
-</tr>
-<tr>
-<td>z</td>
-<td>Number</td>
-<td>position z value</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">returns</h4>
-<p>position: {x: Number, y: Number, z: Number}, the transformed position.</p>
-<h3 id="transformnormal-x-y-z-">transformNormal(x, y, z)</h3>
-<p>Transform a direction vector from node&#39;s local coordinate system to world coordinate system.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>direction x value</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>direction y value</td>
-</tr>
-<tr>
-<td>z</td>
-<td>Number</td>
-<td>direction z value</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">returns</h4>
-<p>direction: {x: Number, y: Number, z: Number}, the transformed direction.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="lang-javascript">const light = new HemisphereLIght(scene);
+
+Object.assign(light.sky, {r: 200, g: 200, b: 200});
+Object.assign(light.sky, {r: 100, g: 100, b: 100});
+
+light.intensity = 1.0;
+</code></pre>
 </div>
         </div>
       </div>
