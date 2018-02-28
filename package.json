@@ -30,7 +30,7 @@
   },
   "scripts": {
     "prepublishOnly": "gulp library-build",
-    "website": "mkdir ../_g3d_build_ && mkdir ../_g3d_build/homepage && mv ./website/homepage ../_g3d_build_/homepage && mv ./website/playground ../_g3d_build_/playground && git co gh-pages && rm -rf ./* && mv ../_g3d_build_/homepage/* ./ && mv ../_g3d_build_/playground ./playground && rm -rf ./_g3d_build_"
+    "website": "mkdir ../_g3d_build_ && mkdir ../_g3d_build_/homepage && mv ./website/homepage ../_g3d_build_/homepage && mv ./website/playground ../_g3d_build_/playground && git co gh-pages && rm -rf ./* && mv ../_g3d_build_/homepage/* ./ && mv ../_g3d_build_/playground ./playground && rm -rf ./_g3d_build_"
   },
   "keywords": [],
   "author": "xieguanglei@hotmail.com"
