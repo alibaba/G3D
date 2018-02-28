@@ -28,7 +28,8 @@ const libraryTasks = dalaran.libraryTasks({
         new webpack.ProvidePlugin(providePluginOptions)
     ],
     devCors: true,
-    testEntryPattern: 'test/**/*.spec.js'
+    testEntryPattern: 'test/**/*.spec.js',
+    eslint: false
 });
 
 gulp.task('library-test', libraryTasks.test);
@@ -147,7 +148,8 @@ const playgroundTasks = (function () {
             new webpack.ProvidePlugin(providePluginOptions)
         ],
         devCors: true,
-        commonsChunk: false
+        commonsChunk: false,
+        eslint: false
     });
 
     function samples() {
