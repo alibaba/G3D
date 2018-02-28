@@ -32,7 +32,8 @@
     "prepublishOnly": "gulp build",
     "dev": "gulp dev",
     "test": "gulp test",
-    "deploy": "git co gh-pages && git merge dev && gulp website && git add . && git ci -m 'build' && git push origin gh-pages && git co dev"
+    "deploy": "git co gh-pages && git merge dev && gulp website && git add . && git ci -m 'build' && git push origin gh-pages && git co dev",
+    "d": "mkdir ../_g3d_build_ && mv ./website/homepage ../_g3d_build_/homepage && mv ./website/playground ../_g3d_build_/playground && git co gh-pages && rm -rf ./* && mv ../_g3d_build_/homepage/* ./ && mv ../_g3d_build_/playground ./playground"
   },
   "keywords": [],
   "author": "xieguanglei@hotmail.com"
