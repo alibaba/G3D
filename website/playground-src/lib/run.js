@@ -1,4 +1,5 @@
 import G3D from '../../../src/G3D';
+import * as loader from './loader';
 
 function run(code, canvas, onError) {
 
@@ -6,13 +7,14 @@ function run(code, canvas, onError) {
         i !== 0 && i !== arr.length - 1
     ).join('\n');
 
-    const func = new Function('G3D', 'canvas', code);
+    const func = new Function('G3D', 'canvas', 'loader', code);
 
     if (typeof func !== 'function') {
         throw new Error('playground code should be a function but not ' + typeof func);
     }
 
-    const render = func(G3D, canvas);
+
+    const render = func(G3D, canvas, loader);
 
     if (typeof render !== 'function') {
         throw new Error('playground function should return a function but not ' + typeof render);

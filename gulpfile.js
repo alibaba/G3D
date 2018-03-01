@@ -153,7 +153,11 @@ const playgroundTasks = (function () {
     });
 
     function samples() {
-        const files = glob.sync('./website/playground-src/samples/**/*.playground.js');
+        const files = glob.sync('./website/playground-src/samples/**/*.playground.js').map(file=>{
+            return file.substring(file.indexOf('/guide')+1, file.indexOf('.playground'));
+        });
+
+        console.log(files);
 
         const obj = {};
         files.forEach(function (file) {
@@ -174,7 +178,7 @@ const playgroundTasks = (function () {
         str = str.replace(/>>>\"/g, '.playground.js")');
         str = 'module.exports = ' + str;
     
-        fs.outputFileSync('./src/samples/index.js', str);
+        fs.outputFileSync('./website/playground-src/samples/index.js', str);
     }
 
     return Object.assign({samples}, tasks);
