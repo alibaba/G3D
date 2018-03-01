@@ -91,34 +91,6 @@ html, body{
 
 
 .g3d{
-    .header{
-        background-color: rgb(71, 71, 71);
-        height: 40px;
-
-        .menu{
-            width: 1280px;
-            margin: auto;
-
-            .item{
-                height: 40px;
-                line-height: 40px;
-                img{
-                    height: 40px;
-                    margin-left: 11px;
-                    margin-right: 13px;
-                }
-            }
-
-            .item-right{
-                float: right;
-                a.link{
-                    color: #888;
-                    font-size: 0.9rem;
-                }
-            }
-        }
-
-    }
 
 
     .banner{
@@ -153,6 +125,10 @@ html, body{
                 font-size: 30px;
                 font-weight: lighter;
                 padding-top: 10px; 
+            }
+
+            .github{
+                display: none;
             }
         }
     }
@@ -331,4 +307,130 @@ iframe.playground{
     margin: 20px auto;
     border: 1px solid #aaa;
     box-shadow: #ccc 2px 0px 4px;
+}
+
+@media only screen and (max-device-width: 640px){
+
+    html, body{
+        font-size: 30px;
+    }
+
+    .header{
+        display: none;
+    }
+
+    .g3d{
+        .banner{
+            height: 100vh;
+            .bg{
+                z-index: -2;
+                background-color: #000; 
+                height: 100vh;
+                width: 100%;
+            }
+
+            .content{
+                .title{
+                    padding-top: 65vh;
+                    font-size: 3rem;
+                }
+
+                .description{
+                    padding-top: 1vh; 
+                    font-size: 1.5rem;
+                }
+
+                .github{
+                    display: block;
+                    background: #ff7979;
+                    margin-left: 37vw;
+                    margin-top: 10vw;
+                    width: 25vw;
+                    height: 10vw;
+                    line-height: 10vw;
+                    font-size: 1.5rem;
+                    border-radius: 5vh;
+                    text-align: center;
+                    a{
+                        text-decoration: none;
+                        color: #fff;
+                        &:hover{
+                            color:#fff;
+                        }
+                        &:link{
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+
+            canvas{
+                transform: translate(-25vw, -20vh) scale(0.7)
+            }
+        }
+
+        .intro{
+            .content{
+                width: 100vw;
+                height: 100vh;
+
+                .logo{
+                    img{
+                        width: 50vw;
+                    }
+                }
+    
+                .title{
+                    display: none;
+                }
+    
+                .description{
+                    font-size: 1.5rem;    
+                    padding: 10vw 10vw;
+                    line-height: 4.5vh;
+                }
+    
+                .blueprint{
+                    display: none;
+                }
+            }
+
+
+        }
+
+        .usage{
+            display: none;
+        }
+    }
+
+    .footer{
+        height: 30vh;
+        .content{
+            width: 100vw;
+            margin: auto;
+    
+            .open-source-icon{
+                padding-left: 30vw;
+                padding-top: 5vh;
+                padding-bottom: 5vh;
+                width: 40vw;
+                display: block;
+                img{
+                    width: 40vw;
+                }
+            }
+            .license{
+                float: none;
+                font-size: 1.5rem;
+                text-align: center;
+                height: 7vh;                
+            }
+            .copyright{
+                float: none;
+                font-size: 1.5rem;
+                text-align: center;                
+                height: 7vh;
+            }
+        }
+    }
 }

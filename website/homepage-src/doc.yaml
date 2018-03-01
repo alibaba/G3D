@@ -37,3 +37,6 @@ doc:
     Create Mesh: ./doc/guide/Create Mesh.md
     Raw Material: ./doc/guide/Raw Material.md
     Standard Material: ./doc/guide/Standard Material.md
+    Lights: ./doc/guide/Lights.md
+    Load Models: ./doc/guide/Load Models.md
+    Morph Targets: ./doc/Morph Targets.md
