@@ -8,6 +8,7 @@ const fs = require('fs-extra');
 const less = require('gulp-less');
 const yaml = require('yaml-js');
 const marked = require('marked');
+const watch = require('gulp-watch');
 
 const providePluginOptions = {};
 glob.sync('src/**/G3D.*.js').forEach(item => {
@@ -35,7 +36,6 @@ const libraryTasks = dalaran.libraryTasks({
 gulp.task('library-test', libraryTasks.test);
 gulp.task('library-dev', libraryTasks.dev);
 gulp.task('library-build', libraryTasks.build);
-
 
 
 
@@ -156,8 +156,6 @@ const playgroundTasks = (function () {
         const files = glob.sync('./website/playground-src/samples/**/*.playground.js').map(file=>{
             return file.substring(file.indexOf('/guide')+1, file.indexOf('.playground'));
         });
-
-        console.log(files);
 
         const obj = {};
         files.forEach(function (file) {
