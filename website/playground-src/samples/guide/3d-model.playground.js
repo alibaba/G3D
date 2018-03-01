@@ -23,8 +23,8 @@ function run(G3D, canvas, loader) {
 
     // load 3d model and create mesh
     let mesh = null;
-    loader.loadText('http://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj', function (obj) {
-        loader.loadText('http://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.mtl', function (mtl) {
+    loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj', function (obj) {
+        loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.mtl', function (mtl) {
             mesh = G3D.MeshBuilder.createFromObjModel(scene, {obj, mtl});
         })
     })
