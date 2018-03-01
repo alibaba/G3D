@@ -34,43 +34,13 @@
               <li class="item"><a href="./Morph Targets.html">Morph Targets</a></li>
             </ol>
           </div>
-          <div class="body"><h1 id="positions-and-rotations">Positions and Rotations</h1>
-<p>We use 3D coordinates to locate objects in a 3D space, as the following picture shows:</p>
-<p><img src="https://img.alicdn.com/tfs/TB1HluJXQyWBuNjy0FpXXassXXa-700-375.png" alt="coordinates"></p>
-<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It&#39;s convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
-<p>Take a look at this example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=positions-and-rotations"></iframe>
+          <div class="body"><h1 id="load-models">Load Models</h1>
+<h2 id="load-obj-model">Load Obj Model</h2>
+<p>See the example.</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=3d-model"></iframe>
 
-<p>Basiclly, you can locate meshes by assigning to <code>mesh.position</code>, <code>mesh.rotation</code> and <code>mesh.scale</code>.</p>
-<ul>
-<li>Position: By assigning to <code>mesh.position</code>, the mesh moves along the specified axis.</li>
-<li>Rotation: By assigning to <code>mesh.rotation</code>, the mesh rotates around the specified axis.</li>
-<li>Scale: By assigning to <code>mesh.scale</code>, the mesh scale along the specified axis.</li>
-</ul>
-<p>Try uncomment these lines, you&#39;ll find the cube&#39;s initial state is changed.</p>
-<pre><code class="lang-javascript">// init mesh position
-// Object.assign(mesh.position, {x: 3, y: 0, z: 0});
-
-// init mesh rotation
-// Object.assign(mesh.rotation, {x: 45, y: 0, z: 0});
-
-// init mesh scale
-// Object.assign(mesh.scale, {x: 2, y: 1, z: 1});
-</code></pre>
-<p>Try uncomment these lines, you&#39;ll find the cube is animated.</p>
-<pre><code class="lang-javascript">// rotate camera for viewing the scene
-// camera.alpha += 1;
-
-// translate mesh animation
-// mesh.position.x += 0.005;
-
-// rotate mesh animation
-// mesh.rotation.x += 1;
-
-// scale mesh animation
-// mesh.scale.x *= 1.0001;
-</code></pre>
-<p><a href="./Create Mesh">Next Chapter</a></p>
+<h2 id="load-stl-model">Load Stl Model</h2>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=3d-model-stl"></iframe>
 </div>
         </div>
       </div>
