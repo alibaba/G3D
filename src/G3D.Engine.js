@@ -13,7 +13,7 @@ class Engine {
     _framebuffers = {};
 
     constructor(canvas) {
-        const gl = this._gl = canvas.getContext('webgl2', { antialias: true });
+        const gl = this._gl = canvas.getContext('webgl', { antialias: true });
         this.width = canvas.width;
         this.height = canvas.height;
 
