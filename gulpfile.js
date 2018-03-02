@@ -9,6 +9,8 @@ const less = require('gulp-less');
 const yaml = require('yaml-js');
 const marked = require('marked');
 const watch = require('gulp-watch');
+const highlight = require('gulp-highlight-code');
+const hljs = require('highlight.js');
 
 const providePluginOptions = {};
 glob.sync('src/**/G3D.*.js').forEach(item => {
@@ -76,13 +78,16 @@ const homePageTasks = (function () {
                     const content = fs.readFileSync(`./doc/${scope}/${k}.md`, 'utf-8');
 
                     if (content) {
-                        fs.outputFileSync(`./website/homepage/${scope.split('-').join('/')}/${k}.html`, templates.doc(
+
+                        let html = templates.doc(
                             {
                                 index: doc[scope],
                                 content: marked(content),
                                 root: '../'
                             }
-                        ));
+                        );
+                        // html = hljs.highlight('javascript', html).value;
+                        fs.outputFileSync(`./website/homepage/${scope.split('-').join('/')}/${k}.html`, html);
                     } else {
                         throw new Error('Read source file failed, please run gulp fetch first.');
                     }
@@ -95,6 +100,10 @@ const homePageTasks = (function () {
 
             deal(doc[scope]);
         });
+
+        return gulp.src('./website/homepage/*/*.html')
+            .pipe(highlight())
+            .pipe(gulp.dest('./website/homepage/'));
     }
 
     function lessTask() {
