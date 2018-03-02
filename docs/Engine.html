@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -89,7 +87,7 @@
           <div class="body"><h1 id="engine">Engine</h1>
 <p>The render Engine of G3D.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.Engine(canvas);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.Engine(canvas);
 </code></pre>
 <h3 id="options">options</h3>
 <table>
@@ -109,13 +107,13 @@
 </tbody>
 </table>
 <h2 id="properties">Properties</h2>
-<p>There&#39;s no public properties for <code>Engine</code>.</p>
+<p>There's no public properties for <code>Engine</code>.</p>
 <h2 id="methods">Methods</h2>
-<p>There&#39;s no public methods for <code>Engine</code>.</p>
+<p>There's no public methods for <code>Engine</code>.</p>
 <h2 id="examples">Examples</h2>
 <p>The only way to use Engine is passing <code>engine</code> to <code>Scene</code> constructor as the only parameter.</p>
-<pre><code class="lang-javascript">const engine = new G3D.Engine(canvas);
-const scene = new G3D.Scene(engine);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">const</span> engine = <span class="hljs-keyword">new</span> G3D.Engine(canvas);
+<span class="hljs-keyword">const</span> scene = <span class="hljs-keyword">new</span> G3D.Scene(engine);
 </code></pre>
 </div>
         </div>
@@ -127,5 +125,5 @@ const scene = new G3D.Scene(engine);
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -35,22 +33,22 @@
             </ol>
           </div>
           <div class="body"><h1 id="lights">Lights</h1>
-<p>As we mentioned in the previous chapters, light will affect <code>StandardMaterial</code>. There&#39;re several types of light, let&#39;s see one by one.</p>
+<p>As we mentioned in the previous chapters, light will affect <code>StandardMaterial</code>. There're several types of light, let's see one by one.</p>
 <h2 id="ambientlight">AmbientLight</h2>
-<p>Ambient light affect the face&#39;s color by simple apply to the face&#39;s color, without the face&#39;s direction. So if there&#39;s only ambient light, the scene will look likes that every mesh&#39;s materials is RawMaterial. But ambient light is not meaningless, because if there&#39;s no ambient light in the scene, certain parts of our scene will be totally black, whick is counter-intutive.</p>
-<p>Usually, we set ambient color&#39;s intensity as a low number (0.1, for example), and apply other lights to make a reseanable scene.</p>
+<p>Ambient light affect the face's color by simple apply to the face's color, without the face's direction. So if there's only ambient light, the scene will look likes that every mesh's materials is RawMaterial. But ambient light is not meaningless, because if there's no ambient light in the scene, certain parts of our scene will be totally black, whick is counter-intutive.</p>
+<p>Usually, we set ambient color's intensity as a low number (0.1, for example), and apply other lights to make a reseanable scene.</p>
 <p>See the scene with only ambient light:</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=ambient-light"></iframe>
 
 <h2 id="directional-light">Directional Light</h2>
-<p>Directional light is a kind of light like the sunlight. Directional light has a direction (position). The face perpendicular to the direction will be lighted more than the face oblique the light&#39;s direction. And the face paralle with the light&#39;s direction will be totally not lighted by the light.</p>
+<p>Directional light is a kind of light like the sunlight. Directional light has a direction (position). The face perpendicular to the direction will be lighted more than the face oblique the light's direction. And the face paralle with the light's direction will be totally not lighted by the light.</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=directional-light"></iframe>
 
-<p>See the example above, check when the light&#39;s <code>direction</code> is changing, how the light is affecting the cylinder mesh.</p>
-<pre><code class="lang-javascript">light1.direction.x = Math.sin(Date.now() / 1000) * 1.0;
+<p>See the example above, check when the light's <code>direction</code> is changing, how the light is affecting the cylinder mesh.</p>
+<pre><code class="lang-javascript hljs">light1.<span class="hljs-built_in">direction</span>.x = Math.<span class="hljs-built_in">sin</span>(<span class="hljs-built_in">Date</span>.now() / <span class="hljs-number">1000</span>) * <span class="hljs-number">1.0</span>;
 </code></pre>
 <h2 id="point-light">Point Light</h2>
-<p>Point light is a little like directional light, how much the face is lighted depends on the light&#39;s direction and the face&#39;s direction, but point light has an origin, for each face (each pixel, actually), the light&#39;s direction is computed using the pixels position and the light&#39;s origin.</p>
+<p>Point light is a little like directional light, how much the face is lighted depends on the light's direction and the face's direction, but point light has an origin, for each face (each pixel, actually), the light's direction is computed using the pixels position and the light's origin.</p>
 <p>See the example.</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=point-light"></iframe>
 
@@ -67,5 +65,5 @@
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

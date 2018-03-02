@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -89,7 +87,7 @@
           <div class="body"><h1 id="hemispherelight">HemisphereLight</h1>
 <p>The hemisphereLight light, extends from <a href="./Light">Light</a>.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.HemisphereLight(scene);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.HemisphereLight(scene);
 </code></pre>
 <h3 id="options">options</h3>
 <table>
@@ -136,12 +134,12 @@
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="lang-javascript">const light = new HemisphereLIght(scene);
+<pre><code class="lang-javascript hljs">const light = <span class="hljs-keyword">new</span> HemisphereLIght(scene);
 
-Object.assign(light.sky, {r: 200, g: 200, b: 200});
-Object.assign(light.sky, {r: 100, g: 100, b: 100});
+Object.assign(light.sky, {<span class="hljs-string">r:</span> <span class="hljs-number">200</span>, <span class="hljs-string">g:</span> <span class="hljs-number">200</span>, <span class="hljs-string">b:</span> <span class="hljs-number">200</span>});
+Object.assign(light.sky, {<span class="hljs-string">r:</span> <span class="hljs-number">100</span>, <span class="hljs-string">g:</span> <span class="hljs-number">100</span>, <span class="hljs-string">b:</span> <span class="hljs-number">100</span>});
 
-light.intensity = 1.0;
+light.intensity = <span class="hljs-number">1.0</span>;
 </code></pre>
 </div>
         </div>
@@ -153,5 +151,5 @@ light.intensity = 1.0;
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

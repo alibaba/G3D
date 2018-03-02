@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -89,7 +87,7 @@
           <div class="body"><h1 id="mesh">Mesh</h1>
 <p>The Mesh. Extends from Node.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.Mesh(scene);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.Mesh(scene);
 </code></pre>
 <h3 id="options">options</h3>
 <table>
@@ -149,24 +147,24 @@
 <h3 id="dispose-">dispose()</h3>
 <p>Remove the mesh from the scene.</p>
 <h4 id="options">options</h4>
-<p>There&#39;s no options for the dispose method.</p>
+<p>There's no options for the dispose method.</p>
 <h4 id="returns">returns</h4>
 <p>Void.</p>
 <h2 id="examples">Examples</h2>
-<pre><code class="lang-javascript">const mesh = new G3D.Mesh(scene);
+<pre><code class="lang-javascript hljs">const <span class="hljs-built_in">mesh</span> = <span class="hljs-built_in">new</span> G3D.Mesh(<span class="hljs-built_in">scene</span>);
 
-mesh.geometry.vertices = [...yourVertices];
-mesh.geometry.normals = [...yourNormals];
-mesh.geometry.uvs = [...yourUVs];
+<span class="hljs-built_in">mesh</span>.geometry.<span class="hljs-built_in">vertices</span> = [...yourVertices];
+<span class="hljs-built_in">mesh</span>.geometry.normals = [...yourNormals];
+<span class="hljs-built_in">mesh</span>.geometry.uvs = [...yourUVs];
 
-mesh.indices = {
+<span class="hljs-built_in">mesh</span>.<span class="hljs-built_in">indices</span> = {
     foo: [...indicesK1],
     bar: [...indicesK2]
 }
 
-mesh.materials.foo.ambientColor = {r: 255, g: 255, b: 0};
+<span class="hljs-built_in">mesh</span>.materials.foo.ambientColor = {r: <span class="hljs-number">255</span>, g: <span class="hljs-number">255</span>, b: <span class="hljs-number">0</span>};
 
-mesh.materials.bar.diffuseTexture.image = loadedImageObject;
+<span class="hljs-built_in">mesh</span>.materials.bar.diffuseTexture.<span class="hljs-built_in">image</span> = loadedImageObject;
 </code></pre>
 </div>
         </div>
@@ -178,5 +176,5 @@ mesh.materials.bar.diffuseTexture.image = loadedImageObject;
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -37,7 +35,7 @@
           <div class="body"><h1 id="positions-and-rotations">Positions and Rotations</h1>
 <p>We use 3D coordinates to locate objects in a 3D space, as the following picture shows:</p>
 <p><img src="https://img.alicdn.com/tfs/TB1HluJXQyWBuNjy0FpXXassXXa-700-375.png" alt="coordinates"></p>
-<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It&#39;s convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
+<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It's convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
 <p>Take a look at this example:</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=positions-and-rotations"></iframe>
 
@@ -47,28 +45,28 @@
 <li>Rotation: By assigning to <code>mesh.rotation</code>, the mesh rotates around the specified axis.</li>
 <li>Scale: By assigning to <code>mesh.scale</code>, the mesh scale along the specified axis.</li>
 </ul>
-<p>Try uncomment these lines, you&#39;ll find the cube&#39;s initial state is changed.</p>
-<pre><code class="lang-javascript">// init mesh position
-// Object.assign(mesh.position, {x: 3, y: 0, z: 0});
+<p>Try uncomment these lines, you'll find the cube's initial state is changed.</p>
+<pre><code class="lang-javascript hljs">// init <span class="hljs-built_in">mesh</span> <span class="hljs-built_in">position</span>
+// Object.assign(<span class="hljs-built_in">mesh</span>.<span class="hljs-built_in">position</span>, {x: <span class="hljs-number">3</span>, y: <span class="hljs-number">0</span>, z: <span class="hljs-number">0</span>});
 
-// init mesh rotation
-// Object.assign(mesh.rotation, {x: 45, y: 0, z: 0});
+// init <span class="hljs-built_in">mesh</span> rotation
+// Object.assign(<span class="hljs-built_in">mesh</span>.rotation, {x: <span class="hljs-number">45</span>, y: <span class="hljs-number">0</span>, z: <span class="hljs-number">0</span>});
 
-// init mesh scale
-// Object.assign(mesh.scale, {x: 2, y: 1, z: 1});
+// init <span class="hljs-built_in">mesh</span> <span class="hljs-built_in">scale</span>
+// Object.assign(<span class="hljs-built_in">mesh</span>.<span class="hljs-built_in">scale</span>, {x: <span class="hljs-number">2</span>, y: <span class="hljs-number">1</span>, z: <span class="hljs-number">1</span>});
 </code></pre>
-<p>Try uncomment these lines, you&#39;ll find the cube is animated.</p>
-<pre><code class="lang-javascript">// rotate camera for viewing the scene
-// camera.alpha += 1;
+<p>Try uncomment these lines, you'll find the cube is animated.</p>
+<pre><code class="lang-javascript hljs">// rotate camera <span class="hljs-keyword">for</span> viewing the <span class="hljs-built_in">scene</span>
+// camera.alpha += <span class="hljs-number">1</span>;
 
-// translate mesh animation
-// mesh.position.x += 0.005;
+// <span class="hljs-built_in">translate</span> <span class="hljs-built_in">mesh</span> <span class="hljs-built_in">animation</span>
+// <span class="hljs-built_in">mesh</span>.<span class="hljs-built_in">position</span>.x += <span class="hljs-number">0.005</span>;
 
-// rotate mesh animation
-// mesh.rotation.x += 1;
+// rotate <span class="hljs-built_in">mesh</span> <span class="hljs-built_in">animation</span>
+// <span class="hljs-built_in">mesh</span>.rotation.x += <span class="hljs-number">1</span>;
 
-// scale mesh animation
-// mesh.scale.x *= 1.0001;
+// <span class="hljs-built_in">scale</span> <span class="hljs-built_in">mesh</span> <span class="hljs-built_in">animation</span>
+// <span class="hljs-built_in">mesh</span>.<span class="hljs-built_in">scale</span>.x *= <span class="hljs-number">1.0001</span>;
 </code></pre>
 <p><a href="./Create Mesh">Next Chapter</a></p>
 </div>
@@ -81,5 +79,5 @@
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

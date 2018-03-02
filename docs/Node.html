@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -89,10 +87,10 @@
           <div class="body"><h1 id="node">Node</h1>
 <p>Base class for Mesh and Camera, representing something transformable in a 3d space.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.Node();
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.Node();
 </code></pre>
 <h3 id="options">options</h3>
-<p>There&#39;s no options for <code>Node</code> constructor.</p>
+<p>There's no options for <code>Node</code> constructor.</p>
 <h2 id="properties">Properties</h2>
 <table>
 <thead>
@@ -121,13 +119,13 @@
 <tr>
 <td>parent</td>
 <td>G3D.Node</td>
-<td>parent of the node, a Node&#39;s position in world will be affected by it&#39;s parent, default is null</td>
+<td>parent of the node, a Node's position in world will be affected by it's parent, default is null</td>
 </tr>
 </tbody>
 </table>
 <h2 id="methods">Methods</h2>
 <h3 id="transformcoordinate-x-y-z-">transformCoordinate(x, y, z)</h3>
-<p>Transform a position from node&#39;s local coordinate system to world coordinate system.</p>
+<p>Transform a position from node's local coordinate system to world coordinate system.</p>
 <h4 id="options">options</h4>
 <table>
 <thead>
@@ -158,7 +156,7 @@
 <h4 id="returns">returns</h4>
 <p>position: {x: Number, y: Number, z: Number}, the transformed position.</p>
 <h3 id="transformnormal-x-y-z-">transformNormal(x, y, z)</h3>
-<p>Transform a direction vector from node&#39;s local coordinate system to world coordinate system.</p>
+<p>Transform a direction vector from node's local coordinate system to world coordinate system.</p>
 <h4 id="options">options</h4>
 <table>
 <thead>
@@ -198,5 +196,5 @@
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

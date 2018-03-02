@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -89,7 +87,7 @@
           <div class="body"><h1 id="directionallight">DirectionalLight</h1>
 <p>The directional light, extends from <a href="./Light">Light</a>.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript">new G3D.DirectionalLight(scene);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.DirectionalLight(scene);
 </code></pre>
 <h3 id="options">options</h3>
 <table>
@@ -126,13 +124,13 @@
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="lang-javascript">const light = new DirectionalLight(scene);
+<pre><code class="lang-javascript hljs">const light = <span class="hljs-keyword">new</span> DirectionalLight(scene);
 
-Object.assign(light.color, {r: 255, g: 255, b: 255});
+Object.assign(light.color, {<span class="hljs-string">r:</span> <span class="hljs-number">255</span>, <span class="hljs-string">g:</span> <span class="hljs-number">255</span>, <span class="hljs-string">b:</span> <span class="hljs-number">255</span>});
 
-Object.assign(light.direction, {x : 1, y : 1, z : 1});
+Object.assign(light.direction, {<span class="hljs-string">x :</span> <span class="hljs-number">1</span>, <span class="hljs-string">y :</span> <span class="hljs-number">1</span>, <span class="hljs-string">z :</span> <span class="hljs-number">1</span>});
 
-light.intensity = 0.5;
+light.intensity = <span class="hljs-number">0.5</span>;
 </code></pre>
 </div>
         </div>
@@ -144,5 +142,5 @@ light.intensity = 0.5;
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -37,37 +35,37 @@
           <div class="body"><h1 id="first-steps">First Steps</h1>
 <p>G3D is a pure javascript 3D render engine compatible with WebGL. It depends on no DOM APIs but just a canvas(or canvas-like) object. This feature makes it possible to run on both browser environment and hybrid enviroment(such as Weex or ReactNative), using <a href="https://alibaba.github.io/GCanvas/">GCanvas</a>.</p>
 <h2 id="playground">Playground</h2>
-<p>The quickest way to try G3D is through the <a href="https://alibaba.github.io/G3D/playground/">Playground</a>. Simply create a 3D scene, create a camera, create lights and meshes as you will. You may create your own scene, or edit an existing one (in Storage -&gt; Sample Examples menu).</p>
+<p>The quickest way to try G3D is through the <a href="https://alibaba.github.io/G3D/playground/">Playground</a>. Simply create a 3D scene, create a camera, create lights and meshes as you will. You may create your own scene, or edit an existing one (in Storage -> Sample Examples menu).</p>
 <p>In this series of guide, playground will appear as parts of the page. Just as the following:</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed"></iframe>
 
 <p>You can edit the code, and the scene rendered on the up-left corner will react quickly. If your code leads to error, the error message will be printed on the left-bottom block.</p>
 <p>The playground code must be a function named <code>run</code>, which returns the <code>render</code> function. The <code>run</code> function will be called once and the <code>render</code> function will be called frequently (about 16ms once).</p>
-<pre><code class="lang-javascript">function run(G3D, canvas){
+<pre><code class="lang-javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span><span class="hljs-params">(G3D, canvas)</span></span>{
 
-    // initialize code
+    <span class="hljs-comment">// initialize code</span>
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
 
-        // animation code
+        <span class="hljs-comment">// animation code</span>
 
-        scene.render();
+        scene.render();  <span class="hljs-comment">// hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</span>
     }
 }
 </code></pre>
 <h2 id="usage">Usage</h2>
 <p>G3D library is published on <a href="https://www.npmjs.com/package/g3d">NPM</a>. You need to install G3D first.</p>
-<pre><code class="lang-dash">npm install g3d
+<pre><code class="lang-dash hljs">npm <span class="hljs-keyword">install</span> g3d
 </code></pre>
 <p>And involve G3D in your own building progress(using Webpack, eg).</p>
-<pre><code class="lang-javascript">import G3D from &#39;g3d&#39;;
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">import</span> G3D <span class="hljs-keyword">from</span> <span class="hljs-string">'g3d'</span>;
 </code></pre>
-<p>If you want to load G3D through a <code>&lt;script&gt;</code> tag (thought we don&#39;t recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside package. You need to put it on your server and load it using a <code>&lt;script&gt;</code> tag.</p>
-<pre><code class="lang-html">&lt;script src=&quot;g3d.min.jd&quot;&gt;&lt;/script&gt;
+<p>If you want to load G3D through a <code><script></code> tag (thought we don't recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside package. You need to put it on your server and load it using a <code><script></code> tag.</p>
+<pre><code class="lang-html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"g3d.min.jd"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 
-&lt;script&gt;
-    console.log(window.G3D);
-&lt;/script&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.G3D);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
 <h2 id="basics">Basics</h2>
 <p>To create and render a 3D scene, you need to follow the progress:</p>
@@ -75,42 +73,42 @@
 <li>Create an <a href="../docs/Engine">engine</a>, specify the canvas (a <code>CanvasHTMLElement</code> in web environment or a canvas-like object in hybrid environment).</li>
 <li>Create a <a href="../docs/Scene">scene</a>, specify the engine you just created.</li>
 <li>Create a <a href="../docs/Camera">camera</a>. In most situations, we need to create a <a href="../docs/PerspectiveCamera">perspective camera</a>, and here we create a <a href="../docs/ArcRotateCamera">arc rotate camera</a> which extends from perspective camera.</li>
-<li>Create some <a href="../docs/light">lights</a>. There&#39;re several types of light, here wo create a <a href="../docs/DirectionalLight">directional light</a> and a <a href="../docs/HemisphereLight">hemisphere light</a>.</li>
+<li>Create some <a href="../docs/light">lights</a>. There're several types of light, here wo create a <a href="../docs/DirectionalLight">directional light</a> and a <a href="../docs/HemisphereLight">hemisphere light</a>.</li>
 <li>Create some <a href="../docs/mesh">meshes</a>. Here, we use <a href="../docs/MeshBuilder">MeshBuilder</a> and create a cube mesh, and specify some <a href="../docs/StandardMaterial">Material</a> options.</li>
 <li>Tell scene to render.</li>
 </ol>
-<pre><code class="lang-javascript">function run(G3D, canvas){
+<pre><code class="lang-javascript hljs">function run(G3D, canvas){
 
-    // create 3d engine
-    const engine = new G3D.Engine(canvas);
+    <span class="hljs-comment">// create 3d engine</span>
+    <span class="hljs-keyword">const</span> engine = <span class="hljs-keyword">new</span> G3D.Engine(canvas);
 
-    // create a scene
-    const scene = new G3D.Scene(engine);
+    <span class="hljs-comment">// create a scene</span>
+    <span class="hljs-keyword">const</span> scene = <span class="hljs-keyword">new</span> G3D.Scene(engine);
 
-    // create camera
-    const camera = new G3D.ArcRotateCamera(scene);
-    camera.alpha = 45;
-    camera.beta = 30;
-    camera.radius = 12;
-    camera.fov = 60;
+    <span class="hljs-comment">// create camera</span>
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">camera</span> = <span class="hljs-keyword">new</span> G3D.ArcRotateCamera(scene);
+    <span class="hljs-built_in">camera</span>.<span class="hljs-built_in">alpha</span> = <span class="hljs-number">45</span>;
+    <span class="hljs-built_in">camera</span>.beta = <span class="hljs-number">30</span>;
+    <span class="hljs-built_in">camera</span>.radius = <span class="hljs-number">12</span>;
+    <span class="hljs-built_in">camera</span>.fov = <span class="hljs-number">60</span>;
 
-    // create 3 lights
-    const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
+    <span class="hljs-comment">// create 3 lights</span>
+    <span class="hljs-keyword">const</span> light1 = <span class="hljs-keyword">new</span> G3D.DirectionalLight(scene);
+    light1.direction.x = <span class="hljs-number">-1</span>;
+    light1.direction.y = <span class="hljs-number">0</span>;
+    light1.direction.z = <span class="hljs-number">1</span>;
 
-    const light2 = new G3D.HemisphereLight(scene);
+    <span class="hljs-keyword">const</span> light2 = <span class="hljs-keyword">new</span> G3D.HemisphereLight(scene);
 
-    // create mesh
-    const mesh = G3D.MeshBuilder.createCube(scene, 6);
+    <span class="hljs-comment">// create mesh</span>
+    <span class="hljs-keyword">const</span> mesh = G3D.MeshBuilder.createCube(scene, <span class="hljs-number">6</span>);
 
-    Object.assign(mesh.materials.default.diffuseColor, {r: 200, g: 100, b: 100});
-    Object.assign(mesh.materials.default.specularColor, {r: 200, g: 100, b: 100});
-    mesh.materials.default.glossiness = 10;
+    <span class="hljs-keyword">Object</span>.assign(mesh.materials.<span class="hljs-keyword">default</span>.diffuseColor, {r: <span class="hljs-number">200</span>, g: <span class="hljs-number">100</span>, b: <span class="hljs-number">100</span>});
+    <span class="hljs-keyword">Object</span>.assign(mesh.materials.<span class="hljs-keyword">default</span>.specularColor, {r: <span class="hljs-number">200</span>, g: <span class="hljs-number">100</span>, b: <span class="hljs-number">100</span>});
+    mesh.materials.<span class="hljs-keyword">default</span>.glossiness = <span class="hljs-number">10</span>;
 
-    return function () {
-        mesh.rotation.y +=1;
+    <span class="hljs-keyword">return</span> function () {
+        mesh.rotation.y +=<span class="hljs-number">1</span>;
         scene.render();
     }
 }
@@ -127,5 +125,5 @@
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>

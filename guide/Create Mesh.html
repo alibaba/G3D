@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
+<!DOCTYPE html><html lang="zh"><head>
     <meta content="text/html">
     <meta charset="utf-8">
     <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
     <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../index.css">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
   </head>
   <body>
     <div class="header">
@@ -41,36 +39,36 @@
 <li>Create custom mesh, mannually specify vertices, normals and so on.</li>
 <li>Create mesh from 3d model file.</li>
 </ol>
-<p>Let&#39;s walk throught one by one.</p>
+<p>Let's walk throught one by one.</p>
 <h2 id="create-predefined-shaped-mesh-">Create predefined shaped mesh.</h2>
 <p>Last chapter we created a cube-shape mesh. Actually G3D allows us to create a number of shapes: Sphere, Cylinder, Cone, Plane(ground).</p>
 <p>See the following case:</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=shapes"></iframe>
 
-<p>We created a sphere mesh by callding <code>G3D.MeshBuilder.createSphere</code>. The first argument is the <code>scene</code> object, the second is sphere&#39;s radius. There&#39;s two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.</p>
-<pre><code class="lang-javascript">mesh = G3D.MeshBuilder.createSphere(scene, 1);
+<p>We created a sphere mesh by callding <code>G3D.MeshBuilder.createSphere</code>. The first argument is the <code>scene</code> object, the second is sphere's radius. There's two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.</p>
+<pre><code class="lang-javascript hljs"><span class="hljs-attribute">mesh</span> = G3D.MeshBuilder.createSphere(scene, 1);
 </code></pre>
 <p>Basiclly, the <code>MeshBuider.createXXX</code> methods follow this pattern:</p>
 <ul>
 <li>First argument should be your scene object.</li>
 <li>Following is one or more arguments representing the size of the mesh.</li>
-<li>Last is one or more arguments is the curve&#39;s segments number.</li>
+<li>Last is one or more arguments is the curve's segments number.</li>
 </ul>
 <p>Read the <a href="../docs/MeshBuilder">API Reference</a> for more information.</p>
 <p>Try uncomment one of these lines and comment other lines, to see what kind of mesh it will create.</p>
-<pre><code class="lang-javascript">    mesh = G3D.MeshBuilder.createSphere(scene, 1);
-    // mesh = G3D.MeshBuilder.createGround(scene, 2, 1);
-    // mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCube(scene, 1);
+<pre><code class="lang-javascript hljs">    <span class="hljs-built_in">mesh</span> = G3D.MeshBuilder.createSphere(<span class="hljs-built_in">scene</span>, <span class="hljs-number">1</span>);
+    // <span class="hljs-built_in">mesh</span> = G3D.MeshBuilder.createGround(<span class="hljs-built_in">scene</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>);
+    // <span class="hljs-built_in">mesh</span> = G3D.MeshBuilder.createCylinder(<span class="hljs-built_in">scene</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    // <span class="hljs-built_in">mesh</span> = G3D.MeshBuilder.createCone(<span class="hljs-built_in">scene</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    // <span class="hljs-built_in">mesh</span> = G3D.MeshBuilder.createCube(<span class="hljs-built_in">scene</span>, <span class="hljs-number">1</span>);
 </code></pre>
 <h2 id="create-custom-mesh">Create Custom Mesh</h2>
-<p>You can also create custom mesh by mannually specify the mesh&#39;s geometry vertices, normals and so on.</p>
+<p>You can also create custom mesh by mannually specify the mesh's geometry vertices, normals and so on.</p>
 <p>See the following example:</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=custom-geometry"></iframe>
 
 <p>In <code>createCustomTriangleMesh</code> method, we call <code>new G3D.Mesh</code> to create an empty mesh.</p>
-<pre><code class="lang-javascript">const mesh = new G3D.Mesh(scene);
+<pre><code class="lang-javascript hljs">const <span class="hljs-built_in">mesh</span> = <span class="hljs-built_in">new</span> G3D.Mesh(<span class="hljs-built_in">scene</span>);
 </code></pre>
 <p>We got a mesh instance, which structure is:</p>
 <ul>
@@ -93,27 +91,27 @@
 </li>
 </ul>
 <p>If we want to create a custom mesh, we need to manually fill <code>geometry.vertices</code>, <code>geometry.normals</code>, <code>geometry.uvs</code>, <code>geometry.indice.default</code>, as following:</p>
-<pre><code class="lang-javascript">mesh.geometry.vertices = [
-    2, 0, 0,
-    0, 2, 0,
-    0, 0, 2
-];
-mesh.geometry.uvs = [0, 0, 0, 0, 0, 0];
+<pre><code class="lang-javascript hljs">mesh.geometry.vertices = [
+<span class="hljs-built_in">    2,</span> <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+<span class="hljs-built_in">    0,</span> <span class="hljs-number">2</span>, <span class="hljs-number">0</span>,
+<span class="hljs-built_in">    0,</span> <span class="hljs-number">0</span>, <span class="hljs-number">2</span>
+]<span class="hljs-comment">;</span>
+mesh.geometry.uvs = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]<span class="hljs-comment">;</span>
 mesh.geometry.normals = [
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1
-];
+<span class="hljs-built_in">    1,</span> <span class="hljs-number">1</span>, <span class="hljs-number">1</span>,
+<span class="hljs-built_in">    1,</span> <span class="hljs-number">1</span>, <span class="hljs-number">1</span>,
+<span class="hljs-built_in">    1,</span> <span class="hljs-number">1</span>, <span class="hljs-number">1</span>
+]<span class="hljs-comment">;</span>
 mesh.geometry.indices = {
-    foo: [
-        0, 1, 2
+<span class="hljs-symbol">    foo:</span> [
+<span class="hljs-built_in">        0,</span> <span class="hljs-number">1</span>, <span class="hljs-number">2</span>
     ]
-};
+}<span class="hljs-comment">;</span>
 </code></pre>
 <ul>
-<li>Each 3 numbers in <code>vertices</code> array represents a vertice&#39;s position (x, y, z). Here we have 3 vertices, the one which coordinate is (2, 0, 0) is on the X axis, and the other two are on Y axis and Z axis.</li>
-<li>Each 2 numbers in <code>uvs</code> array represents a vertice&#39;s uv, which is useful when we apply texture on the mesh. Cause we don&#39;t use texture for the example, we just specify [0, 0] for each vertices.</li>
-<li>Each 3 numbers in <code>normals</code> array represents a vertice&#39;s normal vector. Because the 3 vertices are in the same face (see indices following).</li>
+<li>Each 3 numbers in <code>vertices</code> array represents a vertice's position (x, y, z). Here we have 3 vertices, the one which coordinate is (2, 0, 0) is on the X axis, and the other two are on Y axis and Z axis.</li>
+<li>Each 2 numbers in <code>uvs</code> array represents a vertice's uv, which is useful when we apply texture on the mesh. Cause we don't use texture for the example, we just specify [0, 0] for each vertices.</li>
+<li>Each 3 numbers in <code>normals</code> array represents a vertice's normal vector. Because the 3 vertices are in the same face (see indices following).</li>
 <li>Each 3 numbers in <code>indices.{xxx}</code> (such as <code>indices.default</code>) represents a face, each number is the index of the vertices, for example, the first item number <code>0</code> in <code>indices.foo</code> represents vertice (2, 0, 0) in vertices array.</li>
 </ul>
 <p>You can change the numbers in those arrays and verify the above explaination.</p>
@@ -122,31 +120,31 @@ mesh.geometry.indices = {
 <p>See the following example, check how to use G3D to load obj format 3D model files.</p>
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=create-from-model"></iframe>
 
-<p>As we mentioned above, G3D is a pure render engine and the &#39;load&#39; thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the &#39;load&#39; thing yourself, and pass the loaded text to <code>MeshBuilder.createFromObjModel</code>.</p>
-<pre><code class="lang-javascript">const objStr = `
+<p>As we mentioned above, G3D is a pure render engine and the 'load' thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the 'load' thing yourself, and pass the loaded text to <code>MeshBuilder.createFromObjModel</code>.</p>
+<pre><code class="lang-javascript hljs">const objStr = `
     # Alias OBJ Model File
     # File units = meters
     mtllib triangle.mtl
     usemtl FrontColor
-    v 0 0 1
-    vt -27.8388 -16.0728
-    vn -0.57735 -0.57735 0.57735
-    v 1 0 0
-    vt 27.8388 -16.0728
-    v 0 1 0
-    vt 0 32.1455
-    f 1/1/1 2/2/1 3/3/1
-`;
+    v <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span>
+    vt -<span class="hljs-number">27</span>.<span class="hljs-number">8388</span> -<span class="hljs-number">16</span>.<span class="hljs-number">0728</span>
+    vn -<span class="hljs-number">0.57735</span> -<span class="hljs-number">0.57735 0</span>.<span class="hljs-number">57735</span>
+    v <span class="hljs-number">1</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>
+    vt <span class="hljs-number">27</span>.<span class="hljs-number">8388</span> -<span class="hljs-number">16</span>.<span class="hljs-number">0728</span>
+    v <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>
+    vt <span class="hljs-number">0 32.1455</span>
+    f <span class="hljs-number">1/1/1 2</span>/<span class="hljs-number">2/1 3/3</span>/<span class="hljs-number">1</span>
+`<span class="hljs-comment">;</span>
 
 const mtlStr = `
     # Alias OBJ Material File
     newmtl FrontColor
-    Ka 0.000000 0.000000 0.000000
-    Kd 0.882353 0.882353 0.784314
-    Ks 0.330000 0.330000 0.330000
-`;
+    Ka <span class="hljs-number">0.000000</span> <span class="hljs-number">0.000000</span> <span class="hljs-number">0.000000</span>
+    Kd <span class="hljs-number">0.882353</span> <span class="hljs-number">0.882353</span> <span class="hljs-number">0.784314</span>
+    Ks <span class="hljs-number">0.330000</span> <span class="hljs-number">0.330000</span> <span class="hljs-number">0.330000</span>
+`<span class="hljs-comment">;</span>
 
-return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr });
+return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr })<span class="hljs-comment">;</span>
 </code></pre>
 <p>An obj-formatted model usually contains a <em>.obj file and a </em>.mtl file. You should load it yourself. Here we hard coded a simple model (a triangle just like the one in the previous example).</p>
 <p>For more information about obj format, you can refer to <a href="http://www.martinreddy.net/gfx/3d/OBJ.spec">Obj Spec</a>. And try change the hard coded string to see what happened.</p>
@@ -160,5 +158,5 @@ return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr });
         <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
       </div>
     </div>
-  </body>
-</html>
+  
+</body></html>
