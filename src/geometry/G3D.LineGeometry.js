@@ -1,4 +1,7 @@
-@DirtyCheck(['vertices', 'indices'], 'isDirty')
+@Lazy(
+    [],
+    ['getBuffers']
+)
 class LineGeometry {
     vertices = [];  // vec3
     indices = {
@@ -23,7 +26,6 @@ class LineGeometry {
         return indices;
     }
 
-    @DirtyCache('isDirty', true)
     getBuffers() {
         const engine = this.mesh.scene.engine;
 

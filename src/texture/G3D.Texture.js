@@ -1,4 +1,7 @@
-@DirtyCheck(['image'], 'isDirty')
+@Lazy(
+    ['image'],
+    ['getTexture']
+)
 class Texture {
 
     offset = { x: 0, y: 0 };
@@ -14,7 +17,6 @@ class Texture {
         return this.image;
     }
 
-    @DirtyCache('isDirty', true)
     getTexture() {
         const engine = this.material.mesh.scene.engine;
         return engine.createTexture(this.getImage());

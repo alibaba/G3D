@@ -1,12 +1,21 @@
 let Node_ID = 1;
 
-@DirtyCheck([], 'isDirty')
+@Lazy(
+    [
+        'position', 'position.x', 'position.y', 'position.z',
+        'rotation', 'rotation.x', 'rotation.y', 'rotation.z',
+        'scale', 'scale.x', 'scale.y', 'scale.z'
+    ],
+    [
+        'getMatrix'
+    ]
+)
 class Node {
 
     id = Node_ID++;
-    position = DirtyCheck(['x', 'y', 'z'], 'isDirty', this)({ x: 0, y: 0, z: 0 });
-    rotation = DirtyCheck(['x', 'y', 'z'], 'isDirty', this)({ x: 0, y: 0, z: 0 });
-    scale = DirtyCheck(['x', 'y', 'z'], 'isDirty', this)({ x: 1, y: 1, z: 1 });
+    position = { x: 0, y: 0, z: 0 };
+    rotation = { x: 0, y: 0, z: 0 };
+    scale = { x: 1, y: 1, z: 1 };
     parent = null;
 
     constructor() {
@@ -22,8 +31,9 @@ class Node {
         }
     }
 
-    @DirtyCache('isDirty')
+
     getMatrix() {
+        console.log('get matrix');
         const quat = Quat.create();
         Quat.fromEuler(quat, this.rotation.x, this.rotation.y, this.rotation.z);
         const position = Vec3.fromValues(this.position.x, this.position.y, this.position.z);
@@ -50,7 +60,7 @@ class Node {
 
         const res = Vec4.transformMat4(Vec4.create(), vec, mat);
 
-        return {x: res[0], y: res[1], z: res[2]};
+        return { x: res[0], y: res[1], z: res[2] };
     }
 
 }

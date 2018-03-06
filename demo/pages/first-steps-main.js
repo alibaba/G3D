@@ -46,6 +46,7 @@ function main(
         material.specularColor.b = 100;
         material.glossiness = 10;
     }
+    
 
     function render(){
         scene.render();

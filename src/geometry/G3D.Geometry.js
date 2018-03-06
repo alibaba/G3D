@@ -1,4 +1,9 @@
-@DirtyCheck(['vertices', 'uvs', 'normals', 'indices'], 'isDirty')
+@Lazy(
+    [],
+    [
+        'getBuffers'
+    ]
+)
 class Geometry {
 
     vertices = [];  // vec3
@@ -32,7 +37,7 @@ class Geometry {
         return indices;
     }
 
-    @DirtyCache('isDirty', true)
+
     getBuffers() {
 
         const engine = this.mesh.scene.engine;
