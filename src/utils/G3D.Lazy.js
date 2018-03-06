@@ -9,8 +9,6 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
 
                 const patch = (key, target, siblings) => {
 
-                    console.log('patch', key, target, siblings);
-
                     const [k1, ...k2] = key.split('.');
 
                     if (k2.length !== 0) {
@@ -25,7 +23,6 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                     } else {
 
                         const oriValue = target[k1];
-                        console.log('oriValue', oriValue);
 
                         const k = '__' + k1 + '__';
                         target[k] = oriValue;
@@ -35,9 +32,7 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                                 return target[k];
                             },
                             set: (value) => {
-                                console.log('set', oriValue, value);
                                 if (_.isObject(oriValue) && _.isObject(value)) {
-                                    console.log('set object');
                                     siblings.forEach(ks => {
                                         patch(
                                             ks,
@@ -47,7 +42,7 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                                         )
                                     });
                                 }
-                                this[k] = value;
+                                target[k] = value;
                                 this[flag] = true;
                             }
                         });
@@ -62,6 +57,25 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                         source.filter(item => item.startsWith(key + '.'))
                             .map(item => item.substr(key.length + 1))
                     );
+                });
+
+                dist.forEach(key => {
+
+                    const resultKey = '__' + key + '_' + 'result' + '__';
+                    const functionKey = '__' + key + '__';
+
+                    this[functionKey] = this[key];
+                    this[key] = (...args) => {
+                        if (this[flag]) {
+                            dist.forEach(k => {
+                                const resultKey = '__' + k + '_' + 'result' + '__';
+                                const functionKey = '__' + k + '__';
+                                this[resultKey] = this[functionKey](...args);
+                            })
+                            this[flag] = false;
+                        }
+                        return this[resultKey];
+                    }
                 })
 
                 this[flag] = true;
