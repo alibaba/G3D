@@ -1,5 +1,7 @@
 const isFunction = f => typeof f === 'function';
 
+const isObject = o => typeof o === 'object';
+
 function match(target, identifyer) {
     if (isFunction(identifyer)) {
         return !!identifyer(target);
@@ -22,4 +24,4 @@ function findIndex(arr, identifyer) {
     return -1;
 }
 
-export default {isFunction, findIndex}
+export default {isFunction, isObject, findIndex}
