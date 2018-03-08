@@ -33,7 +33,6 @@ class Node {
 
 
     getMatrix() {
-        console.log('get matrix');
         const quat = Quat.create();
         Quat.fromEuler(quat, this.rotation.x, this.rotation.y, this.rotation.z);
         const position = Vec3.fromValues(this.position.x, this.position.y, this.position.z);
