@@ -40,3 +40,4 @@ doc:
     Lights: ./doc/guide/Lights.md
     Load Models: ./doc/guide/Load Models.md
     Morph Targets: ./doc/Morph Targets.md
+    Text Geometry: ./doc/Text Geometry.md
