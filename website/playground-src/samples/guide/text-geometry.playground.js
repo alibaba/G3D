@@ -33,7 +33,7 @@ function run(G3D, canvas, loader){
     G3D.MeshBuilder.createCoordinate(scene, 6000);
 
 
-    loader.loadText('http://g.alicdn.com/gama/assets/0.0.6/assets/fonts-json/optimer.json', function (text) {
+    loader.loadText('https://g.alicdn.com/gama/assets/0.0.6/assets/fonts-json/optimer.json', function (text) {
 
         const font = JSON.parse(text);
 
