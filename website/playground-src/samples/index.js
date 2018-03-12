@@ -14,6 +14,7 @@ module.exports = {
     "point-light": require("./guide/point-light.playground.js"),
     "positions-and-rotations": require("./guide/positions-and-rotations.playground.js"),
     "raw-material": require("./guide/raw-material.playground.js"),
-    "shapes": require("./guide/shapes.playground.js")
+    "shapes": require("./guide/shapes.playground.js"),
+    "text-geometry": require("./guide/text-geometry.playground.js")
   }
 }

@@ -1,4 +1,11 @@
-@DirtyCheck(['vertices', 'uvs', 'normals', 'indices'], 'isDirty')
+@Lazy(
+    [
+        'normals'
+    ],
+    [
+        'getBuffers'
+    ]
+)
 class Geometry {
 
     vertices = [];  // vec3
@@ -32,7 +39,7 @@ class Geometry {
         return indices;
     }
 
-    @DirtyCache('isDirty', true)
+
     getBuffers() {
 
         const engine = this.mesh.scene.engine;
@@ -57,6 +64,7 @@ class Geometry {
     mergeNormals() {
 
         const { vertices, normals } = this;
+        const unmergedNormals = [...normals];
 
         const hash = {};
 
@@ -85,39 +93,12 @@ class Geometry {
                 normals[idx * 3 + 2] = normal[2] / indices.length;
             }
         }
-    }
 
-    mergeNormals2() {
+        this.normals = normals;
 
-        const hasMerged = [];
-        const { vertices, normals } = this;
-
-        for (let i = 0; i < vertices.length; i += 3) {
-            if (!hasMerged[i]) {
-                const indices = [i / 3];
-                const normal = [normals[i], normals[i + 1], normals[i + 2]];
-                for (let j = i + 3; j < i + vertices.length; j += 3) {
-                    if (
-                        vertices[i] === vertices[j] &&
-                        vertices[i + 1] === vertices[j + 1] &&
-                        vertices[i + 2] === vertices[j + 2]
-                    ) {
-                        indices.push(j / 3);
-                        normal[0] += normals[j];
-                        normal[1] += normals[j + 1];
-                        normal[2] += normals[j + 2];
-                    }
-                }
-
-                for (let k = 0; k < indices.length; k++) {
-                    const idx = indices[k];
-                    normals[idx * 3] = normal[0] / indices.length;
-                    normals[idx * 3 + 1] = normal[1] / indices.length;
-                    normals[idx * 3 + 2] = normal[2] / indices.length;
-                    hasMerged[idx] = true;
-                }
-            }
-        }
+        return () => {
+            this.normals = unmergedNormals;
+        };
     }
 }
 

@@ -617,6 +617,24 @@ class MeshBuilder {
 
 
     }
+
+    static createLineFromPath(scene, path, resolution) {
+        const { vertices, indices } = PathParser.parseToLine(path, resolution);
+        const line = new LineMesh(scene);
+        line.geometry.vertices.push(...vertices);
+        line.geometry.indices.default.push(...indices);
+        return line;
+    }
+
+    static createMeshFromPath(scene, path, thickness, resolution) {
+        const { vertices: mv, indices: mi, uvs, normals } = PathParser.parseToGeometry(path, thickness, resolution);
+        const mesh = new Mesh(scene);
+        mesh.geometry.vertices = mv;
+        mesh.geometry.normals = normals;
+        mesh.geometry.uvs = uvs;
+        mesh.geometry.indices.default.push(...mi);
+        return mesh;
+    }
 }
 
 export default MeshBuilder;

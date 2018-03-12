@@ -252,8 +252,6 @@ class RenderManager {
                 }
             }
         }
-
-        mesh.isDirty = false;
     }
 
     renderPickingLayer(groups) {
