@@ -59,8 +59,11 @@ data = "m 511 492 q 654 412 598 471 q 710 266 710 352 q 607 53 710 128 q 360 -21
 // test
 // data = "m 0 0 l 0 1000 l 1000 1000 l 1000 0 l 0 0 m 200 200 l 800 200 l 800 800 l 200 200";
 
-// test 
+// test
 // data = "m 0 0 l 0 1000 l 1000 1000 l 1000 800 l 200 800 l 200 200 l 1000 200 l 1000 0 l 0 0";
+
+// test
+// data = "m 0 0 l 1000 1000 l 1000 0 l 0 0";
 
 const PathParser = {
 
@@ -184,12 +187,9 @@ const PathParser = {
 
         const { vertices, lines } = this.parse(data);
 
-        const { polygons, holes } = distinguish(lines);
+        const clonedLines = cloneLines(lines);
 
-        console.log('vertices');
-        console.log(vertices);
-        console.log('polygons');
-        console.log(JSON.stringify(polygons));
+        const { polygons, holes } = distinguish(lines);
 
         const indices = earcut(polygons, holes, []);
 
@@ -198,8 +198,11 @@ const PathParser = {
             vertices3d.push(vertices[i], vertices[i + 1], 0);
         }
 
-        return { vertices: vertices3d, indices };
-
+        return {
+            vertices: vertices3d,
+            indices,
+            lines: clonedLines
+        };
 
         function earcut(polygons, holes, triangles) {
 
@@ -208,10 +211,6 @@ const PathParser = {
                 const res = removeHoles(polygons, holes);
                 polygons = res.polygons;
                 holes = res.holes;
-
-                console.log('ssss');
-                console.log(polygons.join(','));
-                console.log(holes.join(','));
             }
 
             polygons.forEach(polygon => {
@@ -364,8 +363,6 @@ const PathParser = {
                     const hv = hole[hvi];
                     const [hvx, hvy] = pt(hv);
 
-                    console.log('-- 1. target hole vertex', hvx, hvy);
-
                     for (let pi = 0; pi < polygons.length; pi++) {
                         let polygon = polygons[pi];
 
@@ -374,11 +371,7 @@ const PathParser = {
 
                             const [pvx, pvy] = pt(pv);
 
-                            console.log('-- 2. target polygon vertex', pvx, pvy);
-
                             if (visible(hvx, hvy, pvx, pvy)) {
-                                console.log('--- visible', hvx, hvy, pvx, pvy);
-                                console.log('--- visible', hv, pv, hole, polygon);
 
                                 polygons.splice(pi, 1);
                                 holes.splice(hi, 1);
@@ -386,7 +379,6 @@ const PathParser = {
                                 hole.pop();
                                 hole = hole.splice(hvi).concat(hole);
                                 hole.push(hv);
-                                // hole.reverse();
 
                                 polygon.splice(pvi + 1, 0, ...hole, pv);
 
@@ -401,8 +393,6 @@ const PathParser = {
                 }
 
             }
-
-
 
 
             function visible(x0, y0, x1, y1) {
@@ -448,6 +438,92 @@ const PathParser = {
                 polygons,
                 holes: []
             }
+        }
+
+        function cloneLines(lines) {
+            return lines.map(line => [...line]);
+        }
+    },
+
+    parseToGeometry: function () {
+
+        const { vertices: f1Vertices, indices: f1Indices, lines } = this.parseToTriangles();
+
+        f1Vertices.forEach((v, i) => {
+            if (i % 3 === 2) {
+                f1Vertices[i] = 50;
+            }
+        })
+
+        const f2Vertices = f1Vertices.map((v, i) => {
+            if (i % 3 === 2) {
+                return -50;
+            } else {
+                return v;
+            }
+        })
+
+        const f2Indices = [...f1Indices];
+
+        const f3Vertices = [];
+        const f3Indices = [];
+
+        lines.forEach(line => {
+            for (let i = 0; i < line.length - 1; i++) {
+                const j = i + 1;
+                const [v1, v2, v3, v4] = [
+                    pt(f1Vertices, i),
+                    pt(f1Vertices, j),
+                    pt(f2Vertices, i),
+                    pt(f2Vertices, j)
+                ];
+
+                const s = f3Vertices.length / 3;
+                f3Vertices.push(...v1, ...v2, ...v3, ...v4);
+                f3Indices.push(s, s + 1, s + 2, s + 1, s + 2, s + 3);
+            }
+        })
+
+        console.log(lines);
+
+        // return {
+        //     vertices: f1Vertices,
+        //     indices: f1Indices
+        // }
+
+        return merge(
+            [f1Vertices, f2Vertices, f3Vertices],
+            [f1Indices, f2Indices, f3Indices]
+        );
+
+        function merge(vList, iList) {
+
+            if (vList.length !== iList.length) {
+                throw new Error('merge vertices not valid');
+            }
+
+            let vertices = [];
+            let indices = [];
+
+            for (let i = 0; i < vList.length; i++) {
+                const len = vertices.length / 3;
+                vertices = vertices.concat(vList[i]);
+                indices = indices.concat(iList[i].map(v => v + len));
+            }
+
+
+
+            return {
+                vertices, indices
+            }
+        }
+
+        function pt(vertices, i) {
+            return [
+                vertices[i * 3],
+                vertices[i * 3 + 1],
+                vertices[i * 3 + 2]
+            ];
         }
     }
 }

@@ -30,14 +30,13 @@ function main(
 
 
     const { vertices, indices } = PathParser.parseToLine();
-
     const line = new G3D.LineMesh(scene);
     line.geometry.vertices.push(...vertices);
     line.geometry.indices.default.push(...indices);
     line.position.x = -350;
     line.position.y = -350;
 
-    const { vertices: mv, indices: mi } = PathParser.parseToTriangles();
+    const { vertices: mv, indices: mi } = PathParser.parseToGeometry();
     const mesh = new G3D.Mesh(scene);
     mesh.geometry.vertices = mv;
     mesh.geometry.normals = mv.map(item => 0);
