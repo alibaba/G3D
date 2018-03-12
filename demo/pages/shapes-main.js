@@ -58,7 +58,7 @@ function main(
         cube.rotation.y += 1;
         sphere.rotation.y += 1;
         cylinder.rotation.x += 0.9;
-        cylinder.rotation.y += 1.17;      
+        cylinder.rotation.y += 1.17;
         cone.rotation.z += 1;
         scene.render();
         requestAnimationFrame(render);
