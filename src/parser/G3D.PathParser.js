@@ -1,4 +1,4 @@
-function Quadratic(x0, y0, x1, y1, x2, y2) {
+function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
 
     function QuadraticBezierP0(t, p) {
         var k = 1 - t;
@@ -18,7 +18,14 @@ function Quadratic(x0, y0, x1, y1, x2, y2) {
             QuadraticBezierP2(t, p2);
     }
 
-    const divs = 5;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const len = Math.sqrt(dx * dx + dy * dy);
+
+    let divs = Math.ceil(len / resolution);
+    if (divs < 3) {
+        divs = 3;
+    }
 
     const vertices = [];
 
@@ -31,43 +38,9 @@ function Quadratic(x0, y0, x1, y1, x2, y2) {
     return vertices;
 }
 
-
-
-
-
-
-
-// #
-let data = "m 619 974 l 522 698 l 684 698 l 781 974 l 930 975 l 831 698 l 1019 699 l 970 564 l 783 563 l 725 403 l 920 403 l 873 271 l 678 271 l 579 -5 l 432 -5 l 530 271 l 367 271 l 270 -5 l 121 -5 l 220 270 l 30 271 l 79 403 l 268 403 l 326 563 l 127 564 l 174 699 l 374 698 l 472 975 l 619 974 m 414 402 l 582 402 l 639 563 l 470 563 l 414 402";
-
-// 1
-
-data = "m 276 616 q 273 680 276 637 q 271 747 271 723 q 197 713 223 726 q 112 666 172 700 l 55 754 q 471 940 291 848 l 498 927 l 492 454 l 493 465 l 493 202 l 493 216 q 497 102 493 178 q 502 0 502 26 l 383 6 q 314 3 362 6 q 264 0 266 0 q 270 359 264 127 q 276 616 276 591";
-
-// 2
-// data = "m 33 75 q 236 249 152 168 q 379 431 321 330 q 438 652 438 533 q 413 772 438 723 q 325 822 389 822 q 220 767 251 822 q 170 616 189 712 l 155 616 q 44 743 107 691 q 189 867 105 823 q 373 911 273 911 q 586 847 500 911 q 673 658 673 783 q 619 480 673 548 q 304 196 566 411 l 430 195 l 553 195 l 706 201 q 689 94 689 148 q 696 38 689 66 q 706 0 703 11 q 514 3 630 0 q 380 7 399 7 q 181 3 302 7 q 44 0 60 0 l 33 75";
-
-// G
-// data = "m 552 -15 q 183 110 324 -15 q 43 461 43 236 q 195 823 43 693 q 583 954 347 954 q 763 932 679 954 q 929 865 848 911 q 879 697 895 784 l 862 697 q 749 816 818 772 q 595 860 680 860 q 390 769 471 860 q 300 608 309 679 q 289 513 291 536 q 287 469 287 490 q 289 404 287 426 q 294 375 292 382 q 389 167 310 250 q 590 84 468 84 q 713 100 651 84 q 699 430 713 272 q 824 423 768 423 q 948 431 886 423 q 942 323 948 395 q 937 214 937 251 q 939 118 937 185 q 942 47 942 51 q 746 1 839 17 q 552 -15 652 -15 ";
-
-// 4
-data = "m 706 383 l 701 299 q 704 248 701 271 q 708 211 706 225 q 592 221 650 221 l 592 176 q 594 83 592 127 q 606 0 597 40 q 540 3 579 0 q 497 6 501 6 q 433 3 473 6 q 384 0 393 0 q 393 104 390 44 q 396 219 396 165 l 309 221 q 169 216 262 221 q 43 212 76 212 l 44 296 l 44 379 q 174 568 113 477 q 287 738 235 658 q 396 909 338 818 q 503 902 444 902 q 553 902 527 902 q 606 909 589 907 q 599 720 606 843 q 592 534 592 596 l 592 370 q 650 375 614 370 q 706 383 686 380 m 396 370 l 396 752 l 141 370 l 396 370 ";
-
-// 8
-data = "m 511 492 q 654 412 598 471 q 710 266 710 352 q 607 53 710 128 q 360 -21 504 -21 q 131 50 229 -21 q 34 248 34 122 q 88 406 34 341 q 235 492 143 471 l 235 502 q 117 568 164 516 q 71 689 71 620 q 165 855 71 802 q 382 908 259 908 q 584 857 498 908 q 671 696 671 806 q 628 574 671 621 q 511 502 586 526 l 511 492 m 373 528 q 456 573 432 528 q 481 684 481 618 q 458 792 481 748 q 376 836 435 836 q 290 791 316 836 q 264 683 264 747 q 291 575 264 622 q 373 528 318 528 m 369 55 q 464 117 439 55 q 489 259 489 180 q 465 396 489 335 q 379 457 441 457 q 285 393 314 457 q 256 256 256 329 q 278 114 256 174 q 369 55 301 55 ";
-
-// test
-// data = "m 0 0 l 0 1000 l 1000 1000 l 1000 0 l 0 0 m 200 200 l 800 200 l 800 800 l 200 200";
-
-// test
-// data = "m 0 0 l 0 1000 l 1000 1000 l 1000 800 l 200 800 l 200 200 l 1000 200 l 1000 0 l 0 0";
-
-// test
-// data = "m 0 0 l 1000 1000 l 1000 0 l 0 0";
-
 const PathParser = {
 
-    parse: function (data) {
+    parse: function (data, resolution) {
 
         data = data.split('\n').join('');
 
@@ -89,7 +62,6 @@ const PathParser = {
                         const x = Number(list[i++]);
                         const y = Number(list[i++]);
 
-
                         if (line.length) {
                             checkLineRing(line);
                             lines.push(line);
@@ -98,7 +70,6 @@ const PathParser = {
 
                         vertices.push(x, y);
                         line.push(vertices.length / 2 - 1);
-
 
                         current = [x, y];
 
@@ -111,7 +82,7 @@ const PathParser = {
                         const y2 = Number(list[i++]);
                         const x1 = Number(list[i++]);
                         const y1 = Number(list[i++]);
-                        const points = Quadratic(x0, y0, x1, y1, x2, y2);
+                        const points = Quadratic(x0, y0, x1, y1, x2, y2, resolution);
                         for (let i = 0; i < points.length; i += 2) {
                             vertices.push(points[i], points[i + 1]);
                             line.push(vertices.length / 2 - 1);
@@ -160,9 +131,9 @@ const PathParser = {
         return { vertices, lines };
     },
 
-    parseToLine: function () {
+    parseToLine: function (data, resolution) {
 
-        const { vertices, lines } = this.parse(data);
+        const { vertices, lines } = this.parse(data, resolution);
 
         const indices = [];
 
@@ -183,9 +154,9 @@ const PathParser = {
         return { vertices: vertices3d, indices };
     },
 
-    parseToTriangles: function () {
+    parseToTriangles: function (data, resolution) {
 
-        const { vertices, lines } = this.parse(data);
+        const { vertices, lines } = this.parse(data, resolution);
 
         const clonedLines = cloneLines(lines);
 
@@ -194,13 +165,19 @@ const PathParser = {
         const indices = earcut(polygons, holes, []);
 
         const vertices3d = [];
+        const normals = [];
+        const uvs = [];
         for (let i = 0; i < vertices.length; i += 2) {
             vertices3d.push(vertices[i], vertices[i + 1], 0);
+            normals.push(0, 0, 1);
+            uvs.push(0, 0);
         }
 
         return {
             vertices: vertices3d,
             indices,
+            normals,
+            uvs,
             lines: clonedLines
         };
 
@@ -445,19 +422,27 @@ const PathParser = {
         }
     },
 
-    parseToGeometry: function () {
+    parseToGeometry: function (data, thickness = 100, resolution = 10) {
 
-        const { vertices: f1Vertices, indices: f1Indices, lines } = this.parseToTriangles();
+        const { vertices: f1Vertices, indices: f1Indices, lines } = this.parseToTriangles(data, resolution);
 
+        const f1Normals = [];
+        const f1UVs = [];
+        const f2Normals = [];
+        const f2UVs = [];
         f1Vertices.forEach((v, i) => {
             if (i % 3 === 2) {
-                f1Vertices[i] = 50;
+                f1Vertices[i] = thickness / 2;
+                f1Normals.push(0, 0, 1);
+                f1UVs.push(0, 0);
+                f2Normals.push(0, 0, -1);
+                f2UVs.push(0, 0);
             }
         })
 
         const f2Vertices = f1Vertices.map((v, i) => {
             if (i % 3 === 2) {
-                return -50;
+                return -thickness / 2;
             } else {
                 return v;
             }
@@ -467,36 +452,36 @@ const PathParser = {
 
         const f3Vertices = [];
         const f3Indices = [];
+        const f3Normals = [];
+        const f3UVs = [];
 
         lines.forEach(line => {
             for (let i = 0; i < line.length - 1; i++) {
                 const j = i + 1;
                 const [v1, v2, v3, v4] = [
-                    pt(f1Vertices, i),
-                    pt(f1Vertices, j),
-                    pt(f2Vertices, i),
-                    pt(f2Vertices, j)
+                    pt(f1Vertices, line[i]),
+                    pt(f1Vertices, line[j]),
+                    pt(f2Vertices, line[i]),
+                    pt(f2Vertices, line[j])
                 ];
+                const norm = normal(v1, v2, v4);
 
                 const s = f3Vertices.length / 3;
                 f3Vertices.push(...v1, ...v2, ...v3, ...v4);
+                f3Normals.push(...norm, ...norm, ...norm, ...norm);
+                f3UVs.push(0, 0, 0, 0, 0, 0, 0, 0);
                 f3Indices.push(s, s + 1, s + 2, s + 1, s + 2, s + 3);
             }
-        })
-
-        console.log(lines);
-
-        // return {
-        //     vertices: f1Vertices,
-        //     indices: f1Indices
-        // }
+        });
 
         return merge(
             [f1Vertices, f2Vertices, f3Vertices],
-            [f1Indices, f2Indices, f3Indices]
+            [f1Indices, f2Indices, f3Indices],
+            [f1Normals, f2Normals, f3Normals],
+            [f1UVs, f2UVs, f3UVs]
         );
 
-        function merge(vList, iList) {
+        function merge(vList, iList, nList, uList) {
 
             if (vList.length !== iList.length) {
                 throw new Error('merge vertices not valid');
@@ -504,17 +489,19 @@ const PathParser = {
 
             let vertices = [];
             let indices = [];
+            let normals = [];
+            let uvs = [];
 
             for (let i = 0; i < vList.length; i++) {
                 const len = vertices.length / 3;
                 vertices = vertices.concat(vList[i]);
                 indices = indices.concat(iList[i].map(v => v + len));
+                normals = normals.concat(...nList[i]);
+                uvs = normals.concat(...uList[i]);
             }
 
-
-
             return {
-                vertices, indices
+                vertices, indices, normals, uvs
             }
         }
 
@@ -525,14 +512,13 @@ const PathParser = {
                 vertices[i * 3 + 2]
             ];
         }
+
+        function normal(v1, v2, v3) {
+            const a1 = Vec3.sub([], v1, v2);
+            const a2 = Vec3.sub([], v2, v3);
+            return Vec3.cross([], a1, a2);
+        }
     }
 }
-
-
-
-
-
-
-
 
 export default PathParser;

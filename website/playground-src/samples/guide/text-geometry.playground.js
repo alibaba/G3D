@@ -1,22 +1,19 @@
-function main(
-    G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
-) {
+function run(G3D, canvas, loader){
 
+    // create 3d engine
     const engine = new G3D.Engine(canvas);
 
+    // create a scene
     const scene = new G3D.Scene(engine);
-    scene.clearColor = { r: 0, g: 0, b: 0 };
-
+    
+    // create camera
     const camera = new G3D.ArcRotateCamera(scene);
     camera.alpha = 0;
     camera.beta = 5;
     camera.radius = 2500;
     camera.far = 10000;
     camera.fov = 120;
-
-    controlArcRotateCamera(canvas, camera);
-
+    
     const light0 = new G3D.AmbientLight(scene);
     light0.intensity = 0.7;
 
@@ -31,8 +28,10 @@ function main(
     light2.direction.y = -1;
     light2.direction.z = -1;
     light2.intensity = 1.5;
+    
 
     G3D.MeshBuilder.createCoordinate(scene, 6000);
+
 
     loader.loadText('http://g.alicdn.com/gama/assets/0.0.6/assets/fonts-json/optimer.json', function (text) {
 
@@ -65,14 +64,9 @@ function main(
         }
 
     })
-
-    function render() {
-        camera.alpha = Math.sin(Date.now() / 1000) * 55;
+    
+    return function () {
+        camera.alpha = Math.sin(Date.now() / 1000) * 55;        
         scene.render();
-        requestAnimationFrame(render);
     }
-    render();
-
 }
-
-export default main;
