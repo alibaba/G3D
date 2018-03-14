@@ -256,29 +256,28 @@ class RenderManager {
 
     renderPickingLayer(groups) {
 
-        const { scene } = this;
-        const { engine } = scene;
+        // const { scene } = this;
+        // const { engine } = scene;
 
-        engine.useProgram('picker');
+        // engine.bindFramebuffer('picker');
 
-        engine.bindFramebuffer('picker');
+        // engine.useProgram('picker');
 
-        engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
-        engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
+        // engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
+        // engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
 
-        engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
+        // engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
 
-        groups.forEach(meshes => {
+        // groups.forEach(meshes => {
 
-            engine.clearDepthBuffer();
+        //     engine.clearDepthBuffer();
 
-            meshes.filter(m => m.getPickable()).forEach((mesh) => {
-                this.renderMeshPickingLayer(mesh);
-            });
-        })
+        //     meshes.filter(m => m.getPickable()).forEach((mesh) => {
+        //         this.renderMeshPickingLayer(mesh);
+        //     });
+        // })
 
-        engine.bindFramebuffer(null);
-
+        // engine.bindFramebuffer(null);
     }
 
     renderMeshPickingLayer(mesh) {

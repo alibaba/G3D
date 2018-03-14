@@ -12,12 +12,13 @@
 
 <script>
 import { isWeex } from "universal-env";
-import { enable, Image as GImage, WeexBridge } from "gcanvas.js";
+// import { enable, Image as GImage, WeexBridge } from "gcanvas.js";
+import { enable, Image as GImage, WeexBridge } from "../../../GCanvas/GCanvas/js/src/index";
 
 import G3D from "../../dist/g3d.min.js";
 G3D.Env.Image = isWeex ? GImage : Image;
 G3D.Env.manuallyFlipY = isWeex;
-G3D.Env.framebufferNotReady = isWeex;
+// G3D.Env.framebufferNotReady = isWeex;
 
 import {
   touchStart,
@@ -28,15 +29,11 @@ import {
 
 import main from "../pages/raw-material-main.js";
 
-function start(ref, size) {
-  if (isWeex) {
-    ref.width = size.width;
-    ref.height = size.height;
-  }
+function start(ref) {
 
   main(G3D, {
     canvas: ref,
-    requestAnimationFrame: setTimeout,
+    requestAnimationFrame: function(){},
     controlArcRotateCamera
   });
 }
@@ -54,25 +51,14 @@ export default {
   mounted: function() {
     var ref = this.$refs.canvas_holder;
 
-    var size = isWeex
-      ? {
-          width: 750,
-          height: 750
-        }
-      : {
-          width: parseInt(ref.style.width),
-          height: parseInt(ref.style.height)
-        };
-    if (!isWeex) {
-      ref.width = size.width;
-      ref.height = size.height;
-    }
-
     if (isWeex) {
       ref = enable(ref, { debug: true, bridge: WeexBridge });
     }
 
-    start(ref, size);
+    ref.width = WXEnvironment.deviceWidth;
+    ref.height = WXEnvironment.deviceWidth;
+
+    start(ref);
   }
 };
 </script>

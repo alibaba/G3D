@@ -121,12 +121,22 @@ class Engine {
     }
 
     createFramebuffer({ width, height, useColorBuffer = false }) {
+        
+  
 
         const gl = this._gl;
 
         const framebuffer = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-        let colorTarget, depthTarget;
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        // let colorTarget, depthTarget;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        return {
+            framebuffer: null,
+            colorTarget: null, depthTarget: null
+        };
+
 
         if (useColorBuffer) {
             const renderbuffer = gl.createRenderbuffer();
