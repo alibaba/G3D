@@ -22,23 +22,11 @@ function main(
 
     light.castShadow = true;
 
-    // const light1 = new G3D.DirectionalLight(scene);
-    // light1.direction.x = -1;
-    // light1.direction.y = 0;
-    // light1.direction.z = 1;
-    // light1.intensity = 0.5;
-
-    // const light2 = new G3D.HemisphereLight(scene);
-    // light2.intensity = 0.5;
-
-    // const light3 = new G3D.AmbientLight(scene);
-    // light3.intensity = 0.2;
-
     const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
     m1.position.z = -1;
     decorateMaterial(m1.materials.default);
 
-    const m2 = G3D.MeshBuilder.createGround(scene, 1);
+    const m2 = G3D.MeshBuilder.createCube(scene, 0.5);
     m2.position.z = 1;
     decorateMaterial(m2.materials.default);
 
@@ -57,6 +45,8 @@ function main(
 
     function render(){
         m2.rotation.z += 1;
+        m2.rotation.x += 1;
+        m2.rotation.y += 1;
         scene.render();
         requestAnimationFrame(render);
     }

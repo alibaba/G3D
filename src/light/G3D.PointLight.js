@@ -4,7 +4,7 @@ class PointLight extends Light {
     radius = 1;
 
     castShadow = false;
-    castShadowFov = 30;
+    castShadowFov = 10;
 
     getPosition() {
         return [this.position.x, this.position.y, this.position.z];
@@ -28,7 +28,7 @@ class PointLight extends Light {
         camera.center = { ...center };
         camera.fov = this.castShadowFov;
         camera.near = 7;
-        camera.far = 12;
+        camera.far = 120;
 
         camera.position = {...this.position};
 
