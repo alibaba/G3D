@@ -1,6 +1,4 @@
-class Camera extends Node {
-
-    scene = null;
+class PerspectiveCamera extends Node {
 
     center = { x: 0, y: 0, z: 0 };
 
@@ -11,16 +9,15 @@ class Camera extends Node {
 
     fov = 90;
 
+    viewRatio = 1;
+
     constructor(scene) {
         super();
-        
-        this.scene = scene;
-        scene.activeCamera = this;
     }
 
     getVMatrix() {
         const matrix = Mat4.create();
-        
+
         const center = Vec3.fromValues(this.center.x, this.center.y, this.center.z);
         const up = Vec3.fromValues(this.up.x, this.up.y, this.up.z);
         const position = Vec3.fromValues(this.position.x, this.position.y, this.position.z);
@@ -34,10 +31,8 @@ class Camera extends Node {
     }
 
     getPMatrix() {
-        const { scene, near, far, fov } = this;
-        const { width, height } = scene.engine;
-
-        return Mat4.perspective(Mat4.create(), Tools.deg2rad(fov), width / height, near, far);
+        const { near, far, fov, viewRatio } = this;
+        return Mat4.perspective(Mat4.create(), Tools.deg2rad(fov), viewRatio, near, far);
     }
 
     getPosition() {
@@ -46,13 +41,12 @@ class Camera extends Node {
 
     getViewRay(x, y, flip = true) {
 
-        const { width, height } = this.scene.engine;
         if (flip) {
-            y = height - y;
+            y = 1 - y;
         }
 
-        const tx = (x / width - 0.5) * 2;
-        const ty = (y / height - 0.5) * 2;
+        const tx = (x - 0.5) * 2;
+        const ty = (y - 0.5) * 2;
 
         const pMatrix = this.getPMatrix();
 
@@ -76,4 +70,4 @@ class Camera extends Node {
     }
 }
 
-export default Camera;
+export default PerspectiveCamera;

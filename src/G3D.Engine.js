@@ -4,6 +4,9 @@ import vShaderDefault from './shaders/default.vert.glsl';
 import fShaderPicker from './shaders/picker.frag.glsl';
 import vShaderPicker from './shaders/picker.vert.glsl';
 
+import fShaderShadow from './shaders/shadow.frag.glsl';
+import vShaderShadow from './shaders/shadow.vert.glsl';
+
 class Engine {
 
     width = 0;
@@ -23,12 +26,17 @@ class Engine {
             }),
             picker: new Program({
                 gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker
+            }),
+            shadow: new Program({
+                gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow
             })
         }
 
         this._framebuffers = {
             picker: Env.framebufferNotReady ? null :
-                this.createFramebuffer({ width: this.width, height: this.height }).framebuffer
+                this.createFramebuffer({ width: this.width, height: this.height }),
+            shadow: Env.framebufferNotReady ? null :
+                this.createFramebuffer({ width: 256, height: 256 })
         }
 
         gl.viewport(0, 0, this.width, this.height);
@@ -158,7 +166,10 @@ class Engine {
 
         return {
             framebuffer,
-            colorTarget, depthTarget
+            colorTarget,
+            depthTarget,
+            width,
+            height
         };
     }
 
@@ -166,10 +177,17 @@ class Engine {
         const gl = this._gl;
         const framebuffer = this._framebuffers[key];
         if (framebuffer) {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
+            gl.viewport(0, 0, framebuffer.width, framebuffer.height);
         } else {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0, 0, this.width, this.height);
         }
+    }
+
+    getFramebuffer(key) {
+        const framebuffer = this._framebuffers[key];
+        return framebuffer;
     }
 
     lineWidth(value) {

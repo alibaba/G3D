@@ -4,7 +4,7 @@ export default {
     Node,
     Env,
 
-    PerspectiveCamera,
+    BasePerspectiveCamera,
     ArcRotateCamera,
 
     Light,

@@ -1,9 +1,11 @@
 class Light {
 
+    scene = null;
     color = { r: 255, g: 255, b: 255 };
     intensity = 1;
 
     constructor(scene) {
+        this.scene = scene;
         scene.lights.push(this);
     }
 

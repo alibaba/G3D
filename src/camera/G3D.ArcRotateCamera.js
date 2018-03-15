@@ -1,4 +1,4 @@
-class ArcRotateCamera extends PerspectiveCamera {
+class ArcRotateCamera extends BasePerspectiveCamera {
 
     radius = 0;
     alpha = 0;
@@ -6,6 +6,14 @@ class ArcRotateCamera extends PerspectiveCamera {
 
     constructor(scene, center, radius, alpha, beta) {
         super(scene, Math.PI / 2, 1, 101);
+
+        const { width, height } = scene.engine;
+
+        this.viewRatio = width / height;
+
+        this.scene = scene;
+
+        scene.activeCamera = this;
     }
 
     getVMatrix() {
@@ -21,6 +29,11 @@ class ArcRotateCamera extends PerspectiveCamera {
         this.position.z = center.z + z;
 
         return super.getVMatrix();
+    }
+
+    getViewRay(x, y, flip) {
+        const { width, height } = this.scene.engine;
+        return super.getViewRay(x / width, y / height, flip);
     }
 }
 

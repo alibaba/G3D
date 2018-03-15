@@ -38,6 +38,12 @@ uniform float uGlossiness;
 uniform bool uEnvMapFlag;
 uniform sampler2D uEnvMapTexture;
 
+uniform bool uShadowFlag;
+uniform sampler2D uShadowMapTexture;
+uniform mat4 uShadowPMatrix;
+uniform mat4 uShadowVMatrix;
+uniform mat4 uMMatrix;
+
 varying vec2 vUV;
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -130,5 +136,19 @@ void main() {
         gl_FragColor = vec4(applyLights(ambientColorSource.xyz, diffuseColorSource.xyz, specularColorSource.xyz), uMaterialOpacity);
     }else if(uMaterialType == MATERIAL_TYPE_RAW){
         gl_FragColor = vec4(diffuseColorSource.xyz, uMaterialOpacity);
+    }
+
+    if(uShadowFlag){
+
+        vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * uMMatrix * vec4(vPosition, 1.0);
+        vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
+        float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
+        // gl_FragColor = vec4(shadowDepth, 0.0, 0.0, 1.0);
+        // gl_FragColor = vec4(shadowCoord.z, 0.0, 0.0, 1.0);
+        if(shadowCoord.z > shadowDepth + 0.2){
+            // gl_FragColor = texture2D(uShadowMapTexture, st);
+            gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        }
+        // vec2 st = gl_FragCoord.xy/600.0;
     }
 }

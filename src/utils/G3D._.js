@@ -24,4 +24,13 @@ function findIndex(arr, identifyer) {
     return -1;
 }
 
-export default {isFunction, isObject, findIndex}
+function find(arr, identifyer) {
+    const i = findIndex(arr, identifyer);
+    if (i !== -1) {
+        return arr[i];
+    } else {
+        return null;
+    }
+}
+
+export default { isFunction, isObject, findIndex, find }

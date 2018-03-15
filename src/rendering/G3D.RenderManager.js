@@ -102,14 +102,17 @@ class RenderManager {
 
             const groups = this.groupMeshLayers();
 
-            this.renderMainLayer(groups);
-
             if (!Env.framebufferNotReady) {
                 this.renderPickingLayer(groups);
             }
 
-        }
+            if (!Env.framebufferNotReady) {
+                this.renderShadowLayer(groups);
+            }
 
+            this.renderMainLayer(groups);
+            
+        }
     }
 
     renderMainLayer(groups) {
@@ -119,10 +122,23 @@ class RenderManager {
 
         engine.useProgram('default');
 
+        const shadowLight = _.find(scene.lights, light => light.castShadow);
+        if (shadowLight) {
+            engine.uniform('uShadowFlag', [true]);
+            const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
+            engine.uniform('uShadowMapTexture', shadowMapTexture);
+            const shadowCamera = shadowLight.getShadowCamera();
+            engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
+            engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
+
+        } else {
+            engine.uniform('uShadowFlag', [false]);
+        }
+
         engine.uniform('manuallyFlipY', [Number(Env.manuallyFlipY)]);
-        scene.engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
-        scene.engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
-        scene.engine.uniform('uCameraPosition', scene.activeCamera.getPosition());
+        engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
+        engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
+        engine.uniform('uCameraPosition', scene.activeCamera.getPosition());
 
         const lights = this.composeLight();
         engine.uniform('uLightType', lights.type);
@@ -327,6 +343,73 @@ class RenderManager {
         }
     }
 
+    renderShadowLayer(groups) {
+
+        const { scene } = this;
+        const { engine, lights } = scene;
+
+        const shadowLight = _.find(lights, light => light.castShadow);
+
+        if (shadowLight) {
+
+            const group = groups[0];
+
+            engine.useProgram('shadow');
+
+            engine.bindFramebuffer('shadow');
+            
+            engine.clearDepthBuffer();
+            engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
+
+            const camera = shadowLight.getShadowCamera();
+
+            engine.uniform('uVMatrix', camera.getVMatrix());
+            engine.uniform('uPMatrix', camera.getPMatrix());
+
+            group.forEach(mesh => {
+
+                engine.uniform('uMMatrix', mesh.getWorldMatrix());
+
+                if (mesh instanceof MorphTargetMesh) {
+                    const { before, after, phase } = mesh.getMorphPhaseInfo();
+                    const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
+                    const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+                    engine.uniform('uMorphTargetFlag', [true]);
+                    engine.attribute('aPosition', gBuffer1.vertices);
+                    engine.attribute('aPosition2', gBuffer2.vertices);
+                    engine.uniform('uMorphPhase', [phase]);
+                } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
+                    const geometryBuffers = mesh.geometry.getBuffers();
+                    engine.uniform('uMorphTargetFlag', [false]);
+                    engine.attribute('aPosition', geometryBuffers.vertices);
+                    engine.attribute('aPosition2', geometryBuffers.vertices);
+                    engine.uniform('uMorphPhase', [0]);
+                }
+
+                {
+                    const materials = mesh.materials;
+
+                    for (let key in materials) {
+                        const material = materials[key];
+
+                        const geometryBuffers = mesh.geometry.getBuffers();
+                        engine.elements(geometryBuffers.indices[key]);
+
+                        if (mesh instanceof LineMesh) {
+                            engine.lineWidth(mesh.lineWidth);
+                            engine.draw(geometryBuffers.indicesLength[key], {
+                                lines: true
+                            });
+                        } else {
+                            engine.draw(geometryBuffers.indicesLength[key]);
+                        }
+                    }
+                }
+            })
+
+            engine.bindFramebuffer(null);
+        }
+    }
 }
 
 export default RenderManager;
