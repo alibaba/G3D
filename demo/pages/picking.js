@@ -6,5 +6,8 @@ import { controlArcRotateCamera } from './lib/attach-control';
 main(G3D, {
     canvas: document.getElementById('canvas'),
     requestAnimationFrame,
-    controlArcRotateCamera
+    controlArcRotateCamera,
+    onClickCanvas: function (callback) {
+        document.getElementById('canvas').addEventListener('click', callback)
+    }
 });
