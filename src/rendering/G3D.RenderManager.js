@@ -275,9 +275,9 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        engine.useProgram('picker');
-
         engine.bindFramebuffer('picker');
+
+        engine.useProgram('picker');
 
         engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
         engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
@@ -294,7 +294,6 @@ class RenderManager {
         })
 
         engine.bindFramebuffer(null);
-
     }
 
     renderMeshPickingLayer(mesh) {

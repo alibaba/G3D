@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera }
+    { canvas, requestAnimationFrame, controlArcRotateCamera, onClickCanvas }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -10,7 +10,7 @@ function main(
     const camera = new G3D.ArcRotateCamera(scene);
     camera.alpha = -60;
     camera.beta = 30;
-    camera.radius = 10;
+    camera.radius = 6;
 
     controlArcRotateCamera(canvas, camera);
 
@@ -34,7 +34,6 @@ function main(
     const m3 = G3D.MeshBuilder.createCube(scene, 1);
     decMaterial(m3);
     m3.position.x = 2;
-
 
     function decMaterial (mesh){
         mesh.materials.default.ambientColor.r = 200;
@@ -77,7 +76,7 @@ function main(
         }
     }
 
-    canvas.addEventListener('click', function (e) {
+    onClickCanvas(function (e) {
         const { offsetX: x, offsetY: y } = e;
         const id = scene.pick(x, y);
         const mesh = findById(meshes, id);
