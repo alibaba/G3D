@@ -12,12 +12,7 @@
 
 <script>
 import { isWeex } from "universal-env";
-// import { enable, Image as GImage, WeexBridge } from "gcanvas.js";
-import {
-  enable,
-  Image as GImage,
-  WeexBridge
-} from "../../../GCanvas/GCanvas/js/src/index";
+import { enable, Image as GImage, WeexBridge } from "gcanvas.js";
 
 import G3D from "../../dist/g3d.min.js";
 G3D.Env.Image = isWeex ? GImage : Image;
