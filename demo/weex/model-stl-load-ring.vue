@@ -15,6 +15,7 @@ import { isWeex } from "universal-env";
 // import { enable, Image as GImage, WeexBridge } from "gcanvas.js";
 import { enable, Image as GImage, WeexBridge } from "../../../GCanvas/GCanvas/js/src/index";
 
+
 import G3D from "../../dist/g3d.min.js";
 G3D.Env.Image = isWeex ? GImage : Image;
 G3D.Env.manuallyFlipY = isWeex;
@@ -26,15 +27,17 @@ import {
   touchEnd,
   controlArcRotateCamera
 } from "./lib/attach-control";
+import loader from './lib/loader';
 
-import main from "../pages/raw-material-main.js";
+import main from "../pages/model-stl-load-ring-main.js";
 
 function start(ref, size) {
 
   main(G3D, {
     canvas: ref,
     requestAnimationFrame: setTimeout,
-    controlArcRotateCamera
+    controlArcRotateCamera,
+    loader
   });
 }
 
