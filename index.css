@@ -155,6 +155,16 @@ body {
 .g3d .banner .content .github {
   display: none;
 }
+.g3d .banner .content .github-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+.g3d .banner .content .github-buttons a {
+  display: none;
+}
+.g3d .banner .content .github-buttons iframe {
+  margin: 0 10px;
+}
 .g3d .intro .content {
   width: 1280px;
   margin: auto;
@@ -335,6 +345,9 @@ iframe.playground {
   }
   .g3d .banner .content .github a:link {
     color: #fff;
+  }
+  .g3d .banner .content .github-buttons {
+    display: none;
   }
   .g3d .banner canvas {
     transform: translate(-25vw, -20vh) scale(0.7);
