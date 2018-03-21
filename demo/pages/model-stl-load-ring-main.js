@@ -63,11 +63,16 @@ function main(
     G3D.MeshBuilder.createCoordinate(scene, 6000);
 
     let mesh = null;
-    loader.loadText('http://g.alicdn.com/gama/assets/0.0.7/assets/models/ring/ring.txt', function (text) {
-        mesh = G3D.MeshBuilder.createFromStlModel(scene, text);
-        check();
+    loader.loadText(
+        'http://g.alicdn.com/gama/assets/0.0.7/assets/models/ring/ring.txt',
+        // 'http://g-assets.daily.taobao.net/gama/assets/0.0.8/assets/tmp/xin_lian.txt',
+        // 'http://g-assets.daily.taobao.net/gama/assets/0.0.8/assets/tmp/xin_lian_simp.txt',
+        function (text) {
+            mesh = G3D.MeshBuilder.createFromStlModel(scene, text);
+            check();
 
-    })
+        }
+    )
 
     let imageReady = false;
     const image = new G3D.Env.Image();
