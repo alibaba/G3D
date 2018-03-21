@@ -7,7 +7,7 @@ function main(
 
     const scene = new G3D.Scene(engine);
 
-    const camera = new G3D.ArcRotateOrthoCamera(scene);
+    const camera = new G3D.RotateOrthographicCamera(scene);
     camera.alpha = 0;
     camera.beta = 45;
     camera.radius = 10;

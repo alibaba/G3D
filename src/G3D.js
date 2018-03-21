@@ -8,7 +8,9 @@ export default {
     BaseOrthographicCamera,
     
     ArcRotateCamera,
-    ArcRotateOrthoCamera,
+    
+    RotateOrthographicCamera,
+    RotatePerspectiveCamera,
 
     Light,
     DirectionalLight,

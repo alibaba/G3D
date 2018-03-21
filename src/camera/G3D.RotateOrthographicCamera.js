@@ -1,10 +1,10 @@
-class ArcRotateOrthoCamera extends BaseOrthographicCamera {
+class RotateOrthographicCamera extends BaseOrthographicCamera {
 
     radius = 0;
     alpha = 0;
     beta = 0;
 
-    constructor(scene, center, radius, alpha, beta) {
+    constructor(scene) {
         super();
         
         this.scene = scene;
@@ -36,4 +36,4 @@ class ArcRotateOrthoCamera extends BaseOrthographicCamera {
     }
 }
 
-export default ArcRotateOrthoCamera;
+export default RotateOrthographicCamera;
