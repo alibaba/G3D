@@ -25,8 +25,8 @@ class DirectionalLight extends Light {
 
         camera.center = { ...center };
         camera.width = 5;
-        camera.near = 2;
-        camera.far = 20;
+        camera.near = 5;
+        camera.far = 15;
 
         camera.position = { ...this.direction };
         return camera;

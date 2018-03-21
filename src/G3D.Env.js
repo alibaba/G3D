@@ -16,7 +16,5 @@ export default {
 
     manuallyFlipY: false,
 
-    framebufferNotReady: false,
-
-    framebufferDebug: null
+    framebufferNotReady: false
 }

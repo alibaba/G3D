@@ -139,14 +139,12 @@ void main() {
 
     if(uShadowFlag){
 
-        vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * uMMatrix * vec4(vPosition, 1.0);
+        vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * vec4(vPosition, 1.0);
+
         vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
 
         float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
-        // gl_FragColor = vec4(shadowDepth, 0.0, 0.0, 1.0);
-        // gl_FragColor = vec4(shadowCoord.z, 0.0, 0.0, 1.0);
-        if(shadowCoord.z > shadowDepth + 0.1){
-            // gl_FragColor = texture2D(uShadowMapTexture, st);
+        if(shadowCoord.z > shadowDepth + 0.05){
             gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
         }
     }

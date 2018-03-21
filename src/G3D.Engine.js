@@ -16,7 +16,10 @@ class Engine {
     _framebuffers = {};
 
     constructor(canvas) {
-        const gl = this._gl = canvas.getContext('webgl', { antialias: true });
+        const gl = this._gl = canvas.getContext('webgl', { 
+            antialias: true,
+            preserveDrawingBuffer: true
+        });
         this.width = canvas.width;
         this.height = canvas.height;
 
@@ -221,7 +224,11 @@ class Engine {
             this.bindFramebuffer(null);
             return [...pixels];
         } else {
-            throw new Error(`framebuffer ${key} not exits`);
+            this.bindFramebuffer(key);
+            var pixels = new Uint8Array(1 * 1 * 4);
+            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            return [...pixels];
+            // throw new Error(`framebuffer ${key} not exits`);
         }
     }
 }

@@ -1,6 +1,6 @@
 function main(
     G3D,
-    {canvas, requestAnimationFrame, controlArcRotateCamera}
+    { canvas, requestAnimationFrame, controlArcRotateCamera }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -16,24 +16,21 @@ function main(
     controlArcRotateCamera(canvas, camera);
 
     const light = new G3D.DirectionalLight(scene);
-    light.direction = {x: 0, y: 0, z: 10};
-    
-    // const light = new G3D.PointLight(scene);
-    // light.position = {x: 0, y: 0, z: 10};
+    light.direction = { x: 0, y: 0, z: 10 };
 
     light.intensity = 1;
 
     light.castShadow = true;
 
     const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
-    m1.position.z = -1;
+    m1.position.z = -3;
     decorateMaterial(m1.materials.default);
 
-    const m2 = G3D.MeshBuilder.createCube(scene, 0.5);
-    m2.position.z = 1;
+    const m2 = G3D.MeshBuilder.createGround(scene, 0.5);
+    m2.position.z = 0;
     decorateMaterial(m2.materials.default);
 
-    function decorateMaterial(material){
+    function decorateMaterial(material) {
         material.ambientColor.r = 200;
         material.ambientColor.g = 100;
         material.ambientColor.b = 100;
@@ -46,14 +43,17 @@ function main(
         material.glossiness = 10;
     }
 
-    function render(){
+    function render() {
         m2.rotation.z += 1;
-        m2.rotation.x += 1;
-        m2.rotation.y += 1;
         scene.render();
         requestAnimationFrame(render);
     }
     render();
+
+    canvas.addEventListener('click', e => {
+        const { offsetX: x, offsetY: y } = e;
+        console.log(scene.pickF(x, y, null));
+    })
 
 }
 

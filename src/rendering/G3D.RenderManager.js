@@ -97,17 +97,29 @@ class RenderManager {
     render() {
 
         const { scene } = this;
+        const { engine } = scene;
 
         if (scene.activeCamera) {
 
             const groups = this.groupMeshLayers();
 
             if (!Env.framebufferNotReady) {
+
+                engine.bindFramebuffer('picker');
+
                 this.renderPickingLayer(groups);
+
+                engine.bindFramebuffer(null);
             }
 
             if (!Env.framebufferNotReady) {
+
+                engine.bindFramebuffer('shadow');
+
                 this.renderShadowLayer(groups);
+
+                engine.bindFramebuffer(null);
+                
             }
 
             this.renderMainLayer(groups);
@@ -123,6 +135,7 @@ class RenderManager {
 
         const shadowLight = _.find(scene.lights, light => light.castShadow);
         if (shadowLight) {
+
             engine.uniform('uShadowFlag', [true]);
             const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
             engine.uniform('uShadowMapTexture', shadowMapTexture);
@@ -131,7 +144,9 @@ class RenderManager {
             engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
 
         } else {
+
             engine.uniform('uShadowFlag', [false]);
+
         }
 
         engine.uniform('manuallyFlipY', [Number(Env.manuallyFlipY)]);
@@ -166,6 +181,7 @@ class RenderManager {
         engine.uniform('uMMatrix', mesh.getWorldMatrix());
 
         if (mesh instanceof MorphTargetMesh) {
+
             const { before, after, phase } = mesh.getMorphPhaseInfo();
             const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
             const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
@@ -177,7 +193,9 @@ class RenderManager {
             engine.attribute('aUV2', gBuffer2.uvs);
             engine.attribute('aNormal2', gBuffer2.normals);
             engine.uniform('uMorphPhase', [phase]);
+
         } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
+
             const geometryBuffers = mesh.geometry.getBuffers();
             engine.uniform('uMorphTargetFlag', [false]);
             engine.attribute('aPosition', geometryBuffers.vertices);
@@ -188,6 +206,7 @@ class RenderManager {
             engine.attribute('aNormal2', geometryBuffers.normals);
         }
 
+
         {
             const materials = mesh.materials;
 
@@ -196,6 +215,7 @@ class RenderManager {
                 const material = materials[key];
 
                 if (material instanceof StandardMaterial) {
+
                     engine.uniform('uMaterialType', [2]);
 
                     engine.uniform('uMaterialAmbientTextureFlag', [
@@ -211,10 +231,14 @@ class RenderManager {
                     ]);
 
                     if (material.getUseEnvMap()) {
+
                         engine.uniform('uEnvMapFlag', [Number(true)]);
                         engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
+
                     } else {
+
                         engine.uniform('uEnvMapFlag', [Number(false)]);
+
                     }
 
                     engine.uniform('uAmbientColor', material.getAmbientColor());
@@ -232,9 +256,13 @@ class RenderManager {
                     engine.uniform('uMaterialType', [1]);
 
                     if (material.getSource() === Material.COLOR) {
+
                         engine.uniform('uMaterialDiffuseTextureFlag', [Number(false)]);
+
                     } else {
+
                         engine.uniform('uMaterialDiffuseTextureFlag', [Number(true)]);
+
                     }
 
                     engine.uniform('uDiffuseColor', material.getColor());
@@ -274,8 +302,6 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        engine.bindFramebuffer('picker');
-
         engine.useProgram('picker');
 
         engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
@@ -291,8 +317,6 @@ class RenderManager {
                 this.renderMeshPickingLayer(mesh);
             });
         })
-
-        engine.bindFramebuffer(null);
     }
 
     renderMeshPickingLayer(mesh) {
@@ -354,8 +378,6 @@ class RenderManager {
 
             engine.useProgram('shadow');
 
-            engine.bindFramebuffer('shadow');
-
             engine.clearDepthBuffer();
             engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
 
@@ -369,6 +391,7 @@ class RenderManager {
                 engine.uniform('uMMatrix', mesh.getWorldMatrix());
 
                 if (mesh instanceof MorphTargetMesh) {
+
                     const { before, after, phase } = mesh.getMorphPhaseInfo();
                     const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
                     const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
@@ -376,12 +399,15 @@ class RenderManager {
                     engine.attribute('aPosition', gBuffer1.vertices);
                     engine.attribute('aPosition2', gBuffer2.vertices);
                     engine.uniform('uMorphPhase', [phase]);
+
                 } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
+
                     const geometryBuffers = mesh.geometry.getBuffers();
                     engine.uniform('uMorphTargetFlag', [false]);
                     engine.attribute('aPosition', geometryBuffers.vertices);
                     engine.attribute('aPosition2', geometryBuffers.vertices);
                     engine.uniform('uMorphPhase', [0]);
+
                 }
 
                 {
@@ -394,18 +420,20 @@ class RenderManager {
                         engine.elements(geometryBuffers.indices[key]);
 
                         if (mesh instanceof LineMesh) {
+
                             engine.lineWidth(mesh.lineWidth);
                             engine.draw(geometryBuffers.indicesLength[key], {
                                 lines: true
                             });
+
                         } else {
+
                             engine.draw(geometryBuffers.indicesLength[key]);
+
                         }
                     }
                 }
             })
-
-            engine.bindFramebuffer(null);
         }
     }
 }

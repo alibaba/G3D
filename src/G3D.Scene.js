@@ -15,17 +15,21 @@ class Scene {
         this.renderManager.render();
     }
 
-    pick(x, y, flip = true) {
+    pick(x, y, flipY = true) {
 
         if (Env.framebufferNotReady) {
             return null;
         }
 
-        if (flip) {
+        if (flipY) {
             y = this.engine.height - y;
         }
         const pixels = this.engine.readFramebufferPixel('picker', x, y);
         return [...pixels].map(n => Math.round(n / 16)).reduceRight((n, item) => n * 16 + item, 0);
+    }
+
+    pickF(x, y, fb) {
+        return this.engine.readFramebufferPixel(fb, x, y);
     }
 }
 
