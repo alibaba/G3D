@@ -1,4 +1,4 @@
-class ArcRotateCamera extends BasePerspectiveCamera {
+class ArcRotateOrthoCamera extends BaseOrthographicCamera {
 
     radius = 0;
     alpha = 0;
@@ -6,12 +6,11 @@ class ArcRotateCamera extends BasePerspectiveCamera {
 
     constructor(scene, center, radius, alpha, beta) {
         super();
-
-        const { width, height } = scene.engine;
-
-        this.viewRatio = width / height;
-
+        
         this.scene = scene;
+        
+        const { width, height } = scene.engine;
+        this.viewRatio = width / height;
 
         scene.activeCamera = this;
     }
@@ -37,4 +36,4 @@ class ArcRotateCamera extends BasePerspectiveCamera {
     }
 }
 
-export default ArcRotateCamera;
+export default ArcRotateOrthoCamera;

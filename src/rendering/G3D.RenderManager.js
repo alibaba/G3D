@@ -111,7 +111,6 @@ class RenderManager {
             }
 
             this.renderMainLayer(groups);
-            
         }
     }
 
@@ -356,7 +355,7 @@ class RenderManager {
             engine.useProgram('shadow');
 
             engine.bindFramebuffer('shadow');
-            
+
             engine.clearDepthBuffer();
             engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
 

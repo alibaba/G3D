@@ -5,7 +5,10 @@ export default {
     Env,
 
     BasePerspectiveCamera,
+    BaseOrthographicCamera,
+    
     ArcRotateCamera,
+    ArcRotateOrthoCamera,
 
     Light,
     DirectionalLight,

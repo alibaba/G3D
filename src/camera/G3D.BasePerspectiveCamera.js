@@ -11,7 +11,7 @@ class PerspectiveCamera extends Node {
 
     viewRatio = 1;
 
-    constructor(scene) {
+    constructor() {
         super();
     }
 

@@ -145,7 +145,7 @@ void main() {
         float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
         // gl_FragColor = vec4(shadowDepth, 0.0, 0.0, 1.0);
         // gl_FragColor = vec4(shadowCoord.z, 0.0, 0.0, 1.0);
-        if(shadowCoord.z > shadowDepth + 0.2){
+        if(shadowCoord.z > shadowDepth + 0.1){
             // gl_FragColor = texture2D(uShadowMapTexture, st);
             gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
         }
