@@ -60,6 +60,7 @@ function main(
         render();
     };
     image.src = '//img.alicdn.com/tfs/TB1jxUkigvD8KJjy0FlXXagBFXa-1024-512.jpg';
+
 }
 
 export default main;
