@@ -77,6 +77,7 @@ vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specular
 
     if(uEnvMapFlag){
         vec3 viewReflect = reflect(-nViewDirection, nNormal);
+
         vec2 viewReflectUV = des2pol(viewReflect);
         vec3 envMapFactor = texture2D(uEnvMapTexture, viewReflectUV).xyz;
         specularColorSource *= envMapFactor;
