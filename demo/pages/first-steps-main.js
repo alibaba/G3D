@@ -20,21 +20,18 @@ function main(
     light1.direction.z = 1;
     light1.intensity = 0.5;
 
-    const light2 = new G3D.HemisphereLight(scene);
-    light2.intensity = 0.5;
-
-    const light3 = new G3D.AmbientLight(scene);
-    light3.intensity = 0.2;
+    const light2 = new G3D.AmbientLight(scene);
+    light2.intensity = 0.2;
 
     const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
     m1.position.z = -1;
-    decorateMaterial(m1.materials.default);
+    decorateMaterialBasic(m1.materials.default);
 
     const m2 = G3D.MeshBuilder.createSphere(scene, 1);
     m2.position.z = 1;
-    decorateMaterial(m2.materials.default);
+    decorateMaterialBasic(m2.materials.default);
 
-    function decorateMaterial(material){
+    function decorateMaterialBasic(material){
         material.ambientColor.r = 200;
         material.ambientColor.g = 100;
         material.ambientColor.b = 100;

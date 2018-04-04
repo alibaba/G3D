@@ -53,7 +53,6 @@ class StandardMaterial extends Material {
         return this.specularSource;
     }
 
-
     getSpecularColor() {
         return Vec3.fromValues(this.specularColor.r / 255, this.specularColor.g / 255, this.specularColor.b / 255);
     }

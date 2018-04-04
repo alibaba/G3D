@@ -5,11 +5,15 @@ const LIGHT_TYPE_DIRECTIONAL = 3;
 const LIGHT_TYPE_POINT = 4;
 const LIGHT_TYPE_HEMISPHERE = 5;
 
+const MATERIAL_TYPE_RAW = 1;
+const MATERIAL_TYPE_STANDARD = 2;
+const MATERIAL_TYPE_PBR = 3;
+
 class RenderManager {
 
     scene = null;
-    renderData = {};
-    needUpdateRenderData = true;
+
+    lightsData = null;
 
     constructor(scene) {
         this.scene = scene;
@@ -23,8 +27,7 @@ class RenderManager {
         }
         const target = {
             type: [],
-            color1: [],
-            color2: [],
+            color: [],
             intensity: [],
             position: []
         }
@@ -32,40 +35,29 @@ class RenderManager {
             const light = lights[i];
             if (light instanceof DirectionalLight) {
                 target.type.push(LIGHT_TYPE_DIRECTIONAL);
-                target.color1.push(...light.getColor());
-                target.color2.push(0, 0, 0);
+                target.color.push(...light.getColor());
                 target.intensity.push(light.getIntensity());
                 target.position.push(...light.getDirection());
-            } else if (light instanceof HemisphereLight) {
-                target.type.push(LIGHT_TYPE_HEMISPHERE);
-                target.color1.push(...light.getSky());
-                target.color2.push(...light.getGround());
-                target.intensity.push(light.getIntensity());
-                target.position.push(...light.getUp());
             } else if (light instanceof AmbientLight) {
                 target.type.push(LIGHT_TYPE_AMBIENT);
-                target.color1.push(...light.getColor());
-                target.color2.push(0, 0, 0);
+                target.color.push(...light.getColor());
                 target.intensity.push(light.getIntensity());
                 target.position.push(0, 0, 0);
             } else if (light instanceof PointLight) {
                 target.type.push(LIGHT_TYPE_POINT);
-                target.color1.push(...light.getColor());
-                target.color2.push(0, 0, 0);
+                target.color.push(...light.getColor());
                 target.intensity.push(light.getIntensity());
                 target.position.push(...light.getPosition());
             } else {
                 target.type.push(LIGHT_TYPE_NULL);
-                target.color1.push(0, 0, 0);
-                target.color2.push(0, 0, 0);
+                target.color.push(0, 0, 0);
                 target.intensity.push(0);
                 target.position.push(0, 0, 0);
             }
         }
         return {
             type: new Int32Array(target.type),
-            color1: new Float32Array(target.color1.map(c => c / 255)),
-            color2: new Float32Array(target.color2.map(c => c / 255)),
+            color: new Float32Array(target.color.map(c => c / 255)),
             intensity: new Float32Array(target.intensity),
             position: new Float32Array(target.position)
         }
@@ -101,26 +93,28 @@ class RenderManager {
 
         if (scene.activeCamera) {
 
+            this.lightsData = this.composeLight();
+
             const groups = this.groupMeshLayers();
 
-            if (!Env.framebufferNotReady) {
+            // if (!Env.framebufferNotReady) {
 
-                engine.bindFramebuffer('picker');
+            //     engine.bindFramebuffer('picker');
 
-                this.renderPickingLayer(groups);
+            //     this.renderPickingLayer(groups);
 
-                engine.bindFramebuffer(null);
-            }
+            //     engine.bindFramebuffer(null);
+            // }
 
-            if (!Env.framebufferNotReady) {
+            // if (!Env.framebufferNotReady) {
 
-                engine.bindFramebuffer('shadow');
+            //     engine.bindFramebuffer('shadow');
 
-                this.renderShadowLayer(groups);
+            //     this.renderShadowLayer(groups);
 
-                engine.bindFramebuffer(null);
-                
-            }
+            //     engine.bindFramebuffer(null);
+
+            // }
 
             this.renderMainLayer(groups);
         }
@@ -135,18 +129,14 @@ class RenderManager {
 
         const shadowLight = _.find(scene.lights, light => light.castShadow);
         if (shadowLight) {
-
             engine.uniform('uShadowFlag', [true]);
             const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
             engine.uniform('uShadowMapTexture', shadowMapTexture);
             const shadowCamera = shadowLight.getShadowCamera();
             engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
             engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
-
         } else {
-
             engine.uniform('uShadowFlag', [false]);
-
         }
 
         engine.uniform('manuallyFlipY', [Number(Env.manuallyFlipY)]);
@@ -154,12 +144,10 @@ class RenderManager {
         engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
         engine.uniform('uCameraPosition', scene.activeCamera.getPosition());
 
-        const lights = this.composeLight();
-        engine.uniform('uLightType', lights.type);
-        engine.uniform('uLightColor1', lights.color1);
-        engine.uniform('uLightColor2', lights.color2);
-        engine.uniform('uLightIntensity', lights.intensity);
-        engine.uniform('uLightPosition', lights.position);
+        engine.uniform('uLightType', this.lightsData.type);
+        engine.uniform('uLightColor', this.lightsData.color);
+        engine.uniform('uLightIntensity', this.lightsData.intensity);
+        engine.uniform('uLightPosition', this.lightsData.position);
 
         engine.clearColorBuffer(scene.clearColor);
 
@@ -216,7 +204,7 @@ class RenderManager {
 
                 if (material instanceof StandardMaterial) {
 
-                    engine.uniform('uMaterialType', [2]);
+                    engine.uniform('uMaterialType', [MATERIAL_TYPE_STANDARD]);
 
                     engine.uniform('uMaterialAmbientTextureFlag', [
                         Number(material.getAmbientSource() === Material.TEXTURE)
@@ -253,7 +241,7 @@ class RenderManager {
 
                 } else if (material instanceof RawMaterial) {
 
-                    engine.uniform('uMaterialType', [1]);
+                    engine.uniform('uMaterialType', [MATERIAL_TYPE_RAW]);
 
                     if (material.getSource() === Material.COLOR) {
 
@@ -267,6 +255,19 @@ class RenderManager {
 
                     engine.uniform('uDiffuseColor', material.getColor());
                     engine.uniform('uDiffuseTexture', material.texture.getTexture());
+
+                } else if (material instanceof PBRMaterial) {
+
+                    engine.uniform('uMaterialType', [MATERIAL_TYPE_PBR]);
+
+                    engine.uniform('uMaterialAlbedoTextureFlag', [Number(material.getAlbedoSource() === Material.TEXTURE)]);
+                    engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
+                    engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
+
+                    engine.uniform('uMaterialRoughness', [material.getRoughness()]);
+
+                    engine.uniform('uMaterialMetallicFlag', [Number(material.getMetallic())]);
+                    engine.uniform('uMaterialBaseReflectivity', material.getBaseReflectivity());
 
                 }
 
