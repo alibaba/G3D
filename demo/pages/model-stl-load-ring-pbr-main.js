@@ -1,14 +1,8 @@
+
 const lightConfigList = {
     direction: [
-        [-1, 2, 1, 4.0],
-        [1, 0, 1, 4.0],
-        [-1, 0, 0, 1.0],
-        [1, 2, -1, 1.0],
-        [-1, -2, -1, 1.0],
-        [1, -2, -1, 1.0]
-    ],
-    ambient: [
-        [4.0]
+        [-1, 2, 1, 70.0],
+        [1, 0, 1, 70.0]
     ]
 };
 
@@ -18,19 +12,22 @@ function main(
     { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
 ) {
 
-    const attachMaterialBasic = function (mesh, r, g, b, image) {
-        mesh.materials.default.ambientColor.r = r / 30;
-        mesh.materials.default.ambientColor.g = g / 30;
-        mesh.materials.default.ambientColor.b = b / 30;
-        mesh.materials.default.diffuseColor.r = r / 30;
-        mesh.materials.default.diffuseColor.g = g / 30;
-        mesh.materials.default.diffuseColor.b = b / 30;
-        mesh.materials.default.specularColor.r = r;
-        mesh.materials.default.specularColor.g = g;
-        mesh.materials.default.specularColor.b = b;
-        mesh.materials.default.glossiness = 2;
-        mesh.materials.default.useEnvMap = true;
-        mesh.materials.default.envMapTexture.image = image;
+    const attachMaterialPBR = function(mesh, r, g, b){
+
+        const mtl = mesh.materials.default = new G3D.PBRMaterial(mesh);
+
+        mtl.albedoColor = {r, g, b};
+
+        // console.log(mtl.albedoColor);
+
+        mtl.metallic = true;
+
+        mtl.roughness = 0.1;
+
+        mtl.useEnvMap = true;
+
+        mtl.envMapTexture.image = image;
+        
     }
 
     const engine = new G3D.Engine(canvas);
@@ -54,11 +51,6 @@ function main(
         light.intensity = intensity;
     });
 
-    lightConfigList.ambient.forEach(([intensity]) => {
-        const light = new G3D.AmbientLight(scene);
-        light.intensity = 4.0;
-    });
-
     G3D.MeshBuilder.createCoordinate(scene, 6000);
 
     let mesh = null;
@@ -68,6 +60,7 @@ function main(
         // 'http://g-assets.daily.taobao.net/gama/assets/0.0.8/assets/tmp/xin_lian_simp.txt',
         function (text) {
             mesh = G3D.MeshBuilder.createFromStlModel(scene, text);
+
             mesh.geometry.mergeNormals();
             check();
         }
@@ -81,13 +74,13 @@ function main(
         check();
     }
     image.src = '//img.alicdn.com/tfs/TB1_QdsolHH8KJjy0FbXXcqlpXa-1280-573.png';
-    // image.src = '//img.alicdn.com/tfs/TB1e2fqgDtYBeNjy1XdXXXXyVXa-256-256.png';
 
     let checked = false;
     function check() {
         if (imageReady && mesh && !checked) {
 
-            attachMaterialBasic(mesh, 190, 190, 190, image);
+            attachMaterialPBR(mesh, 230, 100, 100);
+            
             check = true;
         }
     }

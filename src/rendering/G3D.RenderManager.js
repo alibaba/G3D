@@ -269,6 +269,17 @@ class RenderManager {
                     engine.uniform('uMaterialMetallicFlag', [Number(material.getMetallic())]);
                     engine.uniform('uMaterialBaseReflectivity', material.getBaseReflectivity());
 
+                    if (material.getUseEnvMap()) {
+
+                        engine.uniform('uEnvMapFlag', [Number(true)]);
+                        engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
+
+                    } else {
+
+                        engine.uniform('uEnvMapFlag', [Number(false)]);
+
+                    }
+
                 }
 
                 engine.uniform('uMaterialOpacity', [material.getOpacity()]);

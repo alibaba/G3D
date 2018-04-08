@@ -12,6 +12,10 @@ class PBRMaterial extends Material {
 
     baseReflectivity = { r: 0.2, g: 0.2, b: 0.2 };
 
+    useEnvMap = false;
+
+    envMapTexture = new Texture(this);
+
     mesh = null;
 
     constructor(mesh) {
@@ -39,6 +43,10 @@ class PBRMaterial extends Material {
     getBaseReflectivity() {
         const { baseReflectivity: r } = this;
         return [r.r, r.g, r.b];
+    }
+
+    getUseEnvMap(){
+        return this.useEnvMap;
     }
 
 }

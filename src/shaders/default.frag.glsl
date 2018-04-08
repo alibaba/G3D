@@ -128,6 +128,19 @@ vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specular
 
 vec3 L(vec3 N, vec3 Wi, vec3 Wo, vec3 c, vec3 F0, float a, vec3 Li){
 
+    vec3 envMapFactor;
+
+    if(uEnvMapFlag){
+
+        vec3 viewReflect = reflect(-Wo, N);
+
+        vec2 viewReflectUV = des2pol(viewReflect);
+
+        envMapFactor = texture2D(uEnvMapTexture, viewReflectUV).xyz;
+
+        envMapFactor = (envMapFactor * 0.5)+0.5;
+    }
+
     float NDotWi = clamp(dot(N, Wi), 0.0, 1.0);
     float NDotWo = clamp(dot(N, Wo), 0.0, 1.0);
 
@@ -141,7 +154,6 @@ vec3 L(vec3 N, vec3 Wi, vec3 Wo, vec3 c, vec3 F0, float a, vec3 Li){
 
     float D = (a * a) / max(0.001, PI * pow(NDotH * NDotH * (a * a - 1.0) + 1.0 , 2.0));
 
-    // float k = a * a / 2.0;
     float k = (a + 1.0) * (a + 1.0) / 8.0;
 
     float G1 = NDotWo / max(0.001, NDotWo * (1.0 - k) + k);
@@ -150,7 +162,11 @@ vec3 L(vec3 N, vec3 Wi, vec3 Wo, vec3 c, vec3 F0, float a, vec3 Li){
     
     vec3 specular = vec3(D * G1 * G2) * kf / max(0.001, NDotWi * NDotWo * PI * 4.0);
 
-    return (diffuse + specular) * NDotWi * Li;
+    // diffuse = vec3(0.0);
+    // specular = vec3(0.0);
+
+    // return (diffuse + specular) * NDotWi * Li;
+    return kd;
 }
 
 vec3 pbr(vec3 albedo){
