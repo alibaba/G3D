@@ -25,7 +25,10 @@ const libraryTasks = dalaran.libraryTasks({
     port: 3000,
     loaders: [{
         test: /\.glsl$/,
-        use: 'raw-loader'
+        use: [
+            'raw-loader',
+            path.resolve('./loader.js')
+        ]
     }],
     plugins: [
         new webpack.ProvidePlugin(providePluginOptions)
@@ -162,8 +165,8 @@ const playgroundTasks = (function () {
     });
 
     function samples() {
-        const files = glob.sync('./website/playground-src/samples/**/*.playground.js').map(file=>{
-            return file.substring(file.indexOf('/guide')+1, file.indexOf('.playground'));
+        const files = glob.sync('./website/playground-src/samples/**/*.playground.js').map(file => {
+            return file.substring(file.indexOf('/guide') + 1, file.indexOf('.playground'));
         });
 
         const obj = {};
@@ -179,16 +182,16 @@ const playgroundTasks = (function () {
             });
             target[fileName] = '<<<' + file + '>>>'
         });
-    
+
         let str = JSON.stringify(obj, null, 2);
         str = str.replace(/\"<<</g, 'require("./');
         str = str.replace(/>>>\"/g, '.playground.js")');
         str = 'module.exports = ' + str;
-    
+
         fs.outputFileSync('./website/playground-src/samples/index.js', str);
     }
 
-    return Object.assign({samples}, tasks);
+    return Object.assign({ samples }, tasks);
 
 })();
 

@@ -1,6 +1,4 @@
-#ifdef GL_ES
 precision mediump float;
-#endif
 
 attribute vec3 aPosition;
 attribute vec2 aUV;
@@ -10,11 +8,7 @@ uniform mat4 uPMatrix;
 uniform mat4 uVMatrix;
 uniform mat4 uMMatrix;
 
-uniform bool uMorphTargetFlag;
-uniform float uMorphPhase;
-attribute vec3 aPosition2;
-attribute vec2 aUV2;
-attribute vec3 aNormal2;
+#include <./snippets/morph-target.vert.glsl>
 
 varying vec2 vUV;
 varying vec3 vNormal;
@@ -26,11 +20,7 @@ void main() {
     vec2 aUVRes = aUV;
     vec3 aNormalRes = aNormal;
 
-    if(uMorphTargetFlag){
-        aPositionRes = mix(aPosition, aPosition2, uMorphPhase);
-        aUVRes = mix(aUV, aUV2, uMorphPhase);
-        aNormalRes = mix(aNormal, aNormal2, uMorphPhase);
-    }
+    morphTarget(aPositionRes, aUVRes, aNormalRes);
 
     gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aPositionRes, 1.0);
 

@@ -97,24 +97,24 @@ class RenderManager {
 
             const groups = this.groupMeshLayers();
 
-            // if (!Env.framebufferNotReady) {
+            if (!Env.framebufferNotReady) {
 
-            //     engine.bindFramebuffer('picker');
+                engine.bindFramebuffer('picker');
 
-            //     this.renderPickingLayer(groups);
+                this.renderPickingLayer(groups);
 
-            //     engine.bindFramebuffer(null);
-            // }
+                engine.bindFramebuffer(null);
+            }
 
-            // if (!Env.framebufferNotReady) {
+            if (!Env.framebufferNotReady) {
 
-            //     engine.bindFramebuffer('shadow');
+                engine.bindFramebuffer('shadow');
 
-            //     this.renderShadowLayer(groups);
+                this.renderShadowLayer(groups);
 
-            //     engine.bindFramebuffer(null);
+                engine.bindFramebuffer(null);
 
-            // }
+            }
 
             this.renderMainLayer(groups);
         }
