@@ -63,7 +63,6 @@ class RenderManager {
         }
     }
 
-
     groupMeshLayers() {
 
         const { scene } = this;
@@ -101,7 +100,7 @@ class RenderManager {
 
                 engine.bindFramebuffer('picker');
 
-                this.renderPickingLayer(groups);
+                this.renderPickingTarget(groups);
 
                 engine.bindFramebuffer(null);
             }
@@ -110,44 +109,20 @@ class RenderManager {
 
                 engine.bindFramebuffer('shadow');
 
-                this.renderShadowLayer(groups);
+                this.renderShadowTarget(groups);
 
                 engine.bindFramebuffer(null);
 
             }
 
-            this.renderMainLayer(groups);
+            this.renderMainTarget(groups);
         }
     }
 
-    renderMainLayer(groups) {
+    renderMainTarget(groups) {
 
         const { scene } = this;
         const { engine } = scene;
-
-        engine.useProgram('default');
-
-        const shadowLight = _.find(scene.lights, light => light.castShadow);
-        if (shadowLight) {
-            engine.uniform('uShadowFlag', [true]);
-            const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
-            engine.uniform('uShadowMapTexture', shadowMapTexture);
-            const shadowCamera = shadowLight.getShadowCamera();
-            engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
-            engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
-        } else {
-            engine.uniform('uShadowFlag', [false]);
-        }
-
-        engine.uniform('manuallyFlipY', [Number(Env.manuallyFlipY)]);
-        engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
-        engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
-        engine.uniform('uCameraPosition', scene.activeCamera.getPosition());
-
-        engine.uniform('uLightType', this.lightsData.type);
-        engine.uniform('uLightColor', this.lightsData.color);
-        engine.uniform('uLightIntensity', this.lightsData.intensity);
-        engine.uniform('uLightPosition', this.lightsData.position);
 
         engine.clearColorBuffer(scene.clearColor);
 
@@ -156,168 +131,74 @@ class RenderManager {
             engine.clearDepthBuffer();
 
             meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
-                this.renderMeshMainLayer(mesh);
+
+                const materials = mesh.materials;
+
+                for (let k in materials) {
+
+                    const key = k;
+                    const material = materials[key];
+
+                    if (material instanceof StandardMaterial) {
+
+                        engine.useProgram('default');
+
+                        this.prepareMVPMatrix(mesh);
+
+                        this.prepareMesh(mesh, key);
+
+                        this.prepareShadow();
+
+                        this.prepareManuallyFlipY();
+
+                        this.prepareLights();
+
+                        this.prepareStandardMaterial(material);
+
+                        this.drawMesh(mesh, key);
+
+                    } else if (material instanceof RawMaterial) {
+
+                        engine.useProgram('default');
+
+                        this.prepareMesh(mesh, key);
+
+                        this.prepareMVPMatrix(mesh);
+
+                        this.prepareShadow();
+
+                        this.prepareManuallyFlipY();
+
+                        this.prepareRawMaterial(material);
+
+                        this.drawMesh(mesh, key);
+
+                    } else if (material instanceof PBRMaterial) {
+
+                        engine.useProgram('default');
+
+                        this.prepareMesh(mesh, key);
+
+                        this.prepareMVPMatrix(mesh);
+
+                        this.prepareShadow();
+
+                        this.preparePBRMaterial(material);
+
+                        this.drawMesh(mesh, key);
+
+                    }
+
+                }
+
             })
         })
     }
 
-    renderMeshMainLayer(mesh) {
+    renderPickingTarget(groups) {
 
         const { scene } = this;
         const { engine } = scene;
-
-        engine.uniform('uMMatrix', mesh.getWorldMatrix());
-
-        if (mesh instanceof MorphTargetMesh) {
-
-            const { before, after, phase } = mesh.getMorphPhaseInfo();
-            const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
-            const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
-            engine.uniform('uMorphTargetFlag', [true]);
-            engine.attribute('aPosition', gBuffer1.vertices);
-            engine.attribute('aUV', gBuffer1.uvs);
-            engine.attribute('aNormal', gBuffer1.normals);
-            engine.attribute('aPosition2', gBuffer2.vertices);
-            engine.attribute('aUV2', gBuffer2.uvs);
-            engine.attribute('aNormal2', gBuffer2.normals);
-            engine.uniform('uMorphPhase', [phase]);
-
-        } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
-
-            const geometryBuffers = mesh.geometry.getBuffers();
-            engine.uniform('uMorphTargetFlag', [false]);
-            engine.attribute('aPosition', geometryBuffers.vertices);
-            engine.attribute('aPosition2', geometryBuffers.vertices);
-            engine.attribute('aUV', geometryBuffers.uvs);
-            engine.attribute('aUV2', geometryBuffers.uvs);
-            engine.attribute('aNormal', geometryBuffers.normals);
-            engine.attribute('aNormal2', geometryBuffers.normals);
-        }
-
-
-        {
-            const materials = mesh.materials;
-
-            for (let k in materials) {
-                const key = k;
-                const material = materials[key];
-
-                if (material instanceof StandardMaterial) {
-
-                    engine.uniform('uMaterialType', [MATERIAL_TYPE_STANDARD]);
-
-                    engine.uniform('uMaterialAmbientTextureFlag', [
-                        Number(material.getAmbientSource() === Material.TEXTURE)
-                    ]);
-
-                    engine.uniform('uMaterialDiffuseTextureFlag', [
-                        Number(material.getDiffuseSource() === Material.TEXTURE)
-                    ]);
-
-                    engine.uniform('uMaterialSpecularTextureFlag', [
-                        Number(material.getSpecularSource() === Material.TEXTURE)
-                    ]);
-
-                    if (material.getUseEnvMap()) {
-
-                        engine.uniform('uEnvMapFlag', [Number(true)]);
-                        engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
-
-                    } else {
-
-                        engine.uniform('uEnvMapFlag', [Number(false)]);
-
-                    }
-
-                    engine.uniform('uAmbientColor', material.getAmbientColor());
-                    engine.uniform('uAmbientTexture', material.ambientTexture.getTexture());
-
-                    engine.uniform('uDiffuseColor', material.getDiffuseColor());
-                    engine.uniform('uDiffuseTexture', material.diffuseTexture.getTexture());
-
-                    engine.uniform('uSpecularColor', material.getSpecularColor());
-                    engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
-                    engine.uniform('uGlossiness', [material.getGlossiness()]);
-
-                } else if (material instanceof RawMaterial) {
-
-                    engine.uniform('uMaterialType', [MATERIAL_TYPE_RAW]);
-
-                    if (material.getSource() === Material.COLOR) {
-
-                        engine.uniform('uMaterialDiffuseTextureFlag', [Number(false)]);
-
-                    } else {
-
-                        engine.uniform('uMaterialDiffuseTextureFlag', [Number(true)]);
-
-                    }
-
-                    engine.uniform('uDiffuseColor', material.getColor());
-                    engine.uniform('uDiffuseTexture', material.texture.getTexture());
-
-                } else if (material instanceof PBRMaterial) {
-
-                    engine.uniform('uMaterialType', [MATERIAL_TYPE_PBR]);
-
-                    engine.uniform('uMaterialAlbedoTextureFlag', [Number(material.getAlbedoSource() === Material.TEXTURE)]);
-                    engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
-                    engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
-
-                    engine.uniform('uMaterialRoughness', [material.getRoughness()]);
-
-                    engine.uniform('uMaterialMetallicFlag', [Number(material.getMetallic())]);
-                    engine.uniform('uMaterialBaseReflectivity', material.getBaseReflectivity());
-
-                    if (material.getUseEnvMap()) {
-
-                        engine.uniform('uEnvMapFlag', [Number(true)]);
-                        engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
-
-                    } else {
-
-                        engine.uniform('uEnvMapFlag', [Number(false)]);
-
-                    }
-
-                }
-
-                engine.uniform('uMaterialOpacity', [material.getOpacity()]);
-
-                engine.uniform('uMaterialOffset', material.getOffset());
-
-                if (material.getOpacity() < 1) {
-                    engine.enableBlend();
-                    engine.disableDepthMask();
-                } else {
-                    engine.enableDepthMask();
-                    engine.disableBlend();
-                }
-
-                const geometryBuffers = mesh.geometry.getBuffers();
-                engine.elements(geometryBuffers.indices[key]);
-
-                if (mesh instanceof LineMesh) {
-                    engine.lineWidth(mesh.lineWidth);
-                    engine.draw(geometryBuffers.indicesLength[key], {
-                        lines: true
-                    });
-                } else {
-                    engine.draw(geometryBuffers.indicesLength[key]);
-                }
-            }
-        }
-    }
-
-    renderPickingLayer(groups) {
-
-        const { scene } = this;
-        const { engine } = scene;
-
-        engine.useProgram('picker');
-
-        engine.uniform('uVMatrix', scene.activeCamera.getVMatrix());
-        engine.uniform('uPMatrix', scene.activeCamera.getPMatrix());
 
         engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
 
@@ -326,58 +207,32 @@ class RenderManager {
             engine.clearDepthBuffer();
 
             meshes.filter(m => m.getPickable()).forEach((mesh) => {
-                this.renderMeshPickingLayer(mesh);
+
+                engine.useProgram('picker');                
+
+                this.prepareMVPMatrix(mesh);
+
+                this.prepareMeshPickingTarget(mesh);
+
+                engine.uniform('meshId', [mesh.id]);
+
+                const materials = mesh.materials;
+
+                for (let key in materials) {
+                    const material = materials[key];
+
+                    const geometryBuffers = mesh.geometry.getBuffers();
+                    engine.elements(geometryBuffers.indices[key]);
+
+                    this.drawMesh(mesh, key);
+
+                }
+
             });
         })
     }
 
-    renderMeshPickingLayer(mesh) {
-
-        const { scene } = this;
-        const { engine } = scene;
-
-        engine.uniform('uMMatrix', mesh.getWorldMatrix());
-
-        if (mesh instanceof MorphTargetMesh) {
-            const { before, after, phase } = mesh.getMorphPhaseInfo();
-            const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
-            const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
-            engine.uniform('uMorphTargetFlag', [true]);
-            engine.attribute('aPosition', gBuffer1.vertices);
-            engine.attribute('aPosition2', gBuffer2.vertices);
-            engine.uniform('uMorphPhase', [phase]);
-        } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
-            const geometryBuffers = mesh.geometry.getBuffers();
-            engine.uniform('uMorphTargetFlag', [false]);
-            engine.attribute('aPosition', geometryBuffers.vertices);
-            engine.attribute('aPosition2', geometryBuffers.vertices);
-            engine.uniform('uMorphPhase', [0]);
-        }
-
-        engine.uniform('meshId', [mesh.id]);
-
-        {
-            const materials = mesh.materials;
-
-            for (let key in materials) {
-                const material = materials[key];
-
-                const geometryBuffers = mesh.geometry.getBuffers();
-                engine.elements(geometryBuffers.indices[key]);
-
-                if (mesh instanceof LineMesh) {
-                    engine.lineWidth(mesh.lineWidth);
-                    engine.draw(geometryBuffers.indicesLength[key], {
-                        lines: true
-                    });
-                } else {
-                    engine.draw(geometryBuffers.indicesLength[key]);
-                }
-            }
-        }
-    }
-
-    renderShadowLayer(groups) {
+    renderShadowTarget(groups) {
 
         const { scene } = this;
         const { engine, lights } = scene;
@@ -388,39 +243,23 @@ class RenderManager {
 
             const group = groups[0];
 
-            engine.useProgram('shadow');
 
             engine.clearDepthBuffer();
             engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
 
             const camera = shadowLight.getShadowCamera();
 
-            engine.uniform('uVMatrix', camera.getVMatrix());
-            engine.uniform('uPMatrix', camera.getPMatrix());
+
 
             group.forEach(mesh => {
 
-                engine.uniform('uMMatrix', mesh.getWorldMatrix());
+                engine.useProgram('shadow');
 
-                if (mesh instanceof MorphTargetMesh) {
+                this.prepareMVPMatrix(mesh, camera);
 
-                    const { before, after, phase } = mesh.getMorphPhaseInfo();
-                    const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
-                    const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
-                    engine.uniform('uMorphTargetFlag', [true]);
-                    engine.attribute('aPosition', gBuffer1.vertices);
-                    engine.attribute('aPosition2', gBuffer2.vertices);
-                    engine.uniform('uMorphPhase', [phase]);
-
-                } else if (mesh instanceof Mesh || mesh instanceof LineMesh) {
-
-                    const geometryBuffers = mesh.geometry.getBuffers();
-                    engine.uniform('uMorphTargetFlag', [false]);
-                    engine.attribute('aPosition', geometryBuffers.vertices);
-                    engine.attribute('aPosition2', geometryBuffers.vertices);
-                    engine.uniform('uMorphPhase', [0]);
-
-                }
+                // engine.uniform('uVMatrix', camera.getVMatrix());
+                // engine.uniform('uPMatrix', camera.getPMatrix());
+                // engine.uniform('uMMatrix', mesh.getWorldMatrix());
 
                 {
                     const materials = mesh.materials;
@@ -428,25 +267,331 @@ class RenderManager {
                     for (let key in materials) {
                         const material = materials[key];
 
-                        const geometryBuffers = mesh.geometry.getBuffers();
-                        engine.elements(geometryBuffers.indices[key]);
+                        this.prepareMeshPickingTarget(mesh);
+                        
+                        this.drawMesh(mesh, key);
 
-                        if (mesh instanceof LineMesh) {
-
-                            engine.lineWidth(mesh.lineWidth);
-                            engine.draw(geometryBuffers.indicesLength[key], {
-                                lines: true
-                            });
-
-                        } else {
-
-                            engine.draw(geometryBuffers.indicesLength[key]);
-
-                        }
                     }
                 }
             })
         }
+    }
+
+
+    prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uVMatrix', camera.getVMatrix());
+        engine.uniform('uPMatrix', camera.getPMatrix());
+        engine.uniform('uMMatrix', mesh.getWorldMatrix());
+
+    }
+
+    prepareMesh = (mesh, key) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        if (mesh instanceof MorphTargetMesh) {
+
+            this.prepareMorphTargetMesh(mesh);
+
+        } else if (mesh instanceof Mesh) {
+
+            this.prepareBasicMesh(mesh);
+
+        } else if (mesh instanceof LineMesh) {
+
+            this.prepareLineMesh(mesh);
+
+        }
+
+        const geometryBuffers = mesh.geometry.getBuffers();
+        engine.elements(geometryBuffers.indices[key]);
+    }
+
+    prepareBasicMesh = (mesh) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        const geometryBuffers = mesh.geometry.getBuffers();
+        engine.uniform('uMorphTargetFlag', [false]);
+        engine.attribute('aPosition', geometryBuffers.vertices);
+        engine.attribute('aPosition2', geometryBuffers.vertices);
+        engine.attribute('aUV', geometryBuffers.uvs);
+        engine.attribute('aUV2', geometryBuffers.uvs);
+        engine.attribute('aNormal', geometryBuffers.normals);
+        engine.attribute('aNormal2', geometryBuffers.normals);
+
+    }
+
+    prepareLineMesh = (mesh) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        this.prepareBasicMesh();
+
+        engine.lineWidth(mesh.lineWidth);
+
+    }
+
+    prepareMorphTargetMesh(mesh) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        this.prepareMorphTargetMeshBasic(mesh);
+
+        const { before, after, phase } = mesh.getMorphPhaseInfo();
+        const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
+        const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+        engine.attribute('aUV', gBuffer1.uvs);
+        engine.attribute('aNormal', gBuffer1.normals);
+        engine.attribute('aUV2', gBuffer2.uvs);
+        engine.attribute('aNormal2', gBuffer2.normals);
+
+    }
+
+    prepareMeshPickingTarget = (mesh) => {
+        const { scene } = this;
+        const { engine } = scene;
+
+        if (mesh instanceof MorphTargetMesh) {
+
+            this.prepareMorphTargetMeshPickingTarget(mesh);
+
+        } else if (mesh instanceof Mesh) {
+
+            this.prepareBasicMeshPickingTarget(mesh);
+
+        } else if (mesh instanceof LineMesh) {
+
+            this.prepareLineMeshPickingTarget(mesh);
+
+        }
+    }
+
+    prepareMorphTargetMeshPickingTarget(mesh) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        const { before, after, phase } = mesh.getMorphPhaseInfo();
+        const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
+        const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+        engine.uniform('uMorphTargetFlag', [true]);
+        engine.attribute('aPosition', gBuffer1.vertices);
+        engine.attribute('aPosition2', gBuffer2.vertices);
+        engine.uniform('uMorphPhase', [phase]);
+
+    }
+
+    prepareBasicMeshPickingTarget(mesh) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        const geometryBuffers = mesh.geometry.getBuffers();
+        engine.uniform('uMorphTargetFlag', [false]);
+        engine.attribute('aPosition', geometryBuffers.vertices);
+        engine.attribute('aPosition2', geometryBuffers.vertices);
+        engine.uniform('uMorphPhase', [0]);
+    }
+
+    prepareLineMeshPickingTarget = (mesh) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        this.prepareBasicMeshPickingTarget(mesh);
+
+        engine.lineWidth(mesh.lineWidth);
+
+    }
+
+    prepareMeshShadowTarget = this.prepareMeshPickingTarget;
+
+    prepareStandardMaterial(material) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uMaterialType', [MATERIAL_TYPE_STANDARD]);
+
+        engine.uniform('uMaterialAmbientTextureFlag', [
+            Number(material.getAmbientSource() === Material.TEXTURE)
+        ]);
+
+        engine.uniform('uMaterialDiffuseTextureFlag', [
+            Number(material.getDiffuseSource() === Material.TEXTURE)
+        ]);
+
+        engine.uniform('uMaterialSpecularTextureFlag', [
+            Number(material.getSpecularSource() === Material.TEXTURE)
+        ]);
+
+        if (material.getUseEnvMap()) {
+
+            engine.uniform('uEnvMapFlag', [Number(true)]);
+            engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
+
+        } else {
+
+            engine.uniform('uEnvMapFlag', [Number(false)]);
+
+        }
+
+        engine.uniform('uAmbientColor', material.getAmbientColor());
+        engine.uniform('uAmbientTexture', material.ambientTexture.getTexture());
+
+        engine.uniform('uDiffuseColor', material.getDiffuseColor());
+        engine.uniform('uDiffuseTexture', material.diffuseTexture.getTexture());
+
+        engine.uniform('uSpecularColor', material.getSpecularColor());
+        engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
+        engine.uniform('uGlossiness', [material.getGlossiness()]);
+
+
+        this.prepareMaterialOpacity(material);
+
+    }
+
+    prepareRawMaterial(material) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uMaterialType', [MATERIAL_TYPE_RAW]);
+
+        if (material.getSource() === Material.COLOR) {
+
+            engine.uniform('uMaterialDiffuseTextureFlag', [Number(false)]);
+
+        } else {
+
+            engine.uniform('uMaterialDiffuseTextureFlag', [Number(true)]);
+
+        }
+
+        engine.uniform('uDiffuseColor', material.getColor());
+        engine.uniform('uDiffuseTexture', material.texture.getTexture());
+
+        this.prepareMaterialOpacity(material);
+
+    }
+
+    preparePBRMaterial(material) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uMaterialType', [MATERIAL_TYPE_PBR]);
+
+        engine.uniform('uMaterialAlbedoTextureFlag', [Number(material.getAlbedoSource() === Material.TEXTURE)]);
+        engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
+        engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
+
+        engine.uniform('uMaterialRoughness', [material.getRoughness()]);
+
+        engine.uniform('uMaterialMetallicFlag', [Number(material.getMetallic())]);
+        engine.uniform('uMaterialBaseReflectivity', material.getBaseReflectivity());
+
+        if (material.getUseEnvMap()) {
+
+            engine.uniform('uEnvMapFlag', [Number(true)]);
+            engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
+
+        } else {
+
+            engine.uniform('uEnvMapFlag', [Number(false)]);
+
+        }
+
+        this.prepareMaterialOpacity(material);
+    }
+
+    prepareMaterialOpacity(material) {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uMaterialOpacity', [material.getOpacity()]);
+        engine.uniform('uMaterialOffset', material.getOffset());
+
+        if (material.getOpacity() < 1) {
+            engine.enableBlend();
+            engine.disableDepthMask();
+        } else {
+            engine.enableDepthMask();
+            engine.disableBlend();
+        }
+    }
+
+    prepareLights() {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('uLightType', this.lightsData.type);
+        engine.uniform('uLightColor', this.lightsData.color);
+        engine.uniform('uLightIntensity', this.lightsData.intensity);
+        engine.uniform('uLightPosition', this.lightsData.position);
+
+        engine.uniform('uCameraPosition', scene.activeCamera.getPosition());
+
+    }
+
+    prepareShadow() {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        const shadowLight = _.find(scene.lights, light => light.castShadow);
+
+        if (shadowLight) {
+
+            engine.uniform('uShadowFlag', [true]);
+
+            const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
+
+            engine.uniform('uShadowMapTexture', shadowMapTexture);
+
+            const shadowCamera = shadowLight.getShadowCamera();
+
+            engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
+            engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
+
+        } else {
+
+            engine.uniform('uShadowFlag', [false]);
+
+        }
+
+    }
+
+    prepareManuallyFlipY() {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.uniform('manuallyFlipY', [Number(Env.manuallyFlipY)]);
+
+    }
+
+    drawMesh = (mesh, key) => {
+
+        const { scene } = this;
+        const { engine } = scene;
+
+        const geometryBuffers = mesh.geometry.getBuffers();
+
+        engine.draw(geometryBuffers.indicesLength[key], {
+            lines: mesh instanceof LineMesh
+        });
     }
 }
 

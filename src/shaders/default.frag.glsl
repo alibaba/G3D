@@ -47,7 +47,6 @@ uniform float uMaterialRoughness;
 uniform bool uMaterialMetallicFlag;
 uniform vec3 uMaterialBaseReflectivity;
 
-
 uniform bool uShadowFlag;
 uniform sampler2D uShadowMapTexture;
 uniform mat4 uShadowPMatrix;
@@ -201,9 +200,6 @@ vec3 pbr(vec3 albedo){
     return fragColor;
 }
 
-
-
-
 void main() {
 
     vec2 offsetedUV = vUV;
@@ -211,7 +207,6 @@ void main() {
     if(manuallyFlipY){
         offsetedUV.y = 1.0 - offsetedUV.y;
     }
-
 
     if(uMaterialType == MATERIAL_TYPE_STANDARD){
 
@@ -222,7 +217,8 @@ void main() {
         
     }else if(uMaterialType == MATERIAL_TYPE_RAW){
 
-        vec4 diffuseColorSource = uMaterialDiffuseTextureFlag ? texture2D(uDiffuseTexture, offsetedUV) : vec4(uDiffuseColor, 1.0);        
+        vec4 diffuseColorSource = uMaterialDiffuseTextureFlag ? texture2D(uDiffuseTexture, offsetedUV) : vec4(uDiffuseColor, 1.0);
+
         gl_FragColor = vec4(diffuseColorSource.xyz, uMaterialOpacity);
 
     }else if(uMaterialType == MATERIAL_TYPE_PBR){
