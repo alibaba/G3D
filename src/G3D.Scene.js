@@ -5,6 +5,7 @@ class Scene {
     activeCamera = null;
     meshes = [];
     lights = [];
+    
     renderManager = new RenderManager(this);
 
     constructor(engine) {

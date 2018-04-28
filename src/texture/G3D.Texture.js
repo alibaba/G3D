@@ -4,22 +4,20 @@
 )
 class Texture {
 
-    offset = { x: 0, y: 0 };
+    width = 1;
+    height = 1;
     image = new Uint8Array([255, 255, 255, 255]);
 
-    material = null;
-
-    constructor(material) {
-        this.material = material;
-    }
-
-    getImage() {
-        return this.image;
+    constructor() {
     }
 
     getTexture() {
-        const engine = this.material.mesh.scene.engine;
-        return engine.createTexture(this.getImage());
+        
+        const engine = Engine.instance;
+
+        const [width, height] = this.image.width ? [this.image.width, this.image.height] : [this.width, this.height];
+        
+        return engine.createTexture(this.image, width, height);
     }
 }
 

@@ -1,3 +1,5 @@
+import CubeTexture from "../texture/G3D.CubeTexture";
+
 @Lazy(
     [
         'ambientColor', 'ambientColor.r', 'ambientColor.g', 'ambientColor.b',
@@ -11,20 +13,22 @@
 class StandardMaterial extends Material {
 
     ambientColor = { r: 255, g: 255, b: 255 };
-    ambientTexture = new Texture(this);
+    ambientTexture = new Texture();
     ambientSource = Material.COLOR;
 
     diffuseColor = { r: 255, g: 255, b: 255 };
-    diffuseTexture = new Texture(this);
+    diffuseTexture = new Texture();
     diffuseSource = Material.COLOR;
 
     specularColor = { r: 0, g: 0, b: 0 };
-    specularTexture = new Texture(this);
+    specularTexture = new Texture();
     specularSource = Material.COLOR;
     glossiness = 1.0;
 
-    envMapTexture = new Texture(this);
+    envMapTexture = new Texture();
+    envMapCubeTexture = new CubeTexture();
     useEnvMap = false;
+    useCubeMap = false;
 
     mesh = null;
 
@@ -63,6 +67,10 @@ class StandardMaterial extends Material {
 
     getUseEnvMap() {
         return this.useEnvMap;
+    }
+
+    getUseCubeMap(){
+        return this.useCubeMap;
     }
 }
 

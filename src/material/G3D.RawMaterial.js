@@ -5,7 +5,7 @@
 class RawMaterial extends Material {
 
     color = { r: 255, g: 255, b: 255 };
-    texture = new Texture(this);
+    texture = new Texture();
     source = Material.COLOR;
 
     mesh = null;

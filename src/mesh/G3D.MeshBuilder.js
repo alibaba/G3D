@@ -612,10 +612,6 @@ class MeshBuilder {
             return this.createBox(scene, left, right, top, bottom, front, back);
         }
 
-
-
-
-
     }
 
     static createLineFromPath(scene, path, resolution) {

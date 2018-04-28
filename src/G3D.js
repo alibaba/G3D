@@ -1,4 +1,5 @@
 export default {
+    
     Engine,
     Scene,
     Node,
@@ -8,6 +9,10 @@ export default {
     BaseOrthographicCamera,
     
     ArcRotateCamera,
+
+    Texture,
+    CubeTexture,
+    TextureBuilder,
     
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
@@ -37,5 +42,6 @@ export default {
     Ray,
 
     ObjParser,
-    StlParser
+    StlParser,
+    HDRParser
 };

@@ -38,6 +38,36 @@ function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
     return vertices;
 }
 
+function Line(x0, y0, x1, y1, resolution) {
+
+    return [x1, y1];
+
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+
+    const d = Math.sqrt(dx * dx + dy * dy);
+
+    if (d === 0) {
+        return [x1, y1];
+    }
+
+    const segs = Math.ceil(d / resolution);
+    const segLen = d / segs;
+
+    const points = [];
+    for (let i = 1; i <= segs; i++) {
+
+        const x = x0 + (i / segs) * (dx / d) * d;
+        const y = y0 + (i / segs) * (dy / d) * d;
+
+        points.push(x, y);
+    }
+
+    return points;
+}
+
+
+
 const PathParser = {
 
     parse: function (data, resolution) {
@@ -96,11 +126,23 @@ const PathParser = {
                     {
                         const x = Number(list[i++]);
                         const y = Number(list[i++]);
-                        vertices.push(x, y);
-                        line.push(vertices.length / 2 - 1);
+
+                        const [x0, y0] = current;
+                        const points = Line(x0, y0, x, y, resolution);
+                        for (let i = 0; i < points.length; i += 2) {
+                            vertices.push(points[i], points[i + 1]);
+                            line.push(vertices.length / 2 - 1);
+                        }
+
+                        // vertices.push(x, y);
+                        // line.push(vertices.length / 2 - 1);
 
                         current = [x, y];
-
+                        break;
+                    }
+                case 'z':
+                    {
+                        // line.push(line[0]);
                         break;
                     }
                 default:
@@ -150,13 +192,15 @@ const PathParser = {
             vertices3d.push(vertices[i], vertices[i + 1], 0);
         }
 
-
         return { vertices: vertices3d, indices };
+
     },
 
     parseToTriangles: function (data, resolution) {
 
         const { vertices, lines } = this.parse(data, resolution);
+
+        console.log(vertices.join(','));
 
         const clonedLines = cloneLines(lines);
 
@@ -184,7 +228,6 @@ const PathParser = {
         function earcut(polygons, holes, triangles) {
 
             if (holes.length > 0) {
-
                 const res = removeHoles(polygons, holes);
                 polygons = res.polygons;
                 holes = res.holes;
@@ -198,6 +241,9 @@ const PathParser = {
         }
 
         function earcutPolygon(polygon) {
+
+            console.log(polygon.join(','));
+
             if (polygon.length < 3) {
 
                 throw 'not valid polygon'
@@ -215,13 +261,13 @@ const PathParser = {
                 for (let i = 1; i < polygon.length - 1; i++) {
 
                     const [j0, j1, j2] = [
-                        i - 1,
+                        i === 0 ? polygon.length - 1 : i - 1,
                         i,
-                        i + 1
+                        i === polygon.length - 1 ? 0 : i + 1
                     ]
                     const [i0, i1, i2] = [polygon[j0], polygon[j1], polygon[j2]];
 
-                    if (isEar(i0, i1, i2, polygon)) {
+                    if (isEar(j0, j1, j2, polygon)) {
                         polygon.splice(i, 1);
                         return [
                             i0, i1, i2, ...earcutPolygon(polygon)
@@ -230,14 +276,15 @@ const PathParser = {
                 }
 
                 throw new Error('hole not cleaned');
-                // return [];
             }
         }
 
+        let clockwiseFactor = 1;
+
         function distinguish(indices) {
 
-            const polygons = [];
-            const holes = [];
+            let polygons = [];
+            let holes = [];
 
             indices.forEach((list) => {
 
@@ -249,10 +296,14 @@ const PathParser = {
                     sum += (x1 - x0) * (y1 + y0);
                 }
 
-                if (sum >= 0) {
+                if (polygons.length === 0) {
+                    clockwiseFactor = sum / Math.abs(sum);
+                }
+
+                if (sum * clockwiseFactor >= 0) {
                     polygons.push(list);
                 } else {
-                    holes.push(list)
+                    holes.push(list);
                 }
             })
 
@@ -300,13 +351,36 @@ const PathParser = {
             }
         }
 
-        function isEar(i0, i1, i2, polygon) {
+        function isCross(x0, y0, x1, y1, x2, y2, x3, y3) {
+
+            const s0 = sign(x0, y0, x2, y2, x3, y3);
+            const s1 = sign(x1, y1, x2, y2, x3, y3);
+            const s2 = sign(x2, y2, x0, y0, x1, y1);
+            const s3 = sign(x3, y3, x0, y0, x1, y1);
+
+            const s = s0 * s1 * s2 * s3;
+            if (isNaN(s)) {
+                return false;
+            } else if (s === 0) {
+                return false;
+            } else if (s0 * s1 === -1 && s2 * s3 === -1) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        function isEar(j0, j1, j2, polygon) {
+
+            const [i0, i1, i2] = [polygon[j0], polygon[j1], polygon[j2]];
+
             const [x0, y0, x1, y1, x2, y2] = [...pt(i0), ...pt(i1), ...pt(i2)];
             const v1 = [x1 - x0, y1 - y0];
             const v2 = [x2 - x1, y2 - y1];
             const cross = Vec2.cross([], v1, v2);
 
-            const convex = sign(x2, y2, x0, y0, x1, y1) <= 0;
+            const convex = sign(x2, y2, x0, y0, x1, y1) * clockwiseFactor <= 0;
             if (!convex) {
                 return false;
             }
@@ -316,6 +390,17 @@ const PathParser = {
                 if (ix !== i0 && ix !== i1 && ix !== i2) {
                     const [x, y] = pt(ix);
                     if (insideTriangle(x, y, x0, y0, x1, y1, x2, y2)) {
+                        return false;
+                    }
+                }
+
+                if (i !== polygon.length - 1) {
+
+                    const jx = polygon[i + 1];
+
+                    const [x0p, y0p, x1p, y1p] = [...pt(ix), ...pt(jx)];
+
+                    if (isCross(x0, y0, x2, y2, x0p, y0p, x1p, y1p)) {
                         return false;
                     }
                 }

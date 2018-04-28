@@ -1,3 +1,5 @@
+import Texture from "../texture/G3D.Texture";
+
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
 const LIGHT_TYPE_AMBIENT = 2;
@@ -85,6 +87,10 @@ class RenderManager {
         return groups.filter(Boolean);
     }
 
+    /**
+     * The Render Part
+     */
+
     render() {
 
         const { scene } = this;
@@ -103,6 +109,7 @@ class RenderManager {
                 this.renderPickingTarget(groups);
 
                 engine.bindFramebuffer(null);
+                
             }
 
             if (!Env.framebufferNotReady) {
@@ -159,13 +166,11 @@ class RenderManager {
 
                     } else if (material instanceof RawMaterial) {
 
-                        engine.useProgram('default');
+                        engine.useProgram('raw');
 
                         this.prepareMesh(mesh, key);
 
                         this.prepareMVPMatrix(mesh);
-
-                        this.prepareShadow();
 
                         this.prepareManuallyFlipY();
 
@@ -175,13 +180,15 @@ class RenderManager {
 
                     } else if (material instanceof PBRMaterial) {
 
-                        engine.useProgram('default');
-
-                        this.prepareMesh(mesh, key);
+                        engine.useProgram('pbr');
 
                         this.prepareMVPMatrix(mesh);
 
-                        this.prepareShadow();
+                        this.prepareMesh(mesh, key);
+
+                        // this.prepareShadow();
+
+                        this.prepareLights();
 
                         this.preparePBRMaterial(material);
 
@@ -208,7 +215,7 @@ class RenderManager {
 
             meshes.filter(m => m.getPickable()).forEach((mesh) => {
 
-                engine.useProgram('picker');                
+                engine.useProgram('picker');
 
                 this.prepareMVPMatrix(mesh);
 
@@ -268,7 +275,7 @@ class RenderManager {
                         const material = materials[key];
 
                         this.prepareMeshPickingTarget(mesh);
-                        
+
                         this.drawMesh(mesh, key);
 
                     }
@@ -277,6 +284,9 @@ class RenderManager {
         }
     }
 
+    /**
+     * The Prepare Part
+     */
 
     prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
 
@@ -344,15 +354,17 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        this.prepareMorphTargetMeshBasic(mesh);
-
         const { before, after, phase } = mesh.getMorphPhaseInfo();
         const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
         const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+        engine.uniform('uMorphTargetFlag', [true]);
+        engine.attribute('aPosition', gBuffer1.vertices);
+        engine.attribute('aPosition2', gBuffer2.vertices);
         engine.attribute('aUV', gBuffer1.uvs);
         engine.attribute('aNormal', gBuffer1.normals);
         engine.attribute('aUV2', gBuffer2.uvs);
         engine.attribute('aNormal2', gBuffer2.normals);
+        engine.uniform('uMorphPhase', [phase]);
 
     }
 
@@ -420,8 +432,6 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        engine.uniform('uMaterialType', [MATERIAL_TYPE_STANDARD]);
-
         engine.uniform('uMaterialAmbientTextureFlag', [
             Number(material.getAmbientSource() === Material.TEXTURE)
         ]);
@@ -436,12 +446,21 @@ class RenderManager {
 
         if (material.getUseEnvMap()) {
 
+            const { envMapTexture, envMapCubeTexture } = material;
+            
             engine.uniform('uEnvMapFlag', [Number(true)]);
-            engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
-
+            // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
+            engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
+            // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
+            
         } else {
 
+            const { envMapTexture, envMapCubeTexture } = material;
+
             engine.uniform('uEnvMapFlag', [Number(false)]);
+            // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
+            engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
+            // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
 
         }
 
@@ -455,9 +474,8 @@ class RenderManager {
         engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
         engine.uniform('uGlossiness', [material.getGlossiness()]);
 
-
         this.prepareMaterialOpacity(material);
-
+        
     }
 
     prepareRawMaterial(material) {
@@ -465,23 +483,18 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        engine.uniform('uMaterialType', [MATERIAL_TYPE_RAW]);
-
         if (material.getSource() === Material.COLOR) {
 
-            engine.uniform('uMaterialDiffuseTextureFlag', [Number(false)]);
+            engine.uniform('uMaterialTextureFlag', [Number(false)]);
 
         } else {
 
-            engine.uniform('uMaterialDiffuseTextureFlag', [Number(true)]);
+            engine.uniform('uMaterialTextureFlag', [Number(true)]);
 
         }
 
-        engine.uniform('uDiffuseColor', material.getColor());
-        engine.uniform('uDiffuseTexture', material.texture.getTexture());
-
-        this.prepareMaterialOpacity(material);
-
+        engine.uniform('uColor', material.getColor());
+        engine.uniform('uTexture', material.texture.getTexture());
     }
 
     preparePBRMaterial(material) {
@@ -489,29 +502,18 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        engine.uniform('uMaterialType', [MATERIAL_TYPE_PBR]);
 
-        engine.uniform('uMaterialAlbedoTextureFlag', [Number(material.getAlbedoSource() === Material.TEXTURE)]);
         engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
-        engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
 
         engine.uniform('uMaterialRoughness', [material.getRoughness()]);
 
-        engine.uniform('uMaterialMetallicFlag', [Number(material.getMetallic())]);
-        engine.uniform('uMaterialBaseReflectivity', material.getBaseReflectivity());
+        engine.uniform('uMaterialMetallic', [material.getMetallic()]);
 
-        if (material.getUseEnvMap()) {
+        engine.uniform('uBRDFLUT', material.brdfLUTTexture.getTexture());
 
-            engine.uniform('uEnvMapFlag', [Number(true)]);
-            engine.uniform('uEnvMapTexture', material.envMapTexture.getTexture());
+        engine.uniform('uSpecularMap', material.specularMapTexture.getTexture());
+        engine.uniform('uDiffuseMap', material.diffuseMapTexture.getTexture());
 
-        } else {
-
-            engine.uniform('uEnvMapFlag', [Number(false)]);
-
-        }
-
-        this.prepareMaterialOpacity(material);
     }
 
     prepareMaterialOpacity(material) {
@@ -520,7 +522,6 @@ class RenderManager {
         const { engine } = scene;
 
         engine.uniform('uMaterialOpacity', [material.getOpacity()]);
-        engine.uniform('uMaterialOffset', material.getOffset());
 
         if (material.getOpacity() < 1) {
             engine.enableBlend();

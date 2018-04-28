@@ -85,6 +85,10 @@ class Program {
                 const unit = ++this._textureCount;
                 res.unit = unit;
             }
+            if(baseVecType === 'CUB'){
+                const unit = ++this._textureCount;
+                res.unit = unit;
+            }
             let name = uniform.name;
             if (name.endsWith('[0]')) {
                 name = name.replace('[0]', '');
@@ -129,14 +133,25 @@ class Program {
                 case '2D':
                     {
                         gl.activeTexture(gl[`TEXTURE${unit}`]);
+
                         gl.bindTexture(gl.TEXTURE_2D, value);
                         gl.uniform1i(position, unit);
                         break;
                     }
+                case 'CUB':
+                    {
+                        gl.activeTexture(gl[`TEXTURE${unit}`]);
+
+                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, value);
+                        gl.uniform1i(position, unit);
+                        break;
+                    }
                 default:
-                    throw 'baseVecType invalid';
+                    throw new Error('baseVecType invalid ' + baseVecType);
             }
 
+        } else {
+            console.log(`[Warning] Uniform ${name} not exits.`, this);
         }
     }
 

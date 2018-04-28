@@ -1,3 +1,5 @@
+import CubeTexture from "../texture/G3D.CubeTexture";
+
 class PBRMaterial extends Material {
 
     albedoColor = { r: 0, g: 0, b: 0 };
@@ -6,21 +8,32 @@ class PBRMaterial extends Material {
 
     albedoSource = Material.COLOR;
 
-    metallic = false;
+    metallic = 0.0;
 
     roughness = 0.1;
 
-    baseReflectivity = { r: 0.2, g: 0.2, b: 0.2 };
-
     useEnvMap = false;
 
-    envMapTexture = new Texture(this);
+    envMapTexture = new Texture();
+
+    diffuseMapTexture = new CubeTexture();
+
+    specularMapTexture = new CubeTexture();
+
+    brdfLUTTexture = new Texture();
 
     mesh = null;
 
     constructor(mesh) {
         super();
         this.mesh = mesh;
+
+        const image = new Env.Image();
+        image.crossOrigin = true;
+        image.src = 'https://img.alicdn.com/tfs/TB1yCjuoDtYBeNjy1XdXXXXyVXa-256-256.png';
+        image.onload = () => {
+            this.brdfLUTTexture.image = image;
+        }
     }
 
     getAlbedoColor() {
@@ -38,15 +51,6 @@ class PBRMaterial extends Material {
 
     getRoughness() {
         return this.roughness;
-    }
-
-    getBaseReflectivity() {
-        const { baseReflectivity: r } = this;
-        return [r.r, r.g, r.b];
-    }
-
-    getUseEnvMap(){
-        return this.useEnvMap;
     }
 
 }

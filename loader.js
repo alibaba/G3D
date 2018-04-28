@@ -13,12 +13,12 @@ function loader(source) {
 
         lines.forEach((line, i) => {
 
-            const reg = /^#\s*include\s*<(.*)>$/;
-            const regRes = line.trim().match(reg);
+            const reg = /^(\s*)#\s*include\s*<(.*)>\s*$/;
+            const regRes = line.match(reg);
 
-            if (regRes && regRes[1]) {
+            if (regRes) {
 
-                const p = path.resolve(path.dirname(resourcePath), regRes[1]);
+                const p = path.resolve(path.dirname(resourcePath), regRes[2]);
 
                 count++;
 
@@ -40,7 +40,7 @@ function loader(source) {
                                         callback(err);
                                     } else {
 
-                                        lines[i] = str;
+                                        lines[i] = str.split('\n').map(l => regRes[1] + l).join('\n');
                                         count--;
                                         check();
                                     }
