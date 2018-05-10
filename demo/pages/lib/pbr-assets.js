@@ -1,9 +1,11 @@
 import loader from './loader';
 
+const prefix = '//g.alicdn.com/gama/assets/0.0.11/assets/pbr';
 
-function loadAssets(callback) {
+function loadAssets(envName, callback) {
 
     const faces = ['left', 'right', 'top', 'bottom', 'front', 'back'];
+    const faceDes = ['negx', 'posx', 'posy', 'negy', 'posz', 'negz'];
 
     loadSpecular(function (df) {
         loadDiffuse(function (sp) {
@@ -13,9 +15,10 @@ function loadAssets(callback) {
 
     function loadSpecular(callback) {
         const specularImages = {};
-        faces.forEach(face => {
-            for (let i = 0; i < 10; i++) {
-                specularImages[face + '_' + i] = `//g.alicdn.com/gama/assets/0.0.8/assets/pbr/specular/specular_${face}_${i}.jpg`;
+        faces.forEach((face, j) => {
+            for (let i = 0; i < 9; i++) {
+                // specularImages[face + '_' + i] = `//g.alicdn.com/gama/assets/0.0.8/assets/pbr/specular/specular_${face}_${i}.jpg`;
+                specularImages[face + '_' + i] = `${prefix}/${envName}/output_pmrem_${faceDes[j]}_${i}_${Math.pow(2, 8 - i)}x${Math.pow(2, 8 - i)}.jpg`;
             }
         });
 
@@ -47,8 +50,9 @@ function loadAssets(callback) {
 
         const diffuseImages = {};
 
-        faces.forEach(face => {
-            diffuseImages[face] = `http://g.alicdn.com/gama/assets/0.0.8/assets/pbr/diffuse/diffuse_${face}_0.jpg`;
+        faces.forEach((face, j) => {
+            // diffuseImages[face] = `http://g.alicdn.com/gama/assets/0.0.8/assets/pbr/diffuse/diffuse_${face}_0.jpg`;
+            diffuseImages[face] = `${prefix}/${envName}/output_iem_${faceDes[j]}.jpg`;
         });
 
         loader.loadImageQueue({
@@ -61,11 +65,24 @@ function loadAssets(callback) {
     }
 }
 
+const pbrAssets = (envName = 'apartment') => {
 
-const pbrAssets = {
-    ready: (callback) => {
-        loadAssets(callback);
+    // envName could be:
+
+    const envList = ['apartment', 'office', 'emptyroom', 'backlot'];
+    if (envList.indexOf(envName) === -1) {
+        console.log('envmap ' + envName + ' not exits, fallback to apartment');
+        envName = 'apartment';
     }
-};
+
+    return {
+        ready: callback => {
+            loadAssets(envName, callback)
+        }
+    }
+
+}
+
+
 
 export default pbrAssets;

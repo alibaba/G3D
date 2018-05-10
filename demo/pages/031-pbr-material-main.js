@@ -19,24 +19,47 @@ function main(
 
     controlArcRotateCamera(canvas, camera);
 
-    function createLight(x, y, z) {
+    function createDirectionalLight(x, y, z, intensity = 1.0) {
+
         const light = new G3D.DirectionalLight(scene);
+        
         light.direction.x = x;
         light.direction.y = y;
         light.direction.z = z;
-        light.intensity = 1.0;
+
+        light.intensity = intensity;
+
     }
 
-    createLight(0, 0.5, 0.5);
+    function createPointLight(x, y, z, intensity = 1.0, radius = 1.0) {
+
+        const light = new G3D.PointLight(scene);
+
+        light.position.x = x;
+        light.position.y = y;
+        light.position.z = z;
+
+        light.intensity = intensity;
+
+        light.radius = radius;
+
+    }
+
+    createDirectionalLight(0, 0.5, 0.5);
+
+    createPointLight(0, 0, 0, 10);
+
 
     const m3 = G3D.MeshBuilder.createCoordinate(scene, 5);
 
-    pbrAssets.ready((specular, diffuse) => {
+    pbrAssets().ready((specular, diffuse) => {
 
         const size = 4;
 
         createBalls([200, 200, 200], 1);
         createBalls([218, 179, 0], -1);
+
+        const clamp = (min, max, v) => v < min ? min : v > max ? max : v;
 
         function createBalls(color, z = 1) {
 
@@ -54,20 +77,15 @@ function main(
                     Object.assign(mtl.specularMapTexture.images, specular);
                     Object.assign(mtl.diffuseMapTexture.images, diffuse);
 
-                    mtl.albedoColor = {r: color[0], g: color[1], b: color[2]};
+                    mtl.albedoColor = { r: color[0], g: color[1], b: color[2] };
 
-                    mtl.metallic = m / (size - 1);
-                    mtl.roughness = r / (size - 1);
+                    mtl.metallic = 0 + m / (size - 1) * 1.0;
+                    mtl.roughness = 0 + r / (size - 1) * 1.0;
 
                     mesh.materials.default = mtl;
                 }
             }
-
         }
-
-
-
-
     })
 
     function render() {

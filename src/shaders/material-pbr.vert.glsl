@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 
 attribute vec3 aPosition;
 attribute vec2 aUV;
@@ -13,7 +13,6 @@ uniform mat4 uMMatrix;
 varying vec2 vUV;
 varying vec3 vNormal;
 varying vec3 vPosition;
-
 
 void main() {
 

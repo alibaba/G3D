@@ -89,7 +89,7 @@ vec3 L_env(PBRInfo info){
     vec3 diffuse = diffuseLight * diffuseColor;
 
     vec3 R = -normalize(reflect(info.V, info.N));
-    vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * 9.0).rgb;
+    vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * 8.0).rgb;
 
     vec3 specularColor = mix(vec3(0.04), info.baseColor, info.metallic);
 
@@ -124,6 +124,18 @@ vec3 L(){
                     uLightColor[i],
                     normalize(uLightPosition[i]),
                     uLightIntensity[i]
+                )
+            );
+        }else if(type == LIGHT_TYPE_POINT){
+
+            float dir = length(uLightPosition[i] - vPosition);
+
+            fragColor += L_direct(
+                pbrInputs,
+                PBRLightInfo(
+                    uLightColor[i],
+                    normalize(uLightPosition[i]-vPosition),
+                    uLightIntensity[i] / (dir * dir)
                 )
             );
         }
