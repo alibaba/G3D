@@ -1,6 +1,7 @@
 class Scene {
 
-    clearColor = { r: 0, g: 0, b: 0 };
+    clearColor = { r: 51, g: 51, b: 76 };
+
     engine = null;
     activeCamera = null;
     meshes = [];
