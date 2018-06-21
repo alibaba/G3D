@@ -5,5 +5,4 @@ package-lock.json
 website/homepage
 website/playground
 dist
-demo/pages/900-*
-demo/pages/assets/*
+demo/900-*

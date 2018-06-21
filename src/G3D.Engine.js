@@ -55,15 +55,18 @@ class Engine {
             raw: new Program({
                 gl, fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw
             }),
-            pbr: new Program({
-                gl, fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR
-            }),
-            picker: new Program({
-                gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker
-            }),
-            shadow: new Program({
-                gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow
-            })
+            pbr: Env.pbrNotReady ? null :
+                new Program({
+                    gl, fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR
+                }),
+            picker: Env.framebufferNotReady ? null :
+                new Program({
+                    gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker
+                }),
+            shadow: Env.framebufferNotReady ? null :
+                new Program({
+                    gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow
+                })
         }
 
         this.framebuffers = {
@@ -162,7 +165,7 @@ class Engine {
         } else {
             // gl.texImage2D(gl.TEXTURE_2D, 0, this.extensions.SRGB.SRGB_EXT, this.extensions.SRGB.SRGB_EXT, gl.UNSIGNED_BYTE, image);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-            
+
             const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
             if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
                 gl.generateMipmap(gl.TEXTURE_2D);

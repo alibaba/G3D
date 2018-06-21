@@ -256,8 +256,6 @@ class RenderManager {
 
             const camera = shadowLight.getShadowCamera();
 
-
-
             group.forEach(mesh => {
 
                 engine.useProgram('shadow');

@@ -1,5 +1,5 @@
-import G3D from '../../src/G3D';
-import main from './013-font-main';
+import G3D from '../src/G3D';
+import main from './011-model-stl-load-ring-main';
 import loader from './lib/loader';
 
 import { controlArcRotateCamera } from './lib/attach-control';

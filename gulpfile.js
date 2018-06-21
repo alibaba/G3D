@@ -20,7 +20,7 @@ glob.sync('src/**/G3D.*.js').forEach(item => {
 
 const libraryTasks = dalaran.libraryTasks({
     umdName: 'G3D',
-    demo: './demo/pages',
+    demo: './demo',
     entry: './src/G3D.js',
     port: 3000,
     loaders: [{
@@ -41,8 +41,6 @@ const libraryTasks = dalaran.libraryTasks({
 gulp.task('library-test', libraryTasks.test);
 gulp.task('library-dev', libraryTasks.dev);
 gulp.task('library-build', libraryTasks.build);
-
-
 
 const homePageTasks = (function () {
 
@@ -135,7 +133,6 @@ gulp.task('homepage-less-watch', homePageTasks.watchLess);
 gulp.task('homepage-assets', homePageTasks.assets);
 gulp.task('homepage-build', ['homepage-less', 'homepage-assets'], homePageTasks.build);
 
-
 const playgroundTasks = (function () {
 
     const tasks = dalaran.applicationTasks({
@@ -198,9 +195,5 @@ const playgroundTasks = (function () {
 gulp.task('playground-samples', playgroundTasks.samples);
 gulp.task('playground-dev', ['playground-samples'], playgroundTasks.dev);
 gulp.task('playground-build', ['playground-samples'], playgroundTasks.build);
-
-
-
-
 
 gulp.task('website', ['homepage-build', 'playground-build'], function () { });

@@ -1,5 +1,5 @@
-import G3D from '../../src/G3D';
-import main from './004-point-light-main';
+import G3D from '../src/G3D';
+import main from './042-shadow-directional-light-main';
 
 import { controlArcRotateCamera } from './lib/attach-control';
 

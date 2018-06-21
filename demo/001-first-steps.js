@@ -1,5 +1,5 @@
-import G3D from '../../src/G3D';
-import main from './043-render-layer-index-main';
+import G3D from '../src/G3D';
+import main from './001-first-steps-main';
 
 import { controlArcRotateCamera } from './lib/attach-control';
 
