@@ -35,7 +35,10 @@ export default {
     Geometry,
     LineGeometry,
 
+    Skybox,
+
     Mat4,
+    Mat3,
     Vec3,
     Vec4,
     Quat,

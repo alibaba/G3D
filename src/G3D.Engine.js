@@ -13,6 +13,9 @@ import vShaderPicker from './shaders/picker.vert.glsl';
 import fShaderShadow from './shaders/shadow.frag.glsl';
 import vShaderShadow from './shaders/shadow.vert.glsl';
 
+import fShaderSkybox from './shaders/skybox.frag.glsl';
+import vShaderSkybox from './shaders/skybox.vert.glsl';
+
 
 class Engine {
 
@@ -66,6 +69,10 @@ class Engine {
             shadow: Env.framebufferNotReady ? null :
                 new Program({
                     gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow
+                }),
+            skybox: Env.framebufferNotReady ? null :
+                new Program({
+                    gl, fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox
                 })
         }
 
