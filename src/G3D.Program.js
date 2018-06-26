@@ -85,7 +85,7 @@ class Program {
                 const unit = ++this._textureCount;
                 res.unit = unit;
             }
-            if(baseVecType === 'CUB'){
+            if (baseVecType === 'CUB') {
                 const unit = ++this._textureCount;
                 res.unit = unit;
             }
@@ -155,13 +155,13 @@ class Program {
         }
     }
 
-    attribute(name, buffer) {
+    attribute(name, buffer, stride, offset) {
         if (this._attributes[name]) {
             const gl = this._gl;
             const { type, info, position } = this._attributes[name];
             const { baseType, vecType, baseVecType, vecSize } = this._parseType(type);
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.vertexAttribPointer(position, vecSize, gl[baseType], false, 0, 0);
+            gl.vertexAttribPointer(position, vecSize, gl[baseType], false, stride, offset);
             gl.enableVertexAttribArray(position);
         }
     }

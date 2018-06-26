@@ -15,8 +15,7 @@ class Geometry {
     uvs = [];       // vec2
     normals = [];   // vec3
 
-    constructor(mesh) {
-        this.mesh = mesh;
+    constructor() {
     }
 
     getVertices() {
@@ -39,27 +38,31 @@ class Geometry {
         return indices;
     }
 
-
     getBuffers() {
 
-        const engine = this.mesh.scene.engine;
+        const engine = Engine.instance;
 
         const vertices = engine.createAttributeBuffer(this.getVertices());
         const uvs = engine.createAttributeBuffer(this.getUVs());
         const normals = engine.createAttributeBuffer(this.getNormals());
         const indices = {};
-        const indicesLength = {};
 
         const oIndices = this.getIndices();
         for (let key in oIndices) {
-            indices[key] = engine.createElementBuffer(oIndices[key]);
-            indicesLength[key] = oIndices[key].length;
+            indices[key] = {
+                buffer: engine.createElementBuffer(oIndices[key]),
+                mode: 'TRIANGLES',
+                offset: 0,
+                count: oIndices[key].length
+            }
         }
         return {
-            vertices, uvs, normals, indices, indicesLength
+            vertices: { buffer: vertices, stride: 0, offset: 0 },
+            uvs: { buffer: uvs, stride: 0, offset: 0 },
+            normals: { buffer: normals, stride: 0, offset: 0 },
+            indices
         }
     }
-
 
     mergeNormals() {
 

@@ -38,6 +38,7 @@ class Engine {
             antialias: true,
             preserveDrawingBuffer: true
         });
+
         this.width = canvas.width;
         this.height = canvas.height;
 
@@ -102,8 +103,8 @@ class Engine {
         this.currentProgram.uniform(name, value);
     }
 
-    attribute(name, buffer) {
-        this.currentProgram.attribute(name, buffer);
+    attribute(name, buffer, stride, offset) {
+        this.currentProgram.attribute(name, buffer, stride, offset);
     }
 
     enableDepthMask() {
@@ -312,10 +313,13 @@ class Engine {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     }
 
-    draw(count, { lines } = {}) {
+    draw(mode, count, offset) {
         const gl = this._gl;
-        const type = lines ? gl.LINES : gl.TRIANGLES;
-        gl.drawElements(type, count, gl.UNSIGNED_INT, 0);
+        // const type = lines ? gl.LINES : gl.TRIANGLES;
+        if (typeof mode === 'string') {
+            mode = gl[mode];
+        }
+        gl.drawElements(mode, count, gl.UNSIGNED_INT, offset);
     }
 
     readFramebufferPixel(key, x, y) {

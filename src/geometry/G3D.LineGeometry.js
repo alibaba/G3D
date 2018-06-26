@@ -8,10 +8,7 @@ class LineGeometry {
         default: []  // vec2
     };
 
-    mesh = null;
-
-    constructor(mesh) {
-        this.mesh = mesh;
+    constructor() {
     }
 
     getVertices() {
@@ -27,13 +24,12 @@ class LineGeometry {
     }
 
     getBuffers() {
-        const engine = this.mesh.scene.engine;
+        const engine = Engine.instance;
 
         const oVertices = this.getVertices();
 
         const vertices = engine.createAttributeBuffer(oVertices);
         const indices = {};
-        const indicesLength = {};
         const oUVs = [];
         const oNormals = [];
 
@@ -48,10 +44,20 @@ class LineGeometry {
         const oIndices = this.getIndices();
         for (let key in oIndices) {
             indices[key] = engine.createElementBuffer(oIndices[key]);
-            indicesLength[key] = oIndices[key].length;
+
+            indices[key] = {
+                buffer: engine.createElementBuffer(oIndices[key]),
+                mode: 'LINES',
+                offset: 0,
+                count: oIndices[key].length
+            }
         }
+
         return {
-            vertices, indices, indicesLength, uvs, normals
+            vertices: { buffer: vertices, stride: 0, offset: 0 },
+            uvs: { buffer: uvs, stride: 0, offset: 0 },
+            normals: { buffer: normals, stride: 0, offset: 0 },
+            indices
         }
     }
 }

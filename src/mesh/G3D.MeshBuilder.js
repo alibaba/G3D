@@ -1,3 +1,5 @@
+import G3DGLTFParser from "../parser/G3D.GLTFParser";
+
 class MeshBuilder {
 
     static createGround(scene, width, height = width) {
@@ -630,6 +632,10 @@ class MeshBuilder {
         mesh.geometry.uvs = uvs;
         mesh.geometry.indices.default.push(...mi);
         return mesh;
+    }
+
+    static createMeshFromGLTF(scene, gltf) {
+        return GLTFParser.parse(gltf, scene);
     }
 }
 

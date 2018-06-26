@@ -109,7 +109,7 @@ class RenderManager {
                 this.renderPickingTarget(groups);
 
                 engine.bindFramebuffer(null);
-                
+
             }
 
             if (!Env.framebufferNotReady) {
@@ -229,7 +229,7 @@ class RenderManager {
                     const material = materials[key];
 
                     const geometryBuffers = mesh.geometry.getBuffers();
-                    engine.elements(geometryBuffers.indices[key]);
+                    engine.elements(geometryBuffers.indices[key].buffer);
 
                     this.drawMesh(mesh, key);
 
@@ -317,7 +317,7 @@ class RenderManager {
         }
 
         const geometryBuffers = mesh.geometry.getBuffers();
-        engine.elements(geometryBuffers.indices[key]);
+        engine.elements(geometryBuffers.indices[key].buffer);
     }
 
     prepareBasicMesh = (mesh) => {
@@ -325,14 +325,14 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        const geometryBuffers = mesh.geometry.getBuffers();
+        const { vertices, uvs, normals } = mesh.geometry.getBuffers();
         engine.uniform('uMorphTargetFlag', [false]);
-        engine.attribute('aPosition', geometryBuffers.vertices);
-        engine.attribute('aPosition2', geometryBuffers.vertices);
-        engine.attribute('aUV', geometryBuffers.uvs);
-        engine.attribute('aUV2', geometryBuffers.uvs);
-        engine.attribute('aNormal', geometryBuffers.normals);
-        engine.attribute('aNormal2', geometryBuffers.normals);
+        engine.attribute('aPosition', vertices.buffer, vertices.stride, vertices.offset);
+        engine.attribute('aPosition2', vertices.buffer, vertices.stride, vertices.offset);
+        engine.attribute('aUV', uvs.buffer, uvs.stride, uvs.offset);
+        engine.attribute('aUV2', uvs.buffer, uvs.stride, uvs.offset);
+        engine.attribute('aNormal', normals.buffer, normals.stride, normals.offset);
+        engine.attribute('aNormal2', normals.buffer, normals.stride, normals.offset);
 
     }
 
@@ -353,15 +353,15 @@ class RenderManager {
         const { engine } = scene;
 
         const { before, after, phase } = mesh.getMorphPhaseInfo();
-        const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
-        const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+        const { vertices: vertices1, uvs: uvs1, normals: normals1 } = mesh.morphTargetsGeometries[before].getBuffers();
+        const { vertices: vertices2, uvs: uvs2, normals: normals2 } = mesh.morphTargetsGeometries[after].getBuffers();
         engine.uniform('uMorphTargetFlag', [true]);
-        engine.attribute('aPosition', gBuffer1.vertices);
-        engine.attribute('aPosition2', gBuffer2.vertices);
-        engine.attribute('aUV', gBuffer1.uvs);
-        engine.attribute('aNormal', gBuffer1.normals);
-        engine.attribute('aUV2', gBuffer2.uvs);
-        engine.attribute('aNormal2', gBuffer2.normals);
+        engine.attribute('aPosition', vertices1.buffer, vertices1.stride, vertices1.offset);
+        engine.attribute('aPosition2', vertices2.buffer, vertices2.stride, vertices2.offset);
+        engine.attribute('aUV', uvs1.buffer, uvs1.stride, uvs1.offset);
+        engine.attribute('aUV2', uvs2.buffer, uvs2.stride, uvs2.offset);
+        engine.attribute('aNormal', normals1.buffer, normals1.stride, normals1.offset);
+        engine.attribute('aNormal2', normals2.buffer, normals2.stride, normals2.offset);
         engine.uniform('uMorphPhase', [phase]);
 
     }
@@ -391,11 +391,11 @@ class RenderManager {
         const { engine } = scene;
 
         const { before, after, phase } = mesh.getMorphPhaseInfo();
-        const gBuffer1 = mesh.morphTargetsGeometries[before].getBuffers();
-        const gBuffer2 = mesh.morphTargetsGeometries[after].getBuffers();
+        const { vertices: vertices1 } = mesh.morphTargetsGeometries[before].getBuffers();
+        const { vertices: vertices2 } = mesh.morphTargetsGeometries[after].getBuffers();
         engine.uniform('uMorphTargetFlag', [true]);
-        engine.attribute('aPosition', gBuffer1.vertices);
-        engine.attribute('aPosition2', gBuffer2.vertices);
+        engine.attribute('aPosition', vertices1.buffer, vertices1.stride, vertices1.offset);
+        engine.attribute('aPosition2', vertices2.buffer, vertices2.stride, vertices2.offset);
         engine.uniform('uMorphPhase', [phase]);
 
     }
@@ -405,10 +405,10 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        const geometryBuffers = mesh.geometry.getBuffers();
+        const { vertices } = mesh.geometry.getBuffers();
         engine.uniform('uMorphTargetFlag', [false]);
-        engine.attribute('aPosition', geometryBuffers.vertices);
-        engine.attribute('aPosition2', geometryBuffers.vertices);
+        engine.attribute('aPosition', vertices.buffer, vertices.stride, vertices.offset);
+        engine.attribute('aPosition2', vertices.buffer, vertices.stride, vertices.offset);
         engine.uniform('uMorphPhase', [0]);
     }
 
@@ -445,12 +445,12 @@ class RenderManager {
         if (material.getUseEnvMap()) {
 
             const { envMapTexture, envMapCubeTexture } = material;
-            
+
             engine.uniform('uEnvMapFlag', [Number(true)]);
             // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
             engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
             // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
-            
+
         } else {
 
             const { envMapTexture, envMapCubeTexture } = material;
@@ -473,7 +473,7 @@ class RenderManager {
         engine.uniform('uGlossiness', [material.getGlossiness()]);
 
         this.prepareMaterialOpacity(material);
-        
+
     }
 
     prepareRawMaterial(material) {
@@ -586,11 +586,10 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        const geometryBuffers = mesh.geometry.getBuffers();
+        const { indices } = mesh.geometry.getBuffers();
 
-        engine.draw(geometryBuffers.indicesLength[key], {
-            lines: mesh instanceof LineMesh
-        });
+
+        engine.draw(indices[key].mode, indices[key].count, indices[key].offset);
     }
 }
 
