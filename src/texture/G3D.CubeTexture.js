@@ -17,6 +17,10 @@ class CubeTexture {
         mip: null
     };
 
+    constructor(images) {
+        Object.assign(this.images, images);
+    }
+
     getTexture() {
 
         const engine = Engine.instance;

@@ -1,5 +1,3 @@
-import CubeTexture from "../texture/G3D.CubeTexture";
-
 class PBRMaterial extends Material {
 
     albedoColor = { r: 0, g: 0, b: 0 };
