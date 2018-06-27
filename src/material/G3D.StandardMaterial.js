@@ -1,4 +1,3 @@
-import CubeTexture from "../texture/G3D.CubeTexture";
 
 @Lazy(
     [

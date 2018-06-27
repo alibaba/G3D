@@ -109,7 +109,7 @@ class RenderManager {
                 this.renderPickingTarget(groups);
 
                 engine.bindFramebuffer(null);
-                
+
             }
 
             if (!Env.framebufferNotReady) {
@@ -126,12 +126,46 @@ class RenderManager {
         }
     }
 
+    renderSkybox() {
+        const { scene } = this;
+        const { engine } = scene;
+
+        engine.clearColorBuffer(scene.clearColor);
+        engine.clearDepthBuffer();
+
+
+        const skybox = scene.skybox;
+        const camera = scene.activeCamera;
+        const texture = skybox.cubeMapTexture.getTexture();
+        const mesh = skybox.cubeMapMesh;
+        const vmat3 = Mat3.fromMat4(Mat3.create(), camera.getVMatrix());
+
+
+        engine.useProgram('skybox');
+
+        // TODO: use a new specified geometry(skybox ?) to avoid uploading unnecessary channels
+        const geometryBuffers = mesh.geometry.getBuffers();
+
+        engine.attribute('aPosition', geometryBuffers.vertices);
+        engine.elements(geometryBuffers.indices.default);
+
+        engine.uniform('uVMatrix3', vmat3);
+        engine.uniform('uPMatrix', camera.getPMatrix());
+        engine.uniform('uCubeMap', texture);
+
+        this.drawMesh(mesh, 'default');
+    }
+
     renderMainTarget(groups) {
 
         const { scene } = this;
         const { engine } = scene;
 
         engine.clearColorBuffer(scene.clearColor);
+
+        if (scene.skybox && scene.skybox.ready) {
+            this.renderSkybox();
+        }
 
         groups.forEach(meshes => {
 
