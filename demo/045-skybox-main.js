@@ -21,13 +21,11 @@ function main(
         top: 'https://gw.alicdn.com/tfs/TB1wcxqATtYBeNjy1XdXXXXyVXa-1024-1024.png',
         bottom: 'https://gw.alicdn.com/tfs/TB1O7C5AAyWBuNjy0FpXXassXXa-1024-1024.png',
     }, ({front, back, left, right, top, bottom}) => {
-        const cubeMapTexture = new CubeTexture({
+        new G3D.Skybox(scene, {
             front, back,
-            left,  right,
-            top,   bottom,
+            left, right,
+            top, bottom,
         });
-
-        new G3D.Skybox(scene, cubeMapTexture)
     });
 
 
