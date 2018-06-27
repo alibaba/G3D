@@ -163,7 +163,7 @@ class RenderManager {
 
         engine.clearColorBuffer(scene.clearColor);
 
-        if (scene.skybox && scene.skybox.getReady) {
+        if (scene.skybox && scene.skybox.ready) {
             this.renderSkybox();
         }
 
