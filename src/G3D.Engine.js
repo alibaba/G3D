@@ -37,7 +37,7 @@ class Engine {
 
         Engine.instance = this;
 
-        const gl = this._gl = canvas.getContext('webgl', {
+        const gl = this.gl = canvas.getContext('webgl', {
             antialias: true,
             preserveDrawingBuffer: true
         });
@@ -90,19 +90,19 @@ class Engine {
     }
 
     clearColorBuffer(color) {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.clearColor(color.r / 255, color.g / 255, color.b / 255, color.a !== undefined ? color.a / 255 : 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
     clearDepthBuffer() {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.clear(gl.DEPTH_BUFFER_BIT);
     }
 
     useProgram(key) {
         this.currentProgram = this.programs[key];
-        this._gl.useProgram(this.currentProgram._program);
+        this.gl.useProgram(this.currentProgram.program);
     }
 
     uniform(name, value) {
@@ -114,28 +114,28 @@ class Engine {
     }
 
     enableDepthMask() {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.depthMask(true);
     }
 
     disableDepthMask() {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.depthMask(false);
     }
 
     enableBlend() {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     }
 
     disableBlend() {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.disable(gl.BLEND);
     }
 
     createAttributeBuffer(value) {
-        const gl = this._gl;
+        const gl = this.gl;
         const buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, value, gl.STATIC_DRAW);
@@ -144,7 +144,7 @@ class Engine {
     }
 
     createElementBuffer(value) {
-        const gl = this._gl;
+        const gl = this.gl;
         const buffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, value, gl.STATIC_DRAW);
@@ -154,9 +154,11 @@ class Engine {
 
     createTexture(image, width, height) {
 
-        const gl = this._gl;
+        const gl = this.gl;
 
         const texture = gl.createTexture();
+
+        gl.activeTexture(gl.TEXTURE0);
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -184,9 +186,10 @@ class Engine {
 
     createCubeTexture(images, width, height) {
 
-        const gl = this._gl;
+        const gl = this.gl;
 
         const texture = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0);
 
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 
@@ -246,7 +249,7 @@ class Engine {
 
     createFramebuffer({ width, height, useColorBuffer = false }) {
 
-        const gl = this._gl;
+        const gl = this.gl;
 
         const framebuffer = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -293,7 +296,7 @@ class Engine {
     }
 
     bindFramebuffer(key) {
-        const gl = this._gl;
+        const gl = this.gl;
         const framebuffer = this.framebuffers[key];
         if (framebuffer) {
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
@@ -310,23 +313,23 @@ class Engine {
     }
 
     lineWidth(value) {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.lineWidth(value);
     }
 
     elements(buffer) {
-        const gl = this._gl;
+        const gl = this.gl;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     }
 
     draw(count, { lines } = {}) {
-        const gl = this._gl;
+        const gl = this.gl;
         const type = lines ? gl.LINES : gl.TRIANGLES;
         gl.drawElements(type, count, gl.UNSIGNED_INT, 0);
     }
 
     readFramebufferPixel(key, x, y) {
-        const gl = this._gl;
+        const gl = this.gl;
 
         if (this.framebuffers[key]) {
             this.bindFramebuffer(key);
