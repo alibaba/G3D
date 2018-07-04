@@ -42,7 +42,7 @@ And involve G3D in your own building progress(using Webpack, eg).
 import G3D from 'g3d';
 ```
 
-If you want to load G3D through a `<script>` tag (thought we don't recommed you to do so), you can find a UMD file at `dist/g3d.min.js` inside package. You need to put it on your server and load it using a `<script>` tag.
+If you want to load G3D through a `&lt;script&gt;` tag (thought we don't recommed you to do so), you can find a UMD file at `dist/g3d.min.js` inside package. You need to put it on your server and load it using a `&lt;script&gt;` tag.
 
 ```html
 <script src="g3d.min.jd"></script>
@@ -73,7 +73,7 @@ function run(G3D, canvas){
     const scene = new G3D.Scene(engine);
     
     // create camera
-    const camera = new G3D.ArcRotateCamera(scene);
+    const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.alpha = 45;
     camera.beta = 30;
     camera.radius = 12;

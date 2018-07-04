@@ -1,11 +1,11 @@
-# StandardMaterial
+# PhongMaterial
 
 Standard material, representing phong reflection face. Extends from [Material](./Material).
 
 ## Constructor
 
 ```javascript
-new G3D.StandardMaterial(mesh);
+new G3D.PhongMaterial(mesh);
 ```
 
 | name | type     | description                 |

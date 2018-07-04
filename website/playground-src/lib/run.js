@@ -13,7 +13,6 @@ function run(code, canvas, onError) {
         throw new Error('playground code should be a function but not ' + typeof func);
     }
 
-
     const render = func(G3D, canvas, loader);
 
     if (typeof render !== 'function') {

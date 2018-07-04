@@ -31,9 +31,9 @@ class Engine {
 
     constructor(canvas) {
 
-        if (Engine.instance) {
-            throw new Error('Only 1 Engine instance is allowed');
-        }
+        // if (Engine.instance) {
+        //     throw new Error('Only 1 Engine instance is allowed');
+        // }
 
         Engine.instance = this;
 

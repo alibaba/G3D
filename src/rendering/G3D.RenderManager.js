@@ -179,7 +179,7 @@ class RenderManager {
                     const key = k;
                     const material = materials[key];
 
-                    if (material instanceof StandardMaterial) {
+                    if (material instanceof PhongMaterial || material instanceof StandardMaterial) {
 
                         engine.useProgram('default');
 
