@@ -51,6 +51,7 @@ class Engine {
         gl.getExtension('OES_texture_float_linear');
         this.extensions.SRGB = gl.getExtension('EXT_SRGB');
 
+
         this.programs = {
             default: new Program({
                 gl, fShaderSource: fShaderMaterialDefault, vShaderSource: vShaderMaterialDefault
@@ -208,12 +209,15 @@ class Engine {
         }
 
         Object.keys(targets).forEach(k => {
+
             const image = images[k];
 
             if (image instanceof Env.Image) {
+
                 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-                // gl.texImage2D(targets[k], 0, this.extensions.SRGB.SRGB_EXT, this.extensions.SRGB.SRGB_EXT, gl.UNSIGNED_BYTE, images[k]);
-                gl.texImage2D(targets[k], 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
+
+                gl.texImage2D(targets[k], 0, this.extensions.SRGB.SRGB_ALPHA_EXT, this.extensions.SRGB.SRGB_ALPHA_EXT, gl.UNSIGNED_BYTE, images[k]);
+                // gl.texImage2D(targets[k], 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
 
             } else if (image instanceof Uint8Array) {
                 gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
@@ -233,16 +237,13 @@ class Engine {
 
                     if (image instanceof Env.Image) {
                         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-                        gl.texImage2D(targets[k], i, this.extensions.SRGB.SRGB_EXT, this.extensions.SRGB.SRGB_EXT, gl.UNSIGNED_BYTE, images[k]);
+                        gl.texImage2D(targets[k], i, this.extensions.SRGB.SRGB_ALPHA_EXT, this.extensions.SRGB.SRGB_ALPHA_EXT, gl.UNSIGNED_BYTE, images[k]);
                     }
                 })
 
             });
 
         }
-
-
-
 
         return texture;
     }

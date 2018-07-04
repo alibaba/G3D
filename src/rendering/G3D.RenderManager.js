@@ -125,13 +125,9 @@ class RenderManager {
             this.renderMainTarget(groups);
         }
     }
-
     renderSkybox() {
         const { scene } = this;
         const { engine } = scene;
-
-        engine.clearColorBuffer(scene.clearColor);
-        engine.clearDepthBuffer();
 
 
         const skybox = scene.skybox;
@@ -164,6 +160,9 @@ class RenderManager {
         engine.clearColorBuffer(scene.clearColor);
 
         if (scene.skybox) {
+
+            engine.clearDepthBuffer();
+
             this.renderSkybox();
         }
 
@@ -479,12 +478,12 @@ class RenderManager {
         if (material.getUseEnvMap()) {
 
             const { envMapTexture, envMapCubeTexture } = material;
-            
+
             engine.uniform('uEnvMapFlag', [Number(true)]);
             // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
             engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
             // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
-            
+
         } else {
 
             const { envMapTexture, envMapCubeTexture } = material;
@@ -507,7 +506,7 @@ class RenderManager {
         engine.uniform('uGlossiness', [material.getGlossiness()]);
 
         this.prepareMaterialOpacity(material);
-        
+
     }
 
     prepareRawMaterial(material) {
