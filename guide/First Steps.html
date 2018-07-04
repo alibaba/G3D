@@ -61,7 +61,7 @@
 <p>And involve G3D in your own building progress(using Webpack, eg).</p>
 <pre><code class="lang-javascript hljs"><span class="hljs-keyword">import</span> G3D <span class="hljs-keyword">from</span> <span class="hljs-string">'g3d'</span>;
 </code></pre>
-<p>If you want to load G3D through a <code><script></code> tag (thought we don't recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside package. You need to put it on your server and load it using a <code><script></code> tag.</p>
+<p>If you want to load G3D through a <code>&lt;script&gt;</code> tag (thought we don't recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside package. You need to put it on your server and load it using a <code>&lt;script&gt;</code> tag.</p>
 <pre><code class="lang-html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"g3d.min.jd"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
@@ -87,7 +87,7 @@
     <span class="hljs-keyword">const</span> scene = <span class="hljs-keyword">new</span> G3D.Scene(engine);
 
     <span class="hljs-comment">// create camera</span>
-    <span class="hljs-keyword">const</span> <span class="hljs-built_in">camera</span> = <span class="hljs-keyword">new</span> G3D.ArcRotateCamera(scene);
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">camera</span> = <span class="hljs-keyword">new</span> G3D.RotatePerspectiveCamera(scene);
     <span class="hljs-built_in">camera</span>.<span class="hljs-built_in">alpha</span> = <span class="hljs-number">45</span>;
     <span class="hljs-built_in">camera</span>.beta = <span class="hljs-number">30</span>;
     <span class="hljs-built_in">camera</span>.radius = <span class="hljs-number">12</span>;

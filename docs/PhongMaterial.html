@@ -87,12 +87,11 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="perspectivecamera">PerspectiveCamera</h1>
-<p>Perspective Camera. Extends from <a href="./Node">Node</a>.</p>
+          <div class="body"><h1 id="phongmaterial">PhongMaterial</h1>
+<p>Standard material, representing phong reflection face. Extends from <a href="./Material">Material</a>.</p>
 <h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.PerspectiveCamera(scene);
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.PhongMaterial(mesh);
 </code></pre>
-<h3 id="options">options</h3>
 <table>
 <thead>
 <tr>
@@ -103,9 +102,9 @@
 </thead>
 <tbody>
 <tr>
-<td>scene</td>
-<td>G3D.Scene</td>
-<td>the g3d scene you want to put the camera in</td>
+<td>mesh</td>
+<td>G3D.Mesh</td>
+<td>the mesh the material is on</td>
 </tr>
 </tbody>
 </table>
@@ -120,59 +119,67 @@
 </thead>
 <tbody>
 <tr>
-<td>near</td>
+<td>ambientColor</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>ambient color</td>
+</tr>
+<tr>
+<td>ambientTexture</td>
+<td>G3D.Texture</td>
+<td>ambient texture</td>
+</tr>
+<tr>
+<td>ambientSource</td>
+<td>enum {Material.COLOR, Material.TEXTURE}</td>
+<td>whether to use ambient color or texture</td>
+</tr>
+<tr>
+<td>diffuseColor</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>diffuse color</td>
+</tr>
+<tr>
+<td>diffuseTexture</td>
+<td>G3D.Texture</td>
+<td>diffuse texture</td>
+</tr>
+<tr>
+<td>diffuseSource</td>
+<td>enum {Material.COLOR, Material.TEXTURE}</td>
+<td>whether to use diffuse color or texture</td>
+</tr>
+<tr>
+<td>specularColor</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>specular color</td>
+</tr>
+<tr>
+<td>specularTexture</td>
+<td>G3D.Texture</td>
+<td>specular texture</td>
+</tr>
+<tr>
+<td>specularSource</td>
+<td>enum {Material.COLOR, Material.TEXTURE}</td>
+<td>whether to use specular color or texture</td>
+</tr>
+<tr>
+<td>glossiness</td>
 <td>Number</td>
-<td>distance between camera and the near plane, default is 1</td>
+<td>glossiness, from 1 to 1000</td>
 </tr>
 <tr>
-<td>far</td>
-<td>Number</td>
-<td>distance between camera and the far plane, default is 1000</td>
+<td>envMapTexture</td>
+<td>G3D.Texture</td>
+<td>env map texture</td>
 </tr>
 <tr>
-<td>fov</td>
-<td>Number</td>
-<td>field of view, default is 90</td>
-</tr>
-<tr>
-<td>viewRatio</td>
-<td>Number</td>
-<td>view's width / height, default is 1</td>
-</tr>
-</tbody>
-</table>
-<h2 id="methods">Methods</h2>
-<h3 id="getviewray-x-y-flip-">getViewRay(x, y, flip)</h3>
-<p>Create a ray from camera position to the mouse-click direction.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>mouse-click position x value in the canvas</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>mouse-click position y value in the canvas</td>
-</tr>
-<tr>
-<td>flip</td>
+<td>useEnvMap</td>
 <td>Boolean</td>
-<td>whether to flip the y value, default is true</td>
+<td>wether to use env map</td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns">returns</h4>
-<p>ray: G3D.Ray | null, the created ray</p>
 </div>
         </div>
       </div>

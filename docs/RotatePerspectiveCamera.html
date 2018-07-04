@@ -87,10 +87,10 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="perspectivecamera">PerspectiveCamera</h1>
-<p>Perspective Camera. Extends from <a href="./Node">Node</a>.</p>
-<h2 id="constructor">Constructor</h2>
-<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.PerspectiveCamera(scene);
+          <div class="body"><h1 id="rotateperspectivecamera">RotatePerspectiveCamera</h1>
+<p>The camera moving by a sphere polar coordinates. Extends from <a href="./PerspectiveCamera">PerspectiveCamera</a>.</p>
+<h2 id="contructor">Contructor</h2>
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">new</span> <span class="hljs-type">G3D</span>.RotatePerspectiveCamera(scene);
 </code></pre>
 <h3 id="options">options</h3>
 <table>
@@ -120,59 +120,34 @@
 </thead>
 <tbody>
 <tr>
-<td>near</td>
+<td>radius</td>
 <td>Number</td>
-<td>distance between camera and the near plane, default is 1</td>
+<td>the distance between camera and it's look at point (center point)</td>
 </tr>
 <tr>
-<td>far</td>
+<td>alpha</td>
 <td>Number</td>
-<td>distance between camera and the far plane, default is 1000</td>
+<td>the alpha angle (on X-Z plane), from 0 to 360</td>
 </tr>
 <tr>
-<td>fov</td>
+<td>beta</td>
 <td>Number</td>
-<td>field of view, default is 90</td>
-</tr>
-<tr>
-<td>viewRatio</td>
-<td>Number</td>
-<td>view's width / height, default is 1</td>
+<td>the beta angle (vertical to Y axis), from -180 to 180</td>
 </tr>
 </tbody>
 </table>
 <h2 id="methods">Methods</h2>
-<h3 id="getviewray-x-y-flip-">getViewRay(x, y, flip)</h3>
-<p>Create a ray from camera position to the mouse-click direction.</p>
-<h4 id="options">options</h4>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x</td>
-<td>Number</td>
-<td>mouse-click position x value in the canvas</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Number</td>
-<td>mouse-click position y value in the canvas</td>
-</tr>
-<tr>
-<td>flip</td>
-<td>Boolean</td>
-<td>whether to flip the y value, default is true</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">returns</h4>
-<p>ray: G3D.Ray | null, the created ray</p>
+<p>There's no public methods for <code>Engine</code>.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="lang-javascript hljs"><span class="hljs-keyword">const</span> <span class="hljs-built_in">camera</span> = <span class="hljs-keyword">new</span> G3D.RotatePerspectiveCamera(scene);
+
+<span class="hljs-built_in">camera</span>.<span class="hljs-built_in">alpha</span> = <span class="hljs-number">90</span>;
+<span class="hljs-built_in">camera</span>.beta = <span class="hljs-number">45</span>;
+<span class="hljs-built_in">camera</span>.radius = <span class="hljs-number">500</span>;
+
+<span class="hljs-built_in">camera</span>.near = <span class="hljs-number">1</span>;
+<span class="hljs-built_in">camera</span>.far = <span class="hljs-number">3000</span>;
+</code></pre>
 </div>
         </div>
       </div>
