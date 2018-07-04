@@ -142,7 +142,10 @@ const playgroundTasks = (function () {
         react: true,
         loaders: [{
             test: /\.glsl$/,
-            use: 'raw-loader'
+            use: [
+                'raw-loader',
+                path.resolve('./loader.js')
+            ]
         }, {
             test: /\.playground.js$/,
             use: 'raw-loader'

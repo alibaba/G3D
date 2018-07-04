@@ -1,11 +1,11 @@
-# ArcRotateCamera
+# RotatePerspectiveCamera
 
 The camera moving by a sphere polar coordinates. Extends from [PerspectiveCamera](./PerspectiveCamera).
 
 ## Contructor
 
 ```javascript
-new G3D.ArcRotateCamera(scene);
+new G3D.RotatePerspectiveCamera(scene);
 ```
 
 ### options
@@ -29,7 +29,7 @@ There's no public methods for `Engine`.
 ## Examples
 
 ```javascript
-const camera = new G3D.ArcRotateCamera(scene);
+const camera = new G3D.RotatePerspectiveCamera(scene);
 
 camera.alpha = 90;
 camera.beta = 45;

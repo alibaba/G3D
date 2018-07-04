@@ -39,7 +39,7 @@ function main(
 
     scene.clearColor = {r: 235, g: 235, b: 235};
 
-    const camera = new G3D.ArcRotateCamera(scene);
+    const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.alpha = 0;
     camera.beta = 20;
     camera.radius = 30;

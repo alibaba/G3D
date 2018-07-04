@@ -7,7 +7,7 @@ function main(
 
     const scene = new G3D.Scene(engine);
 
-    const camera = new G3D.ArcRotateCamera(scene);
+    const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.fov = 60;
     camera.alpha = 45;
     camera.beta = 0;

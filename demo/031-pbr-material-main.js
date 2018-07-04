@@ -9,7 +9,7 @@ function main(
 
     scene.clearColor = { r: 51, g: 51, b: 76 };
 
-    const camera = new G3D.ArcRotateCamera(scene)
+    const camera = new G3D.RotatePerspectiveCamera(scene)
     camera.fov = 60;
     camera.near = 0.01;
     camera.far = 100;

@@ -1,5 +1,3 @@
-import CubeTexture from "../texture/G3D.CubeTexture";
-
 class PBRMaterial extends Material {
 
     albedoColor = { r: 0, g: 0, b: 0 };
@@ -12,21 +10,14 @@ class PBRMaterial extends Material {
 
     roughness = 0.1;
 
-    useEnvMap = false;
-
-    envMapTexture = new Texture();
-
     diffuseMapTexture = new CubeTexture();
 
     specularMapTexture = new CubeTexture();
 
     brdfLUTTexture = new Texture();
 
-    mesh = null;
-
-    constructor(mesh) {
+    constructor() {
         super();
-        this.mesh = mesh;
 
         const image = new Env.Image();
         image.crossOrigin = true;

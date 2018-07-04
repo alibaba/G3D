@@ -1,24 +1,23 @@
 class Program {
 
-    _gl = null;
-    _program = null;
-    _uniforms = {};
-    _attributes = {};
-    _textureCount = 0;
+    gl = null;
+    program = null;
+    uniforms = {};
+    attributes = {};
+    textureCount = 0;
 
     constructor({ gl, fShaderSource, vShaderSource }) {
-        this._gl = gl;
-        this._fShaderSource = fShaderSource;
-        this._vShaderSource = vShaderSource;
-        this._initProgram();
-
+        this.gl = gl;
+        this.fShaderSource = fShaderSource;
+        this.vShaderSource = vShaderSource;
+        this.initProgram();
     }
 
-    _initProgram() {
+    initProgram() {
 
-        const gl = this._gl;
-        const fShaderSource = this._fShaderSource;
-        const vShaderSource = this._vShaderSource;
+        const gl = this.gl;
+        const fShaderSource = this.fShaderSource;
+        const vShaderSource = this.vShaderSource;
 
         function loadShader(gl, type, source) {
             var shader = gl.createShader(type);
@@ -80,13 +79,13 @@ class Program {
                 position: gl.getUniformLocation(program, uniform.name),
                 info: uniform
             };
-            const { baseVecType } = this._parseType(res.type);
+            const { baseVecType } = this.parseType(res.type);
             if (baseVecType === '2D') {
-                const unit = ++this._textureCount;
+                const unit = ++this.textureCount;
                 res.unit = unit;
             }
-            if (baseVecType === 'CUB') {
-                const unit = ++this._textureCount;
+            if(baseVecType === 'CUB'){
+                const unit = ++this.textureCount;
                 res.unit = unit;
             }
             let name = uniform.name;
@@ -96,12 +95,12 @@ class Program {
             uniforms[name] = res;
         }
 
-        this._program = program;
-        this._attributes = attributes;
-        this._uniforms = uniforms;
+        this.program = program;
+        this.attributes = attributes;
+        this.uniforms = uniforms;
     }
 
-    _parseType(type) {
+    parseType(type) {
         const baseType = type.split('_')[0];
         const vecType = type.split('_').length > 1 ? type.split('_')[1] : 'VEC1';
         const baseVecType = vecType.substr(0, 3);
@@ -110,12 +109,12 @@ class Program {
     }
 
     uniform(name, value) {
-        if (this._uniforms[name]) {
+        if (this.uniforms[name]) {
 
-            const gl = this._gl;
+            const gl = this.gl;
 
-            const { type, info, position, unit } = this._uniforms[name];
-            const { baseType, vecType, baseVecType, vecSize } = this._parseType(type);
+            const { type, info, position, unit } = this.uniforms[name];
+            const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
 
             switch (baseVecType) {
                 case 'VEC':
@@ -133,7 +132,6 @@ class Program {
                 case '2D':
                     {
                         gl.activeTexture(gl[`TEXTURE${unit}`]);
-
                         gl.bindTexture(gl.TEXTURE_2D, value);
                         gl.uniform1i(position, unit);
                         break;
@@ -155,11 +153,11 @@ class Program {
         }
     }
 
-    attribute(name, buffer, stride, offset) {
-        if (this._attributes[name]) {
-            const gl = this._gl;
-            const { type, info, position } = this._attributes[name];
-            const { baseType, vecType, baseVecType, vecSize } = this._parseType(type);
+    attribute(name, buffer) {
+        if (this.attributes[name]) {
+            const gl = this.gl;
+            const { type, info, position } = this.attributes[name];
+            const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
             gl.vertexAttribPointer(position, vecSize, gl[baseType], false, stride, offset);
             gl.enableVertexAttribArray(position);

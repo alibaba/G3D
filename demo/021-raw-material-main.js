@@ -10,7 +10,7 @@ function main(
 
         const scene = new G3D.Scene(engine);
 
-        const camera = new G3D.ArcRotateCamera(scene);
+        const camera = new G3D.RotatePerspectiveCamera(scene);
         camera.alpha = -35;
         camera.beta = -5;
         camera.radius = 20;

@@ -16,13 +16,12 @@ new G3D.PerspectiveCamera(scene);
 
 ## Properties
 
-| name   | type                              | description                                                              |
-| ------ | --------------------------------- | ------------------------------------------------------------------------ |
-| center | {x: Number, y: Number, z: Number} | the center point the camera is looking at, default is {x: 0, y: 1, z: 0} |
-| up     | {x: Number, y: Number, z: Number} | the up direction of the camera, default is {x: 0, y: 1, z: 0}            |
-| near   | Number                            | distance between camera and the near plane, default is 1                 |
-| far    | Number                            | distance between camera and the far plane, default is 1000               |
-| fov    | Number                            | field of view, default is 90                                             |
+| name      | type   | description                                                |
+| --------- | ------ | ---------------------------------------------------------- |
+| near      | Number | distance between camera and the near plane, default is 1   |
+| far       | Number | distance between camera and the far plane, default is 1000 |
+| fov       | Number | field of view, default is 90                               |
+| viewRatio | Number | view's width / height, default is 1                        |
 
 ## Methods
 

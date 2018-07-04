@@ -94,35 +94,34 @@ class MeshBuilder {
 
         const mesh = new Mesh(scene);
         mesh.geometry.vertices = [
-            left, top, front,
-            right, top, front,
-            right, bottom, front,
+            left, top, front, // 0
             left, bottom, front,
-
-            left, top, back,
+            right, bottom, front,
+            right, top, front,
+            left, top, back, // 4
             right, top, back,
             right, bottom, back,
             left, bottom, back,
 
-            left, bottom, front,
-            left, top, front,
-            left, top, back,
+            left, bottom, front, // 8
             left, bottom, back,
-
-            right, bottom, front,
-            right, top, front,
-            right, top, back,
-            right, bottom, back,
-
-            left, top, front,
-            right, top, front,
-            right, top, back,
             left, top, back,
+            left, top, front,
 
-            left, bottom, front,
-            right, bottom, front,
+            right, bottom, front, // 12
             right, bottom, back,
-            left, bottom, back
+            right, top, back,
+            right, top, front,
+
+            left, top, front, // 16
+            left, top, back,
+            right, top, back,
+            right, top, front,
+
+            left, bottom, front, //20
+            left, bottom, back,
+            right, bottom, back,
+            right, bottom, front,
         ];
 
         mesh.geometry.uvs = [
@@ -142,6 +141,67 @@ class MeshBuilder {
             0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
             0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0,
         ];
+
+        mesh.geometry.indices.default = [
+            0, 1, 2, 0, 2, 3,
+            4, 5, 6, 4, 6, 7,
+            8, 9, 10, 8, 10, 11,
+            12, 13, 14, 12, 14, 15,
+            16, 17, 18, 16, 18, 19,
+            20, 21, 22, 20, 22, 23
+        ];
+
+        return mesh;
+    }
+
+    static createSkyboxMesh(scene, size) {
+        const mesh = new Mesh(scene);
+
+        // weird but reasonable though.
+        // skybox shouldn't be manged by scene meshes directly,
+        // so we remove it from the current scene.
+        mesh.dispose();
+
+        const sz = size
+
+        mesh.geometry.vertices = [
+            // front face
+            -sz,  sz,  sz,
+            -sz, -sz,  sz,
+             sz, -sz,  sz,
+             sz,  sz,  sz,
+
+             // back face
+             sz,  sz, -sz,
+             sz, -sz, -sz,
+            -sz, -sz, -sz,
+            -sz,  sz, -sz,
+
+            // left face
+            -sz,  sz, -sz,
+            -sz, -sz, -sz,
+            -sz, -sz,  sz,
+            -sz,  sz,  sz,
+
+            // right face
+             sz,  sz,  sz,
+             sz, -sz,  sz,
+             sz, -sz, -sz,
+             sz,  sz, -sz,
+
+             // top face
+            -sz,  sz, -sz,
+            -sz,  sz,  sz,
+             sz,  sz,  sz,
+             sz,  sz, -sz,
+
+             //bottom face
+            -sz, -sz,  sz,
+            -sz, -sz, -sz,
+             sz, -sz, -sz,
+             sz, -sz,  sz,
+        ];
+
 
         mesh.geometry.indices.default = [
             0, 1, 2, 0, 2, 3,
