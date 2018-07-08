@@ -52,7 +52,15 @@ function main(
 
     const m3 = G3D.MeshBuilder.createCoordinate(scene, 5);
 
-    pbrAssets().ready((specular, diffuse) => {
+    pbrAssets().ready((specular, diffuse, lut) => {
+
+        const pbrEnv = new G3D.PBREnviroment();
+
+        pbrEnv.specular.images = specular;
+        pbrEnv.diffuse.images = diffuse;
+        pbrEnv.brdfLUT.image = lut;
+
+        pbrEnv.brdfLUT.flipY = false;
 
         const size = 4;
 
@@ -74,8 +82,7 @@ function main(
 
                     const mtl = new G3D.PBRMaterial();
 
-                    Object.assign(mtl.specularMapTexture.images, specular);
-                    Object.assign(mtl.diffuseMapTexture.images, diffuse);
+                    mtl.pbrEnviroment = pbrEnv;
 
                     mtl.albedoColor = { r: color[0], g: color[1], b: color[2] };
 

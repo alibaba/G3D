@@ -1,11 +1,14 @@
 @Lazy(
-    ['images', 'images.top', 'images.bottom', 'images.left', 'images.right', 'images.front', 'images.back'],
+    ['images', 'images.top', 'images.bottom', 'images.left', 'images.right', 'images.front', 'images.back', 'sRGB', 'flipY'],
     ['getTexture']
 )
 class CubeTexture {
 
     width = 1;
     height = 1;
+
+    sRGB = true;
+    flipY = false;
 
     images = {
         top: new Uint8Array([255, 255, 255, 255]),
@@ -27,7 +30,7 @@ class CubeTexture {
 
         const { width, height } = this;
 
-        return engine.createCubeTexture(this.images, width, height);
+        return engine.createCubeTexture(this.images, width, height, this.sRGB, this.flipY);
     }
 }
 

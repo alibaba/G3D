@@ -52,7 +52,6 @@ class Engine {
         gl.getExtension('OES_texture_float_linear');
         this.extensions.SRGB = gl.getExtension('EXT_SRGB');
 
-
         this.programs = {
             default: new Program({
                 gl, fShaderSource: fShaderMaterialDefault, vShaderSource: vShaderMaterialDefault
@@ -136,6 +135,15 @@ class Engine {
         gl.disable(gl.BLEND);
     }
 
+    createBuffer(value, target) {
+        const gl = this.gl;
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(target, buffer);
+        gl.bufferData(target, value, gl.STATIC_DRAW);
+        gl.bindBuffer(target, null);
+        return buffer;
+    }
+
     createAttributeBuffer(value) {
         const gl = this.gl;
         const buffer = gl.createBuffer();
@@ -154,7 +162,7 @@ class Engine {
         return buffer;
     }
 
-    createTexture(image, width, height) {
+    createTexture(image, width, height, sRGB, flipY) {
 
         const gl = this.gl;
 
@@ -166,16 +174,19 @@ class Engine {
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
         if (image instanceof Uint8Array) {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
         } else if (image instanceof Float32Array) {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
         } else {
-            // gl.texImage2D(gl.TEXTURE_2D, 0, this.extensions.SRGB.SRGB_EXT, this.extensions.SRGB.SRGB_EXT, gl.UNSIGNED_BYTE, image);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+            const format = !sRGB ? gl.RGBA : this.extensions.SRGB_ALPHA_EXT;
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
             const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
             if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
@@ -186,11 +197,12 @@ class Engine {
         return texture;
     }
 
-    createCubeTexture(images, width, height) {
+    createCubeTexture(images, width, height, sRGB, flipY) {
 
         const gl = this.gl;
 
         const texture = gl.createTexture();
+
         gl.activeTexture(gl.TEXTURE0);
 
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
@@ -209,6 +221,10 @@ class Engine {
             back: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
         }
 
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+
+        const format = !sRGB ? gl.RGBA : this.extensions.SRGB.SRGB_ALPHA_EXT;
+
         Object.keys(targets).forEach(k => {
 
             const image = images[k];
@@ -217,11 +233,12 @@ class Engine {
 
                 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
-                gl.texImage2D(targets[k], 0, this.extensions.SRGB.SRGB_ALPHA_EXT, this.extensions.SRGB.SRGB_ALPHA_EXT, gl.UNSIGNED_BYTE, images[k]);
-                // gl.texImage2D(targets[k], 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
+                gl.texImage2D(targets[k], 0, format, format, gl.UNSIGNED_BYTE, images[k]);
 
             } else if (image instanceof Uint8Array) {
+
                 gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
+
             }
 
         })
@@ -237,8 +254,9 @@ class Engine {
                     const image = images[k];
 
                     if (image instanceof Env.Image) {
-                        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-                        gl.texImage2D(targets[k], i, this.extensions.SRGB.SRGB_ALPHA_EXT, this.extensions.SRGB.SRGB_ALPHA_EXT, gl.UNSIGNED_BYTE, images[k]);
+
+                        gl.texImage2D(targets[k], i, format, format, gl.UNSIGNED_BYTE, images[k]);
+                        
                     }
                 })
 
@@ -324,13 +342,18 @@ class Engine {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     }
 
-    draw(mode, count, offset) {
-        const gl = this._gl;
-        // const type = lines ? gl.LINES : gl.TRIANGLES;
+    draw(mode, count, type, offset) {
+        const gl = this.gl;
         if (typeof mode === 'string') {
             mode = gl[mode];
         }
-        gl.drawElements(mode, count, gl.UNSIGNED_INT, offset);
+
+        if (typeof type === 'string') {
+            type = gl[type];
+        }
+
+
+        gl.drawElements(mode, count, type, offset);
     }
 
     readFramebufferPixel(key, x, y) {
@@ -347,7 +370,6 @@ class Engine {
             var pixels = new Uint8Array(1 * 1 * 4);
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             return [...pixels];
-            // throw new Error(`framebuffer ${key} not exits`);
         }
     }
 }

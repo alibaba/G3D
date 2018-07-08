@@ -48,8 +48,9 @@ class LineGeometry {
             indices[key] = {
                 buffer: engine.createElementBuffer(oIndices[key]),
                 mode: 'LINES',
-                offset: 0,
-                count: oIndices[key].length
+                count: oIndices[key].length,
+                type: 'UNSIGNED_INT',
+                offset: 0
             }
         }
 

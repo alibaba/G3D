@@ -1,5 +1,5 @@
 @Lazy(
-    ['image'],
+    ['image', 'sRGB', 'flipY'],
     ['getTexture']
 )
 class Texture {
@@ -7,6 +7,10 @@ class Texture {
     width = 1;
     height = 1;
     image = new Uint8Array([255, 255, 255, 255]);
+
+    sRGB = false;
+    
+    flipY = true;
 
     constructor() {
     }
@@ -17,7 +21,7 @@ class Texture {
 
         const [width, height] = this.image.width ? [this.image.width, this.image.height] : [this.width, this.height];
         
-        return engine.createTexture(this.image, width, height);
+        return engine.createTexture(this.image, width, height, this.sRGB, this.flipY);
     }
 }
 

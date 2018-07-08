@@ -52,10 +52,12 @@ class Geometry {
             indices[key] = {
                 buffer: engine.createElementBuffer(oIndices[key]),
                 mode: 'TRIANGLES',
-                offset: 0,
-                count: oIndices[key].length
+                count: oIndices[key].length,
+                type: 'UNSIGNED_INT',
+                offset: 0
             }
         }
+
         return {
             vertices: { buffer: vertices, stride: 0, offset: 0 },
             uvs: { buffer: uvs, stride: 0, offset: 0 },

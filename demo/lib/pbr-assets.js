@@ -9,7 +9,9 @@ function loadAssets(envName, callback) {
 
     loadSpecular(function (df) {
         loadDiffuse(function (sp) {
-            callback(df, sp);
+            loadBRDFLUT(function (lut) {
+                callback(df, sp, lut);
+            })
         })
     });
 
@@ -62,6 +64,10 @@ function loadAssets(envName, callback) {
             callback(images);
         })
 
+    }
+
+    function loadBRDFLUT(callback) {
+        loader.loadImage('//img.alicdn.com/tfs/TB1yCjuoDtYBeNjy1XdXXXXyVXa-256-256.png', callback);
     }
 }
 

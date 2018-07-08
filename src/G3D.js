@@ -31,6 +31,7 @@ export default {
     RawMaterial,
     StandardMaterial,
     PBRMaterial,
+    PBREnviroment,
 
     Geometry,
     LineGeometry,

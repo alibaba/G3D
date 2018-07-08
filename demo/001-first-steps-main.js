@@ -25,24 +25,9 @@ function main(
 
     const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
     m1.position.z = -1;
-    decorateMaterialBasic(m1.materials.default);
 
     const m2 = G3D.MeshBuilder.createSphere(scene, 1);
     m2.position.z = 1;
-    decorateMaterialBasic(m2.materials.default);
-
-    function decorateMaterialBasic(material){
-        material.ambientColor.r = 200;
-        material.ambientColor.g = 100;
-        material.ambientColor.b = 100;
-        material.diffuseColor.r = 200;
-        material.diffuseColor.g = 100;
-        material.diffuseColor.b = 100;
-        material.specularColor.r = 200;
-        material.specularColor.g = 100;
-        material.specularColor.b = 100;
-        material.glossiness = 10;
-    }
 
     function render(){
         scene.render();

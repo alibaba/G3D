@@ -1,15 +1,8 @@
-import Texture from "../texture/G3D.Texture";
-
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
 const LIGHT_TYPE_AMBIENT = 2;
 const LIGHT_TYPE_DIRECTIONAL = 3;
 const LIGHT_TYPE_POINT = 4;
-const LIGHT_TYPE_HEMISPHERE = 5;
-
-const MATERIAL_TYPE_RAW = 1;
-const MATERIAL_TYPE_STANDARD = 2;
-const MATERIAL_TYPE_PBR = 3;
 
 class RenderManager {
 
@@ -125,6 +118,7 @@ class RenderManager {
             this.renderMainTarget(groups);
         }
     }
+
     renderSkybox() {
         const { scene } = this;
         const { engine } = scene;
@@ -179,7 +173,7 @@ class RenderManager {
                     const key = k;
                     const material = materials[key];
 
-                    if (material instanceof PhongMaterial || material instanceof StandardMaterial) {
+                    if (material instanceof PhongMaterial) {
 
                         engine.useProgram('default');
 
@@ -540,10 +534,10 @@ class RenderManager {
 
         engine.uniform('uMaterialMetallic', [material.getMetallic()]);
 
-        engine.uniform('uBRDFLUT', material.brdfLUTTexture.getTexture());
+        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
 
-        engine.uniform('uSpecularMap', material.specularMapTexture.getTexture());
-        engine.uniform('uDiffuseMap', material.diffuseMapTexture.getTexture());
+        engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
+        engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.getTexture());
 
     }
 
@@ -621,8 +615,7 @@ class RenderManager {
 
         const { indices } = mesh.geometry.getBuffers();
 
-
-        engine.draw(indices[key].mode, indices[key].count, indices[key].offset);
+        engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
     }
 }
 

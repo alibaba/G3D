@@ -153,7 +153,7 @@ class Program {
         }
     }
 
-    attribute(name, buffer) {
+    attribute(name, buffer, stride, offset) {
         if (this.attributes[name]) {
             const gl = this.gl;
             const { type, info, position } = this.attributes[name];

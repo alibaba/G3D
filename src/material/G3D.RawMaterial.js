@@ -8,11 +8,8 @@ class RawMaterial extends Material {
     texture = new Texture();
     source = Material.COLOR;
 
-    mesh = null;
-
-    constructor(mesh) {
+    constructor() {
         super();
-        this.mesh = mesh;
     }
 
     getSource() {
