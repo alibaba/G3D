@@ -1,6 +1,6 @@
 class PerspectiveCamera extends BaseCamera {
 
-    fov = 90;
+    fov = 60;
     viewRatio = 1;
 
     near = 1;

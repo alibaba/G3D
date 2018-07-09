@@ -12,6 +12,14 @@ class RawMaterial extends Material {
         super();
     }
 
+    getDefines() {
+        const defines = [];
+        if (this.source === Material.TEXTURE) {
+            defines.push('RAW_TEXTURE');
+        }
+        return defines;
+    }
+
     getSource() {
         return this.source;
     }

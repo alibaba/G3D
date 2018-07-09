@@ -1,8 +1,8 @@
 class Mesh extends Node {
 
-    geometry = new Geometry(this);
+    geometry = new Geometry();
     materials = {
-        default: new PhongMaterial(this)
+        default: new PhongMaterial()
     };
     scene = null;
 

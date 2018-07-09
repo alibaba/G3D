@@ -32,6 +32,10 @@ function main(
         function (content) {
             const model = JSON.parse(content);
             mesh = G3D.MeshBuilder.createFromG3DModel(scene, model);
+
+            // mesh.materials.default = new G3D.RawMaterial();
+
+
         }
     );
 

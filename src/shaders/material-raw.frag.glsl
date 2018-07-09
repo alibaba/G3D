@@ -2,19 +2,19 @@
 precision mediump float;
 #endif
 
-uniform bool uMaterialTextureFlag;
-uniform vec3 uColor;
+#ifdef RAW_TEXTURE
 uniform sampler2D uTexture;
-
 varying vec2 vUV;
-
-#include <./uniforms/manually-flip-y.frag.glsl>
+#else
+uniform vec3 uColor;
+#endif
 
 void main() {
 
-    vec2 uv = vUV;
+    #ifdef RAW_TEXTURE
+        gl_FragColor = texture2D(uTexture, vUV);
+    #else
+        gl_FragColor = vec4(uColor, 1.0);
+    #endif
 
-    #include <./snippets/manually-flip-y.frag.glsl>
-
-    gl_FragColor = uMaterialTextureFlag ? texture2D(uTexture, uv) : vec4(uColor, 1.0);
 }

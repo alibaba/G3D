@@ -97,21 +97,21 @@ class RenderManager {
 
             if (!Env.framebufferNotReady) {
 
-                engine.bindFramebuffer('picker');
+                // engine.bindFramebuffer('picker');
 
-                this.renderPickingTarget(groups);
+                // this.renderPickingTarget(groups);
 
-                engine.bindFramebuffer(null);
+                // engine.bindFramebuffer(null);
 
             }
 
             if (!Env.framebufferNotReady) {
 
-                engine.bindFramebuffer('shadow');
+                // engine.bindFramebuffer('shadow');
 
-                this.renderShadowTarget(groups);
+                // this.renderShadowTarget(groups);
 
-                engine.bindFramebuffer(null);
+                // engine.bindFramebuffer(null);
 
             }
 
@@ -153,12 +153,12 @@ class RenderManager {
 
         engine.clearColorBuffer(scene.clearColor);
 
-        if (scene.skybox) {
+        // if (scene.skybox) {
 
-            engine.clearDepthBuffer();
+        //     engine.clearDepthBuffer();
 
-            this.renderSkybox();
-        }
+        //     this.renderSkybox();
+        // }
 
         groups.forEach(meshes => {
 
@@ -175,31 +175,29 @@ class RenderManager {
 
                     if (material instanceof PhongMaterial) {
 
-                        engine.useProgram('default');
+                        engine.useProgram('phong', [...material.getDefines()]);
 
                         this.prepareMVPMatrix(mesh);
 
                         this.prepareMesh(mesh, key);
 
-                        this.prepareShadow();
+                        // this.prepareShadow();
 
-                        this.prepareManuallyFlipY();
+                        // this.prepareManuallyFlipY();
 
                         this.prepareLights();
 
-                        this.prepareStandardMaterial(material);
+                        this.preparePhongMaterial(material);
 
                         this.drawMesh(mesh, key);
 
                     } else if (material instanceof RawMaterial) {
 
-                        engine.useProgram('raw');
+                        engine.useProgram('raw', [...material.getDefines()]);
 
                         this.prepareMesh(mesh, key);
 
                         this.prepareMVPMatrix(mesh);
-
-                        this.prepareManuallyFlipY();
 
                         this.prepareRawMaterial(material);
 
@@ -207,13 +205,11 @@ class RenderManager {
 
                     } else if (material instanceof PBRMaterial) {
 
-                        engine.useProgram('pbr');
+                        engine.useProgram('pbr', [...material.getDefines()]);
 
                         this.prepareMVPMatrix(mesh);
 
                         this.prepareMesh(mesh, key);
-
-                        // this.prepareShadow();
 
                         this.prepareLights();
 
@@ -329,50 +325,31 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
-        if (mesh instanceof MorphTargetMesh) {
+        const { vertices, uvs, normals, indices } = mesh.geometry.getBuffers();
 
-            this.prepareMorphTargetMesh(mesh);
-
-        } else if (mesh instanceof Mesh) {
-
-            this.prepareBasicMesh(mesh);
-
-        } else if (mesh instanceof LineMesh) {
-
-            this.prepareLineMesh(mesh);
-
+        if (!vertices) {
+            return;
         }
 
-        const geometryBuffers = mesh.geometry.getBuffers();
-        engine.elements(geometryBuffers.indices[key].buffer);
-    }
-
-    prepareBasicMesh = (mesh) => {
-
-        const { scene } = this;
-        const { engine } = scene;
-
-        const { vertices, uvs, normals } = mesh.geometry.getBuffers();
-        engine.uniform('uMorphTargetFlag', [false]);
         engine.attribute('aPosition', vertices.buffer, vertices.stride, vertices.offset);
-        engine.attribute('aPosition2', vertices.buffer, vertices.stride, vertices.offset);
-        engine.attribute('aUV', uvs.buffer, uvs.stride, uvs.offset);
-        engine.attribute('aUV2', uvs.buffer, uvs.stride, uvs.offset);
-        engine.attribute('aNormal', normals.buffer, normals.stride, normals.offset);
-        engine.attribute('aNormal2', normals.buffer, normals.stride, normals.offset);
 
+        if (uvs) {
+            if (typeof uvs.stride === 'number') {
+                engine.attribute('aUV', uvs.buffer, uvs.stride, uvs.offset);
+            } else {
+                Object.keys(uvs).forEach(key => {
+                    engine.attribute(key, uvs[key].buffer, uvs[key].stride, uvs[key].offset);
+                })
+            }
+        }
+
+        if (normals) {
+            engine.attribute('aNormal', normals.buffer, normals.stride, normals.offset);
+        }
+
+        engine.elements(indices[key].buffer);
     }
 
-    prepareLineMesh = (mesh) => {
-
-        const { scene } = this;
-        const { engine } = scene;
-
-        this.prepareBasicMesh();
-
-        engine.lineWidth(mesh.lineWidth);
-
-    }
 
     prepareMorphTargetMesh(mesh) {
 
@@ -452,55 +429,43 @@ class RenderManager {
 
     prepareMeshShadowTarget = this.prepareMeshPickingTarget;
 
-    prepareStandardMaterial(material) {
+    preparePhongMaterial(material) {
 
         const { scene } = this;
         const { engine } = scene;
 
-        engine.uniform('uMaterialAmbientTextureFlag', [
-            Number(material.getAmbientSource() === Material.TEXTURE)
-        ]);
-
-        engine.uniform('uMaterialDiffuseTextureFlag', [
-            Number(material.getDiffuseSource() === Material.TEXTURE)
-        ]);
-
-        engine.uniform('uMaterialSpecularTextureFlag', [
-            Number(material.getSpecularSource() === Material.TEXTURE)
-        ]);
-
         if (material.getUseEnvMap()) {
 
-            const { envMapTexture, envMapCubeTexture } = material;
+            // const { envMapTexture, envMapCubeTexture } = material;
 
-            engine.uniform('uEnvMapFlag', [Number(true)]);
-            // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
-            engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
-            // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
+            // engine.uniform('uEnvMapFlag', [Number(true)]);
+            // engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
 
         } else {
 
-            const { envMapTexture, envMapCubeTexture } = material;
+            // const { envMapTexture, envMapCubeTexture } = material;
 
-            engine.uniform('uEnvMapFlag', [Number(false)]);
-            // engine.uniform('uEnvMapCubeFlag', [Number(material.getUseCubeMap())]);
-            engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
-            // engine.uniform('uEnvMapCubeTexture', envMapCubeTexture.getTexture());
+            // engine.uniform('uEnvMapFlag', [Number(false)]);
+            // engine.uniform('uEnvMapTexture', envMapTexture.getTexture());
 
         }
 
         engine.uniform('uAmbientColor', material.getAmbientColor());
-        engine.uniform('uAmbientTexture', material.ambientTexture.getTexture());
+        if (material.ambientTexture) {
+            engine.uniform('uAmbientTexture', material.ambientTexture.getTexture());
+        }
 
         engine.uniform('uDiffuseColor', material.getDiffuseColor());
-        engine.uniform('uDiffuseTexture', material.diffuseTexture.getTexture());
+        if (material.diffuseTexture) {
+            engine.uniform('uDiffuseTexture', material.diffuseTexture.getTexture());
+        }
 
         engine.uniform('uSpecularColor', material.getSpecularColor());
-        engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
+        if (material.specularTexture) {
+            engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
+        }
+
         engine.uniform('uGlossiness', [material.getGlossiness()]);
-
-        this.prepareMaterialOpacity(material);
-
     }
 
     prepareRawMaterial(material) {
@@ -509,17 +474,10 @@ class RenderManager {
         const { engine } = scene;
 
         if (material.getSource() === Material.COLOR) {
-
-            engine.uniform('uMaterialTextureFlag', [Number(false)]);
-
+            engine.uniform('uColor', material.getColor());
         } else {
-
-            engine.uniform('uMaterialTextureFlag', [Number(true)]);
-
+            engine.uniform('uTexture', material.texture.getTexture());
         }
-
-        engine.uniform('uColor', material.getColor());
-        engine.uniform('uTexture', material.texture.getTexture());
     }
 
     preparePBRMaterial(material) {
@@ -527,34 +485,22 @@ class RenderManager {
         const { scene } = this;
         const { engine } = scene;
 
+        if (material.albedoSource === Material.TEXTURE) {
+            engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
+        }
 
         engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
-
         engine.uniform('uMaterialRoughness', [material.getRoughness()]);
-
         engine.uniform('uMaterialMetallic', [material.getMetallic()]);
 
-        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
+        if (material.useMetallicRoughnessTexture) {
+            engine.uniform('uMaterialMetallicRoughnessTexture', material.metallicRoughnessTexture.getTexture());
+        }
 
+        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.getTexture());
 
-    }
-
-    prepareMaterialOpacity(material) {
-
-        const { scene } = this;
-        const { engine } = scene;
-
-        engine.uniform('uMaterialOpacity', [material.getOpacity()]);
-
-        if (material.getOpacity() < 1) {
-            engine.enableBlend();
-            engine.disableDepthMask();
-        } else {
-            engine.enableDepthMask();
-            engine.disableBlend();
-        }
     }
 
     prepareLights() {
@@ -615,7 +561,9 @@ class RenderManager {
 
         const { indices } = mesh.geometry.getBuffers();
 
-        engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+        if (indices[key]) {
+            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+        }
     }
 }
 

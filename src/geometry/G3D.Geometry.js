@@ -8,60 +8,79 @@
 )
 class Geometry {
 
-    vertices = [];  // vec3
+    vertices = null;
     indices = {
-        default: []  // vec2
+        default: null
     };
-    uvs = [];       // vec2
-    normals = [];   // vec3
+    uvs = null;
+    normals = null;
 
     constructor() {
-    }
-
-    getVertices() {
-        return new Float32Array(this.vertices);
-    }
-
-    getUVs() {
-        return new Float32Array(this.uvs);
-    }
-
-    getNormals() {
-        return new Float32Array(this.normals);
-    }
-
-    getIndices() {
-        const indices = { ...this.indices };
-        for (let key in indices) {
-            indices[key] = new Uint32Array(indices[key]);
-        }
-        return indices;
     }
 
     getBuffers() {
 
         const engine = Engine.instance;
 
-        const vertices = engine.createAttributeBuffer(this.getVertices());
-        const uvs = engine.createAttributeBuffer(this.getUVs());
-        const normals = engine.createAttributeBuffer(this.getNormals());
-        const indices = {};
+        const vertices = this.vertices ? {
+            buffer: engine.createAttributeBuffer(
+                new Float32Array(this.vertices)
+            ),
+            stride: 0,
+            offset: 0
+        } : null;
 
-        const oIndices = this.getIndices();
-        for (let key in oIndices) {
-            indices[key] = {
-                buffer: engine.createElementBuffer(oIndices[key]),
-                mode: 'TRIANGLES',
-                count: oIndices[key].length,
-                type: 'UNSIGNED_INT',
-                offset: 0
+        const normals = this.normals ? {
+            buffer: engine.createAttributeBuffer(
+                new Float32Array(this.normals)
+            ),
+            stride: 0,
+            offset: 0
+        } : null;
+
+        let uvs = null;
+        if (this.uvs) {
+            uvs = {};
+            if (typeof this.uvs.length === 'number') {
+                uvs = {
+                    buffer: engine.createAttributeBuffer(
+                        new Float32Array(this.uvs)
+                    ),
+                    stride: 0,
+                    offset: 0
+                }
+            } else {
+                Object.keys(this.uvs).forEach(key => {
+                    uvs[key] = {
+                        buffer: engine.createAttributeBuffer(
+                            new Float32Array(this.uvs[key])
+                        ),
+                        stride: 0,
+                        offset: 0
+                    }
+                });
             }
         }
 
+        const indices = {};
+        Object.keys(this.indices).forEach(key => {
+
+            indices[key] = this.indices[key] ? {
+                buffer: engine.createElementBuffer(
+                    new Uint32Array(this.indices[key])
+                ),
+                mode: 'TRIANGLES',
+                count: this.indices[key].length,
+                type: 'UNSIGNED_INT',
+                offset: 0
+            } : null;
+
+        });
+
         return {
-            vertices: { buffer: vertices, stride: 0, offset: 0 },
-            uvs: { buffer: uvs, stride: 0, offset: 0 },
-            normals: { buffer: normals, stride: 0, offset: 0 },
+            vertices,
+            uvs,
+            normals,
             indices
         }
     }

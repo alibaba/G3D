@@ -1,5 +1,5 @@
-import fShaderMaterialDefault from './shaders/material-default.frag.glsl';
-import vShaderMaterialDefault from './shaders/material-default.vert.glsl';
+import fShaderMaterialPhong from './shaders/material-phong.frag.glsl';
+import vShaderMaterialPhong from './shaders/material-phong.vert.glsl';
 
 import fShaderMaterialRaw from './shaders/material-raw.frag.glsl';
 import vShaderMaterialRaw from './shaders/material-raw.vert.glsl';
@@ -21,7 +21,7 @@ class Engine {
 
     width = 0;
     height = 0;
-    currentProgram = null;
+    currentProgram = {};
     programs = {};
     framebuffers = {};
 
@@ -53,8 +53,8 @@ class Engine {
         this.extensions.SRGB = gl.getExtension('EXT_SRGB');
 
         this.programs = {
-            default: new Program({
-                gl, fShaderSource: fShaderMaterialDefault, vShaderSource: vShaderMaterialDefault
+            phong: new Program({
+                gl, fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong
             }),
             raw: new Program({
                 gl, fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw
@@ -101,17 +101,27 @@ class Engine {
         gl.clear(gl.DEPTH_BUFFER_BIT);
     }
 
-    useProgram(key) {
-        this.currentProgram = this.programs[key];
-        this.gl.useProgram(this.currentProgram.program);
+    useProgram(key, defines = []) {
+
+        this.currentProgram = { key, defines };
+
+        const program = this.programs[key].define(defines);
+        this.gl.useProgram(program.program);
     }
 
     uniform(name, value) {
-        this.currentProgram.uniform(name, value);
+
+        const { key, defines } = this.currentProgram;
+
+        const program = this.programs[key].define(defines);
+        program.uniform(name, value);
     }
 
     attribute(name, buffer, stride, offset) {
-        this.currentProgram.attribute(name, buffer, stride, offset);
+
+        const { key, defines } = this.currentProgram;
+        const program = this.programs[key].define(defines);
+        program.attribute(name, buffer, stride, offset);
     }
 
     enableDepthMask() {
@@ -256,7 +266,7 @@ class Engine {
                     if (image instanceof Env.Image) {
 
                         gl.texImage2D(targets[k], i, format, format, gl.UNSIGNED_BYTE, images[k]);
-                        
+
                     }
                 })
 

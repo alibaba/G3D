@@ -12,16 +12,14 @@
 class PhongMaterial extends Material {
 
     ambientColor = { r: 255, g: 255, b: 255 };
-    ambientTexture = new Texture();
-    ambientSource = Material.COLOR;
+    ambientTexture = null;
 
     diffuseColor = { r: 255, g: 255, b: 255 };
-    diffuseTexture = new Texture();
-    diffuseSource = Material.COLOR;
+    diffuseTexture = null;
 
-    specularColor = { r: 0, g: 0, b: 0 };
-    specularTexture = new Texture();
-    specularSource = Material.COLOR;
+    specularColor = { r: 255, g: 255, b: 255 };
+    specularTexture = null;
+
     glossiness = 1.0;
 
     envMapTexture = new Texture();
@@ -29,11 +27,25 @@ class PhongMaterial extends Material {
     useEnvMap = false;
     useCubeMap = false;
 
-    mesh = null;
-
     constructor(mesh) {
         super();
-        this.mesh = mesh;
+    }
+
+    getDefines() {
+        const defines = [];
+        if (this.ambientTexture) {
+            defines.push('PHONG_AMBIENT_TEXTURE');
+        }
+        if (this.diffuseTexture) {
+            defines.push('PHONG_DIFFUSE_TEXTURE');
+        }
+        if (this.specularTexture) {
+            defines.push('PHONG_SPECULAR_TEXTURE');
+        }
+        if (this.ambientTexture || this.diffuseTexture || this.specularTexture) {
+            defines.push('PHONG_TEXTURE');
+        }
+        return defines;
     }
 
     getAmbientSource() {
@@ -68,7 +80,7 @@ class PhongMaterial extends Material {
         return this.useEnvMap;
     }
 
-    getUseCubeMap(){
+    getUseCubeMap() {
         return this.useCubeMap;
     }
 }

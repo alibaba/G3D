@@ -1,26 +1,20 @@
 precision mediump float;
 
 attribute vec3 aPosition;
-attribute vec2 aUV;
-attribute vec3 aNormal;
 
 uniform mat4 uPMatrix;
 uniform mat4 uVMatrix;
 uniform mat4 uMMatrix;
 
-#include <./uniforms/morph-target.vert.glsl>
-
+#ifdef RAW_TEXTURE
+attribute vec2 aUV;
 varying vec2 vUV;
+#endif
 
 void main() {
+    gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aPosition, 1.0);
 
-    vec3 position = aPosition;
-    vec2 uv = aUV;
-    vec3 normal = aNormal;
-
-    #include <./snippets/morph-target.vert.glsl>
-
-    gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(position, 1.0);
-
-    vUV = uv;
+    #ifdef RAW_TEXTURE
+    vUV = aUV;
+    #endif
 }

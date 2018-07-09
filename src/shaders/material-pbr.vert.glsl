@@ -1,30 +1,38 @@
 precision highp float;
 
 attribute vec3 aPosition;
-attribute vec2 aUV;
 attribute vec3 aNormal;
 
 uniform mat4 uPMatrix;
 uniform mat4 uVMatrix;
 uniform mat4 uMMatrix;
 
-#include <./uniforms/morph-target.vert.glsl>
-
-varying vec2 vUV;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
+#ifdef PBR_ALBEDO_TEXTURE
+attribute vec2 aAlbedoUV;
+varying vec2 vAlbedoUV;
+#endif
+
+#ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
+attribute vec2 aMetallicRoughnessUV;
+varying vec2 vMetallicRoughnessUV;
+#endif
+
 void main() {
 
-    vec3 position = aPosition;
-    vec2 uv = aUV;
-    vec3 normal = aNormal;
+    gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aPosition, 1.0);
 
-    #include <./snippets/morph-target.vert.glsl>
+    vPosition = (uMMatrix * vec4(aPosition, 1.0)).xyz;
+    vNormal = normalize((uMMatrix * vec4( aNormal, 0.0)).xyz);
 
-    gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(position, 1.0);
+    #ifdef PBR_ALBEDO_TEXTURE
+    vAlbedoUV = aAlbedoUV;
+    #endif
 
-    vUV = uv;
-    vNormal = normalize((uMMatrix * vec4( normal, 0.0)).xyz);
-    vPosition = (uMMatrix * vec4(position, 1.0)).xyz;
+    #ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
+    vMetallicRoughnessUV = aMetallicRoughnessUV;
+    #endif
+
 }

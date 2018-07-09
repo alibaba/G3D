@@ -26,73 +26,12 @@ class MeshBuilder {
         const d = depth / 2;
 
         return MeshBuilder.createBox(scene, -w, w, h, -h, d, -d);
-
-        const mesh = new Mesh(scene);
-        mesh.geometry.vertices = [
-            -w, h, d,
-            w, h, d,
-            w, -h, d,
-            -w, -h, d,
-
-            -w, h, -d,
-            w, h, -d,
-            w, -h, -d,
-            -w, -h, -d,
-
-            -w, -h, d,
-            -w, h, d,
-            -w, h, -d,
-            -w, -h, -d,
-
-            w, -h, d,
-            w, h, d,
-            w, h, -d,
-            w, -h, -d,
-
-            -w, h, d,
-            w, h, d,
-            w, h, -d,
-            -w, h, -d,
-
-            -w, -h, d,
-            w, -h, d,
-            w, -h, -d,
-            -w, -h, -d
-        ];
-
-        mesh.geometry.uvs = [
-            0, 0, 0, 1, 1, 1, 1, 0,
-            0, 0, 0, 1, 1, 1, 1, 0,
-            0, 0, 0, 1, 1, 1, 1, 0,
-            0, 0, 0, 1, 1, 1, 1, 0,
-            0, 0, 0, 1, 1, 1, 1, 0,
-            0, 0, 0, 1, 1, 1, 1, 0
-        ];
-
-        mesh.geometry.normals = [
-            0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-            0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
-            -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
-            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
-            0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
-            0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0,
-        ];
-
-        mesh.geometry.indices.default = [
-            0, 1, 2, 0, 2, 3,
-            4, 5, 6, 4, 6, 7,
-            8, 9, 10, 8, 10, 11,
-            12, 13, 14, 12, 14, 15,
-            16, 17, 18, 16, 18, 19,
-            20, 21, 22, 20, 22, 23
-        ];
-
-        return mesh;
     }
 
     static createBox(scene, left, right, top, bottom, front, back) {
 
         const mesh = new Mesh(scene);
+
         mesh.geometry.vertices = [
             left, top, front, // 0
             left, bottom, front,
@@ -166,42 +105,41 @@ class MeshBuilder {
 
         mesh.geometry.vertices = [
             // front face
-            -sz,  sz,  sz,
-            -sz, -sz,  sz,
-             sz, -sz,  sz,
-             sz,  sz,  sz,
+            -sz, sz, sz,
+            -sz, -sz, sz,
+            sz, -sz, sz,
+            sz, sz, sz,
 
-             // back face
-             sz,  sz, -sz,
-             sz, -sz, -sz,
+            // back face
+            sz, sz, -sz,
+            sz, -sz, -sz,
             -sz, -sz, -sz,
-            -sz,  sz, -sz,
+            -sz, sz, -sz,
 
             // left face
-            -sz,  sz, -sz,
+            -sz, sz, -sz,
             -sz, -sz, -sz,
-            -sz, -sz,  sz,
-            -sz,  sz,  sz,
+            -sz, -sz, sz,
+            -sz, sz, sz,
 
             // right face
-             sz,  sz,  sz,
-             sz, -sz,  sz,
-             sz, -sz, -sz,
-             sz,  sz, -sz,
+            sz, sz, sz,
+            sz, -sz, sz,
+            sz, -sz, -sz,
+            sz, sz, -sz,
 
-             // top face
-            -sz,  sz, -sz,
-            -sz,  sz,  sz,
-             sz,  sz,  sz,
-             sz,  sz, -sz,
+            // top face
+            -sz, sz, -sz,
+            -sz, sz, sz,
+            sz, sz, sz,
+            sz, sz, -sz,
 
-             //bottom face
-            -sz, -sz,  sz,
+            //bottom face
+            -sz, -sz, sz,
             -sz, -sz, -sz,
-             sz, -sz, -sz,
-             sz, -sz,  sz,
+            sz, -sz, -sz,
+            sz, -sz, sz,
         ];
-
 
         mesh.geometry.indices.default = [
             0, 1, 2, 0, 2, 3,
@@ -268,7 +206,6 @@ class MeshBuilder {
                     indices.push(b, c, d)
                 };
             }
-
         }
 
         const mesh = new Mesh(scene);
@@ -422,7 +359,6 @@ class MeshBuilder {
         body();
         cop(-1);
 
-
         const mesh = new Mesh(scene);
         mesh.geometry.vertices = vertices;
         mesh.geometry.uvs = uvs;
@@ -486,7 +422,7 @@ class MeshBuilder {
                 mesh.geometry.indices[key] = indices;
 
                 if (!mesh.materials[key]) {
-                    mesh.materials[key] = new StandardMaterial(mesh);
+                    mesh.materials[key] = new PhongMaterial();
                 }
 
                 if (mtl.ambientColor) {
@@ -500,8 +436,11 @@ class MeshBuilder {
                     const image = new Env.Image();
                     image.crossOrigin = true;
                     image.onload = function () {
-                        mesh.materials[key].ambientTexture.image = image;
-                        mesh.materials[key].ambientSource = Material.TEXTURE;
+
+                        const texture = new Texture();
+                        texture.image = image;
+                        mesh.materials[key].ambientTexture = texture;
+
                     }
                     image.src = mtl.ambientTexture;
                 }
@@ -517,8 +456,11 @@ class MeshBuilder {
                     const image = new Env.Image();
                     image.crossOrigin = true;
                     image.onload = function () {
-                        mesh.materials[key].diffuseTexture.image = image;
-                        mesh.materials[key].diffuseSource = Material.TEXTURE;
+
+                        const texture = new Texture();
+                        texture.image = image;
+                        mesh.materials[key].diffuseTexture = texture;
+
                     }
                     image.src = mtl.diffuseTexture;
                 }
@@ -527,20 +469,30 @@ class MeshBuilder {
                     mesh.materials[key].specularColor = {
                         r: mtl.specularColor[0] * 255,
                         g: mtl.specularColor[1] * 255,
-                        b: mtl.specularColor[2] * 255,
+                        b: mtl.specularColor[2] * 255
                     }
                 }
                 if (mtl.specularTexture) {
                     const image = new Env.Image();
                     image.crossOrigin = true;
                     image.onload = function () {
-                        mesh.materials[key].specularTexture.image = image;
-                        mesh.materials[key].specularSource = Material.TEXTURE;
+
+                        const texture = new Texture();
+                        texture.image = image;
+                        mesh.materials[key].specularTexture = texture;
                     }
                     image.src = mtl.specularTexture;
                 }
             }
         }
+
+        Object.keys(mesh.geometry.indices).forEach(key => {
+            if (!mesh.geometry.indices[key]) {
+                delete mesh.geometry.indices[key];
+                delete mesh.materials[key];
+            }
+        })
+
         return mesh;
     }
 
@@ -694,8 +646,8 @@ class MeshBuilder {
         return mesh;
     }
 
-    static createMeshFromGLTF(scene, gltf) {
-        return GLTFParser.parse(gltf, scene);
+    static createMeshFromGLTF(scene, gltf, pbrEnv) {
+        return GLTFParser.parse(gltf, scene, pbrEnv);
     }
 }
 

@@ -1,4 +1,4 @@
-class Program {
+class DefinedProgram {
 
     gl = null;
     program = null;
@@ -84,7 +84,7 @@ class Program {
                 const unit = ++this.textureCount;
                 res.unit = unit;
             }
-            if(baseVecType === 'CUB'){
+            if (baseVecType === 'CUB') {
                 const unit = ++this.textureCount;
                 res.unit = unit;
             }
@@ -161,7 +161,48 @@ class Program {
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
             gl.vertexAttribPointer(position, vecSize, gl[baseType], false, stride, offset);
             gl.enableVertexAttribArray(position);
+        }else{
+            // console.log(`[Warning] Attribute ${name} not exits.`, this);
         }
+    }
+}
+
+
+class Program {
+
+    gl = null;
+    fShaderSource = null;
+    vShaderSource = null;
+
+    definedPrograms = {};
+
+    constructor({ gl, fShaderSource, vShaderSource }) {
+
+        this.gl = gl;
+        this.fShaderSource = fShaderSource;
+        this.vShaderSource = vShaderSource;
+
+    }
+
+    define(defines) {
+
+        defines = defines.sort();
+
+        const definesKey = defines.join(';');
+
+        if (!this.definedPrograms[definesKey]) {
+
+            const definesString = defines.map(name => `#define ${name} 1`).join('\n') + '\n';
+
+            this.definedPrograms[definesKey] = new DefinedProgram({
+                gl: this.gl,
+                vShaderSource: definesString + this.vShaderSource,
+                fShaderSource: definesString + this.fShaderSource
+            })
+
+        }
+
+        return this.definedPrograms[definesKey];
     }
 }
 

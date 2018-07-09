@@ -57,7 +57,6 @@ function main(
             last = now;
             m3.rotation.y += 0.2 * d;
             m4.rotation.y += 0.2 * d;
-            camera.alpha += 0.5;
             scene.render();
             requestAnimationFrame(render);
         }

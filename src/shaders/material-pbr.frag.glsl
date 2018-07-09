@@ -29,9 +29,18 @@ uniform samplerCube uDiffuseMap;
 
 uniform sampler2D uBRDFLUT;
 
-varying vec2 vUV;
 varying vec3 vNormal;
 varying vec3 vPosition;
+
+#ifdef PBR_ALBEDO_TEXTURE
+varying vec2 vAlbedoUV;
+uniform sampler2D uMaterialAlbedoTexture;
+#endif
+
+#ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
+varying vec2 vMetallicRoughnessUV;
+uniform sampler2D uMaterialMetallicRoughnessTexture;
+#endif
 
 struct PBRInfo
 {
@@ -105,11 +114,28 @@ vec3 L(){
     vec3 fragColor = vec3(0.0, 0.0, 0.0);
 
     PBRInfo pbrInputs = PBRInfo(
+
         normalize(vNormal),
+        
         normalize(uCameraPosition - vPosition),
+
+        #ifdef PBR_ALBEDO_TEXTURE
+        uMaterialAlbedoColor * texture2D(uMaterialAlbedoTexture, vAlbedoUV).rgb,
+        #else
         uMaterialAlbedoColor,
-        uMaterialRoughness * uMaterialRoughness,
+        #endif
+
+        #ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
+        uMaterialRoughness * texture2D(uMaterialMetallicRoughnessTexture, vMetallicRoughnessUV).g,
+        #else
+        uMaterialRoughness,
+        #endif
+
+        #ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
+        uMaterialMetallic * texture2D(uMaterialMetallicRoughnessTexture, vMetallicRoughnessUV).b
+        #else
         uMaterialMetallic
+        #endif
     );
 
     for(int i = 0; i < LIGHT_MAX_COUNT; i++){
