@@ -6,14 +6,12 @@ function main(
     const engine = new G3D.Engine(canvas);
 
     const scene = new G3D.Scene(engine);
-    scene.clearColor = { r: 0, g: 0, b: 0 };
 
     const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.alpha = 0;
     camera.beta = 5;
     camera.radius = 5500;
     camera.far = 10000;
-    camera.fov = 60;
 
     controlArcRotateCamera(canvas, camera);
 
@@ -52,8 +50,7 @@ function main(
 
             function createMesh(char, x, y) {
 
-
-                let path = font.glyphs[char].o;
+                const path = font.glyphs[char].o;
 
                 const line = G3D.MeshBuilder.createLineFromPath(scene, path, 20);
                 const mesh = G3D.MeshBuilder.createMeshFromPath(scene, path, 100, 20);

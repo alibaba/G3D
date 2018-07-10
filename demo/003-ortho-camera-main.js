@@ -20,27 +20,14 @@ function main(
     light1.direction.z = 1;
     light1.intensity = 1.5;
 
-    const m1 = G3D.MeshBuilder.createGround(scene, 8, 18);
-    m1.position.z = -10;
-    m1.rotation.x = 90;
-    decorateMaterial(m1.materials.default);
+    const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
+    m1.position.z = -1;
+    // m1.rotation.x = 90;
 
-    const m2 = G3D.MeshBuilder.createSphere(scene, 1);
+    const m2 = G3D.MeshBuilder.createSphere(scene, 1, 32);
     m2.position.z = 1;
-    decorateMaterial(m2.materials.default);
 
-    function decorateMaterial(material){
-        material.ambientColor.r = 200;
-        material.ambientColor.g = 100;
-        material.ambientColor.b = 100;
-        material.diffuseColor.r = 200;
-        material.diffuseColor.g = 100;
-        material.diffuseColor.b = 100;
-        material.specularColor.r = 200;
-        material.specularColor.g = 100;
-        material.specularColor.b = 100;
-        material.glossiness = 10;
-    }
+    const coord = G3D.MeshBuilder.createCoordinate(scene, 10);
 
     function render(){
         scene.render();

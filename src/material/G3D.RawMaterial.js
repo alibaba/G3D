@@ -5,8 +5,7 @@
 class RawMaterial extends Material {
 
     color = { r: 255, g: 255, b: 255 };
-    texture = new Texture();
-    source = Material.COLOR;
+    texture = null;
 
     constructor() {
         super();
@@ -14,14 +13,10 @@ class RawMaterial extends Material {
 
     getDefines() {
         const defines = [];
-        if (this.source === Material.TEXTURE) {
+        if (this.texture) {
             defines.push('RAW_TEXTURE');
         }
         return defines;
-    }
-
-    getSource() {
-        return this.source;
     }
 
     getColor() {

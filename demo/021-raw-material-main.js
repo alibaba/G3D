@@ -25,10 +25,12 @@ function main(
         m1.position.x = 5;
         m1.position.y = 5;
 
+        const texture = new G3D.Texture();
+        texture.image = image;
+
         const m2 = G3D.MeshBuilder.createGround(scene, 6);
         m2.materials.default = new G3D.RawMaterial(m2);
-        m2.materials.default.texture.image = image;
-        m2.materials.default.source = G3D.Material.TEXTURE;
+        m2.materials.default.texture = texture;
         m2.position.x = -5;
         m2.position.y = 5;
 
@@ -42,8 +44,7 @@ function main(
 
         const m4 = G3D.MeshBuilder.createCube(scene, 4);
         m4.materials.default = new G3D.RawMaterial(m4);
-        m4.materials.default.texture.image = image;
-        m4.materials.default.source = G3D.Material.TEXTURE;
+        m4.materials.default.texture = texture;
         m4.position.x = -5;
         m4.position.y = -5;
 

@@ -1,5 +1,3 @@
-import G3DGLTFParser from "../parser/G3D.GLTFParser";
-
 class MeshBuilder {
 
     static createGround(scene, width, height = width) {
@@ -566,6 +564,7 @@ class MeshBuilder {
     }
 
     static createWireFrameFromMesh(scene, target) {
+
         const mesh = new LineMesh(scene);
 
         const cache = {};
@@ -579,6 +578,7 @@ class MeshBuilder {
         }
 
         mesh.geometry.vertices = [...target.geometry.vertices];
+        mesh.geometry.indices.default = [];
 
         for (let key in target.geometry.indices) {
 
@@ -631,8 +631,8 @@ class MeshBuilder {
     static createLineFromPath(scene, path, resolution) {
         const { vertices, indices } = PathParser.parseToLine(path, resolution);
         const line = new LineMesh(scene);
-        line.geometry.vertices.push(...vertices);
-        line.geometry.indices.default.push(...indices);
+        line.geometry.vertices = [...vertices];
+        line.geometry.indices.default = [...indices];
         return line;
     }
 
@@ -642,7 +642,7 @@ class MeshBuilder {
         mesh.geometry.vertices = mv;
         mesh.geometry.normals = normals;
         mesh.geometry.uvs = uvs;
-        mesh.geometry.indices.default.push(...mi);
+        mesh.geometry.indices.default = [...mi];
         return mesh;
     }
 

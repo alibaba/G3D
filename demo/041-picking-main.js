@@ -24,29 +24,13 @@ function main(
     light2.intensity = 0.5;
 
     const m1 = G3D.MeshBuilder.createGround(scene, 3, 3);
-    decMaterial(m1);
     m1.position.z = -2;
 
-    const m2 = G3D.MeshBuilder.createSphere(scene, 1.2);
-    decMaterial(m2);
+    const m2 = G3D.MeshBuilder.createSphere(scene, 1.2, 128, 128);
     m2.position.z = 2;
 
     const m3 = G3D.MeshBuilder.createCube(scene, 1);
-    decMaterial(m3);
     m3.position.x = 2;
-
-    function decMaterial (mesh){
-        mesh.materials.default.ambientColor.r = 200;
-        mesh.materials.default.ambientColor.g = 100;
-        mesh.materials.default.ambientColor.b = 100;
-        mesh.materials.default.diffuseColor.r = 200;
-        mesh.materials.default.diffuseColor.g = 100;
-        mesh.materials.default.diffuseColor.b = 100;
-        mesh.materials.default.specularColor.r = 200;
-        mesh.materials.default.specularColor.g = 100;
-        mesh.materials.default.specularColor.b = 100;
-        mesh.materials.default.phongFactor = 0.5;
-    }
 
     function render() {
         scene.render();
@@ -64,15 +48,15 @@ function main(
         }
     }
 
+    const rawMaterial = new G3D.RawMaterial();
+    rawMaterial.color = {r: 100, g: 200, b: 50};
+    const phongMaterial = new G3D.PhongMaterial();
+
     const toggleMesh = (mesh) => {
-        if (mesh.materials.default.diffuseColor.g === 100) {
-            mesh.materials.default.diffuseColor.g = 200;
-            mesh.materials.default.specularColor.g = 200;
-            mesh.materials.default.ambientColor.g = 200;           
-        } else {
-            mesh.materials.default.diffuseColor.g = 100;
-            mesh.materials.default.specularColor.g = 100;
-            mesh.materials.default.ambientColor.g = 100;
+        if(mesh.materials.default instanceof G3D.PhongMaterial){
+            mesh.materials.default = rawMaterial;
+        }else{
+            mesh.materials.default = phongMaterial;
         }
     }
 

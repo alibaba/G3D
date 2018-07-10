@@ -200,7 +200,7 @@ const PathParser = {
 
         const { vertices, lines } = this.parse(data, resolution);
 
-        console.log(vertices.join(','));
+        // console.log(vertices.join(','));
 
         const clonedLines = cloneLines(lines);
 
@@ -242,7 +242,7 @@ const PathParser = {
 
         function earcutPolygon(polygon) {
 
-            console.log(polygon.join(','));
+            // console.log(polygon.join(','));
 
             if (polygon.length < 3) {
 

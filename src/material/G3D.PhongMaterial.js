@@ -19,15 +19,11 @@ class PhongMaterial extends Material {
 
     specularColor = { r: 255, g: 255, b: 255 };
     specularTexture = null;
-
     glossiness = 1.0;
 
-    envMapTexture = new Texture();
-    envMapCubeTexture = new CubeTexture();
-    useEnvMap = false;
-    useCubeMap = false;
+    specularEnvMapTexture = null;
 
-    constructor(mesh) {
+    constructor() {
         super();
     }
 
@@ -45,31 +41,34 @@ class PhongMaterial extends Material {
         if (this.ambientTexture || this.diffuseTexture || this.specularTexture) {
             defines.push('PHONG_TEXTURE');
         }
+        if (this.specularEnvMapTexture) {
+            defines.push('PHONG_SPECULAR_ENV_MAP_TEXTURE');
+        }
         return defines;
     }
 
-    getAmbientSource() {
-        return this.ambientSource;
-    }
-
     getAmbientColor() {
-        return Vec3.fromValues(this.ambientColor.r / 255, this.ambientColor.g / 255, this.ambientColor.b / 255);
-    }
-
-    getDiffuseSource() {
-        return this.diffuseSource;
+        return new Float32Array([
+            this.ambientColor.r / 255,
+            this.ambientColor.g / 255,
+            this.ambientColor.b / 255
+        ]);
     }
 
     getDiffuseColor() {
-        return Vec3.fromValues(this.diffuseColor.r / 255, this.diffuseColor.g / 255, this.diffuseColor.b / 255);
-    }
-
-    getSpecularSource() {
-        return this.specularSource;
+        return new Float32Array([
+            this.diffuseColor.r / 255,
+            this.diffuseColor.g / 255,
+            this.diffuseColor.b / 255
+        ]);
     }
 
     getSpecularColor() {
-        return Vec3.fromValues(this.specularColor.r / 255, this.specularColor.g / 255, this.specularColor.b / 255);
+        return new Float32Array([
+            this.specularColor.r / 255,
+            this.specularColor.g / 255,
+            this.specularColor.b / 255
+        ]);
     }
 
     getGlossiness() {

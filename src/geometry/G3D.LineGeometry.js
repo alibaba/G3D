@@ -4,9 +4,7 @@
 )
 class LineGeometry {
     vertices = [];  // vec3
-    indices = {
-        default: []  // vec2
-    };
+    indices = {};
 
     constructor() {
     }

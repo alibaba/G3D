@@ -1,8 +1,8 @@
 class LineMesh extends Mesh {
 
-    geometry = new LineGeometry(this);
+    geometry = new LineGeometry();
     materials = {
-        default: new RawMaterial(this)
+        default: new RawMaterial()
     }
     lineWidth = 2.0;
 

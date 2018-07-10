@@ -8,9 +8,9 @@ function main(
     const scene = new G3D.Scene(engine);
 
     const camera = new G3D.RotatePerspectiveCamera(scene);
-    camera.alpha = 45;
-    camera.beta = 0;
-    camera.radius = 10;
+    camera.alpha = 25;
+    camera.beta = 45;
+    camera.radius = 20;
 
     controlArcRotateCamera(canvas, camera);
 
@@ -37,20 +37,6 @@ function main(
     m3.position.x = -3;
 
     const ground = G3D.MeshBuilder.createGround(scene, 12, 8);
-    decorateMaterial(ground.materials.default);
-
-    function decorateMaterial(material) {
-        material.ambientColor.r = 200;
-        material.ambientColor.g = 100;
-        material.ambientColor.b = 100;
-        material.diffuseColor.r = 200;
-        material.diffuseColor.g = 100;
-        material.diffuseColor.b = 100;
-        material.specularColor.r = 200;
-        material.specularColor.g = 100;
-        material.specularColor.b = 100;
-        material.glossiness = 10;
-    }
 
     function decorateLightSource(material) {
         material.diffuseColor.r = 255;

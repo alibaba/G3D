@@ -29,9 +29,12 @@ export default {
 
     Material,
     RawMaterial,
-    StandardMaterial,
+    PhongMaterial,
     PBRMaterial,
     PBREnviroment,
+
+    StandardMaterial,
+
 
     Geometry,
     LineGeometry,

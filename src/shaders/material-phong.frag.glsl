@@ -48,11 +48,11 @@ uniform sampler2D uDiffuseTexture;
 uniform sampler2D uSpecularTexture;
 #endif
 
-#ifdef PHONG_SPECULAR_ENV_TEXTURE
-uniform sampler2D uEnvMapTexture;
+#ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE
+uniform sampler2D uSpecularEnvMapTexture;
 #endif
 
-#ifdef PHONG_SPECULAR_ENV_TEXTURE
+#ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE
 vec2 des2pol(vec3 pos){
     float r = distance(vec2(pos.x, pos.z), vec2(0.0));
     float beta = atan(pos.y, r);
@@ -63,17 +63,16 @@ vec2 des2pol(vec3 pos){
 }
 #endif
 
-
 vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specularColorSource){
     vec3 colorLighted = vec3(0.0);
 
     vec3 nNormal = normalize(vNormal);
     vec3 nViewDirection = normalize(uCameraPosition - vPosition);
 
-    #ifdef PHONG_SPECULAR_ENV_TEXTURE
+    #ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE
     vec3 viewReflect = reflect(-nViewDirection, nNormal);
     vec2 viewReflectUV = des2pol(viewReflect);
-    vec3 envMapFactor = texture2D(uEnvMapTexture, viewReflectUV).rgb;
+    vec3 envMapFactor = texture2D(uSpecularEnvMapTexture, viewReflectUV).rgb;
     specularColorSource *= envMapFactor;
     #endif
 
@@ -142,12 +141,12 @@ void main() {
 
     gl_FragColor = vec4(applyLights(ambient, diffuse, specular), 1.0);
 
-    // if(uShadowFlag){
-    //     vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * vec4(vPosition, 1.0);
-    //     vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
-    //     float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
-    //     if(shadowCoord.z > shadowDepth + 0.001){
-    //         gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
-    //     }
-    // }
+    if(uShadowFlag){
+        vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * vec4(vPosition, 1.0);
+        vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
+        float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
+        if(shadowCoord.z > shadowDepth + 0.001){
+            gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
+        }
+    }
 }

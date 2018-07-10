@@ -22,14 +22,14 @@ function main(
         light1.direction.x = 1;
         light1.direction.y = 0;
         light1.direction.z = 1;
-        light1.intensity = 0.6;
+        light1.intensity = 0.4;
         const light2 = new G3D.DirectionalLight(scene);
         light2.direction.x = -1;
         light2.direction.y = 0;
         light2.direction.z = 1;
-        light2.intensity = 0.6;
+        light2.intensity = 0.4;
         const light3 = new G3D.AmbientLight(scene);
-        light3.intensity = 0.5;
+        light3.intensity = 0.2;
 
         // lambert
         const m1 = G3D.MeshBuilder.createSphere(scene, 4);
@@ -45,7 +45,7 @@ function main(
         makePhong(m3, 20);
         makePosition(m3, 5, -5);
 
-        // lambert
+        // lambert texture
         const m4 = G3D.MeshBuilder.createSphere(scene, 4);
         makeLambertTexture(m4);
         makePosition(m4, 5, -15);
@@ -65,7 +65,7 @@ function main(
         makePhong(m7, 20);
         makePosition(m7, -5, -5);
 
-        // lambert
+        // lambert texture
         const m8 = G3D.MeshBuilder.createCube(scene, 6);
         makeLambertTexture(m8);
         makePosition(m8, -5, -15);
@@ -73,40 +73,25 @@ function main(
         new G3D.MeshBuilder.createCoordinate(scene, 40);
 
         function makeLambert(mesh) {
-            mesh.materials.default.ambientColor.r = 100;
-            mesh.materials.default.ambientColor.g = 200;
-            mesh.materials.default.ambientColor.b = 100;
-            mesh.materials.default.diffuseColor.r = 100;
-            mesh.materials.default.diffuseColor.g = 200;
-            mesh.materials.default.diffuseColor.b = 100;
+            mesh.materials.default.ambientColor = { r: 100, g: 200, b: 100 };
+            mesh.materials.default.diffuseColor = { r: 100, g: 200, b: 100 };
+            mesh.materials.default.specularColor = { r: 0, g: 0, b: 0 };
         }
         function makeLambertTexture(mesh) {
-            mesh.materials.default.ambientTexture.image = image;
-            mesh.materials.default.ambientSource = G3D.Material.TEXTURE;
-            mesh.materials.default.diffuseTexture.image = image;
-            mesh.materials.default.diffuseSource = G3D.Material.TEXTURE;
+            const texture = new G3D.Texture();
+            texture.image = image;
+            mesh.materials.default.ambientTexture = texture;
+            mesh.materials.default.diffuseTexture = texture;
+            mesh.materials.default.specularColor = { r: 0, g: 0, b: 0 };
         }
         function makePhong(mesh, glossiness) {
-            mesh.materials.default.ambientColor.r = 50;
-            mesh.materials.default.ambientColor.g = 100;
-            mesh.materials.default.ambientColor.b = 50;
-            mesh.materials.default.diffuseColor.r = 50;
-            mesh.materials.default.diffuseColor.g = 100;
-            mesh.materials.default.diffuseColor.b = 50;
-            mesh.materials.default.specularColor.r = 100;
-            mesh.materials.default.specularColor.g = 200;
-            mesh.materials.default.specularColor.b = 100;
+            mesh.materials.default.ambientColor = { r: 50, g: 100, b: 50 };
+            mesh.materials.default.diffuseColor = { r: 50, g: 100, b: 50 };
+            mesh.materials.default.specularColor = { r: 100, g: 200, b: 100 };
             mesh.materials.default.glossiness = glossiness;
         }
-        function makePhongTexture(mesh, glossiness) {
-            mesh.materials.default.ambientTexture.image = image;
-            mesh.materials.default.ambientSource = G3D.Material.TEXTURE;
-            mesh.materials.default.diffuseTexture.image = image;
-            mesh.materials.default.diffuseSource = G3D.Material.TEXTURE;
-            mesh.materials.default.specularTexture.image = image;
-            mesh.materials.default.specularSource = G3D.Material.TEXTURE;
-            mesh.materials.default.phongFactor = glossiness;
-        }
+
+
         function makePosition(mesh, x, y) {
             mesh.position.x = x;
             mesh.position.y = y;

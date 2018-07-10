@@ -9,9 +9,7 @@
 class Geometry {
 
     vertices = null;
-    indices = {
-        default: null
-    };
+    indices = {};
     uvs = null;
     normals = null;
 

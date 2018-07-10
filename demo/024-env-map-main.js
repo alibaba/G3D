@@ -33,20 +33,13 @@ function main(
     const light4 = new G3D.AmbientLight(scene);
     light4.intensity = 0.5;
 
-    const mesh = G3D.MeshBuilder.createSphere(scene, 1);
-    mesh.materials.default.ambientColor.r = 150;
-    mesh.materials.default.ambientColor.g = 150;
-    mesh.materials.default.ambientColor.b = 150;
-    mesh.materials.default.diffuseColor.r = 150;
-    mesh.materials.default.diffuseColor.g = 150;
-    mesh.materials.default.diffuseColor.b = 150;
-    mesh.materials.default.specularColor.r = 200;
-    mesh.materials.default.specularColor.g = 200;
-    mesh.materials.default.specularColor.b = 200;
+    const mesh = G3D.MeshBuilder.createSphere(scene, 1, 256, 128);
+    mesh.materials.default.ambientColor = {r: 150, g: 150, b:150};
+    mesh.materials.default.diffuseColor = {r: 150, g: 150, b:150};
+    mesh.materials.default.specularColor = {r: 200, g: 200, b:200};
     mesh.materials.default.glossiness = 1;
 
     G3D.MeshBuilder.createCoordinate(scene, 2);
-
 
     function render() {
         scene.render();
@@ -55,8 +48,9 @@ function main(
     render();
 
     loader.loadImage('//img.alicdn.com/tfs/TB1jxUkigvD8KJjy0FlXXagBFXa-1024-512.jpg', image=>{
-        mesh.materials.default.useEnvMap = true;
-        mesh.materials.default.envMapTexture.image = image;
+        const texture = new G3D.Texture();
+        texture.image = image;
+        mesh.materials.default.specularEnvMapTexture = texture;
     });
 
 }

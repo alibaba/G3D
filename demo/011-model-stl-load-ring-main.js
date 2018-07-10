@@ -3,9 +3,7 @@ const lightConfigList = {
         [-1, 2, 1, 4.0],
         [1, 0, 1, 4.0],
         [-1, 0, 0, 1.0],
-        [1, 2, -1, 1.0],
-        [-1, -2, -1, 1.0],
-        [1, -2, -1, 1.0]
+        [1, 2, -1, 1.0]
     ],
     ambient: [
         [4.0]
@@ -29,22 +27,22 @@ function main(
         mesh.materials.default.specularColor.g = g;
         mesh.materials.default.specularColor.b = b;
         mesh.materials.default.glossiness = 2;
-        mesh.materials.default.useEnvMap = true;
-        mesh.materials.default.envMapTexture.image = image;
+
+        const texture = new G3D.Texture();
+        texture.image = image;
+
+        mesh.materials.default.specularEnvMapTexture = texture;
     }
 
     const engine = new G3D.Engine(canvas);
 
     const scene = new G3D.Scene(engine);
 
-    scene.clearColor = {r: 235, g: 235, b: 235};
-
     const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.alpha = 0;
     camera.beta = 20;
-    camera.radius = 30;
-    camera.far = 200;
-    camera.fov = 60;
+    camera.radius = 60;
+    camera.far = 400;
 
     controlArcRotateCamera(canvas, camera);
 
@@ -68,6 +66,7 @@ function main(
         'http://g.alicdn.com/gama/assets/0.0.7/assets/models/ring/ring.txt',
         function (text) {
             mesh = G3D.MeshBuilder.createFromStlModel(scene, text);
+            mesh.position.y = 10;
             mesh.geometry.mergeNormals();
             check();
         }
@@ -81,7 +80,6 @@ function main(
         check();
     }
     image.src = '//img.alicdn.com/tfs/TB1_QdsolHH8KJjy0FbXXcqlpXa-1280-573.png';
-    // image.src = '//img.alicdn.com/tfs/TB1e2fqgDtYBeNjy1XdXXXXyVXa-256-256.png';
 
     let checked = false;
     function check() {
@@ -91,9 +89,8 @@ function main(
         }
     }
 
-
     function render() {
-        mesh && (mesh.rotation.y = Date.now()/100);
+        mesh && (mesh.rotation.y += 0.5);
         scene.render();
         requestAnimationFrame(render);
     }

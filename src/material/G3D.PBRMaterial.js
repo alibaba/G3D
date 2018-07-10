@@ -1,13 +1,8 @@
 class PBRMaterial extends Material {
 
-
     albedoColor = { r: 0, g: 0, b: 0 };
 
     albedoTexture = new Texture();
-
-    albedoSource = Material.COLOR;
-
-
 
     metallic = 0.0;
 
