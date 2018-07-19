@@ -29,10 +29,6 @@ class Scene {
         const pixels = this.engine.readFramebufferPixel('picker', x, y);
         return [...pixels].map(n => Math.round(n / 16)).reduceRight((n, item) => n * 16 + item, 0);
     }
-
-    pickF(x, y, fb) {
-        return this.engine.readFramebufferPixel(fb, x, y);
-    }
 }
 
 export default Scene;

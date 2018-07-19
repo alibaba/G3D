@@ -8,54 +8,8 @@ class RenderManager {
 
     scene = null;
 
-    lightsData = null;
-
     constructor(scene) {
         this.scene = scene;
-    }
-
-    composeLight() {
-        const { scene } = this;
-        const { lights } = scene;
-        if (lights.length > 16) {
-            throw new Error('[G3D] Scene could not have more than 16 lights.');
-        }
-        const target = {
-            type: [],
-            color: [],
-            intensity: [],
-            position: []
-        }
-        for (let i = 0; i < LIGHT_MAX_COUNT; i++) {
-            const light = lights[i];
-            if (light instanceof DirectionalLight) {
-                target.type.push(LIGHT_TYPE_DIRECTIONAL);
-                target.color.push(...light.getColor());
-                target.intensity.push(light.getIntensity());
-                target.position.push(...light.getDirection());
-            } else if (light instanceof AmbientLight) {
-                target.type.push(LIGHT_TYPE_AMBIENT);
-                target.color.push(...light.getColor());
-                target.intensity.push(light.getIntensity());
-                target.position.push(0, 0, 0);
-            } else if (light instanceof PointLight) {
-                target.type.push(LIGHT_TYPE_POINT);
-                target.color.push(...light.getColor());
-                target.intensity.push(light.getIntensity());
-                target.position.push(...light.getPosition());
-            } else {
-                target.type.push(LIGHT_TYPE_NULL);
-                target.color.push(0, 0, 0);
-                target.intensity.push(0);
-                target.position.push(0, 0, 0);
-            }
-        }
-        return {
-            type: new Int32Array(target.type),
-            color: new Float32Array(target.color.map(c => c / 255)),
-            intensity: new Float32Array(target.intensity),
-            position: new Float32Array(target.position)
-        }
     }
 
     groupMeshLayers() {
@@ -87,8 +41,6 @@ class RenderManager {
         const engine = Engine.instance;
 
         if (scene.activeCamera) {
-
-            this.lightsData = this.composeLight();
 
             const groups = this.groupMeshLayers();
 
@@ -132,13 +84,21 @@ class RenderManager {
             this.drawSkybox();
         }
 
+
+
+        const globalDefines = [];
+
+        if (scene.lights.filter(lt => lt.castShadow).length > 0) {
+            globalDefines.push('CAST_SHADOW');
+        }
+
         groups.forEach(meshes => {
 
             engine.clearDepthBuffer();
 
             meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
 
-                Object.keys(mesh.geometry.indices).forEach(key => {
+                Object.keys(mesh.geometry.getBuffers().indices).forEach(key => {
 
                     const material = mesh.materials[key];
 
@@ -146,7 +106,7 @@ class RenderManager {
 
                         engine.useProgram(
                             'raw',
-                            [...material.getDefines()]
+                            [...material.getDefines(), ...globalDefines]
                         );
 
                         this.prepareMVPMatrix(mesh);
@@ -161,7 +121,7 @@ class RenderManager {
 
                         engine.useProgram(
                             'phong',
-                            [...material.getDefines()]
+                            [...material.getDefines(), ...globalDefines]
                         );
 
                         this.prepareMVPMatrix(mesh);
@@ -180,7 +140,7 @@ class RenderManager {
 
                         engine.useProgram(
                             'pbr',
-                            [...material.getDefines()]
+                            [...material.getDefines(), ...globalDefines]
                         );
 
                         this.prepareMVPMatrix(mesh);
@@ -194,8 +154,6 @@ class RenderManager {
                         this.drawMesh(mesh, key);
 
                     }
-
-
                 })
             })
         })
@@ -286,7 +244,6 @@ class RenderManager {
 
         const { scene } = this;
         const engine = Engine.instance;
-
 
         const { lights, activeCamera } = scene;
 
@@ -422,10 +379,12 @@ class RenderManager {
         }
 
         engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
+        engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.getMipLevel()]);
 
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
 
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.getTexture());
+
 
     }
 
@@ -435,24 +394,18 @@ class RenderManager {
 
         const { scene } = this;
 
-        const shadowLight = _.find(scene.lights, light => light.castShadow);
+        const shadowLights = scene.lights.filter(lt=>lt.castShadow);
 
-        if (shadowLight) {
+        if (shadowLights.length > 0) {
 
-            engine.uniform('uShadowFlag', [true]);
+            const shadowLight = shadowLights[0];
 
             const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
-
             engine.uniform('uShadowMapTexture', shadowMapTexture);
 
             const shadowCamera = shadowLight.getShadowCamera();
-
             engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
             engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
-
-        } else {
-
-            engine.uniform('uShadowFlag', [false]);
 
         }
 

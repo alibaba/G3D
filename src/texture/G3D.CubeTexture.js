@@ -32,6 +32,14 @@ class CubeTexture {
 
         return engine.createCubeTexture(this.images, width, height, this.sRGB, this.flipY);
     }
+
+    getMipLevel() {
+        if (this.images.mip) {
+            return this.images.mip.length;
+        } else {
+            return 0;
+        }
+    }
 }
 
 export default CubeTexture;

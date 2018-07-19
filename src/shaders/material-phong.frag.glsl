@@ -23,12 +23,6 @@ uniform vec3 uSpecularColor;
 
 uniform float uGlossiness;
 
-uniform bool uShadowFlag;
-uniform sampler2D uShadowMapTexture;
-uniform mat4 uShadowPMatrix;
-uniform mat4 uShadowVMatrix;
-uniform mat4 uMMatrix;
-
 varying vec3 vNormal;
 varying vec3 vPosition;
 
@@ -50,6 +44,12 @@ uniform sampler2D uSpecularTexture;
 
 #ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE
 uniform sampler2D uSpecularEnvMapTexture;
+#endif
+
+#ifdef CAST_SHADOW
+uniform mat4 uShadowPMatrix;
+uniform mat4 uShadowVMatrix;
+uniform sampler2D uShadowMapTexture;
 #endif
 
 #ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE
@@ -141,12 +141,12 @@ void main() {
 
     gl_FragColor = vec4(applyLights(ambient, diffuse, specular), 1.0);
 
-    if(uShadowFlag){
-        vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * vec4(vPosition, 1.0);
-        vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
-        float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
-        if(shadowCoord.z > shadowDepth + 0.001){
-            gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
-        }
+    #ifdef CAST_SHADOW
+    vec4 shadowPosition = uShadowPMatrix * uShadowVMatrix * vec4(vPosition, 1.0);
+    vec3 shadowCoord = (shadowPosition.xyz / shadowPosition.w)/2.0 + 0.5;
+    float shadowDepth = texture2D(uShadowMapTexture, shadowCoord.xy).r;
+    if(shadowCoord.z > shadowDepth + 0.01){
+        gl_FragColor = vec4(gl_FragColor.xyz*0.7, 1.0);
     }
+    #endif
 }

@@ -22,38 +22,39 @@ function main(
 
     light.castShadow = true;
 
-    const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
-    m1.position.z = -3;
-    decorateMaterial(m1.materials.default);
+    const m = G3D.MeshBuilder.createGround(scene, 6, 4);
+    m.position.z = -3;
+    decorateMaterial(m.materials.default, 200, 100, 100);
 
-    const m2 = G3D.MeshBuilder.createGround(scene, 0.5);
-    m2.position.z = 0;
-    decorateMaterial(m2.materials.default);
+    const m1 = G3D.MeshBuilder.createCone(scene, 0.3, 0.5);
+    m1.position.x = -1;
+    decorateMaterial(m1.materials.default, 100, 200, 100);
 
-    function decorateMaterial(material) {
-        material.ambientColor.r = 200;
-        material.ambientColor.g = 100;
-        material.ambientColor.b = 100;
-        material.diffuseColor.r = 200;
-        material.diffuseColor.g = 100;
-        material.diffuseColor.b = 100;
-        material.specularColor.r = 200;
-        material.specularColor.g = 100;
-        material.specularColor.b = 100;
+    const m2 = G3D.MeshBuilder.createCube(scene, 0.5);
+    decorateMaterial(m2.materials.default, 100, 200, 100);
+
+    const m3 = G3D.MeshBuilder.createCylinder(scene, 0.2, 0.5);
+    m3.position.x = 1;
+    decorateMaterial(m3.materials.default, 100, 200, 100);
+
+    function decorateMaterial(material, r, g, b) {
+        material.ambientColor = {r, g, b};
+        material.diffuseColor = {r, g, b};
+        material.specularColor = {r, g, b};
         material.glossiness = 10;
     }
 
     function render() {
-        m2.rotation.z += 1;
+        m1.rotation.x += 1;
+        m1.rotation.y += 0.7;
+        m2.rotation.x += 1;
+        m2.rotation.z += 0.7;
+        m3.rotation.y += 1;
+        m3.rotation.z += 0.7;
         scene.render();
         requestAnimationFrame(render);
     }
     render();
-
-    canvas.addEventListener('click', e => {
-        const { offsetX: x, offsetY: y } = e;
-        console.log(scene.pickF(x, y, null));
-    })
 
 }
 

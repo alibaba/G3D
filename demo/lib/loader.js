@@ -22,6 +22,7 @@ function loadText(url, callback) {
 
   var xmlhttp = new XMLHttpRequest();
 
+
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == XMLHttpRequest.DONE) {
       if (xmlhttp.status == 200) {
@@ -35,6 +36,7 @@ function loadText(url, callback) {
   };
 
   xmlhttp.open('GET', url, true);
+  // xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
   xmlhttp.send();
 }
 
@@ -79,6 +81,28 @@ function loadImageQueue(urlMap, callback) {
 }
 
 
+function loadTextQueue(urls, callback) {
+
+  let loadCount = 0;
+  const res = [];
+
+  console.log(urls);
+
+  urls.forEach((url, i) => {
 
 
-export default { loadText, loadImage, loadBlob, loadImageQueue };
+    loadText(url, text => {
+      res[i] = text;
+      loadCount++;
+
+      if (loadCount === urls.length) {
+        callback(res);
+      }
+
+    });
+  });
+}
+
+
+
+export default { loadText, loadImage, loadBlob, loadImageQueue, loadTextQueue };

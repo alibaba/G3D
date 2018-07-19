@@ -1,25 +1,44 @@
+
+
 const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     console.log(gltf);
 
     const glBuffers = gltf.bufferViews.map((bv) => {
 
-        const { data } = gltf.buffers[bv.buffer];
+        if (bv.target) {
+            const { data } = gltf.buffers[bv.buffer];
 
-        const sliced = data.slice(
-            bv.byteOffset,
-            bv.byteOffset + bv.byteLength
-        );
+            const sliced = data.slice(
+                bv.byteOffset,
+                bv.byteOffset + bv.byteLength
+            );
 
-        return Engine.instance.createBuffer(sliced, bv.target);
+            return Engine.instance.createBuffer(sliced, bv.target);
+
+        } else {
+
+            return null;
+
+        }
 
     });
+
+    // gltf.images.forEach(item => {
+
+    //     if (item.bufferView) {
+    //         const buffer = glBuffers[item.bufferView];
+
+
+    //     }
+
+    // });
+
 
     const pbrEnv = new PBREnviroment();
     pbrEnv.specular.images = specular;
     pbrEnv.diffuse.images = diffuse;
     pbrEnv.brdfLUT.image = lut;
-
 
     const gTextures = gltf.textures.map(tex => {
 
@@ -74,54 +93,102 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
         return material;
     });
 
-    // const material = new PBRMaterial();
-    // material.pbrEnviroment = pbrEnv;
+    const gMeshCreators = gltf.meshes.map((item) => {
 
-    // material.albedoColor = { r: 148, g: 148, b: 148 };
-    // material.metallic = 0.5;
-    // material.roughtness = 0.99;
+        return () => {
 
-    const meshes = gltf.meshes.map((item, i) => {
+            const mesh = new Mesh(scene);
 
-        const mesh = new Mesh(scene);
+            const { primitives } = item;
+            const { attributes, indices, mode, material: materialIndex } = primitives[0];
 
-        const { primitives } = item;
-        const { attributes, indices, mode, material: materialIndex } = primitives[0];
+            const getBuffer = (accessorKey) => {
 
-        const getBuffer = (accessorKey) => {
+                const accessor = gltf.accessors[accessorKey];
 
-            const accessor = gltf.accessors[accessorKey];
+                return {
+                    buffer: glBuffers[accessor.bufferView],
+                    stride: accessor.byteStride || 0,
+                    offset: accessor.byteOffset || 0,
+                    count: accessor.count
+                }
+            };
 
-            return {
-                buffer: glBuffers[accessor.bufferView],
-                stride: accessor.byteStride || 0,
-                offset: accessor.byteOffset || 0,
-                count: accessor.count
-            }
-        };
+            mesh.geometry.getBuffers = () => {
 
-        mesh.geometry.getBuffers = () => {
-
-            return {
-                vertices: getBuffer(attributes['POSITION']),
-                normals: getBuffer(attributes['NORMAL']),
-                uvs: {
-                    aAlbedoUV: getBuffer(attributes['TEXCOORD_0']),
-                    aMetallicRoughnessUV: getBuffer(attributes['TEXCOORD_0'])
-                },
-                indices: {
-                    default: {
-                        ...getBuffer(indices),
-                        mode: 'TRIANGLES',
-                        type: 'UNSIGNED_SHORT'
+                return {
+                    vertices: getBuffer(attributes['POSITION']),
+                    normals: getBuffer(attributes['NORMAL']),
+                    uvs: attributes['TEXCOORD_0'] ? {
+                        aAlbedoUV: getBuffer(attributes['TEXCOORD_0']),
+                        aMetallicRoughnessUV: getBuffer(attributes['TEXCOORD_0'])
+                    } : null,
+                    indices: {
+                        default: {
+                            ...getBuffer(indices),
+                            mode: 'TRIANGLES',
+                            type: 'UNSIGNED_SHORT'
+                        }
                     }
                 }
             }
+
+            mesh.materials.default = gMaterials[materialIndex];
+
+            return mesh;
+
         }
 
-        mesh.materials.default = gMaterials[materialIndex];
+    });
 
+    const gMeshes = gltf.nodes.map((item, i) => {
+
+        const mesh = (item.mesh !== undefined) ? gMeshCreators[item.mesh]() : new Mesh(scene);
+
+        if (item.matrix) {
+
+            console.log(item.matrix);
+
+            const mMatrix = Mat4.fromValues(...item.matrix);
+
+            const trans = Mat4.getTranslation(Vec3.create(), mMatrix);
+            const quat = Mat4.getRotation(Quat.create(), mMatrix);
+            const euler = Quat.getEuler(Vec3.create(), quat);
+            const scale = Mat4.getScaling(Vec3.create(), mMatrix);
+
+            console.log('trans, quat, euler, scale');
+            console.log(trans, quat, euler, scale);
+
+            mesh.position = {
+                x: trans[0],
+                y: trans[1],
+                z: trans[2]
+            };
+
+            mesh.rotation = {
+                x: euler[0],
+                y: euler[1],
+                z: euler[2]
+            };
+
+            mesh.scale = {
+                x: scale[0],
+                y: scale[1],
+                z: scale[2]
+            }
+
+            console.log(mesh.getMatrix());
+
+        }
         return mesh;
+    });
+
+    gltf.nodes.map((item, i) => {
+        if (item.children) {
+            item.children.forEach(c => {
+                gMeshes[c].parent = gMeshes[i];
+            })
+        }
     });
 
 }

@@ -19,29 +19,7 @@ function main(
     const m1 = new G3D.MeshBuilder.createSphere(scene, 0.2);
     m1.materials.default = new G3D.RawMaterial(m1);
 
-
-
-    const ground = G3D.MeshBuilder.createCylinder(scene, 4, 8, 128);
-    decorateMaterial(ground.materials.default);
-
-    function decorateMaterial(material) {
-        material.ambientColor.r = 200;
-        material.ambientColor.g = 100;
-        material.ambientColor.b = 100;
-        material.diffuseColor.r = 200;
-        material.diffuseColor.g = 100;
-        material.diffuseColor.b = 100;
-        material.specularColor.r = 200;
-        material.specularColor.g = 100;
-        material.specularColor.b = 100;
-        material.glossiness = 10;
-    }
-
-    function decorateLightSource(material) {
-        material.diffuseColor.r = 255;
-        material.diffuseColor.g = 255;
-        material.diffuseColor.b = 255;
-    }
+    G3D.MeshBuilder.createCylinder(scene, 4, 8, 128);
 
     function render() {
 

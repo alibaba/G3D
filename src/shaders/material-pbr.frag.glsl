@@ -26,8 +26,8 @@ uniform float uMaterialMetallic;
 
 uniform samplerCube uSpecularMap;
 uniform samplerCube uDiffuseMap;
-
 uniform sampler2D uBRDFLUT;
+uniform int uSpecularMipLevel;
 
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -98,7 +98,7 @@ vec3 L_env(PBRInfo info){
     vec3 diffuse = diffuseLight * diffuseColor;
 
     vec3 R = -normalize(reflect(info.V, info.N));
-    vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * 8.0).rgb;
+    vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * float(uSpecularMipLevel)).rgb;
 
     vec3 specularColor = mix(vec3(0.04), info.baseColor, info.metallic);
 

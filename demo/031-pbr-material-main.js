@@ -7,9 +7,7 @@ function main(
 
     const scene = new G3D.Scene(engine);
 
-    scene.clearColor = { r: 51, g: 51, b: 76 };
-
-    const camera = new G3D.RotatePerspectiveCamera(scene)
+    const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.fov = 60;
     camera.near = 0.01;
     camera.far = 100;
@@ -49,10 +47,9 @@ function main(
 
     createPointLight(0, 0, 0, 10);
 
+    G3D.MeshBuilder.createCoordinate(scene, 5);
 
-    const m3 = G3D.MeshBuilder.createCoordinate(scene, 5);
-
-    pbrAssets().ready((specular, diffuse, lut) => {
+    pbrAssets('default').ready((specular, diffuse, lut) => {
 
         const pbrEnv = new G3D.PBREnviroment();
 

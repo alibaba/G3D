@@ -2,6 +2,8 @@ import loader from './loader';
 
 const prefix = '//g.alicdn.com/gama/assets/0.0.11/assets/pbr';
 
+let useDefault = false;
+
 function loadAssets(envName, callback) {
 
     const faces = ['left', 'right', 'top', 'bottom', 'front', 'back'];
@@ -18,9 +20,15 @@ function loadAssets(envName, callback) {
     function loadSpecular(callback) {
         const specularImages = {};
         faces.forEach((face, j) => {
-            for (let i = 0; i < 9; i++) {
-                // specularImages[face + '_' + i] = `//g.alicdn.com/gama/assets/0.0.8/assets/pbr/specular/specular_${face}_${i}.jpg`;
-                specularImages[face + '_' + i] = `${prefix}/${envName}/output_pmrem_${faceDes[j]}_${i}_${Math.pow(2, 8 - i)}x${Math.pow(2, 8 - i)}.jpg`;
+
+            if (useDefault) {
+                for (let i = 0; i < 10; i++) {
+                    specularImages[face + '_' + i] = `//g.alicdn.com/gama/assets/0.0.8/assets/pbr/specular/specular_${face}_${i}.jpg`;
+                }
+            } else {
+                for (let i = 0; i < 9; i++) {
+                    specularImages[face + '_' + i] = `${prefix}/${envName}/output_pmrem_${faceDes[j]}_${i}_${Math.pow(2, 8 - i)}x${Math.pow(2, 8 - i)}.jpg`;
+                }
             }
         });
 
@@ -53,14 +61,17 @@ function loadAssets(envName, callback) {
         const diffuseImages = {};
 
         faces.forEach((face, j) => {
-            // diffuseImages[face] = `http://g.alicdn.com/gama/assets/0.0.8/assets/pbr/diffuse/diffuse_${face}_0.jpg`;
-            diffuseImages[face] = `${prefix}/${envName}/output_iem_${faceDes[j]}.jpg`;
+
+            if (useDefault) {
+                diffuseImages[face] = `http://g.alicdn.com/gama/assets/0.0.8/assets/pbr/diffuse/diffuse_${face}_0.jpg`;
+            } else {
+                diffuseImages[face] = `${prefix}/${envName}/output_iem_${faceDes[j]}.jpg`;
+            }
         });
 
         loader.loadImageQueue({
             ...diffuseImages
         }, function (images) {
-
             callback(images);
         })
 
@@ -77,8 +88,14 @@ const pbrAssets = (envName = 'apartment') => {
 
     const envList = ['apartment', 'office', 'emptyroom', 'backlot'];
     if (envList.indexOf(envName) === -1) {
-        console.log('envmap ' + envName + ' not exits, fallback to apartment');
-        envName = 'apartment';
+
+        if (envName === 'default') {
+            useDefault = true;
+        } else {
+            console.log('envmap ' + envName + ' not exits, fallback to apartment');
+            envName = 'apartment';
+        }
+
     }
 
     return {

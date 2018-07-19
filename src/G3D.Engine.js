@@ -85,7 +85,10 @@ class Engine {
         }
 
         gl.viewport(0, 0, this.width, this.height);
+
         gl.enable(gl.DEPTH_TEST);
+
+        gl.enable(gl.CULL_FACE);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }
@@ -265,13 +268,13 @@ class Engine {
 
                     if (image instanceof Env.Image) {
 
-                        gl.texImage2D(targets[k], i, format, format, gl.UNSIGNED_BYTE, images[k]);
+                        gl.texImage2D(targets[k], i+1, format, format, gl.UNSIGNED_BYTE, images[k]);
 
                     }
                 })
 
             });
-
+            
         }
 
         return texture;
