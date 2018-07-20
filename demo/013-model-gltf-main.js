@@ -13,6 +13,7 @@ function main(
 
             gltf.buffers.forEach(buffer => {
 
+
                 if (typeof buffer.uri === 'string') {
                     buffer.uri = [buffer.uri];
                 }
@@ -64,14 +65,14 @@ function main(
 
         controlArcRotateCamera(canvas, camera);
 
-        // const light1 = new G3D.DirectionalLight(scene);
-        // light1.direction.x = 1;
-        // light1.direction.y = -1;
-        // light1.direction.z = 0;
-        // light1.intensity = 0.2;
+        const light1 = new G3D.DirectionalLight(scene);
+        light1.direction.x = 1;
+        light1.direction.y = -1;
+        light1.direction.z = 0;
+        light1.intensity = 0.2;
 
-        // const light2 = new G3D.AmbientLight(scene);
-        // light2.intensity = 0.2;
+        const light2 = new G3D.AmbientLight(scene);
+        light2.intensity = 0.2;
 
         const coord = G3D.MeshBuilder.createCoordinate(scene, 100);
 

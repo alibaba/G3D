@@ -86,8 +86,6 @@ function loadTextQueue(urls, callback) {
   let loadCount = 0;
   const res = [];
 
-  console.log(urls);
-
   urls.forEach((url, i) => {
 
 

@@ -35,7 +35,8 @@ const libraryTasks = dalaran.libraryTasks({
     ],
     devCors: true,
     testEntryPattern: 'test/**/*.spec.js',
-    eslint: false
+    eslint: false,
+    liveReload: true
 });
 
 gulp.task('library-test', libraryTasks.test);

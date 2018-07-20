@@ -147,17 +147,12 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
         if (item.matrix) {
 
-            console.log(item.matrix);
-
             const mMatrix = Mat4.fromValues(...item.matrix);
 
             const trans = Mat4.getTranslation(Vec3.create(), mMatrix);
             const quat = Mat4.getRotation(Quat.create(), mMatrix);
             const euler = Quat.getEuler(Vec3.create(), quat);
             const scale = Mat4.getScaling(Vec3.create(), mMatrix);
-
-            console.log('trans, quat, euler, scale');
-            console.log(trans, quat, euler, scale);
 
             mesh.position = {
                 x: trans[0],
@@ -176,8 +171,6 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
                 y: scale[1],
                 z: scale[2]
             }
-
-            console.log(mesh.getMatrix());
 
         }
         return mesh;
