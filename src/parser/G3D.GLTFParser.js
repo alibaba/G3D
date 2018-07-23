@@ -24,16 +24,6 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     });
 
-    // gltf.images.forEach(item => {
-
-    //     if (item.bufferView) {
-    //         const buffer = glBuffers[item.bufferView];
-
-
-    //     }
-
-    // });
-
 
     const pbrEnv = new PBREnviroment();
     pbrEnv.specular.images = specular;
@@ -57,7 +47,7 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
         const material = new PBRMaterial();
 
-        const { pbrMetallicRoughness: mr } = mtl;
+        const { pbrMetallicRoughness: mr, normalTexture, emissiveTexture } = mtl;
 
         if (mr.baseColorFactor) {
             material.albedoColor = {
@@ -75,17 +65,25 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
         if (mr.baseColorTexture) {
             material.albedoTexture = gTextures[mr.baseColorTexture.index];
-            material.albedoSource = Material.TEXTURE;
+            material.albedoTexture.sRGB = true;
         }
 
         if (mr.metallicRoughnessTexture) {
-            material.useMetallicRoughnessTexture = true;
             material.metallicRoughnessTexture = gTextures[mr.metallicRoughnessTexture.index];
             material.metallic = 1.0;
             material.roughness = 1.0;
         } else {
-            material.metallic = 0.9;
-            material.roughness = 0.2;
+            // TODO : single value
+            // material.metallic = 1.0;
+            // material.roughness = 1.0;
+        }
+
+        if(emissiveTexture){
+            material.emissiveTexture = gTextures[emissiveTexture.index];
+        }
+
+        if (normalTexture) {
+            material.normalTexture = gTextures[normalTexture.index];
         }
 
         material.pbrEnviroment = pbrEnv;
@@ -121,7 +119,9 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
                     normals: getBuffer(attributes['NORMAL']),
                     uvs: attributes['TEXCOORD_0'] ? {
                         aAlbedoUV: getBuffer(attributes['TEXCOORD_0']),
-                        aMetallicRoughnessUV: getBuffer(attributes['TEXCOORD_0'])
+                        aMetallicRoughnessUV: getBuffer(attributes['TEXCOORD_0']),
+                        aNormalUV: getBuffer(attributes['TEXCOORD_0']),
+                        aEmissiveUV: getBuffer(attributes['TEXCOORD_0'])
                     } : null,
                     indices: {
                         default: {

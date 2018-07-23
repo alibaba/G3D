@@ -10,7 +10,9 @@ class PBRMaterial extends Material {
 
     metallicRoughnessTexture = null;
 
-    useMetallicRoughnessTexture = false;
+    emissiveTexture = null;
+
+    normalTexture = null;
 
     pbrEnviroment = new PBREnviroment();
 
@@ -20,22 +22,29 @@ class PBRMaterial extends Material {
 
     getDefines() {
         const defines = [];
-        if (this.albedoSource === Material.TEXTURE) {
+
+        if (this.albedoTexture) {
             defines.push('PBR_ALBEDO_TEXTURE');
         }
-        if (this.useMetallicRoughnessTexture) {
+
+        if (this.metallicRoughnessTexture) {
             defines.push('PBR_METALLIC_ROUGHNESS_TEXTURE');
         }
+
+        if(this.emissiveTexture){
+            defines.push('PBR_EMISSIVE_TEXTURE');
+        }
+
+        if (this.normalTexture) {
+            defines.push('PBR_NORMAL_TEXTURE');
+        }
+
         return defines;
     }
 
     getAlbedoColor() {
         const { albedoColor: c } = this;
         return [c.r / 255, c.g / 255, c.b / 255];
-    }
-
-    getAlbedoSource() {
-        return this.albedoSource;
     }
 
     getMetallic() {

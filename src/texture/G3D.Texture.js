@@ -12,6 +12,8 @@ class Texture {
     
     flipY = true;
 
+    clamp = false; // or repeat
+
     constructor() {
     }
 
@@ -21,7 +23,7 @@ class Texture {
 
         const [width, height] = this.image.width ? [this.image.width, this.image.height] : [this.width, this.height];
         
-        return engine.createTexture(this.image, width, height, this.sRGB, this.flipY);
+        return engine.createTexture(this.image, width, height, this.sRGB, this.flipY, this.clamp);
     }
 }
 

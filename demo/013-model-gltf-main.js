@@ -13,7 +13,6 @@ function main(
 
             gltf.buffers.forEach(buffer => {
 
-
                 if (typeof buffer.uri === 'string') {
                     buffer.uri = [buffer.uri];
                 }

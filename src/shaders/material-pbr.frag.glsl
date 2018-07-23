@@ -29,8 +29,13 @@ uniform samplerCube uDiffuseMap;
 uniform sampler2D uBRDFLUT;
 uniform int uSpecularMipLevel;
 
-varying vec3 vNormal;
 varying vec3 vPosition;
+varying vec3 vNormal;
+
+#ifdef PBR_NORMAL_TEXTURE
+varying vec2 vNormalUV;
+uniform sampler2D uMaterialNormalTexture;
+#endif
 
 #ifdef PBR_ALBEDO_TEXTURE
 varying vec2 vAlbedoUV;
@@ -40,6 +45,11 @@ uniform sampler2D uMaterialAlbedoTexture;
 #ifdef PBR_METALLIC_ROUGHNESS_TEXTURE
 varying vec2 vMetallicRoughnessUV;
 uniform sampler2D uMaterialMetallicRoughnessTexture;
+#endif
+
+#ifdef PBR_EMISSIVE_TEXTURE
+varying vec2 vEmissiveUV;
+uniform sampler2D uMaterialEmissiveTexture;
 #endif
 
 struct PBRInfo
@@ -57,6 +67,23 @@ struct PBRLightInfo
     vec3 L;
     float intensity;
 };
+
+#ifdef PBR_NORMAL_TEXTURE
+vec3 getNormal(){
+    vec3 pos_dx = dFdx(vPosition);
+    vec3 pos_dy = dFdy(vPosition);
+    vec3 tex_dx = dFdx(vec3(vNormalUV, 0.0));
+    vec3 tex_dy = dFdy(vec3(vNormalUV, 0.0));
+    vec3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
+    vec3 ng = normalize(vNormal);
+    t = normalize(t - ng * dot(ng, t));
+    vec3 b = normalize(cross(ng, t));
+    mat3 tbn = mat3(t, b, ng);
+    vec3 n = texture2D(uMaterialNormalTexture, vNormalUV).rgb;
+    n = normalize(tbn * ((2.0 * n - 1.0) * vec3(1.0, 1.0, 1.0)));
+    return n;
+}
+#endif
 
 vec3 L_direct(PBRInfo info, PBRLightInfo light){
     
@@ -105,7 +132,7 @@ vec3 L_env(PBRInfo info){
     vec2 brdf = texture2D(uBRDFLUT, vec2(NdotV, 1.0 - info.roughness)).rg;
 
     vec3 specular = specularLight * (specularColor * brdf.x + brdf.y);
-    
+
     return diffuse + specular;
 }
 
@@ -115,8 +142,12 @@ vec3 L(){
 
     PBRInfo pbrInputs = PBRInfo(
 
-        normalize(vNormal),
-        
+        #ifdef PBR_NORMAL_TEXTURE
+        getNormal(),
+        #else
+        vNormal,
+        #endif
+
         normalize(uCameraPosition - vPosition),
 
         #ifdef PBR_ALBEDO_TEXTURE
@@ -168,6 +199,10 @@ vec3 L(){
     }
 
     fragColor += L_env(pbrInputs);
+
+    #ifdef PBR_EMISSIVE_TEXTURE
+    fragColor += texture2D(uMaterialEmissiveTexture, vEmissiveUV).rgb;
+    #endif
 
     fragColor = pow(fragColor, vec3(1.0/2.2));
 

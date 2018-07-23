@@ -378,13 +378,18 @@ class RenderManager {
             engine.uniform('uMaterialMetallicRoughnessTexture', material.metallicRoughnessTexture.getTexture());
         }
 
+        if (material.emissiveTexture) {
+            engine.uniform('uMaterialEmissiveTexture', material.emissiveTexture.getTexture());
+        }
+
+        if (material.normalTexture) {
+            engine.uniform('uMaterialNormalTexture', material.normalTexture.getTexture());
+        }
+
         engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
         engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.getMipLevel()]);
-
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
-
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.getTexture());
-
 
     }
 
@@ -394,7 +399,7 @@ class RenderManager {
 
         const { scene } = this;
 
-        const shadowLights = scene.lights.filter(lt=>lt.castShadow);
+        const shadowLights = scene.lights.filter(lt => lt.castShadow);
 
         if (shadowLights.length > 0) {
 
