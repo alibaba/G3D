@@ -66,24 +66,33 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
         if (mr.baseColorTexture) {
             material.albedoTexture = gTextures[mr.baseColorTexture.index];
             material.albedoTexture.sRGB = true;
+
+            material.gltfAlbedoTexCoord = mr.baseColorTexture.texCoord || 0;
         }
 
         if (mr.metallicRoughnessTexture) {
             material.metallicRoughnessTexture = gTextures[mr.metallicRoughnessTexture.index];
             material.metallic = 1.0;
             material.roughness = 1.0;
+
+            material.gltfMetallicRoughnessTexCoord = mr.metallicRoughnessTexture.texCoord || 0;
         } else {
             // TODO : single value
             // material.metallic = 1.0;
             // material.roughness = 1.0;
         }
 
-        if(emissiveTexture){
+        if (emissiveTexture) {
             material.emissiveTexture = gTextures[emissiveTexture.index];
+            material.emissiveTexture.sRGB = true;
+
+            material.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
         }
 
         if (normalTexture) {
             material.normalTexture = gTextures[normalTexture.index];
+
+            material.gltfNormalTexCoord = normalTexture.texCoord || 0;
         }
 
         material.pbrEnviroment = pbrEnv;
@@ -112,17 +121,32 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
                 }
             };
 
+
+
+
             mesh.geometry.getBuffers = () => {
 
-                return {
+                const material = mesh.materials.default;
+
+                const uvs = {};
+
+                if (material.albedoTexture) {
+                    uvs.aAlbedoUV = getBuffer(attributes[`TEXCOORD_${material.gltfAlbedoTexCoord}`]);
+                }
+                if (material.metallicRoughnessTexture) {
+                    uvs.aMetallicRoughnessUV = getBuffer(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
+                }
+                if (material.normalTexture) {
+                    uvs.aNormalUV = getBuffer(attributes[`TEXCOORD_${material.gltfNormalTexCoord}`]);
+                }
+                if (material.emissiveTexture) {
+                    uvs.aEmissiveUV = getBuffer(attributes[`TEXCOORD_${material.gltfEmissiveTexCoord}`]);
+                }
+
+                const buffers = {
                     vertices: getBuffer(attributes['POSITION']),
                     normals: getBuffer(attributes['NORMAL']),
-                    uvs: attributes['TEXCOORD_0'] ? {
-                        aAlbedoUV: getBuffer(attributes['TEXCOORD_0']),
-                        aMetallicRoughnessUV: getBuffer(attributes['TEXCOORD_0']),
-                        aNormalUV: getBuffer(attributes['TEXCOORD_0']),
-                        aEmissiveUV: getBuffer(attributes['TEXCOORD_0'])
-                    } : null,
+                    uvs: uvs,
                     indices: {
                         default: {
                             ...getBuffer(indices),
@@ -130,7 +154,10 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
                             type: 'UNSIGNED_SHORT'
                         }
                     }
-                }
+                };
+
+
+                return buffers;
             }
 
             mesh.materials.default = gMaterials[materialIndex];
@@ -176,13 +203,15 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
         return mesh;
     });
 
-    gltf.nodes.map((item, i) => {
+    gltf.nodes.forEach((item, i) => {
         if (item.children) {
             item.children.forEach(c => {
                 gMeshes[c].parent = gMeshes[i];
             })
         }
     });
+
+    return gMeshes.filter(m => !m.parent);
 
 }
 

@@ -3,9 +3,22 @@ function main(
     { canvas, requestAnimationFrame, controlArcRotateCamera, loader, pbrAssets }
 ) {
 
+    const models = {
+        damagedHelmet: {
+            uri: '//g.alicdn.com/gama/assets/0.0.16/assets/gltf/DamagedHelmet/DamagedHelmet.gltf.json',
+            cameraRadius: 2.8
+        },
+        metalRoughSpheres: {
+            uri: '//g.alicdn.com/gama/assets/0.0.15/assets/gltf/MetalRoughSpheres/MetalRoughSpheres.gltf.json',
+            cameraRadius: 25
+        }
+    }
+
+    const model = models['damagedHelmet'];
+
     pbrAssets('default').ready((specular, diffuse, lut) => {
 
-        loader.loadText('//g.alicdn.com/gama/assets/0.0.15/assets/gltf/MetalRoughSpheres/MetalRoughSpheres.gltf.json', (text) => {
+        loader.loadText(model.uri, (text) => {
 
             const gltf = JSON.parse(text);
 
@@ -60,7 +73,9 @@ function main(
         const camera = new G3D.RotatePerspectiveCamera(scene);
         camera.alpha = 175;
         camera.beta = 15;
-        camera.radius = 25;
+        camera.near = 0.001;
+        camera.far = model.cameraRadius * 3;
+        camera.radius = model.cameraRadius;
 
         controlArcRotateCamera(canvas, camera);
 
@@ -70,14 +85,15 @@ function main(
         light1.direction.z = 0;
         light1.intensity = 0.2;
 
-        const light2 = new G3D.AmbientLight(scene);
-        light2.intensity = 0.2;
-
         const coord = G3D.MeshBuilder.createCoordinate(scene, 100);
 
-        G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
+        const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
+
 
         function render() {
+
+            meshes.forEach(m=>m.rotation.y+=0.5);
+
             scene.render();
             requestAnimationFrame(render);
         }

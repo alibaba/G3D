@@ -213,5 +213,5 @@ vec3 L(){
 void main() {
 
     gl_FragColor = vec4(L(), 1.0);
-    
+
 }
