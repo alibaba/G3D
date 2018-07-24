@@ -76,11 +76,19 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
             material.roughness = 1.0;
 
             material.gltfMetallicRoughnessTexCoord = mr.metallicRoughnessTexture.texCoord || 0;
-        } else {
-            // TODO : single value
-            // material.metallic = 1.0;
-            // material.roughness = 1.0;
         }
+
+        if (typeof mr.metallicFactor === 'number') {
+            material.metallic = mr.metallicFactor;
+        } else {
+            material.metallic = 1.0;
+        }
+        if (typeof mr.roughnessFactor === 'number') {
+            material.roughness = mr.roughnessFactor;
+        }else{
+            material.roughness = 1.0;
+        }
+
 
         if (emissiveTexture) {
             material.emissiveTexture = gTextures[emissiveTexture.index];
