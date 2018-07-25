@@ -4,7 +4,7 @@ class RotatePerspectiveCamera extends BasePerspectiveCamera {
     alpha = 0;
     beta = 0;
 
-    constructor(scene, center, radius, alpha, beta) {
+    constructor(scene) {
         super();
 
         const { width, height } = scene.engine;
