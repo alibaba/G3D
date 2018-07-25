@@ -10,7 +10,7 @@ const yaml = require('yaml-js');
 const marked = require('marked');
 const watch = require('gulp-watch');
 const highlight = require('gulp-highlight-code');
-const hljs = require('highlight.js');
+const handlebars = require('handlebars');
 
 const providePluginOptions = {};
 glob.sync('src/**/G3D.*.js').forEach(item => {
@@ -36,12 +36,63 @@ const libraryTasks = dalaran.libraryTasks({
     devCors: true,
     testEntryPattern: 'test/**/*.spec.js',
     eslint: false,
-    liveReload: true
+    liveReload: true,
+    htmlTemplate: './demo/template/html.handlebars',
+    jsTemplate: './demo/template/js.handlebars'
 });
 
 gulp.task('library-test', libraryTasks.test);
 gulp.task('library-dev', libraryTasks.dev);
 gulp.task('library-build', libraryTasks.build);
+gulp.task('library-demo', libraryTasks.demo);
+gulp.task('library-demoformat', function () {
+
+    const jsTemplate = handlebars.compile(fs.readFileSync('./demo/template/js.handlebars', 'utf-8'));
+    const htmlTemplate = handlebars.compile(fs.readFileSync('./demo/template/html.handlebars', 'utf-8'));
+
+    glob.sync('demo/*.js').forEach(item => {
+
+        const name = item.match(/demo\/([0-9a-zA-Z\-]+)\.js/);
+
+        if (name && name[1]) {
+            const data = fs.readFileSync(item, 'utf-8');
+
+            if (data.indexOf('G3D_TEMPLATE_GENERATED') !== -1) {
+                fs.writeFileSync(
+                    item,
+                    jsTemplate({
+                        name: name[1],
+                        liveReload: true
+                    })
+                );
+            }
+        }
+
+    });
+
+    glob.sync('demo/*.html').forEach(item => {
+
+        const name = item.match(/demo\/([0-9a-zA-Z\-]+)\.html/);
+
+        if (name && name[1]) {
+            const data = fs.readFileSync(item, 'utf-8');
+
+            if (data.indexOf('G3D_TEMPLATE_GENERATED') !== -1) {
+                fs.writeFileSync(
+                    item,
+                    htmlTemplate({
+                        name: name[1],
+                        liveReload: true
+                    })
+                );
+            }
+        }
+
+    })
+
+
+});
+
 
 const homePageTasks = (function () {
 

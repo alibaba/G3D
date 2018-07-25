@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>G3D | 023-wireframe</title>
+    <title>G3D | {{name}}</title>
 </head>
 
 <body>
@@ -21,8 +21,10 @@
         }
     </style>
     <canvas id="canvas" width=600 height=600></canvas>
+    {{#if liveReload}}
     <script src="http://localhost:35729/livereload.js"></script>
-    <script src="./023-wireframe.bundle.js"></script>
+    {{/if}}
+    <script src="./{{name}}.bundle.js"></script>
 </body>
 
 </html>
