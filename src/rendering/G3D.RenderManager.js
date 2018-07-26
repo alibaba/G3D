@@ -170,7 +170,8 @@ class RenderManager {
 
             meshes.filter(m => m.getPickable() && m.getGlobalVisibility()).forEach((mesh) => {
 
-                Object.keys(mesh.geometry.indices).forEach(key => {
+
+                Object.keys(mesh.materials).forEach(key => {
 
                     const material = mesh.materials[key];
 
