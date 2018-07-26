@@ -9,7 +9,6 @@ module.exports = {
     "envmap and glossiness": require("./guide/envmap and glossiness.playground.js"),
     "first-steps": require("./guide/first-steps.playground.js"),
     "light-and-standard-material": require("./guide/light-and-standard-material.playground.js"),
-    "morph-target": require("./guide/morph-target.playground.js"),
     "point-light": require("./guide/point-light.playground.js"),
     "positions-and-rotations": require("./guide/positions-and-rotations.playground.js"),
     "raw-material": require("./guide/raw-material.playground.js"),

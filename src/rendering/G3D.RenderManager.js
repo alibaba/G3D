@@ -421,9 +421,12 @@ class RenderManager {
 
         const { indices } = mesh.geometry.getBuffers();
 
-        engine.elements(indices[key].buffer);
+        if (indices[key]) {
+            engine.elements(indices[key].buffer);
 
-        engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+        }
+
     }
 
     drawSkybox() {

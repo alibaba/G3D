@@ -1,4 +1,4 @@
-function run(G3D, canvas, loader){
+function run(G3D, canvas, utils){
 
     // create 3d engine
     const engine = new G3D.Engine(canvas);
@@ -33,7 +33,7 @@ function run(G3D, canvas, loader){
     G3D.MeshBuilder.createCoordinate(scene, 6000);
 
 
-    loader.loadText('https://g.alicdn.com/gama/assets/0.0.6/assets/fonts-json/optimer.json', function (text) {
+    utils.loader.loadText('https://g.alicdn.com/gama/assets/0.0.6/assets/fonts-json/optimer.json', function (text) {
 
         const font = JSON.parse(text);
 

@@ -1,4 +1,4 @@
-function run(G3D, canvas, loader) {
+function run(G3D, canvas, utils) {
 
     // create 3d engine
     const engine = new G3D.Engine(canvas);
@@ -8,7 +8,7 @@ function run(G3D, canvas, loader) {
     const camera = new G3D.ArcRotateCamera(scene);
     camera.alpha = 0;
     camera.beta = 0;
-    camera.radius = 78;
+    camera.radius = 178;
 
     const light1 = new G3D.DirectionalLight(scene);
     light1.direction.x = 1;
@@ -27,7 +27,7 @@ function run(G3D, canvas, loader) {
 
     // load 3d model and create mesh
     let mesh = null;
-    loader.loadBlob(
+    utils.loader.loadBlob(
         /*it's stl, ignore the png trick*/
         'https://g.alicdn.com/gama/assets/0.0.2/assets/models/g3d-banner/venus_print.stl.obj.png',
         function (content) {
