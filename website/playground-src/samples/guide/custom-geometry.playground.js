@@ -1,23 +1,21 @@
-function run(G3D, canvas) {
+function run(G3D, canvas, utils) {
 
     const engine = new G3D.Engine(canvas);
     const scene = new G3D.Scene(engine);
 
-    const camera = new G3D.ArcRotateCamera(scene);
+    const camera = new G3D.RotatePerspectiveCamera(scene);
     camera.alpha = 45;
     camera.beta = 30;
     camera.radius = 5;
-    camera.fov = 60;
     camera.near = 0.0001;
+    utils.control(canvas, camera);
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
+    light1.direction = { x: 1, y: 0, z: 2 };
+    const light2 = new G3D.AmbientLight(scene);
+    light2.intensity = 0.2;
 
-    const light2 = new G3D.HemisphereLight(scene);
-
-    const coordinate = G3D.MeshBuilder.createCoordinate(scene, 10);
+    G3D.MeshBuilder.createCoordinate(scene, 10);
 
     function createCustomTriangleMesh() {
         const mesh = new G3D.Mesh(scene);
@@ -34,20 +32,15 @@ function run(G3D, canvas) {
             1, 1, 1
         ];
         mesh.geometry.indices = {
-            foo: [
+            'default': [
                 0, 1, 2
             ]
         };
 
-        delete mesh.materials.default;
-        mesh.materials.foo = new G3D.StandardMaterial(mesh);
-
-        Object.assign(mesh.materials.foo.diffuseColor, { r: 200, g: 100, b: 100 });
-        Object.assign(mesh.materials.foo.specularColor, { r: 200, g: 100, b: 100 });
-        mesh.materials.foo.glossiness = 10;
-
+        return mesh;
     }
-    const mesh = createCustomTriangleMesh();
+    
+    createCustomTriangleMesh();
 
     return function () {
         camera.alpha += 1;

@@ -31,11 +31,3 @@ Point light is a little like directional light, how much the face is lighted dep
 See the example.
 
 <iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=point-light"></iframe>
-
-## Hemisphere Light
-
-Hemisphere light simulate the out-door enviroment light, which has a sky color and a ground color.
-
-See the example.
-
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=hemisphere-light"></iframe>

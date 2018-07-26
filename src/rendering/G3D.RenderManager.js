@@ -84,8 +84,6 @@ class RenderManager {
             this.drawSkybox();
         }
 
-
-
         const globalDefines = [];
 
         if (scene.lights.filter(lt => lt.castShadow).length > 0) {

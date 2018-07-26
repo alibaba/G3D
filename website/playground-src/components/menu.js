@@ -55,13 +55,7 @@ class AppMenu extends Component {
                 >
                     <Menu.Item key="about"><Icon type="setting" />About</Menu.Item>
                     <SubMenu title={<span><Icon type="setting" />Storage</span>}>
-                        <Menu.Item disabled key="setting:2">New Playground</Menu.Item>
-                        <SubMenu title={'Load Examples'}>
-                        </SubMenu>
-                        <SubMenu title={'Sample Examples'}>
-                            {this.renderSamples()}
-                        </SubMenu>
-                        <Menu.Item disabled key="save">Save Work</Menu.Item>
+                        {this.renderSamples()}
                     </SubMenu>
                 </Menu>
 
@@ -78,7 +72,7 @@ class AppMenu extends Component {
                     width={800}
                 >
                     <div>
-                        Hello G3D.
+                        See <a target="_blank" href="https://github.com/alibaba/G3D">Github</a> for source code.
                     </div>
                 </Modal>
             </div>

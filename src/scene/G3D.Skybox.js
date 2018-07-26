@@ -5,7 +5,7 @@ class Skybox {
     cubeMapMesh;
     cubeMapTexture;
 
-    constructor(scene, faceImages, skyboxSize = 10) {
+    constructor(scene, faceImages, skyboxSize = 100) {
         scene.skybox = this;
         this.scene = scene;
         this.skyboxSize = skyboxSize;

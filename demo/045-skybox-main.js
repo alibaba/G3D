@@ -10,6 +10,8 @@ function main(
     camera.alpha = 0;
     camera.beta = 0;
     camera.radius = 10;
+    camera.near = 0.001;
+    camera.far = 1000;
 
     controlArcRotateCamera(canvas, camera);
 
@@ -21,6 +23,7 @@ function main(
         top: '//gw.alicdn.com/tfs/TB1wcxqATtYBeNjy1XdXXXXyVXa-1024-1024.png',
         bottom: '//gw.alicdn.com/tfs/TB1O7C5AAyWBuNjy0FpXXassXXa-1024-1024.png',
     }, ({front, back, left, right, top, bottom}) => {
+
         new G3D.Skybox(scene, {
             front, back,
             left, right,

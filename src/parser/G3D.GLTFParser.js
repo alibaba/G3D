@@ -24,7 +24,6 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     });
 
-
     const pbrEnv = new PBREnviroment();
     pbrEnv.specular.images = specular;
     pbrEnv.diffuse.images = diffuse;

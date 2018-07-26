@@ -1,4 +1,4 @@
-function run(G3D, canvas) {
+function run(G3D, canvas, utils) {
 
     const engine = new G3D.Engine(canvas);
     const scene = new G3D.Scene(engine);
@@ -9,31 +9,23 @@ function run(G3D, canvas) {
     camera.radius = 5;
     camera.fov = 60;
     camera.near = 0.0001;
+    utils.control(canvas, camera);
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
+    light1.direction = { x: 1, y: 0, z: 2 };
+    const light2 = new G3D.AmbientLight(scene);
+    light2.intensity = 0.5;
 
-    const light2 = new G3D.HemisphereLight(scene);
+    G3D.MeshBuilder.createCoordinate(scene, 10);
 
-    const coordinate = G3D.MeshBuilder.createCoordinate(scene, 10);
 
-    let mesh;
-    mesh = G3D.MeshBuilder.createSphere(scene, 1);
-    // mesh = G3D.MeshBuilder.createGround(scene, 2, 1);
-    // mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCube(scene, 1);
-
-    if (mesh) {
-        Object.assign(mesh.materials.default.diffuseColor, { r: 200, g: 100, b: 100 });
-        Object.assign(mesh.materials.default.specularColor, { r: 200, g: 100, b: 100 });
-        mesh.materials.default.glossiness = 10;
-    }
+    const mesh = G3D.MeshBuilder.createSphere(scene, 1, 64, 64);
+    // const mesh = G3D.MeshBuilder.createGround(scene, 3, 2);
+    // const mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
+    // const mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
+    // const mesh = G3D.MeshBuilder.createCube(scene, 1);
 
     return function () {
-        camera.beta = Math.sin(Date.now()/1000)*90;
         scene.render();
     }
 }

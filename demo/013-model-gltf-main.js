@@ -71,8 +71,8 @@ function main(
         const scene = new G3D.Scene(engine);
 
         const camera = new G3D.RotatePerspectiveCamera(scene);
-        camera.alpha = 175;
-        camera.beta = 15;
+        camera.alpha = 80;
+        camera.beta = 0;
         camera.near = 0.001;
         camera.far = model.cameraRadius * 3;
         camera.radius = model.cameraRadius;
@@ -85,14 +85,17 @@ function main(
         light1.direction.z = 0;
         light1.intensity = 0.2;
 
-        const coord = G3D.MeshBuilder.createCoordinate(scene, 100);
+        // const coord = G3D.MeshBuilder.createCoordinate(scene, 100);
 
         const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
+        meshes.forEach(m=>m.rotation.y = 225);
+
+        new G3D.Skybox(scene, diffuse, model.cameraRadius * 1.5);
 
         function render() {
 
-            meshes.forEach(m=>m.rotation.y+=0.5);
+            meshes.forEach(m => m.rotation.y += 0.1);
 
             scene.render();
             requestAnimationFrame(render);

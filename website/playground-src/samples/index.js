@@ -8,7 +8,6 @@ module.exports = {
     "directional-light": require("./guide/directional-light.playground.js"),
     "envmap and glossiness": require("./guide/envmap and glossiness.playground.js"),
     "first-steps": require("./guide/first-steps.playground.js"),
-    "hemisphere-light": require("./guide/hemisphere-light.playground.js"),
     "light-and-standard-material": require("./guide/light-and-standard-material.playground.js"),
     "morph-target": require("./guide/morph-target.playground.js"),
     "point-light": require("./guide/point-light.playground.js"),

@@ -88,7 +88,7 @@ class Engine {
 
         gl.enable(gl.DEPTH_TEST);
 
-        gl.enable(gl.CULL_FACE);
+        // gl.enable(gl.CULL_FACE);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }

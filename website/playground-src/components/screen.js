@@ -39,7 +39,7 @@ class Screen extends Component {
 
         return (
             <div style={{ ...style }}>
-                <canvas ref="canvas" width={width} height={height} style={style} />
+                <canvas ref="canvas" width={width*2} height={height*2} style={style} />
             </div>
         )
     }

@@ -87,12 +87,10 @@ gulp.task('library-demoformat', function () {
                 );
             }
         }
-
     })
 
 
 });
-
 
 const homePageTasks = (function () {
 
