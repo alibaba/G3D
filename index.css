@@ -358,6 +358,10 @@ iframe.playground {
   }
   .g3d .banner canvas {
     transform: translate(-25vw, -20vh) scale(0.7);
+    display: none;
+  }
+  .g3d .banner .mask {
+    display: none;
   }
   .g3d .intro .content {
     width: 100vw;
