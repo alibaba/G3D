@@ -177,6 +177,8 @@ class Engine {
 
     createTexture(image, width, height, sRGB, flipY, clamp) {
 
+        const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
+
         const gl = this.gl;
 
         const texture = gl.createTexture();
@@ -185,9 +187,11 @@ class Engine {
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
+        clamp = clamp || (!isPowerOf2(width) || !isPowerOf2(height));
+
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
-        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
@@ -201,7 +205,6 @@ class Engine {
 
             gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
-            const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
             if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
                 gl.generateMipmap(gl.TEXTURE_2D);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
