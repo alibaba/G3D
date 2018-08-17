@@ -45,35 +45,39 @@ class Engine {
         this.width = canvas.width;
         this.height = canvas.height;
 
-        gl.getExtension('EXT_shader_texture_lod');
+        const extensions = this.extensions;
+
+        extensions.TEX_LOD = gl.getExtension('EXT_shader_texture_lod');
+
         gl.getExtension('OES_standard_derivatives');
         gl.getExtension('OES_element_index_uint');
         gl.getExtension('OES_texture_float');
         gl.getExtension('OES_texture_float_linear');
-        this.extensions.SRGB = gl.getExtension('EXT_SRGB');
+
+        extensions.SRGB = gl.getExtension('EXT_SRGB');
 
         this.programs = {
             phong: new Program({
-                gl, fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong
+                gl, fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong, extensions
             }),
             raw: new Program({
-                gl, fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw
+                gl, fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw, extensions
             }),
             pbr: Env.pbrNotReady ? null :
                 new Program({
-                    gl, fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR
+                    gl, fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR, extensions
                 }),
             picker: Env.framebufferNotReady ? null :
                 new Program({
-                    gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker
+                    gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker, extensions
                 }),
             shadow: Env.framebufferNotReady ? null :
                 new Program({
-                    gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow
+                    gl, fShaderSource: fShaderShadow, vShaderSource: vShaderShadow, extensions
                 }),
             skybox: Env.framebufferNotReady ? null :
                 new Program({
-                    gl, fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox
+                    gl, fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox, extensions
                 })
         }
 
@@ -109,6 +113,7 @@ class Engine {
         this.currentProgram = { key, defines };
 
         const program = this.programs[key].define(defines);
+
         this.gl.useProgram(program.program);
     }
 
@@ -196,9 +201,13 @@ class Engine {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
         if (image instanceof Uint8Array) {
+
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
         } else if (image instanceof Float32Array) {
+
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
+
         } else {
 
             const format = !sRGB ? gl.RGBA : this.extensions.SRGB.SRGB_ALPHA_EXT;

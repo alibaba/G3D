@@ -39,15 +39,17 @@ class DefinedProgram {
 
             for (let i = 0; i < types.length; i++) {
                 if (gl[types[i]] === value) {
-                    return types[i]
+                    return types[i];
                 }
             }
 
             throw new Error(`get type failed ' + value`);
         }
 
+
         const fShader = loadShader(gl, gl.FRAGMENT_SHADER, fShaderSource);
         const vShader = loadShader(gl, gl.VERTEX_SHADER, vShaderSource);
+
 
         const program = gl.createProgram();
         gl.attachShader(program, vShader);
@@ -161,7 +163,7 @@ class DefinedProgram {
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
             gl.vertexAttribPointer(position, vecSize, gl[baseType], false, stride, offset);
             gl.enableVertexAttribArray(position);
-        }else{
+        } else {
             // console.log(`[Warning] Attribute ${name} not exits.`, this);
         }
     }
@@ -173,15 +175,20 @@ class Program {
     gl = null;
     fShaderSource = null;
     vShaderSource = null;
-
+    extensions = [];
     definedPrograms = {};
 
-    constructor({ gl, fShaderSource, vShaderSource }) {
+    constructor({ gl, fShaderSource, vShaderSource, extensions }) {
 
         this.gl = gl;
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
 
+        Object.keys(extensions).forEach(key => {
+            if (extensions[key] !== null) {
+                this.extensions.push(`EXT_${key}`);
+            }
+        });
     }
 
     define(defines) {
@@ -192,13 +199,13 @@ class Program {
 
         if (!this.definedPrograms[definesKey]) {
 
-            const definesString = defines.map(name => `#define ${name} 1`).join('\n') + '\n';
+            const definesString = [...this.extensions, ...defines].map(name => `#define ${name} 1`).join('\n') + '\n';
 
             this.definedPrograms[definesKey] = new DefinedProgram({
                 gl: this.gl,
                 vShaderSource: definesString + this.vShaderSource,
                 fShaderSource: definesString + this.fShaderSource
-            })
+            });
 
         }
 

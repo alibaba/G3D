@@ -90,13 +90,13 @@ function main(
                 }
             }
         }
-    })
 
-    function render() {
-        scene.render();
-        requestAnimationFrame(render);
-    }
-    render();
+        function render() {
+            scene.render();
+            requestAnimationFrame(render);
+        }
+        render();
+    })
 
 }
 

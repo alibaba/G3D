@@ -1,4 +1,7 @@
+#ifdef EXT_TEX_LOD
 #extension GL_EXT_shader_texture_lod: enable
+#endif
+
 #extension GL_OES_standard_derivatives : enable
 
 precision highp float;
@@ -125,7 +128,11 @@ vec3 L_env(PBRInfo info){
     vec3 diffuse = diffuseLight * diffuseColor;
 
     vec3 R = -normalize(reflect(info.V, info.N));
+    #ifdef EXT_TEX_LOD
     vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * float(uSpecularMipLevel)).rgb;
+    #else
+    vec3 specularLight = textureCube(uSpecularMap, R).rgb;
+    #endif
 
     vec3 specularColor = mix(vec3(0.04), info.baseColor, info.metallic);
 
