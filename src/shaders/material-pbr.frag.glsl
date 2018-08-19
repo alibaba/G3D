@@ -4,7 +4,18 @@
 
 #extension GL_OES_standard_derivatives : enable
 
+#ifdef PRECISION_FLOAT_HIGHP
 precision highp float;
+#endif
+
+#ifdef PRECISION_FLOAT_MEDIUMP
+precision mediump float;
+#endif
+
+#ifdef PRECISION_FLOAT_LOWP
+precision lowp float;
+#endif
+
 
 #define PI 3.1415926
 
@@ -62,6 +73,10 @@ struct PBRInfo
     vec3 baseColor;
     float roughness;
     float metallic;
+};
+
+struct PP{
+    vec3 color;
 };
 
 struct PBRLightInfo
@@ -212,6 +227,9 @@ vec3 L(){
     #endif
 
     fragColor = pow(fragColor, vec3(1.0/2.2));
+
+    // PP pp = PP(vec3(uMaterialAlbedoColor));
+    // return pp.color;
 
     return fragColor;
 }

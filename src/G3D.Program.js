@@ -176,9 +176,10 @@ class Program {
     fShaderSource = null;
     vShaderSource = null;
     extensions = [];
+    precisions = [];
     definedPrograms = {};
 
-    constructor({ gl, fShaderSource, vShaderSource, extensions }) {
+    constructor({ gl, fShaderSource, vShaderSource, extensions, precisions }) {
 
         this.gl = gl;
         this.fShaderSource = fShaderSource;
@@ -189,6 +190,8 @@ class Program {
                 this.extensions.push(`EXT_${key}`);
             }
         });
+
+        this.precisions.push(`PRECISION_FLOAT_${precisions.float.toUpperCase()}`);
     }
 
     define(defines) {
@@ -199,7 +202,7 @@ class Program {
 
         if (!this.definedPrograms[definesKey]) {
 
-            const definesString = [...this.extensions, ...defines].map(name => `#define ${name} 1`).join('\n') + '\n';
+            const definesString = [...this.precisions, ...this.extensions, ...defines].map(name => `#define ${name} 1`).join('\n') + '\n';
 
             this.definedPrograms[definesKey] = new DefinedProgram({
                 gl: this.gl,

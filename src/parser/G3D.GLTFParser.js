@@ -2,8 +2,6 @@
 
 const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
-    console.log(gltf);
-
     const glBuffers = gltf.bufferViews.map((bv) => {
 
         if (bv.target) {
