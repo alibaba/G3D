@@ -9,6 +9,10 @@ class LineGeometry {
     constructor() {
     }
 
+    destroy() {
+
+    }
+
     getVertices() {
         return new Float32Array(this.vertices);
     }

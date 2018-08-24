@@ -6,11 +6,19 @@ class Scene {
     activeCamera = null;
     meshes = [];
     lights = [];
-    
+
     renderManager = new RenderManager(this);
 
     constructor(engine) {
         this.engine = engine;
+    }
+
+    destroy() {
+
+        this.meshes.forEach(mesh => {
+            mesh.destroy();
+        });
+
     }
 
     render() {

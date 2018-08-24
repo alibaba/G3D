@@ -16,6 +16,11 @@ class Mesh extends Node {
         this.scene.meshes.push(this);
     }
 
+    destroy() {
+        this.geometry.destroy();
+        this.materials.destroy();
+    }
+
     dispose() {
         const i = _.findIndex(this.scene.meshes, { id: this.id });
         if (i !== -1) {

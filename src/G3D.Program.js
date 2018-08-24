@@ -102,6 +102,10 @@ class DefinedProgram {
         this.uniforms = uniforms;
     }
 
+    destroy() {
+        this.gl.deleteProgram(this.program);
+    }
+
     parseType(type) {
         const baseType = type.split('_')[0];
         const vecType = type.split('_').length > 1 ? type.split('_')[1] : 'VEC1';
@@ -213,6 +217,14 @@ class Program {
         }
 
         return this.definedPrograms[definesKey];
+    }
+
+    destroy() {
+
+        Object.keys(this.definedPrograms).forEach(key => {
+            this.definedPrograms[key].destroy();
+        });
+
     }
 }
 

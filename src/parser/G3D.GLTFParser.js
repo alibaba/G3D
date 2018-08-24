@@ -126,9 +126,6 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
                 }
             };
 
-
-
-
             mesh.geometry.getBuffers = () => {
 
                 const material = mesh.materials.default;
@@ -168,7 +165,6 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
             mesh.materials.default = gMaterials[materialIndex];
 
             return mesh;
-
         }
 
     });

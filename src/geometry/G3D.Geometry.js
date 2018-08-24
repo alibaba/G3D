@@ -16,6 +16,10 @@ class Geometry {
     constructor() {
     }
 
+    destroy() {
+
+    }
+
     getBuffers() {
 
         const engine = Engine.instance;

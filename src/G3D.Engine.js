@@ -33,9 +33,9 @@ class Engine {
 
     constructor(canvas) {
 
-        // if (Engine.instance) {
-        //     throw new Error('Only 1 Engine instance is allowed');
-        // }
+        if (Engine.instance) {
+            throw new Error('Only 1 Engine instance is allowed.');
+        }
 
         Engine.instance = this;
 
@@ -105,6 +105,18 @@ class Engine {
         // gl.enable(gl.CULL_FACE);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    }
+
+    destroy() {
+
+        Object.keys(this.programs).forEach(key => {
+            this.programs[key].destroy();
+        });
+
+        Object.keys(this.framebuffers).forEach(key => {
+            this.framebuffers[key].destroy();
+        });
+
     }
 
     clearColorBuffer(color) {
@@ -308,7 +320,7 @@ class Engine {
         return texture;
     }
 
-    createFramebuffer({ width, height, useColorBuffer = false }) {
+    createFramebuffer({ width, height }) {
 
         const gl = this.gl;
 
@@ -316,24 +328,16 @@ class Engine {
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
         let colorTarget, depthTarget;
 
-        if (useColorBuffer) {
-            const renderbuffer = gl.createRenderbuffer();
-            gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
-            gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA4, width, height);
-            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, renderbuffer);
-            colorTarget = renderbuffer;
-        } else {
-            const tex = gl.createTexture();
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, tex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        const tex = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-            colorTarget = tex;
-        }
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+        colorTarget = tex;
 
         const renderbuffer = gl.createRenderbuffer();
         gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
@@ -352,7 +356,12 @@ class Engine {
             colorTarget,
             depthTarget,
             width,
-            height
+            height,
+            destroy: () => {
+                gl.deleteRenderbuffer(depthTarget);
+                gl.deleteTexture(colorTarget);
+                gl.deleteFramebuffer(framebuffer);
+            }
         };
     }
 
@@ -392,7 +401,6 @@ class Engine {
         if (typeof type === 'string') {
             type = gl[type];
         }
-
 
         gl.drawElements(mode, count, type, offset);
     }
