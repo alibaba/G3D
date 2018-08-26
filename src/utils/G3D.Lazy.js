@@ -1,10 +1,11 @@
-function Lazy(source = [], dist = [], flag = '__isDirty__') {
+function Lazy(source = [], dist = [], destructors = [], flag = '__isDirty__') {
 
     return function (Clazz) {
 
         class Lazyed extends Clazz {
 
             constructor(...args) {
+
                 super(...args);
 
                 const patch = (key, target, siblings) => {
@@ -59,7 +60,7 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                     );
                 });
 
-                dist.forEach(key => {
+                dist.forEach((key, i) => {
 
                     const resultKey = '__' + key + '_' + 'result' + '__';
                     const functionKey = '__' + key + '__';
@@ -67,6 +68,11 @@ function Lazy(source = [], dist = [], flag = '__isDirty__') {
                     this[functionKey] = this[key];
                     this[key] = (...args) => {
                         if (this[flag]) {
+
+                            if (destructors[i] && this[resultKey] !== undefined) {
+                                this[destructors[i]](this[resultKey]);
+                            }
+
                             dist.forEach(k => {
                                 const resultKey = '__' + k + '_' + 'result' + '__';
                                 const functionKey = '__' + k + '__';

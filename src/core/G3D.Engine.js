@@ -1,20 +1,21 @@
-import fShaderMaterialPhong from './shaders/material-phong.frag.glsl';
-import vShaderMaterialPhong from './shaders/material-phong.vert.glsl';
+import fShaderMaterialPhong from '../shaders/material-phong.frag.glsl';
+import vShaderMaterialPhong from '../shaders/material-phong.vert.glsl';
 
-import fShaderMaterialRaw from './shaders/material-raw.frag.glsl';
-import vShaderMaterialRaw from './shaders/material-raw.vert.glsl';
+import fShaderMaterialRaw from '../shaders/material-raw.frag.glsl';
+import vShaderMaterialRaw from '../shaders/material-raw.vert.glsl';
 
-import fShaderMaterialPBR from './shaders/material-pbr.frag.glsl';
-import vShaderMaterialPBR from './shaders/material-pbr.vert.glsl';
+import fShaderMaterialPBR from '../shaders/material-pbr.frag.glsl';
+import vShaderMaterialPBR from '../shaders/material-pbr.vert.glsl';
 
-import fShaderPicker from './shaders/picker.frag.glsl';
-import vShaderPicker from './shaders/picker.vert.glsl';
+import fShaderPicker from '../shaders/picker.frag.glsl';
+import vShaderPicker from '../shaders/picker.vert.glsl';
 
-import fShaderShadow from './shaders/shadow.frag.glsl';
-import vShaderShadow from './shaders/shadow.vert.glsl';
+import fShaderShadow from '../shaders/shadow.frag.glsl';
+import vShaderShadow from '../shaders/shadow.vert.glsl';
 
-import fShaderSkybox from './shaders/skybox.frag.glsl';
-import vShaderSkybox from './shaders/skybox.vert.glsl';
+import fShaderSkybox from '../shaders/skybox.frag.glsl';
+import vShaderSkybox from '../shaders/skybox.vert.glsl';
+
 
 
 class Engine {
@@ -93,9 +94,9 @@ class Engine {
 
         this.framebuffers = {
             picker: Env.framebufferNotReady ? null :
-                this.createFramebuffer({ width: this.width, height: this.height }),
+                new Framebuffer({ gl, width: this.width, height: this.height }),
             shadow: Env.framebufferNotReady ? null :
-                this.createFramebuffer({ width: 1024, height: 1024 })
+                new Framebuffer({ gl, width: 1024, height: 1024 })
         }
 
         gl.viewport(0, 0, this.width, this.height);
@@ -326,24 +327,21 @@ class Engine {
 
         const framebuffer = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-        let colorTarget, depthTarget;
 
-        const tex = gl.createTexture();
+        const colorTarget = gl.createTexture();
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.bindTexture(gl.TEXTURE_2D, colorTarget);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-        colorTarget = tex;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTarget, 0);
 
-        const renderbuffer = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
+        const depthTarget = gl.createRenderbuffer();
+        gl.bindRenderbuffer(gl.RENDERBUFFER, depthTarget);
         gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
-        depthTarget = renderbuffer;
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthTarget);
 
         if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
             throw new Error(`framebuffer not ready ${gl.checkFramebufferStatus(gl.FRAMEBUFFER)}`);

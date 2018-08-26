@@ -12,9 +12,16 @@ const canvas = document.getElementById('canvas');
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
+
+let stop = false;
+
 main(G3D, {
     canvas,
-    requestAnimationFrame,
+    requestAnimationFrame: function (f) {
+        if (!stop) {
+            requestAnimationFrame(f);
+        }
+    },
     controlArcRotateCamera,
     pbrAssets,
     loader,
@@ -24,12 +31,11 @@ main(G3D, {
 });
 
 
-
-
 // GUI Control
 const data = {
     destroy: () => {
         if (G3D.Engine.instance) {
+            stop = true;
             G3D.Engine.instance.destroy();
         }
     }

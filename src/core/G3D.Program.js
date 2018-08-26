@@ -1,13 +1,16 @@
 class DefinedProgram {
 
     gl = null;
+
     program = null;
     uniforms = {};
     attributes = {};
     textureCount = 0;
 
     constructor({ gl, fShaderSource, vShaderSource }) {
+
         this.gl = gl;
+
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
         this.initProgram();

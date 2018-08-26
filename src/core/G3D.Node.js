@@ -31,7 +31,6 @@ class Node {
         }
     }
 
-
     getMatrix() {
         const quat = Quat.create();
         Quat.fromEuler(quat, this.rotation.x, this.rotation.y, this.rotation.z);

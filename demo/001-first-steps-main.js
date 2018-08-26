@@ -1,6 +1,6 @@
 function main(
     G3D,
-    {canvas, requestAnimationFrame, controlArcRotateCamera}
+    { canvas, requestAnimationFrame, controlArcRotateCamera }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -29,7 +29,7 @@ function main(
     const m2 = G3D.MeshBuilder.createSphere(scene, 1);
     m2.position.z = 1;
 
-    function render(){
+    function render() {
         scene.render();
         requestAnimationFrame(render);
     }
