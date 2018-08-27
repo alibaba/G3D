@@ -1,5 +1,3 @@
-
-
 const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     const glBuffers = gltf.bufferViews.map((bv) => {
@@ -22,20 +20,16 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     });
 
-    const pbrEnv = new PBREnviroment();
+    const pbrEnv = new PBREnviroment({brdfLUT: lut});
     pbrEnv.specular.images = specular;
     pbrEnv.diffuse.images = diffuse;
-    pbrEnv.brdfLUT.image = lut;
+    // pbrEnv.brdfLUT.image = lut;
 
     const gTextures = gltf.textures.map(tex => {
 
         const image = gltf.images[tex.source].data;
 
-        const texture = new Texture();
-
-        texture.image = image;
-        texture.flipY = false;
-        texture.sRGB = false;
+        const texture = new Texture({ image });
 
         return texture;
     });
@@ -82,7 +76,7 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
         }
         if (typeof mr.roughnessFactor === 'number') {
             material.roughness = mr.roughnessFactor;
-        }else{
+        } else {
             material.roughness = 1.0;
         }
 

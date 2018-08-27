@@ -1,15 +1,11 @@
 class DefinedProgram {
 
-    gl = null;
-
     program = null;
     uniforms = {};
     attributes = {};
     textureCount = 0;
 
-    constructor({ gl, fShaderSource, vShaderSource }) {
-
-        this.gl = gl;
+    constructor({ fShaderSource, vShaderSource }) {
 
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
@@ -18,7 +14,7 @@ class DefinedProgram {
 
     initProgram() {
 
-        const gl = this.gl;
+        const { gl } = GL;
         const fShaderSource = this.fShaderSource;
         const vShaderSource = this.vShaderSource;
 
@@ -49,10 +45,8 @@ class DefinedProgram {
             throw new Error(`get type failed ' + value`);
         }
 
-
         const fShader = loadShader(gl, gl.FRAGMENT_SHADER, fShaderSource);
         const vShader = loadShader(gl, gl.VERTEX_SHADER, vShaderSource);
-
 
         const program = gl.createProgram();
         gl.attachShader(program, vShader);
@@ -106,7 +100,10 @@ class DefinedProgram {
     }
 
     destroy() {
-        this.gl.deleteProgram(this.program);
+
+        const { gl } = GL;
+
+        gl.deleteProgram(this.program);
     }
 
     parseType(type) {
@@ -120,7 +117,7 @@ class DefinedProgram {
     uniform(name, value) {
         if (this.uniforms[name]) {
 
-            const gl = this.gl;
+            const { gl } = GL;
 
             const { type, info, position, unit } = this.uniforms[name];
             const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
@@ -164,7 +161,7 @@ class DefinedProgram {
 
     attribute(name, buffer, stride, offset) {
         if (this.attributes[name]) {
-            const gl = this.gl;
+            const { gl } = GL;
             const { type, info, position } = this.attributes[name];
             const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -179,16 +176,16 @@ class DefinedProgram {
 
 class Program {
 
-    gl = null;
     fShaderSource = null;
     vShaderSource = null;
     extensions = [];
     precisions = [];
     definedPrograms = {};
 
-    constructor({ gl, fShaderSource, vShaderSource, extensions, precisions }) {
+    constructor({ fShaderSource, vShaderSource, extensions, precisions }) {
 
-        this.gl = gl;
+        const { gl } = GL;
+
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
 
@@ -212,7 +209,6 @@ class Program {
             const definesString = [...this.precisions, ...this.extensions, ...defines].map(name => `#define ${name} 1`).join('\n') + '\n';
 
             this.definedPrograms[definesKey] = new DefinedProgram({
-                gl: this.gl,
                 vShaderSource: definesString + this.vShaderSource,
                 fShaderSource: definesString + this.fShaderSource
             });

@@ -7,13 +7,12 @@ export default {
 
     BasePerspectiveCamera,
     BaseOrthographicCamera,
-    
+
     ArcRotateCamera,
 
     Texture,
     CubeTexture,
-    TextureBuilder,
-    
+
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
 
@@ -49,6 +48,5 @@ export default {
     Ray,
 
     ObjParser,
-    StlParser,
-    HDRParser
+    StlParser
 };

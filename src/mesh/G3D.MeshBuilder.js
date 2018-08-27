@@ -435,8 +435,7 @@ class MeshBuilder {
                     image.crossOrigin = true;
                     image.onload = function () {
 
-                        const texture = new Texture();
-                        texture.image = image;
+                        const texture = new Texture({ image });
                         mesh.materials[key].ambientTexture = texture;
 
                     }
@@ -455,8 +454,7 @@ class MeshBuilder {
                     image.crossOrigin = true;
                     image.onload = function () {
 
-                        const texture = new Texture();
-                        texture.image = image;
+                        const texture = new Texture({ image, flipY: true });
                         mesh.materials[key].diffuseTexture = texture;
 
                     }
@@ -475,8 +473,7 @@ class MeshBuilder {
                     image.crossOrigin = true;
                     image.onload = function () {
 
-                        const texture = new Texture();
-                        texture.image = image;
+                        const texture = new Texture({ Image });
                         mesh.materials[key].specularTexture = texture;
                     }
                     image.src = mtl.specularTexture;

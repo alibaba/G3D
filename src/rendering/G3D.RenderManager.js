@@ -154,7 +154,7 @@ class RenderManager {
                     }
                 })
             })
-        })
+        });
 
     }
 
@@ -327,33 +327,32 @@ class RenderManager {
 
         engine.uniform('uColor', material.getColor());
         if (material.texture) {
-            engine.uniform('uTexture', material.texture.getTexture());
+            engine.uniform('uTexture', material.texture.glTexture);
         }
 
     }
 
     preparePhongMaterial(material) {
 
-        const { scene } = this;
         const engine = Engine.instance;
 
         engine.uniform('uAmbientColor', material.getAmbientColor());
         if (material.ambientTexture) {
-            engine.uniform('uAmbientTexture', material.ambientTexture.getTexture());
+            engine.uniform('uAmbientTexture', material.ambientTexture.glTexture);
         }
 
         engine.uniform('uDiffuseColor', material.getDiffuseColor());
         if (material.diffuseTexture) {
-            engine.uniform('uDiffuseTexture', material.diffuseTexture.getTexture());
+            engine.uniform('uDiffuseTexture', material.diffuseTexture.glTexture);
         }
 
         engine.uniform('uSpecularColor', material.getSpecularColor());
         if (material.specularTexture) {
-            engine.uniform('uSpecularTexture', material.specularTexture.getTexture());
+            engine.uniform('uSpecularTexture', material.specularTexture.glTexture);
         }
 
         if (material.specularEnvMapTexture) {
-            engine.uniform('uSpecularEnvMapTexture', material.specularEnvMapTexture.getTexture());
+            engine.uniform('uSpecularEnvMapTexture', material.specularEnvMapTexture.glTexture);
         }
 
         engine.uniform('uGlossiness', [material.getGlossiness()]);
@@ -370,25 +369,25 @@ class RenderManager {
         engine.uniform('uMaterialMetallic', [material.getMetallic()]);
 
         if (material.albedoTexture) {
-            engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.getTexture());
+            engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.glTexture);
         }
 
         if (material.metallicRoughnessTexture) {
-            engine.uniform('uMaterialMetallicRoughnessTexture', material.metallicRoughnessTexture.getTexture());
+            engine.uniform('uMaterialMetallicRoughnessTexture', material.metallicRoughnessTexture.glTexture);
         }
 
         if (material.emissiveTexture) {
-            engine.uniform('uMaterialEmissiveTexture', material.emissiveTexture.getTexture());
+            engine.uniform('uMaterialEmissiveTexture', material.emissiveTexture.glTexture);
         }
 
         if (material.normalTexture) {
-            engine.uniform('uMaterialNormalTexture', material.normalTexture.getTexture());
+            engine.uniform('uMaterialNormalTexture', material.normalTexture.glTexture);
         }
 
         engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
         engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.getMipLevel()]);
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
-        engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.getTexture());
+        engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.glTexture);
 
     }
 

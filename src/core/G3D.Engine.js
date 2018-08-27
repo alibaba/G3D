@@ -38,22 +38,28 @@ class Engine {
             throw new Error('Only 1 Engine instance is allowed.');
         }
 
+        // TODO : remove
         Engine.instance = this;
 
-        const gl = this.gl = canvas.getContext('webgl', {
+        const gl = GL.gl = canvas.getContext('webgl', {
             antialias: true,
             preserveDrawingBuffer: true
         });
 
+        // TODO : remove
+        this.gl = gl;
+
         this.width = canvas.width;
         this.height = canvas.height;
 
-        const extensions = this.extensions;
+        const extensions = GL.extensions = this.extensions;
 
         extensions.TEX_LOD = gl.getExtension('EXT_shader_texture_lod');
 
+        // TODO : check support
         gl.getExtension('OES_standard_derivatives');
         gl.getExtension('OES_element_index_uint');
+
         gl.getExtension('OES_texture_float');
         gl.getExtension('OES_texture_float_linear');
 

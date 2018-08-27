@@ -20,7 +20,7 @@ function main(
     function createDirectionalLight(x, y, z, intensity = 1.0) {
 
         const light = new G3D.DirectionalLight(scene);
-        
+
         light.direction.x = x;
         light.direction.y = y;
         light.direction.z = z;
@@ -51,20 +51,17 @@ function main(
 
     pbrAssets('default').ready((specular, diffuse, lut) => {
 
-        const pbrEnv = new G3D.PBREnviroment();
+        const pbrEnv = new G3D.PBREnviroment({
+            brdfLUT: lut
+        });
 
         pbrEnv.specular.images = specular;
         pbrEnv.diffuse.images = diffuse;
-        pbrEnv.brdfLUT.image = lut;
-
-        pbrEnv.brdfLUT.flipY = false;
 
         const size = 4;
 
         createBalls([200, 200, 200], 1);
         createBalls([218, 179, 0], -1);
-
-        const clamp = (min, max, v) => v < min ? min : v > max ? max : v;
 
         function createBalls(color, z = 1) {
 

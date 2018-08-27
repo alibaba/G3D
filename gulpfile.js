@@ -27,7 +27,7 @@ const libraryTasks = dalaran.libraryTasks({
         test: /\.glsl$/,
         use: [
             'raw-loader',
-            path.resolve('./loader.js')
+            path.resolve('./dev/glsl-loader.js')
         ]
     }],
     plugins: [

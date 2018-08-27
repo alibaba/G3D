@@ -1,8 +1,4 @@
-// import Engine from "../G3D.Engine";
-
 class Framebuffer {
-
-    gl = null;
 
     width = null;
     height = null;
@@ -13,9 +9,9 @@ class Framebuffer {
 
     depthTarget = null;
 
-    constructor({ gl, width, height }) {
+    constructor({ width, height }) {
 
-        this.gl = gl;
+        const { gl } = GL;
 
         this.width = width;
         this.height = height;
@@ -52,7 +48,8 @@ class Framebuffer {
 
     destroy() {
 
-        const { gl, framebuffer, colorTarget, depthTarget } = this;
+        const { gl } = GL;
+        const { framebuffer, colorTarget, depthTarget } = this;
 
         gl.deleteRenderbuffer(depthTarget);
         gl.deleteTexture(colorTarget);

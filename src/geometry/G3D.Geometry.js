@@ -4,6 +4,9 @@
     ],
     [
         'getBuffers'
+    ],
+    [
+        'destroyBuffers'
     ]
 )
 class Geometry {
@@ -22,44 +25,39 @@ class Geometry {
 
     getBuffers() {
 
-        const engine = Engine.instance;
+        const vertices = this.vertices ? new BufferView({
+            buffer: new Buffer({
+                data: new Float32Array(this.vertices),
+                target: 'ARRAY_BUFFER'
+            })
+        }) : null;
 
-        const vertices = this.vertices ? {
-            buffer: engine.createAttributeBuffer(
-                new Float32Array(this.vertices)
-            ),
-            stride: 0,
-            offset: 0
-        } : null;
-
-        const normals = this.normals ? {
-            buffer: engine.createAttributeBuffer(
-                new Float32Array(this.normals)
-            ),
-            stride: 0,
-            offset: 0
-        } : null;
+        const normals = this.normals ? new BufferView({
+            buffer: new Buffer({
+                data: new Float32Array(this.normals),
+                target: 'ARRAY_BUFFER'
+            })
+        }) : null;
 
         let uvs = null;
         if (this.uvs) {
             uvs = {};
             if (typeof this.uvs.length === 'number') {
-                uvs = {
-                    buffer: engine.createAttributeBuffer(
-                        new Float32Array(this.uvs)
-                    ),
-                    stride: 0,
-                    offset: 0
-                }
+                uvs = new BufferView({
+                    buffer: new Buffer({
+                        data: new Float32Array(this.uvs),
+                        target: 'ARRAY_BUFFER'
+                    })
+                })
             } else {
                 Object.keys(this.uvs).forEach(key => {
-                    uvs[key] = {
-                        buffer: engine.createAttributeBuffer(
-                            new Float32Array(this.uvs[key])
-                        ),
-                        stride: 0,
-                        offset: 0
-                    }
+                    uvs[key] = new BufferView({
+                        buffer: new Buffer({
+                            data: new Float32Array(this.uvs[key]),
+                            target: 'ARRAY_BUFFER'
+                        })
+                    })
+
                 });
             }
         }
@@ -68,9 +66,10 @@ class Geometry {
         Object.keys(this.indices).forEach(key => {
 
             indices[key] = this.indices[key] ? {
-                buffer: engine.createElementBuffer(
-                    new Uint32Array(this.indices[key])
-                ),
+                buffer: new Buffer({
+                    data: new Uint32Array(this.indices[key]),
+                    target: 'ELEMENT_ARRAY_BUFFER'
+                }).glBuffer,
                 mode: 'TRIANGLES',
                 count: this.indices[key].length,
                 type: 'UNSIGNED_INT',
@@ -85,6 +84,10 @@ class Geometry {
             normals,
             indices
         }
+    }
+
+    destroyBuffers() {
+
     }
 
     mergeNormals() {

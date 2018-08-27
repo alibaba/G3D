@@ -4,21 +4,15 @@ class PBREnviroment {
 
     specular = new CubeTexture();
 
-    brdfLUT = new Texture();
+    brdfLUT = null;
 
-    constructor() {
+    constructor({ brdfLUT }) {
+
+        this.brdfLUT = new Texture({ image: brdfLUT });
+
 
         this.brdfLUT.flipY = false;
-
         this.brdfLUT.clamp = true;
-
-        // const image = new Env.Image();
-        // image.crossOrigin = true;
-        // image.src = 'https://img.alicdn.com/tfs/TB1yCjuoDtYBeNjy1XdXXXXyVXa-256-256.png';
-        // image.onload = () => {
-        //     this.brdfLUT.image = image;
-        // }
-
     }
 
 }

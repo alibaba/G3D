@@ -25,8 +25,7 @@ function main(
         m1.position.x = 5;
         m1.position.y = 5;
 
-        const texture = new G3D.Texture();
-        texture.image = image;
+        const texture = new G3D.Texture({image});
 
         const m2 = G3D.MeshBuilder.createGround(scene, 6);
         m2.materials.default = new G3D.RawMaterial(m2);

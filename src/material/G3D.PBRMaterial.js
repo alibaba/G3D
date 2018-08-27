@@ -14,7 +14,7 @@ class PBRMaterial extends Material {
 
     normalTexture = null;
 
-    pbrEnviroment = new PBREnviroment();
+    pbrEnviroment = null;
 
     constructor() {
         super();
@@ -31,7 +31,7 @@ class PBRMaterial extends Material {
             defines.push('PBR_METALLIC_ROUGHNESS_TEXTURE');
         }
 
-        if(this.emissiveTexture){
+        if (this.emissiveTexture) {
             defines.push('PBR_EMISSIVE_TEXTURE');
         }
 
