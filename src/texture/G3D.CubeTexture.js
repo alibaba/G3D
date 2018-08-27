@@ -1,44 +1,93 @@
-@Lazy(
-    ['images', 'images.top', 'images.bottom', 'images.left', 'images.right', 'images.front', 'images.back', 'sRGB', 'flipY'],
-    ['getTexture']
-)
 class CubeTexture {
 
-    width = 1;
-    height = 1;
+    glTexture = null;
 
-    sRGB = true;
-    flipY = false;
+    mipLevel = 0;
 
-    images = {
-        top: new Uint8Array([255, 255, 255, 255]),
-        bottom: new Uint8Array([255, 255, 255, 255]),
-        left: new Uint8Array([255, 255, 255, 255]),
-        right: new Uint8Array([255, 255, 255, 255]),
-        front: new Uint8Array([255, 255, 255, 255]),
-        back: new Uint8Array([255, 255, 255, 255]),
-        mip: null
-    };
+    constructor({ images, width, height, flipY = false, sRGB = true }) {
 
-    constructor(images) {
-        Object.assign(this.images, images);
-    }
+        const { gl } = GL;
 
-    getTexture() {
+        const texture = this.glTexture = gl.createTexture();
 
-        const engine = Engine.instance;
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 
-        const { width, height } = this;
 
-        return engine.createCubeTexture(this.images, width, height, this.sRGB, this.flipY);
-    }
+        // filter
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-    getMipLevel() {
-        if (this.images.mip) {
-            return this.images.mip.length;
-        } else {
-            return 0;
+
+        // wrap
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        const targets = {
+            right: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+            left: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+            top: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+            bottom: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            front: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+            back: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
         }
+
+        const { extensions } = GL;
+
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+
+        const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
+
+
+        Object.keys(targets).forEach(k => {
+
+            const image = images[k];
+
+            if (image instanceof Uint8Array) {
+
+                gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
+
+            } else if (image instanceof Float32Array) {
+
+                gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, images[k]);
+
+            } else if (image instanceof Env.Image) {
+
+                gl.texImage2D(targets[k], 0, format, format, gl.UNSIGNED_BYTE, images[k]);
+
+            }
+
+        })
+
+        if (images.mip) {
+
+            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+
+            images.mip.forEach((images, i) => {
+
+                Object.keys(images).forEach(k => {
+
+                    const image = images[k];
+
+                    if (image instanceof Env.Image) {
+
+                        gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, images[k]);
+
+                    }
+                })
+            });
+
+            this.mipLevel = images.mip.length;
+
+        }
+    }
+
+    destructor() {
+
+        const { gl } = GL;
+
+        gl.deleteTexture(this.glTexture);
+
     }
 }
 

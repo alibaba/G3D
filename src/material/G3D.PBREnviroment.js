@@ -1,18 +1,19 @@
 class PBREnviroment {
 
-    diffuse = new CubeTexture();
+    diffuse = null;
 
-    specular = new CubeTexture();
+    specular = null;
 
     brdfLUT = null;
 
-    constructor({ brdfLUT }) {
+    constructor({ diffuse, specular, brdfLUT }) {
 
-        this.brdfLUT = new Texture({ image: brdfLUT });
+        this.diffuse = new CubeTexture({ images: diffuse, sRGB: true, flipY: false });
 
+        this.specular = new CubeTexture({ images: specular, sRGB: true, flipY: false });
 
-        this.brdfLUT.flipY = false;
-        this.brdfLUT.clamp = true;
+        this.brdfLUT = new Texture({ image: brdfLUT, flipY: false, sRGB: false, repeat: false });
+
     }
 
 }

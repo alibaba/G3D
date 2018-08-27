@@ -209,50 +209,50 @@ class Engine {
         return buffer;
     }
 
-    createTexture(image, width, height, sRGB, flipY, clamp) {
+    // createTexture(image, width, height, sRGB, flipY, clamp) {
 
-        const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
+    //     const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
 
-        const gl = this.gl;
+    //     const gl = this.gl;
 
-        const texture = gl.createTexture();
+    //     const texture = gl.createTexture();
 
-        gl.activeTexture(gl.TEXTURE0);
+    //     gl.activeTexture(gl.TEXTURE0);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+    //     gl.bindTexture(gl.TEXTURE_2D, texture);
 
-        clamp = clamp || (!isPowerOf2(width) || !isPowerOf2(height));
+    //     clamp = clamp || (!isPowerOf2(width) || !isPowerOf2(height));
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
+    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
+    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+    //     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-        if (image instanceof Uint8Array) {
+    //     if (image instanceof Uint8Array) {
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    //         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
-        } else if (image instanceof Float32Array) {
+    //     } else if (image instanceof Float32Array) {
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
+    //         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
 
-        } else {
+    //     } else {
 
-            let format = gl.RGBA;
-            if (sRGB && this.extensions.SRGB) {
-                format = this.extensions.SRGB.SRGB_ALPHA_EXT;
-            }
+    //         let format = gl.RGBA;
+    //         if (sRGB && this.extensions.SRGB) {
+    //             format = this.extensions.SRGB.SRGB_ALPHA_EXT;
+    //         }
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
+    //         gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
-            if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-                gl.generateMipmap(gl.TEXTURE_2D);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
-            }
-        }
-        return texture;
-    }
+    //         if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+    //             gl.generateMipmap(gl.TEXTURE_2D);
+    //             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
+    //         }
+    //     }
+    //     return texture;
+    // }
 
     createCubeTexture(images, width, height, sRGB, flipY) {
 

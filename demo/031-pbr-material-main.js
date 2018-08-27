@@ -52,11 +52,10 @@ function main(
     pbrAssets('default').ready((specular, diffuse, lut) => {
 
         const pbrEnv = new G3D.PBREnviroment({
+            diffuse,
+            specular,
             brdfLUT: lut
         });
-
-        pbrEnv.specular.images = specular;
-        pbrEnv.diffuse.images = diffuse;
 
         const size = 4;
 

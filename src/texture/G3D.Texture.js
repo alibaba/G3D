@@ -4,7 +4,7 @@ class Texture {
 
     glTexture = null;
 
-    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = false, repeat = true /*or repeat*/ }) {
+    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = false, repeat = true /*or clamp*/ }) {
 
         const { gl } = GL;
 
@@ -12,7 +12,6 @@ class Texture {
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
-
 
         // wrap
         // REPEAT works only when image size is power of 2
@@ -34,6 +33,7 @@ class Texture {
         // store
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
+
         // fill data
         if (image instanceof Uint8Array) {
 
@@ -43,11 +43,13 @@ class Texture {
 
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
 
-        } else {
+        } else if (image instanceof Env.Image) {
 
             const { extensions } = GL;
 
             const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
+
+            console.log(format === gl.RGBA);
 
             gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
@@ -59,18 +61,13 @@ class Texture {
 
     }
 
-    // destructor() {
+    destructor() {
 
-    // }
+        const { gl } = GL;
 
-    // getTexture() {
+        gl.deleteTexture(this.glTexture);
 
-    //     const engine = Engine.instance;
-
-    //     const [width, height] = this.image.width ? [this.image.width, this.image.height] : [this.width, this.height];
-
-    //     return engine.createTexture(this.image, width, height, this.sRGB, this.flipY, this.clamp);
-    // }
+    }
 }
 
 export default Texture;

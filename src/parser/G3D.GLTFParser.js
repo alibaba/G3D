@@ -20,16 +20,13 @@ const parse = (gltf, scene, { specular, diffuse, lut }) => {
 
     });
 
-    const pbrEnv = new PBREnviroment({brdfLUT: lut});
-    pbrEnv.specular.images = specular;
-    pbrEnv.diffuse.images = diffuse;
-    // pbrEnv.brdfLUT.image = lut;
+    const pbrEnv = new PBREnviroment({ diffuse, specular, brdfLUT: lut });
 
     const gTextures = gltf.textures.map(tex => {
 
         const image = gltf.images[tex.source].data;
 
-        const texture = new Texture({ image });
+        const texture = new Texture({ image, sRGB: false, flipY: false, repeat: true });
 
         return texture;
     });

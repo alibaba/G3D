@@ -384,9 +384,9 @@ class RenderManager {
             engine.uniform('uMaterialNormalTexture', material.normalTexture.glTexture);
         }
 
-        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.getTexture());
-        engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.getMipLevel()]);
-        engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.getTexture());
+        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.glTexture);
+        engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.mipLevel]);
+        engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.glTexture);
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.glTexture);
 
     }
@@ -436,7 +436,7 @@ class RenderManager {
 
         const skybox = scene.skybox;
         const camera = scene.activeCamera;
-        const texture = skybox.cubeMapTexture.getTexture();
+        const texture = skybox.cubeMapTexture.glTexture;
         const mesh = skybox.cubeMapMesh;
         const vmat3 = Mat3.fromMat4(Mat3.create(), camera.getVMatrix());
 

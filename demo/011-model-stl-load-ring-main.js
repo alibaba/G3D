@@ -28,8 +28,8 @@ function main(
         mesh.materials.default.specularColor.b = b;
         mesh.materials.default.glossiness = 2;
 
-        const texture = new G3D.Texture();
-        texture.image = image;
+        const texture = new G3D.Texture({ image, repeat: false });
+        // texture.image = image;
 
         mesh.materials.default.specularEnvMapTexture = texture;
     }
