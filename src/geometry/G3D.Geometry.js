@@ -4,9 +4,6 @@
     ],
     [
         'getBuffers'
-    ],
-    [
-        'destroyBuffers'
     ]
 )
 class Geometry {
@@ -16,11 +13,22 @@ class Geometry {
     uvs = null;
     normals = null;
 
-    constructor() {
-    }
+    bufferViews = null;
 
-    destroy() {
+    constructor(data) {
 
+        // if (data) {
+
+        //     const bufferViews = this.bufferViews = {};
+
+        //     const { vertices, indices, uvs, normals } = data;
+
+        //     if(vertices instanceof Buffer)
+        
+        // }
+
+
+        
     }
 
     getBuffers() {
@@ -76,6 +84,17 @@ class Geometry {
                 offset: 0
             } : null;
 
+            // indices[key] = this.indices[key] ? new ElementBufferView({
+            //     buffer: new Buffer({
+            //         data: new Uint32Array(this.indices[key]),
+            //         target: 'ELEMENT_ARRAY_BUFFER'
+            //     }),
+            //     mode: 'TRIANGLES',
+            //     count: this.indices[key].length,
+            //     type: 'UNSIGNED_INT',
+            //     offset: 0
+            // }) : null;
+
         });
 
         return {
@@ -84,10 +103,6 @@ class Geometry {
             normals,
             indices
         }
-    }
-
-    destroyBuffers() {
-
     }
 
     mergeNormals() {

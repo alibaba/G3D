@@ -4,7 +4,7 @@ class Buffer {
 
     constructor({ data, target }) {
 
-        const gl = GL.gl;
+        const {gl} = GL;
 
         if (typeof target === 'string') {
             target = gl[target];

@@ -1,9 +1,9 @@
 class BufferView {
 
     buffer = null;
-
-    stride = 0;
-    offset = 0;
+    
+    stride = null;
+    offset = null;
 
     constructor({ buffer, stride = 0, offset = 0 }) {
 
