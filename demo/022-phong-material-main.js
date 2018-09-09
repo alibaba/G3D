@@ -5,6 +5,7 @@ function main(
 
     const image = new G3D.Env.Image();
     image.crossOrigin = true;
+
     image.onload = function () {
 
         const engine = new G3D.Engine(canvas);
@@ -19,15 +20,13 @@ function main(
         controlArcRotateCamera(canvas, camera);
 
         const light1 = new G3D.DirectionalLight(scene);
-        light1.direction.x = 1;
-        light1.direction.y = 0;
-        light1.direction.z = 1;
+        light1.direction = { x: 1, y: 0, z: 1 };
         light1.intensity = 0.4;
+
         const light2 = new G3D.DirectionalLight(scene);
-        light2.direction.x = -1;
-        light2.direction.y = 0;
-        light2.direction.z = 1;
+        light2.direction = { x: -1, y: 0, z: 1 };
         light2.intensity = 0.4;
+
         const light3 = new G3D.AmbientLight(scene);
         light3.intensity = 0.2;
 
@@ -49,7 +48,6 @@ function main(
         const m4 = G3D.MeshBuilder.createSphere(scene, 4);
         makeLambertTexture(m4);
         makePosition(m4, 5, -15);
-
 
         // lambert
         const m5 = G3D.MeshBuilder.createCube(scene, 6);
@@ -78,8 +76,7 @@ function main(
             mesh.materials.default.specularColor = { r: 0, g: 0, b: 0 };
         }
         function makeLambertTexture(mesh) {
-            const texture = new G3D.Texture();
-            texture.image = image;
+            const texture = new G3D.Texture({ image });
             mesh.materials.default.ambientTexture = texture;
             mesh.materials.default.diffuseTexture = texture;
             mesh.materials.default.specularColor = { r: 0, g: 0, b: 0 };

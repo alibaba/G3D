@@ -298,7 +298,6 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        // const { vertices, uvs, normals } = geometry.getBuffers();
         const { vertices, uvs, normals } = geometry.bufferViews;
 
         if (!vertices) {
@@ -308,6 +307,7 @@ class RenderManager {
         engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
 
         if (uvs) {
+
             if (typeof uvs.stride === 'number') {
 
                 engine.attribute('aUV', uvs.buffer.glBuffer, uvs.stride, uvs.offset);
@@ -428,8 +428,6 @@ class RenderManager {
         if (indices && indices[key]) {
 
             engine.elements(indices[key].buffer.glBuffer);
-
-            console.log(key, indices[key]);
 
             engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
         }

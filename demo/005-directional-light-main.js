@@ -16,6 +16,7 @@ function main(
     controlArcRotateCamera(canvas, camera);
 
     const l1 = new G3D.DirectionalLight(scene);
+
     const m1 = new G3D.MeshBuilder.createSphere(scene, 0.2);
     m1.materials.default = new G3D.RawMaterial(m1);
 
@@ -27,10 +28,6 @@ function main(
 
         l1.direction = {x: Math.sin(now/500)*18, y: 18, z: 18};
         m1.position = {x: Math.sin(now/500)*9, y: 9, z: 9};
-        
-        // m1.position.z = l1.position.z = Math.sin(now / 500 + Math.PI * 2 / 3) * 2 + 3;
-        // m2.position.z = l2.position.z = Math.sin(now / 500 + Math.PI * 4 / 3) * 2 + 3;
-        // m3.position.z = l3.position.z = Math.sin(now / 500) * 2 + 3;
 
         scene.render();
         requestAnimationFrame(render);

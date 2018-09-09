@@ -33,10 +33,12 @@ class LineGeometry {
                     uvs.push(0, 0);
                 }
 
-                this.bufferViews.uvs = new Buffer({
-                    data: new Float32Array(uvs),
-                    target: 'ARRAY_BUFFER'
-                })
+                this.bufferViews.uvs = new BufferView({
+                    buffer: new Buffer({
+                        data: new Float32Array(uvs),
+                        target: 'ARRAY_BUFFER'
+                    })
+                });
             }
 
 

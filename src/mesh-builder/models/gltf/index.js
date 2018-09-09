@@ -1,7 +1,5 @@
 function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
-    console.log(gltf);
-
     const pbrEnv = new PBREnviroment({ diffuse, specular, brdfLUT: lut });
 
     const glBuffers = gltf.bufferViews.map((bv) => {
@@ -148,7 +146,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
                 const accessor = gltf.accessors[accessorKey];
 
-                debugger;
                 return new ElementBufferView({
                     buffer: glBuffers[accessor.bufferView],
                     offset: accessor.byteOffset || 0,
