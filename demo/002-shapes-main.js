@@ -15,18 +15,16 @@ function main(
     controlArcRotateCamera(canvas, camera);
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = 0;
-    light1.direction.y = 1;
-    light1.direction.z = 1;
+    light1.direction = { x: 0, y: 1, z: 1 };
     light1.intensity = 0.3;
 
     const light2 = new G3D.AmbientLight(scene);
     light2.intensity = 0.5;
 
     const attachColor = function (mesh, r, g, b) {
-        mesh.materials.default.ambientColor = {r, g, b};
-        mesh.materials.default.diffuseColor = {r, g, b};
-        mesh.materials.default.specularColor = {r, g, b};
+        mesh.materials.default.ambientColor = { r, g, b };
+        mesh.materials.default.diffuseColor = { r, g, b };
+        mesh.materials.default.specularColor = { r, g, b };
         mesh.materials.default.glossiness = 10;
     }
 

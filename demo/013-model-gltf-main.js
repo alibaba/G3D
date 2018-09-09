@@ -89,16 +89,16 @@ function main(
 
         const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
-        meshes.forEach(m=>m.rotation.y = 225);
+        // meshes.forEach(m=>m.rotation.y = 225);
 
         // new G3D.Skybox(scene, diffuse, model.cameraRadius * 1.5);
 
         function render() {
 
-            meshes.forEach(m => m.rotation.y += 0.1);
+            // meshes.forEach(m => m.rotation.y += 0.1);
 
             scene.render();
-            requestAnimationFrame(render);
+            // requestAnimationFrame(render);
         }
         render();
     }

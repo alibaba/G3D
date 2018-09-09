@@ -11,7 +11,7 @@ class ElementBufferView {
 
         const { gl } = GL;
 
-        this.buffer = buffer.glBuffer;
+        this.buffer = buffer;
 
         if (typeof mode === 'String') {
             mode = gl[mode];

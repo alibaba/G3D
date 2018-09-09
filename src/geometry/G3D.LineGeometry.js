@@ -1,19 +1,68 @@
-@Lazy(
-    ['vertices', 'indices'],
-    ['getBuffers']
-)
 class LineGeometry {
-    vertices = [];
-    indices = {};
 
-    constructor() {
-    }
+    bufferViews = {};
 
-    destroy() {
+    constructor({ vertices, indices } = {}) {
 
+        if (vertices) {
+
+            this.bufferViews.vertices = new BufferView({
+                buffer: new Buffer({
+                    data: new Float32Array(vertices),
+                    target: 'ARRAY_BUFFER'
+                })
+            })
+
+            {
+                const normals = [];
+                for (let i = 0; i < vertices.length; i += 3) {
+                    normals.push(0, 0, 1);
+                }
+
+                this.bufferViews.normals = new BufferView({
+                    buffer: new Buffer({
+                        data: new Float32Array(normals),
+                        target: 'ARRAY_BUFFER'
+                    })
+                })
+            }
+
+            {
+                const uvs = [];
+                for (let i = 0; i < vertices.length; i += 3) {
+                    uvs.push(0, 0);
+                }
+
+                this.bufferViews.uvs = new Buffer({
+                    data: new Float32Array(uvs),
+                    target: 'ARRAY_BUFFER'
+                })
+            }
+
+
+            {
+                this.bufferViews.indices = {}
+                for (let key in indices) {
+
+                    this.bufferViews.indices[key] = new ElementBufferView({
+                        buffer: new Buffer({
+                            data: new Uint32Array(indices[key]),
+                            target: 'ELEMENT_ARRAY_BUFFER'
+                        }),
+                        mode: 'LINES',
+                        count: indices[key].length,
+                        type: 'UNSIGNED_INT',
+                        offset: 0
+                    })
+                }
+            }
+
+        }
     }
 
     getBuffers() {
+
+        return;
 
         const vertices = new BufferView({
             buffer: new Buffer({
@@ -32,10 +81,12 @@ class LineGeometry {
         }
 
         const uvs = new BufferView({
+
             buffer: new Buffer({
                 data: new Float32Array(oUVs),
                 target: 'ARRAY_BUFFER'
             })
+
         })
 
         const normals = new BufferView({

@@ -1,107 +1,114 @@
-@Lazy(
-    [
-        'normals'
-    ],
-    [
-        'getBuffers'
-    ]
-)
 class Geometry {
 
-    vertices = null;
-    indices = {};
-    uvs = null;
-    normals = null;
+    bufferViews = {};
 
-    bufferViews = null;
+    constructor({ vertices, normals, uvs, indices } = {}) {
 
-    constructor(data) {
+        if (vertices) {
 
-        // if (data) {
+            if (vertices instanceof BufferView) {
 
-        //     const bufferViews = this.bufferViews = {};
+                this.bufferViews.vertices = vertices;
 
-        //     const { vertices, indices, uvs, normals } = data;
+            } else {
 
-        //     if(vertices instanceof Buffer)
-        
-        // }
-
-
-        
-    }
-
-    getBuffers() {
-
-        const vertices = this.vertices ? new BufferView({
-            buffer: new Buffer({
-                data: new Float32Array(this.vertices),
-                target: 'ARRAY_BUFFER'
-            })
-        }) : null;
-
-        const normals = this.normals ? new BufferView({
-            buffer: new Buffer({
-                data: new Float32Array(this.normals),
-                target: 'ARRAY_BUFFER'
-            })
-        }) : null;
-
-        let uvs = null;
-        if (this.uvs) {
-            uvs = {};
-            if (typeof this.uvs.length === 'number') {
-                uvs = new BufferView({
+                this.bufferViews.vertices = new BufferView({
                     buffer: new Buffer({
-                        data: new Float32Array(this.uvs),
+                        data: new Float32Array(vertices),
                         target: 'ARRAY_BUFFER'
                     })
-                })
+                });
+            }
+
+        }
+
+        if (normals) {
+
+            if (normals instanceof BufferView) {
+
+                this.bufferViews.normals = normals;
+
             } else {
-                Object.keys(this.uvs).forEach(key => {
-                    uvs[key] = new BufferView({
+
+                this.bufferViews.normals = new BufferView({
+                    buffer: new Buffer({
+                        data: new Float32Array(normals),
+                        target: 'ARRAY_BUFFER'
+                    })
+                });
+
+            }
+        }
+
+        if (uvs) {
+
+
+
+            if (uvs instanceof BufferView || typeof uvs.length === 'number') {
+
+                if (uvs instanceof BufferView) {
+
+                    this.bufferViews.uvs = uvs;
+
+                } else {
+
+                    this.bufferViews.uvs = new BufferView({
                         buffer: new Buffer({
-                            data: new Float32Array(this.uvs[key]),
+                            data: new Float32Array(uvs),
                             target: 'ARRAY_BUFFER'
                         })
                     })
 
+                }
+
+            } else {
+                this.bufferViews.uvs = {};
+
+                Object.keys(uvs).forEach(key => {
+
+                    if (uvs[key] instanceof BufferView) {
+
+                        this.bufferViews.uvs[key] = uvs[key];
+
+                    } else {
+
+                        this.bufferViews.uvs[key] = new BufferView({
+                            buffer: new Buffer({
+                                data: new Float32Array(uvs[key]),
+                                target: 'ARRAY_BUFFER'
+                            })
+                        })
+                    }
                 });
             }
+
         }
 
-        const indices = {};
-        Object.keys(this.indices).forEach(key => {
+        if (indices) {
 
-            indices[key] = this.indices[key] ? {
-                buffer: new Buffer({
-                    data: new Uint32Array(this.indices[key]),
-                    target: 'ELEMENT_ARRAY_BUFFER'
-                }).glBuffer,
-                mode: 'TRIANGLES',
-                count: this.indices[key].length,
-                type: 'UNSIGNED_INT',
-                offset: 0
-            } : null;
+            this.bufferViews.indices = {};
 
-            // indices[key] = this.indices[key] ? new ElementBufferView({
-            //     buffer: new Buffer({
-            //         data: new Uint32Array(this.indices[key]),
-            //         target: 'ELEMENT_ARRAY_BUFFER'
-            //     }),
-            //     mode: 'TRIANGLES',
-            //     count: this.indices[key].length,
-            //     type: 'UNSIGNED_INT',
-            //     offset: 0
-            // }) : null;
+            Object.keys(indices).forEach(key => {
 
-        });
+                if (indices[key] instanceof ElementBufferView) {
 
-        return {
-            vertices,
-            uvs,
-            normals,
-            indices
+                    this.bufferViews.indices[key] = indices[key];
+
+                } else {
+                    this.bufferViews.indices[key] = new ElementBufferView({
+                        buffer: new Buffer({
+                            data: new Uint32Array(indices[key]),
+                            target: 'ELEMENT_ARRAY_BUFFER'
+                        }),
+                        mode: 'TRIANGLES',
+                        count: indices[key].length,
+                        type: 'UNSIGNED_INT',
+                        offset: 0
+                    });
+                }
+
+
+            });
         }
     }
 

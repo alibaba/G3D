@@ -67,7 +67,7 @@ function main(
         function (text) {
             mesh = G3D.MeshBuilder.createFromStlModel(scene, text);
             mesh.position.y = 10;
-            mesh.geometry.mergeNormals();
+            // mesh.geometry.mergeNormals();
             check();
         }
     )

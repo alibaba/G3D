@@ -96,63 +96,64 @@ class RenderManager {
 
             meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
 
-                Object.keys(mesh.geometry.getBuffers().indices).forEach(key => {
+                mesh.geometry.bufferViews.indices &&
+                    Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
 
-                    const material = mesh.materials[key];
+                        const material = mesh.materials[key];
 
-                    if (material instanceof RawMaterial) {
+                        if (material instanceof RawMaterial) {
 
-                        engine.useProgram(
-                            'raw',
-                            [...material.getDefines(), ...globalDefines]
-                        );
+                            engine.useProgram(
+                                'raw',
+                                [...material.getDefines(), ...globalDefines]
+                            );
 
-                        this.prepareMVPMatrix(mesh);
+                            this.prepareMVPMatrix(mesh);
 
-                        this.prepareGeometry(mesh.geometry);
+                            this.prepareGeometry(mesh.geometry);
 
-                        this.prepareRawMaterial(material);
+                            this.prepareRawMaterial(material);
 
-                        this.drawMesh(mesh, key);
+                            this.drawMesh(mesh, key);
 
-                    } else if (material instanceof PhongMaterial) {
+                        } else if (material instanceof PhongMaterial) {
 
-                        engine.useProgram(
-                            'phong',
-                            [...material.getDefines(), ...globalDefines]
-                        );
+                            engine.useProgram(
+                                'phong',
+                                [...material.getDefines(), ...globalDefines]
+                            );
 
-                        this.prepareMVPMatrix(mesh);
+                            this.prepareMVPMatrix(mesh);
 
-                        this.prepareLights();
+                            this.prepareLights();
 
-                        this.prepareGeometry(mesh.geometry);
+                            this.prepareGeometry(mesh.geometry);
 
-                        this.preparePhongMaterial(material);
+                            this.preparePhongMaterial(material);
 
-                        this.prepareShadow();
+                            this.prepareShadow();
 
-                        this.drawMesh(mesh, key);
+                            this.drawMesh(mesh, key);
 
-                    } else if (material instanceof PBRMaterial) {
+                        } else if (material instanceof PBRMaterial) {
 
-                        engine.useProgram(
-                            'pbr',
-                            [...material.getDefines(), ...globalDefines]
-                        );
+                            engine.useProgram(
+                                'pbr',
+                                [...material.getDefines(), ...globalDefines]
+                            );
 
-                        this.prepareMVPMatrix(mesh);
+                            this.prepareMVPMatrix(mesh);
 
-                        this.prepareLights();
+                            this.prepareLights();
 
-                        this.prepareGeometry(mesh.geometry);
+                            this.prepareGeometry(mesh.geometry);
 
-                        this.preparePBRMaterial(material);
+                            this.preparePBRMaterial(material);
 
-                        this.drawMesh(mesh, key);
+                            this.drawMesh(mesh, key);
 
-                    }
-                })
+                        }
+                    })
             })
         });
 
@@ -297,26 +298,30 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        const { vertices, uvs, normals } = geometry.getBuffers();
+        // const { vertices, uvs, normals } = geometry.getBuffers();
+        const { vertices, uvs, normals } = geometry.bufferViews;
 
         if (!vertices) {
             return;
         }
 
-        engine.attribute('aPosition', vertices.buffer, vertices.stride, vertices.offset);
+        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
 
         if (uvs) {
             if (typeof uvs.stride === 'number') {
-                engine.attribute('aUV', uvs.buffer, uvs.stride, uvs.offset);
+
+                engine.attribute('aUV', uvs.buffer.glBuffer, uvs.stride, uvs.offset);
+
             } else {
+
                 Object.keys(uvs).forEach(key => {
-                    engine.attribute(key, uvs[key].buffer, uvs[key].stride, uvs[key].offset);
+                    engine.attribute(key, uvs[key].buffer.glBuffer, uvs[key].stride, uvs[key].offset);
                 })
             }
         }
 
         if (normals) {
-            engine.attribute('aNormal', normals.buffer, normals.stride, normals.offset);
+            engine.attribute('aNormal', normals.buffer.glBuffer, normals.stride, normals.offset);
         }
 
     }
@@ -418,10 +423,13 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        const { indices } = mesh.geometry.getBuffers();
+        const { indices } = mesh.geometry.bufferViews;
 
-        if (indices[key]) {
-            engine.elements(indices[key].buffer);
+        if (indices && indices[key]) {
+
+            engine.elements(indices[key].buffer.glBuffer);
+
+            console.log(key, indices[key]);
 
             engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
         }

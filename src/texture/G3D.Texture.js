@@ -49,8 +49,6 @@ class Texture {
 
             const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
 
-            console.log(format === gl.RGBA);
-
             gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
             if (isPowerOf2(width) && isPowerOf2(height)) {
@@ -58,7 +56,6 @@ class Texture {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
             }
         }
-
     }
 
     destructor() {

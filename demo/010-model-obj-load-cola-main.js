@@ -15,16 +15,14 @@ function main(
     controlArcRotateCamera(canvas, camera);
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = 1;
-    light1.direction.y = 1;
-    light1.direction.z = 1;
+    light1.direction = { x: 1, y: 1, z: 1 };
     light1.intensity = 1.5;
 
     const light3 = new G3D.AmbientLight(scene);
     light3.intensity = 0.2;
 
     let mesh = null;
-    loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj', function (obj) {    
+    loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj', function (obj) {
         loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.mtl', function (mtl) {
             mesh = G3D.MeshBuilder.createFromObjModel(scene, { obj, mtl });
         })
