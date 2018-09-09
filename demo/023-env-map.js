@@ -1,7 +1,7 @@
 // G3D_TEMPLATE_GENERATED
 import G3D from '../src/G3D';
 
-import main from './023-wireframe-main';
+import main from './023-env-map-main';
 import loader from './lib/loader';
 import pbrAssets from './lib/pbr-assets';
 import { controlArcRotateCamera } from './lib/attach-control';

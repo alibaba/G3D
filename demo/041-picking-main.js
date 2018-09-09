@@ -15,9 +15,7 @@ function main(
     controlArcRotateCamera(canvas, camera);
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
+    light1.direction = {x: -1, y: 0, z: 1};
     light1.intensity = 0.5;
 
     const light2 = new G3D.AmbientLight(scene);

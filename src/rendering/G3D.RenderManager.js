@@ -212,7 +212,7 @@ class RenderManager {
 
             group.forEach(mesh => {
 
-                Object.keys(mesh.geometry.indices).forEach(key => {
+                Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
 
                     const material = mesh.materials[key];
 
