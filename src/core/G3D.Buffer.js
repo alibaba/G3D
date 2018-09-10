@@ -4,7 +4,7 @@ class Buffer {
 
     constructor({ data, target }) {
 
-        const {gl} = GL;
+        const { gl, buffers } = GL;
 
         if (typeof target === 'string') {
             target = gl[target];
@@ -15,14 +15,15 @@ class Buffer {
         gl.bindBuffer(target, glBuffer);
         gl.bufferData(target, data, gl.STATIC_DRAW);
         gl.bindBuffer(target, null);
+
+        buffers.push(this);
     }
 
-    destroy() {
+    destructor() {
 
         const { gl } = GL;
 
         gl.deleteBuffer(this.glBuffer);
-
     }
 }
 

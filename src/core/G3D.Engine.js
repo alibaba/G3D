@@ -25,9 +25,7 @@ class Engine {
     currentProgram = {};
     programs = {};
     framebuffers = {};
-
     extensions = {};
-
     precisions = {};
 
     static instance = null;
@@ -117,13 +115,20 @@ class Engine {
     destroy() {
 
         Object.keys(this.programs).forEach(key => {
-            this.programs[key].destroy();
+            this.programs[key].destructor();
         });
 
         Object.keys(this.framebuffers).forEach(key => {
-            this.framebuffers[key].destroy();
+            this.framebuffers[key].destructor();
         });
 
+        const { buffers, textures, cubeTextures } = GL;
+
+        buffers.forEach(buffer => buffer.destructor());
+
+        textures.forEach(texture => texture.destructor());
+
+        cubeTextures.forEach(cubeTexture => cubeTexture.destructor());
     }
 
     clearColorBuffer(color) {
@@ -189,184 +194,6 @@ class Engine {
         gl.bufferData(target, value, gl.STATIC_DRAW);
         gl.bindBuffer(target, null);
         return buffer;
-    }
-
-    createAttributeBuffer(value) {
-        const gl = this.gl;
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, value, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        return buffer;
-    }
-
-    createElementBuffer(value) {
-        const gl = this.gl;
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, value, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-        return buffer;
-    }
-
-    // createTexture(image, width, height, sRGB, flipY, clamp) {
-
-    //     const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
-
-    //     const gl = this.gl;
-
-    //     const texture = gl.createTexture();
-
-    //     gl.activeTexture(gl.TEXTURE0);
-
-    //     gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    //     clamp = clamp || (!isPowerOf2(width) || !isPowerOf2(height));
-
-    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
-    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, clamp ? gl.CLAMP_TO_EDGE : gl.REPEAT);
-    //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-    //     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
-
-    //     if (image instanceof Uint8Array) {
-
-    //         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-    //     } else if (image instanceof Float32Array) {
-
-    //         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
-
-    //     } else {
-
-    //         let format = gl.RGBA;
-    //         if (sRGB && this.extensions.SRGB) {
-    //             format = this.extensions.SRGB.SRGB_ALPHA_EXT;
-    //         }
-
-    //         gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
-
-    //         if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-    //             gl.generateMipmap(gl.TEXTURE_2D);
-    //             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
-    //         }
-    //     }
-    //     return texture;
-    // }
-
-    createCubeTexture(images, width, height, sRGB, flipY) {
-
-        const gl = this.gl;
-
-        const texture = gl.createTexture();
-
-        gl.activeTexture(gl.TEXTURE0);
-
-        gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-
-        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        const targets = {
-            right: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-            left: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-            top: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-            bottom: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-            front: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-            back: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
-        }
-
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
-
-        let format = gl.RGBA;
-        if (sRGB && this.extensions.SRGB) {
-            format = this.extensions.SRGB.SRGB_ALPHA_EXT;
-        }
-
-        Object.keys(targets).forEach(k => {
-
-            const image = images[k];
-
-            if (image instanceof Env.Image) {
-
-                gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-
-                gl.texImage2D(targets[k], 0, format, format, gl.UNSIGNED_BYTE, images[k]);
-
-            } else if (image instanceof Uint8Array) {
-
-                gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, images[k]);
-
-            }
-
-        })
-
-        if (images.mip) {
-
-            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-
-            images.mip.forEach((images, i) => {
-
-                Object.keys(images).forEach(k => {
-
-                    const image = images[k];
-
-                    if (image instanceof Env.Image) {
-
-                        gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, images[k]);
-
-                    }
-                })
-
-            });
-
-        }
-
-        return texture;
-    }
-
-    createFramebuffer({ width, height }) {
-
-        const gl = this.gl;
-
-        const framebuffer = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-
-        const colorTarget = gl.createTexture();
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, colorTarget);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTarget, 0);
-
-        const depthTarget = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, depthTarget);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthTarget);
-
-        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
-            throw new Error(`framebuffer not ready ${gl.checkFramebufferStatus(gl.FRAMEBUFFER)}`);
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        return {
-            framebuffer,
-            colorTarget,
-            depthTarget,
-            width,
-            height,
-            destroy: () => {
-                gl.deleteRenderbuffer(depthTarget);
-                gl.deleteTexture(colorTarget);
-                gl.deleteFramebuffer(framebuffer);
-            }
-        };
     }
 
     bindFramebuffer(key) {

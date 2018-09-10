@@ -99,7 +99,7 @@ class DefinedProgram {
         this.uniforms = uniforms;
     }
 
-    destroy() {
+    destructor() {
 
         const { gl } = GL;
 
@@ -218,10 +218,10 @@ class Program {
         return this.definedPrograms[definesKey];
     }
 
-    destroy() {
+    destructor() {
 
         Object.keys(this.definedPrograms).forEach(key => {
-            this.definedPrograms[key].destroy();
+            this.definedPrograms[key].destructor();
         });
 
     }

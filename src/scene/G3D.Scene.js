@@ -13,14 +13,6 @@ class Scene {
         this.engine = engine;
     }
 
-    destroy() {
-
-        this.meshes.forEach(mesh => {
-            mesh.destroy();
-        });
-
-    }
-
     render() {
         this.renderManager.render();
     }

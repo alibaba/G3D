@@ -1,4 +1,12 @@
 export default {
+
     gl: null,
-    extensions: null
+
+    extensions: null,
+
+    buffers: [],
+
+    textures: [],
+    cubeTextures: [],
+
 };

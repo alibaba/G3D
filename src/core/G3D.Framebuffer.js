@@ -46,7 +46,7 @@ class Framebuffer {
 
     }
 
-    destroy() {
+    destructor() {
 
         const { gl } = GL;
         const { framebuffer, colorTarget, depthTarget } = this;
