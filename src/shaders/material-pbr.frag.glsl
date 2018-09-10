@@ -228,9 +228,6 @@ vec3 L(){
 
     fragColor = pow(fragColor, vec3(1.0/2.2));
 
-    // PP pp = PP(vec3(uMaterialAlbedoColor));
-    // return pp.color;
-
     return fragColor;
 }
 

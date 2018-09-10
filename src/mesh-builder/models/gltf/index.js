@@ -2,7 +2,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
     const pbrEnv = new PBREnviroment({ diffuse, specular, brdfLUT: lut });
 
-    const glBuffers = gltf.bufferViews.map((bv) => {
+    const gBuffers = gltf.bufferViews.map((bv) => {
 
         const { data } = gltf.buffers[bv.buffer];
 
@@ -13,14 +13,22 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
     });
 
-    const gTextures = gltf.textures.map(tex => {
 
-        const image = gltf.images[tex.source].data;
+    const gTextureCache = [];
+    const gTextureCreators = gltf.textures.map((tex, i) => {
 
-        const texture = new Texture({ image, sRGB: false, flipY: false, repeat: true });
-
-        return texture;
+        return (sRGB = false) => {
+            if (!gTextureCache[i]) {
+                const image = gltf.images[tex.source].data;
+                const texture = new Texture({ image, sRGB, flipY: false, repeat: true });
+                gTextureCache[i] = texture;
+            }
+            return gTextureCache[i];
+        };
     });
+
+
+
 
     const gMaterials = gltf.materials.map(mtl => {
 
@@ -43,14 +51,14 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
         }
 
         if (mr.baseColorTexture) {
-            material.albedoTexture = gTextures[mr.baseColorTexture.index];
+            material.albedoTexture = gTextureCreators[mr.baseColorTexture.index](true);
             material.albedoTexture.sRGB = true;
 
             material.gltfAlbedoTexCoord = mr.baseColorTexture.texCoord || 0;
         }
 
         if (mr.metallicRoughnessTexture) {
-            material.metallicRoughnessTexture = gTextures[mr.metallicRoughnessTexture.index];
+            material.metallicRoughnessTexture = gTextureCreators[mr.metallicRoughnessTexture.index]();
             material.metallic = 1.0;
             material.roughness = 1.0;
 
@@ -70,13 +78,13 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
 
         if (emissiveTexture) {
-            material.emissiveTexture = gTextures[emissiveTexture.index];
+            material.emissiveTexture = gTextureCreators[emissiveTexture.index](true);
             material.emissiveTexture.sRGB = true;
             material.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
         }
 
         if (normalTexture) {
-            material.normalTexture = gTextures[normalTexture.index];
+            material.normalTexture = gTextureCreators[normalTexture.index]();
             material.gltfNormalTexCoord = normalTexture.texCoord || 0;
         }
 
@@ -114,8 +122,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                     uvs.aEmissiveUV = getBufferView(attributes[`TEXCOORD_${material.gltfEmissiveTexCoord}`]);
                 };
 
-
-
                 mesh.geometry = new Geometry({
                     vertices: getBufferView(attributes['POSITION']),
                     normals: getBufferView(attributes['NORMAL']),
@@ -132,7 +138,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                 const accessor = gltf.accessors[accessorKey];
 
                 return new BufferView({
-                    buffer: glBuffers[accessor.bufferView],
+                    buffer: gBuffers[accessor.bufferView],
                     stride: accessor.byteStride || 0,
                     offset: accessor.byteOffset || 0,
                     count: accessor.count
@@ -145,7 +151,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                 const accessor = gltf.accessors[accessorKey];
 
                 return new ElementBufferView({
-                    buffer: glBuffers[accessor.bufferView],
+                    buffer: gBuffers[accessor.bufferView],
                     offset: accessor.byteOffset || 0,
                     count: accessor.count,
                     mode: 'TRIANGLES',
@@ -155,57 +161,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
             return mesh;
 
-            // const getBuffer = (accessorKey) => {
-
-            //     const accessor = gltf.accessors[accessorKey];
-
-            //     return {
-            //         buffer: glBuffers[accessor.bufferView],
-            //         stride: accessor.byteStride || 0,
-            //         offset: accessor.byteOffset || 0,
-            //         count: accessor.count
-            //     }
-            // };
-
-            // mesh.geometry.getBuffers = () => {
-
-            //     const material = mesh.materials.default;
-
-            //     const uvs = {};
-
-            //     if (material.albedoTexture) {
-            //         uvs.aAlbedoUV = getBuffer(attributes[`TEXCOORD_${material.gltfAlbedoTexCoord}`]);
-            //     }
-            //     if (material.metallicRoughnessTexture) {
-            //         uvs.aMetallicRoughnessUV = getBuffer(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
-            //     }
-            //     if (material.normalTexture) {
-            //         uvs.aNormalUV = getBuffer(attributes[`TEXCOORD_${material.gltfNormalTexCoord}`]);
-            //     }
-            //     if (material.emissiveTexture) {
-            //         uvs.aEmissiveUV = getBuffer(attributes[`TEXCOORD_${material.gltfEmissiveTexCoord}`]);
-            //     }
-
-            //     const buffers = {
-            //         vertices: getBuffer(attributes['POSITION']),
-            //         normals: getBuffer(attributes['NORMAL']),
-            //         uvs: uvs,
-            //         indices: {
-            //             default: {
-            //                 ...getBuffer(indices),
-            //                 mode: 'TRIANGLES',
-            //                 type: 'UNSIGNED_SHORT'
-            //             }
-            //         }
-            //     };
-
-
-            //     return buffers;
-            // }
-
-            // mesh.materials.default = gMaterials[materialIndex];
-
-            // return mesh;
         }
 
     });
