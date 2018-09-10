@@ -12,19 +12,18 @@ class Mesh extends Node {
 
     constructor(scene) {
         super();
-        this.scene = scene;
-        this.scene.meshes.push(this);
-    }
-
-    destroy() {
-        this.geometry.destroy();
-        this.materials.destroy();
+        if (scene) {
+            this.scene = scene;
+            this.scene.meshes.push(this);
+        }
     }
 
     dispose() {
-        const i = _.findIndex(this.scene.meshes, { id: this.id });
-        if (i !== -1) {
-            this.scene.meshes.splice(i, 1);
+        if (this.scene) {
+            const i = _.findIndex(this.scene.meshes, { id: this.id });
+            if (i !== -1) {
+                this.scene.meshes.splice(i, 1);
+            }
         }
     }
 

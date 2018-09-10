@@ -107,7 +107,6 @@ class Geometry {
                     });
                 }
 
-
             });
         }
     }

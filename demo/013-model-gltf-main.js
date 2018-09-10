@@ -80,18 +80,14 @@ function main(
         controlArcRotateCamera(canvas, camera);
 
         const light1 = new G3D.DirectionalLight(scene);
-        light1.direction.x = 1;
-        light1.direction.y = -1;
-        light1.direction.z = 0;
+        light1.direction = { x: 1, y: -1, z: 0 };
         light1.intensity = 0.2;
-
-        const coord = G3D.MeshBuilder.createCoordinate(scene, 100);
 
         const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
-        meshes.forEach(m=>m.rotation.y = 225);
+        meshes.forEach(m => m.rotation.y = 225);
 
-        // new G3D.Skybox(scene, diffuse, model.cameraRadius * 1.5);
+        new G3D.Skybox(scene, diffuse, model.cameraRadius * 1.5);
 
         function render() {
 

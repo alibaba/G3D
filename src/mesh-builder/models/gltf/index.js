@@ -72,13 +72,11 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
         if (emissiveTexture) {
             material.emissiveTexture = gTextures[emissiveTexture.index];
             material.emissiveTexture.sRGB = true;
-
             material.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
         }
 
         if (normalTexture) {
             material.normalTexture = gTextures[normalTexture.index];
-
             material.gltfNormalTexCoord = normalTexture.texCoord || 0;
         }
 

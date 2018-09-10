@@ -1,6 +1,6 @@
 function main(
     G3D,
-    {canvas, requestAnimationFrame, controlArcRotateCamera, loader}
+    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
 ) {
     const engine = new G3D.Engine(canvas);
 
@@ -22,7 +22,7 @@ function main(
         right: '//gw.alicdn.com/tfs/TB1zIBqATtYBeNjy1XdXXXXyVXa-1024-1024.png',
         top: '//gw.alicdn.com/tfs/TB1wcxqATtYBeNjy1XdXXXXyVXa-1024-1024.png',
         bottom: '//gw.alicdn.com/tfs/TB1O7C5AAyWBuNjy0FpXXassXXa-1024-1024.png',
-    }, ({front, back, left, right, top, bottom}) => {
+    }, ({ front, back, left, right, top, bottom }) => {
 
         new G3D.Skybox(scene, {
             front, back,
@@ -30,21 +30,6 @@ function main(
             top, bottom,
         });
     });
-
-    const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
-    light1.intensity = 0.5;
-
-    const light2 = new G3D.AmbientLight(scene);
-    light2.intensity = 0.2;
-
-    const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
-    m1.position.z = -1;
-
-    const m2 = G3D.MeshBuilder.createSphere(scene, 1);
-    m2.position.z = 1;
 
     function render() {
         scene.render();

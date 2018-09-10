@@ -444,13 +444,14 @@ class RenderManager {
         const camera = scene.activeCamera;
         const texture = skybox.cubeMapTexture.glTexture;
         const mesh = skybox.cubeMapMesh;
+
         const vmat3 = Mat3.fromMat4(Mat3.create(), camera.getVMatrix());
 
         engine.useProgram('skybox');
 
-        const geometryBuffers = mesh.geometry.getBuffers();
+        const geometryBuffers = mesh.geometry.bufferViews;
 
-        engine.attribute('aPosition', geometryBuffers.vertices.buffer, geometryBuffers.vertices.stride, geometryBuffers.vertices.offset);
+        engine.attribute('aPosition', geometryBuffers.vertices.buffer.glBuffer, geometryBuffers.vertices.stride, geometryBuffers.vertices.offset);
 
         engine.uniform('uVMatrix3', vmat3);
         engine.uniform('uPMatrix', camera.getPMatrix());
