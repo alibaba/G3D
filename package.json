@@ -1,14 +1,11 @@
 {
-  "name": "@ali/g3d",
-  "version": "0.1.7",
+  "name": "g3d",
+  "version": "0.1.0",
   "description": "webgl render engine compatible with both browser and gcanvas",
   "main": "dist/g3d.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/alibaba/G3D"
-  },
-  "publishConfig": {
-    "registry": "http://registry.npm.alibaba-inc.com"
   },
   "devDependencies": {
     "antd": "^3.2.2",
