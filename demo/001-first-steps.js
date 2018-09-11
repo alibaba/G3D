@@ -12,22 +12,23 @@ const canvas = document.getElementById('canvas');
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
-
 let stop = false;
 
 main(G3D, {
     canvas,
     requestAnimationFrame: function (f) {
-        if (!stop) {
-            requestAnimationFrame(f);
-        }
+        requestAnimationFrame(() => {
+            if (!stop) {
+                f();
+            }
+        });
     },
     controlArcRotateCamera,
     pbrAssets,
     loader,
     onClickCanvas: function (callback) {
         canvas.addEventListener('click', callback)
-    }
+    },
 });
 
 

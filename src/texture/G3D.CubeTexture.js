@@ -6,7 +6,7 @@ class CubeTexture {
 
     constructor({ images, width, height, flipY = false, sRGB = true }) {
 
-        const { gl } = GL;
+        const { gl, cubeTextures } = GL;
 
         const texture = this.glTexture = gl.createTexture();
 
@@ -78,6 +78,8 @@ class CubeTexture {
             this.mipLevel = images.mip.length;
 
         }
+
+        cubeTextures.push(this);
     }
 
     destructor() {

@@ -5,16 +5,21 @@ export default {
     Env,
     Engine,
 
-    BasePerspectiveCamera,
-    BaseOrthographicCamera,
-
-    ArcRotateCamera,
-
+    Buffer,
+    BufferView,
+    ElementBufferView,
     Texture,
     CubeTexture,
 
+    Skybox,
+
+    BasePerspectiveCamera,
+    BaseOrthographicCamera,
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
+
+    // TODO: remove this on next major version
+    ArcRotateCamera,
 
     Light,
     DirectionalLight,
@@ -22,9 +27,11 @@ export default {
     AmbientLight,
     PointLight,
 
-    MeshBuilder,
     Mesh,
     LineMesh,
+
+    Geometry,
+    LineGeometry,
 
     Material,
     RawMaterial,
@@ -32,21 +39,15 @@ export default {
     PBRMaterial,
     PBREnviroment,
 
+    // TODO: remove this on next major version
     StandardMaterial,
 
-
-    Geometry,
-    LineGeometry,
-
-    Skybox,
+    MeshBuilder,
 
     Mat4,
     Mat3,
     Vec3,
     Vec4,
     Quat,
-    Ray,
-
-    ObjParser,
-    StlParser
+    Ray
 };

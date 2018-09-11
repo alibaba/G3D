@@ -6,7 +6,7 @@ class Texture {
 
     constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = false, repeat = true /*or clamp*/ }) {
 
-        const { gl } = GL;
+        const { gl, textures } = GL;
 
         const texture = this.glTexture = gl.createTexture();
 
@@ -56,6 +56,8 @@ class Texture {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
             }
         }
+
+        textures.push(this);
     }
 
     destructor() {
