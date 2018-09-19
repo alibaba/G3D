@@ -1,15 +1,5 @@
 let Node_ID = 1;
 
-@Lazy(
-    [
-        'position', 'position.x', 'position.y', 'position.z',
-        'rotation', 'rotation.x', 'rotation.y', 'rotation.z',
-        'scale', 'scale.x', 'scale.y', 'scale.z'
-    ],
-    [
-        'getMatrix'
-    ]
-)
 class Node {
 
     id = Node_ID++;
@@ -32,13 +22,26 @@ class Node {
     }
 
     getMatrix() {
-        const quat = Quat.create();
+
+        if (!this._quatValues) {
+            this._quatValues = new Float32Array(4);
+            this._positionValues = new Float32Array(3);
+            this._scaleValues = new Float32Array(3);
+            this._matrixValues = new Float32Array(16);
+        }
+
+        const quat = this._quatValues;
+        const position = this._positionValues;
+        const scale = this._scaleValues;
+        const matrix = this._matrixValues;
+
         Quat.fromEuler(quat, this.rotation.x, this.rotation.y, this.rotation.z);
-        const position = Vec3.fromValues(this.position.x, this.position.y, this.position.z);
-        const scale = Vec3.fromValues(this.scale.x, this.scale.y, this.scale.z);
-        const mat = Mat4.create();
-        Mat4.fromRotationTranslationScale(mat, quat, position, scale);
-        return mat;
+        Vec3.set(position, this.position.x, this.position.y, this.position.z);
+        Vec3.set(scale, this.scale.x, this.scale.y, this.scale.z);
+
+        Mat4.fromRotationTranslationScale(matrix, quat, position, scale);
+
+        return matrix;
     }
 
     transformCoordinate(x, y, z) {

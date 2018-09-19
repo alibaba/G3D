@@ -1,14 +1,3 @@
-
-@Lazy(
-    [
-        'ambientColor', 'ambientColor.r', 'ambientColor.g', 'ambientColor.b',
-        'diffuseColor', 'diffuseColor.r', 'diffuseColor.g', 'diffuseColor.b',
-        'specularColor', 'specularColor.r', 'specularColor.g', 'specularColor.b'
-    ],
-    [
-        'getAmbientColor', 'getDiffuseColor', 'getSpecularColor'
-    ]
-)
 class PhongMaterial extends Material {
 
     ambientColor = { r: 255, g: 255, b: 255 };
@@ -48,40 +37,55 @@ class PhongMaterial extends Material {
     }
 
     getAmbientColor() {
-        return new Float32Array([
-            this.ambientColor.r / 255,
-            this.ambientColor.g / 255,
-            this.ambientColor.b / 255
-        ]);
+
+        if (!this._ambientColorValues) {
+            this._ambientColorValues = new Float32Array(3);
+        }
+
+        const values = this._ambientColorValues;
+
+        values[0] = this.ambientColor.r / 255;
+        values[1] = this.ambientColor.g / 255;
+        values[2] = this.ambientColor.b / 255;
+
+        return values;
     }
 
     getDiffuseColor() {
-        return new Float32Array([
-            this.diffuseColor.r / 255,
-            this.diffuseColor.g / 255,
-            this.diffuseColor.b / 255
-        ]);
+
+        if (!this._diffuseColorValues) {
+            this._diffuseColorValues = new Float32Array(3);
+        }
+
+        const values = this._diffuseColorValues;
+
+        values[0] = this.diffuseColor.r / 255;
+        values[1] = this.diffuseColor.g / 255;
+        values[2] = this.diffuseColor.b / 255;
+
+        return values;
     }
 
     getSpecularColor() {
-        return new Float32Array([
-            this.specularColor.r / 255,
-            this.specularColor.g / 255,
-            this.specularColor.b / 255
-        ]);
+
+        if (!this._specularColorValues) {
+            this._specularColorValues = new Float32Array(3);
+        }
+
+        const values = this._specularColorValues;
+
+        values[0] = this.specularColor.r / 255;
+        values[1] = this.specularColor.g / 255;
+        values[2] = this.specularColor.b / 255;
+
+        return values;
+
     }
 
     getGlossiness() {
         return this.glossiness;
     }
 
-    getUseEnvMap() {
-        return this.useEnvMap;
-    }
-
-    getUseCubeMap() {
-        return this.useCubeMap;
-    }
 }
 
 export default PhongMaterial;

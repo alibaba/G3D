@@ -1,7 +1,3 @@
-@Lazy(
-    ['color', 'color.r', 'color.g', 'color.b'],
-    ['getColor']
-)
 class RawMaterial extends Material {
 
     color = { r: 255, g: 255, b: 255 };
@@ -20,7 +16,17 @@ class RawMaterial extends Material {
     }
 
     getColor() {
-        return Vec3.fromValues(this.color.r / 255, this.color.g / 255, this.color.b / 255);
+
+        if (!this._colorValues) {
+            this._colorValues = new Float32Array(3);
+        }
+
+        const values = this._colorValues;
+        values[0] = this.color.r / 255;
+        values[1] = this.color.g / 255;
+        values[2] = this.color.b / 255;
+
+        return values;
     }
 }
 
