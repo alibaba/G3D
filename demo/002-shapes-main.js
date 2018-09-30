@@ -47,11 +47,11 @@ function main(
     attachColor(cone, 230, 126, 34);
 
     function render() {
-        cube.rotation.y += 1;
-        sphere.rotation.y += 1;
-        cylinder.rotation.x += 0.9;
-        cylinder.rotation.y += 1.17;
-        cone.rotation.z += 1;
+        // cube.rotation.y += 1;
+        // sphere.rotation.y += 1;
+        // cylinder.rotation.x += 0.9;
+        // cylinder.rotation.y += 1.17;
+        // cone.rotation.z += 1;
         scene.render();
         requestAnimationFrame(render);
     }

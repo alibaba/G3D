@@ -7,6 +7,9 @@ import vShaderMaterialRaw from '../shaders/material-raw.vert.glsl';
 import fShaderMaterialPBR from '../shaders/material-pbr.frag.glsl';
 import vShaderMaterialPBR from '../shaders/material-pbr.vert.glsl';
 
+import fShaderMaterialGem from '../shaders/material-gem.frag.glsl';
+import vShaderMaterialGem from '../shaders/material-gem.vert.glsl';
+
 import fShaderPicker from '../shaders/picker.frag.glsl';
 import vShaderPicker from '../shaders/picker.vert.glsl';
 
@@ -15,8 +18,6 @@ import vShaderShadow from '../shaders/shadow.vert.glsl';
 
 import fShaderSkybox from '../shaders/skybox.frag.glsl';
 import vShaderSkybox from '../shaders/skybox.vert.glsl';
-
-
 
 class Engine {
 
@@ -82,6 +83,9 @@ class Engine {
                 new Program({
                     gl, fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR, extensions, precisions
                 }),
+            gem: new Program({
+                gl, fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem, extensions, precisions
+            }),
             picker: Env.framebufferNotReady ? null :
                 new Program({
                     gl, fShaderSource: fShaderPicker, vShaderSource: vShaderPicker, extensions, precisions
@@ -107,7 +111,8 @@ class Engine {
 
         gl.enable(gl.DEPTH_TEST);
 
-        // gl.enable(gl.CULL_FACE);
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }
@@ -166,12 +171,12 @@ class Engine {
         program.attribute(name, buffer, stride, offset);
     }
 
-    enableDepthMask() {
+    enableDepthTest() {
         const gl = this.gl;
         gl.depthMask(true);
     }
 
-    disableDepthMask() {
+    disableDepthTest() {
         const gl = this.gl;
         gl.depthMask(false);
     }
@@ -187,13 +192,13 @@ class Engine {
         gl.disable(gl.BLEND);
     }
 
-    createBuffer(value, target) {
-        const gl = this.gl;
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(target, buffer);
-        gl.bufferData(target, value, gl.STATIC_DRAW);
-        gl.bindBuffer(target, null);
-        return buffer;
+    cullFace(isBack = true) {
+        const { gl } = GL;
+        if (isBack) {
+            gl.cullFace(gl.BACK);
+        } else {
+            gl.cullFace(gl.FRONT);
+        }
     }
 
     bindFramebuffer(key) {

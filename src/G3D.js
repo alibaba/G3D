@@ -37,6 +37,7 @@ export default {
     RawMaterial,
     PhongMaterial,
     PBRMaterial,
+    GemMaterial,
     PBREnviroment,
 
     // TODO: remove this on next major version

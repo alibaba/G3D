@@ -1,4 +1,4 @@
-function createCone(scene, radius, height, segs = 16){
+function createCone(scene, radius, height, segs = 16) {
 
     const vertices = [];
     const uvs = [];
@@ -28,10 +28,11 @@ function createCone(scene, radius, height, segs = 16){
             normals.push(...n, ...n);
             uvs.push(...uv, ...uv);
             const base = iStart + i * 2;
+
             if (i !== segs - 1) {
-                indices.push(base, base + 1, base + 3);
+                indices.push(base + 1, base, base + 3);
             } else {
-                indices.push(base, base + 1, iStart + 1);
+                indices.push(base + 1, base, iStart + 1);
             }
         }
 

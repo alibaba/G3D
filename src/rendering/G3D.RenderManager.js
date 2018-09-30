@@ -152,6 +152,42 @@ class RenderManager {
 
                             this.drawMesh(mesh, key);
 
+                        } else if (material instanceof GemMaterial) {
+
+                            engine.useProgram(
+                                'gem',
+                                [...material.getDefines(), ...globalDefines]
+                            );
+
+                            this.prepareMVPMatrix(mesh);
+
+                            this.prepareGeometry(mesh.geometry);
+
+                            this.prepareGemMaterial(material);
+
+                            engine.uniform('uCullBack', [true]);
+                            
+                            engine.cullFace(false);
+
+                            engine.disableDepthTest();
+
+                            this.drawMesh(mesh, key);
+
+                            engine.uniform('uCullBack', [false]);
+                            
+                            engine.cullFace(true);
+
+                            engine.enableDepthTest();
+
+                            engine.enableBlend();
+
+                            GL.gl.blendFunc(GL.gl.ONE, GL.gl.ONE);
+
+                            this.drawMesh(mesh, key);
+
+
+
+
                         }
                     })
             })
@@ -245,7 +281,7 @@ class RenderManager {
         const { scene } = this;
         const engine = Engine.instance;
 
-        const { lights, activeCamera } = scene;
+        const { lights } = scene;
 
         const type = [];
         const color = [];
@@ -290,8 +326,6 @@ class RenderManager {
         engine.uniform('uLightColor', lightsData.color);
         engine.uniform('uLightIntensity', lightsData.intensity);
         engine.uniform('uLightPosition', lightsData.position);
-
-        engine.uniform('uCameraPosition', activeCamera.getPosition());
     }
 
     prepareGeometry = (geometry) => {
@@ -366,6 +400,9 @@ class RenderManager {
     preparePBRMaterial(material) {
 
         const engine = Engine.instance;
+        const { activeCamera } = this.scene;
+
+        engine.uniform('uCameraPosition', activeCamera.getPosition());
 
         engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
 
@@ -393,6 +430,21 @@ class RenderManager {
         engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.mipLevel]);
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.glTexture);
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.glTexture);
+
+
+    }
+
+    prepareGemMaterial(material) {
+
+        const engine = Engine.instance;
+
+        const { activeCamera } = this.scene;
+
+        engine.uniform('uCameraPos', activeCamera.getPosition());
+
+        engine.uniform('uRefractionMap', material.refractionCubeMap.glTexture);
+
+        engine.uniform('uEnvMap', material.envCubeMap.glTexture);
 
     }
 

@@ -4,7 +4,7 @@ class Texture {
 
     glTexture = null;
 
-    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = false, repeat = true /*or clamp*/ }) {
+    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = true, repeat = true /*or clamp*/ }) {
 
         const { gl, textures } = GL;
 
