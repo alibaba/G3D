@@ -111,9 +111,6 @@ class Engine {
 
         gl.enable(gl.DEPTH_TEST);
 
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK);
-
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }
 
@@ -192,12 +189,17 @@ class Engine {
         gl.disable(gl.BLEND);
     }
 
-    cullFace(isBack = true) {
-        const { gl } = GL;
-        if (isBack) {
-            gl.cullFace(gl.BACK);
+    cullFace(culled) {
+
+        const gl = this.gl;
+
+        if (!culled) {
+            gl.disable(gl.CULL_FACE);
         } else {
-            gl.cullFace(gl.FRONT);
+            gl.enable(gl.CULL_FACE);
+            if (gl[culled]) {
+                gl.cullFace(gl[culled]);
+            }
         }
     }
 

@@ -74,11 +74,10 @@ function loadAssets(envName, callback) {
         }, function (images) {
             callback(images);
         })
-
     }
 
     function loadBRDFLUT(callback) {
-        loader.loadImage('//img.alicdn.com/tfs/TB1yCjuoDtYBeNjy1XdXXXXyVXa-256-256.png', callback);
+        loader.loadImage('http://img.alicdn.com/tfs/TB1yCjuoDtYBeNjy1XdXXXXyVXa-256-256.png', callback);
     }
 }
 

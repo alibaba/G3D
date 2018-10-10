@@ -12,6 +12,9 @@ const canvas = document.getElementById('canvas');
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
+canvas.style.width = document.documentElement.clientWidth + 'px';
+canvas.style.height = document.documentElement.clientHeight + 'px';
+
 let stop = false;
 
 main(G3D, {

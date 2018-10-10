@@ -1,4 +1,5 @@
 function loadBlob(url, callback) {
+
   var xmlhttp = new XMLHttpRequest();
 
   xmlhttp.onreadystatechange = function () {

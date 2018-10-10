@@ -1,6 +1,6 @@
 import STLParser from './parser';
 
-function createFromStlModel(scene, model) {
+function createFromStlModel(scene, model, { geometry = {} } = {}) {
 
     model = STLParser.parse(model);
 
@@ -13,6 +13,7 @@ function createFromStlModel(scene, model) {
         indices: {
             default: model.indices
         },
+        ...geometry
     });
 
     return mesh;

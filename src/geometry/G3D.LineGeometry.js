@@ -2,6 +2,8 @@ class LineGeometry {
 
     bufferViews = {};
 
+    facing = Geometry.BOTH;
+
     constructor({ vertices, indices } = {}) {
 
         if (vertices) {

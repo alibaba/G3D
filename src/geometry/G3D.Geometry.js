@@ -1,8 +1,20 @@
 class Geometry {
 
+    static FRONT = 1;
+    static BACK = 2;
+    static BOTH = 3;
+
     bufferViews = {};
 
-    constructor({ vertices, normals, uvs, indices } = {}) {
+    facing = Geometry.FRONT;
+
+    constructor({ vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FRONT } = {}) {
+
+        if (mergeNormals && vertices && normals) {
+            normals = this.mergeNormals(vertices, normals);
+        }
+
+        this.facing = facing;
 
         if (vertices) {
 
@@ -19,7 +31,6 @@ class Geometry {
                     })
                 });
             }
-
         }
 
         if (normals) {
@@ -41,8 +52,6 @@ class Geometry {
         }
 
         if (uvs) {
-
-
 
             if (uvs instanceof BufferView || typeof uvs.length === 'number') {
 
@@ -111,10 +120,7 @@ class Geometry {
         }
     }
 
-    mergeNormals() {
-
-        const { vertices, normals } = this;
-        const unmergedNormals = [...normals];
+    mergeNormals(vertices, normals) {
 
         const hash = {};
 
@@ -144,11 +150,7 @@ class Geometry {
             }
         }
 
-        this.normals = normals;
-
-        return () => {
-            this.normals = unmergedNormals;
-        };
+        return normals;
     }
 }
 

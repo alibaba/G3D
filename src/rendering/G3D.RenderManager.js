@@ -96,6 +96,8 @@ class RenderManager {
 
             meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
 
+                this.setFaceCull(mesh.geometry.facing);
+
                 mesh.geometry.bufferViews.indices &&
                     Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
 
@@ -165,17 +167,23 @@ class RenderManager {
 
                             this.prepareGemMaterial(material);
 
-                            engine.uniform('uCullBack', [true]);
-                            
-                            engine.cullFace(false);
+                            // the first draw (back)
+
+                            this.setFaceCull(mesh.geometry.facing === Geometry.FRONT ? Geometry.BACK : Geometry.FRONT);
+
+                            engine.uniform('uCullBack', [false]);
 
                             engine.disableDepthTest();
 
+                            engine.disableBlend();
+
                             this.drawMesh(mesh, key);
 
-                            engine.uniform('uCullBack', [false]);
-                            
-                            engine.cullFace(true);
+                            // the second draw (front)
+
+                            this.setFaceCull(mesh.geometry.facing);
+
+                            engine.uniform('uCullBack', [true]);
 
                             engine.enableDepthTest();
 
@@ -185,9 +193,7 @@ class RenderManager {
 
                             this.drawMesh(mesh, key);
 
-
-
-
+                            engine.disableBlend();
                         }
                     })
             })
@@ -265,6 +271,13 @@ class RenderManager {
                 });
             })
         }
+    }
+
+    setFaceCull = (facing) => {
+
+        Engine.instance.cullFace(
+            facing === Geometry.FRONT ? 'BACK' : facing === Geometry.BACK ? 'FRONT' : false
+        );
     }
 
     prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
