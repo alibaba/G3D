@@ -13,6 +13,10 @@ uniform vec3 uCameraPos;
 uniform bool uCullBack;
 
 
+vec3 lighten(vec3 color, float f){
+    return (vec3(1.0) - (vec3(1.0) - color) * f);
+}
+
 vec3 frag1(){
     vec3 normal = normalize(vNormal);
     vec3 view = normalize(uCameraPos - vPosition);
@@ -26,6 +30,8 @@ vec3 frag1(){
     vec3 color = refractColor + reflectColor;
 
     color = pow(color, vec3(2.2));
+
+    
 
     return color;
 }
@@ -44,8 +50,13 @@ vec3 frag2(){
     vec3 envColor = textureCube(uEnvMap, reflectVector).rgb;
     vec3 reflectColor = textureCube(uEnvMap, reflectVector).rgb;
 
-    return refractColor;
+    refractColor = lighten(refractColor, 0.8);
+
+    vec3 color = refractColor;
+
+    return color;
 }
+
 
 
 void main() {

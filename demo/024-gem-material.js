@@ -9,8 +9,8 @@ import * as dat from 'dat.gui';
 
 const canvas = document.getElementById('canvas');
 
-canvas.width = document.documentElement.clientWidth;
-canvas.height = document.documentElement.clientHeight;
+canvas.width = document.documentElement.clientWidth * devicePixelRatio;
+canvas.height = document.documentElement.clientHeight * devicePixelRatio;
 
 canvas.style.width = document.documentElement.clientWidth + 'px';
 canvas.style.height = document.documentElement.clientHeight + 'px';

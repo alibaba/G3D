@@ -171,7 +171,7 @@ class RenderManager {
 
                             this.setFaceCull(mesh.geometry.facing === Geometry.FRONT ? Geometry.BACK : Geometry.FRONT);
 
-                            engine.uniform('uCullBack', [false]);
+                            engine.uniform('uCullBack', [true]);
 
                             engine.disableDepthTest();
 
@@ -183,7 +183,7 @@ class RenderManager {
 
                             this.setFaceCull(mesh.geometry.facing);
 
-                            engine.uniform('uCullBack', [true]);
+                            engine.uniform('uCullBack', [false]);
 
                             engine.enableDepthTest();
 
