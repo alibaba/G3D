@@ -1,3 +1,6 @@
+import Mesh from '../../../mesh/G3D.Mesh';
+import Geometry from '../../../geometry/G3D.Geometry';
+
 import STLParser from './parser';
 
 function createFromStlModel(scene, model, { geometry = {} } = {}) {

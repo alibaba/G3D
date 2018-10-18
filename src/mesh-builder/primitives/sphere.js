@@ -1,3 +1,9 @@
+import Mesh from '../../mesh/G3D.Mesh';
+import Geometry from '../../geometry/G3D.Geometry';
+
+import Vec3 from '../../math/G3D.Vec3';
+
+
 function createSphere(scene, radius, widthSeg = 16, heightSeg = 12) {
 
     const phiStart = 0;

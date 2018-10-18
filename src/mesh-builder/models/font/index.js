@@ -1,3 +1,11 @@
+import Mesh from '../../../mesh/G3D.Mesh';
+import LineMesh from '../../../mesh/G3D.LineMesh';
+import LineGeometry from '../../../geometry/G3D.LineGeometry';
+import Geometry from '../../../geometry/G3D.Geometry';
+
+
+
+
 import PathParser from './parser.js';
 
 function createLineFromPath(scene, path, resolution) {
@@ -28,7 +36,8 @@ function createMeshFromPath(scene, path, thickness, resolution) {
         uvs,
         indices: {
             default: indices
-        }
+        },
+        facing: Geometry.BOTH
     });
     
     return mesh;

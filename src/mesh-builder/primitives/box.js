@@ -1,3 +1,6 @@
+import Mesh from '../../mesh/G3D.Mesh';
+import Geometry from '../../geometry/G3D.Geometry';
+
 function createBox(scene, left, right, top, bottom, front, back) {
 
     const mesh = new Mesh(scene);

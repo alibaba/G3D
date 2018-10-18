@@ -1,3 +1,7 @@
+import Vec2 from '../../../math/G3D.Vec2';
+import Vec3 from '../../../math/G3D.Vec3';
+
+
 function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
 
     function QuadraticBezierP0(t, p) {

@@ -1,4 +1,5 @@
 // G3D_TEMPLATE_GENERATED
+
 import G3D from '../src/G3D';
 
 import main from './001-first-steps-main';

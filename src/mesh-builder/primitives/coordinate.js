@@ -1,3 +1,8 @@
+import Mesh from '../../mesh/G3D.Mesh';
+
+import LineMesh from '../../mesh/G3D.LineMesh';
+import LineGeometry from '../../geometry/G3D.LineGeometry';
+
 function createCoordinate(scene, size) {
 
     const mesh = new Mesh(scene);
@@ -34,7 +39,7 @@ function createCoordinate(scene, size) {
                 default: [0, 1]
             }
         })
-        zc.materials.default.color = {r: 0, g: 0, b: 256};
+        zc.materials.default.color = { r: 0, g: 0, b: 256 };
         zc.parent = mesh;
     }
 

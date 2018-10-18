@@ -1,5 +1,6 @@
 import * as Quat from './gl-matrix/quat';
 
+
 Quat.getEuler = function (out, q) {
 
     const [q3, q2, q1, q0] = q;

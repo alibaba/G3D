@@ -1,3 +1,6 @@
+import Mesh from '../../mesh/G3D.Mesh';
+import Geometry from '../../geometry/G3D.Geometry';
+
 function createCone(scene, radius, height, segs = 16) {
 
     const vertices = [];

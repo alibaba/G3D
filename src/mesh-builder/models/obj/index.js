@@ -1,3 +1,10 @@
+import Mesh from '../../../mesh/G3D.Mesh';
+import Geometry from '../../../geometry/G3D.Geometry';
+
+import PhongMaterial from '../../../material/G3D.PhongMaterial';
+import Texture from '../../../texture/G3D.Texture';
+import Env from '../../../core/G3D.Env';
+
 import OBJParser from './parser';
 
 function flatten(arr) {
@@ -87,7 +94,6 @@ function createFromObjModel(scene, model) {
     }
 
     const mesh = new Mesh(scene);
-    console.log(mesh);
 
     mesh.geometry = new Geometry({
         vertices,
@@ -96,15 +102,6 @@ function createFromObjModel(scene, model) {
         indices
     });
     mesh.materials = materials;
-
-    // console.log(mesh);
-
-    // Object.keys(mesh.geometry.indices).forEach(key => {
-    //     if (!mesh.geometry.indices[key]) {
-    //         delete mesh.geometry.indices[key];
-    //         delete mesh.materials[key];
-    //     }
-    // })
 
     return mesh;
 }

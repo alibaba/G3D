@@ -1,3 +1,8 @@
+import Mesh from '../../mesh/G3D.Mesh';
+import Geometry from '../../geometry/G3D.Geometry';
+
+
+
 function createPlane(scene, width, height = width) {
 
     const hWidth = width / 2;
