@@ -8,21 +8,22 @@ import Ray from '../math/G3D.Ray';
 
 class PerspectiveCamera extends BaseCamera {
 
-    fov = 60;
-    viewRatio = 1;
+    fov: number = 60;
+    viewRatio: number = 1;
 
-    near = 1;
-    far = 1000;
+    near: number = 1;
+    far: number = 1000;
 
     constructor() {
         super();
     }
 
-    getPMatrix() {
+    getPMatrix(): Float32Array {
         const { near, far, fov, viewRatio } = this;
         return Mat4.perspective(Mat4.create(), Tools.deg2rad(fov), viewRatio, near, far);
     }
 
+    // TODO: make it better
     getViewRay(x, y, flip = true) {
 
         if (flip) {

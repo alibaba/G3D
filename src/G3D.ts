@@ -14,7 +14,6 @@ import BaseOrthographicCamera from './camera/G3D.BaseOrthographicCamera';
 import BasePerspectiveCamera from './camera/G3D.BasePerspectiveCamera';
 import RotatePerspectiveCamera from './camera/G3D.RotatePerspectiveCamera';
 import RotateOrthographicCamera from './camera/G3D.RotateOrthographicCamera';
-import ArcRotateCamera from './camera/G3D.ArcRotateCamera';
 
 import Light from './light/G3D.Light';
 import AmbientLight from './light/G3D.AmbientLight';
@@ -33,7 +32,6 @@ import PhongMaterial from './material/G3D.PhongMaterial';
 import PBRMaterial from './material/G3D.PBRMaterial';
 import PBREnviroment from './material/G3D.PBREnviroment';
 import GemMaterial from './material/G3D.GemMaterial';
-import StandardMaterial from './material/G3D.StandardMaterial';
 import MeshBuilder from './mesh-builder/G3D.MeshBuilder';
 
 import Mat4 from './math/G3D.Mat4';
@@ -66,9 +64,6 @@ export default {
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
 
-    // TODO: remove this on next major version
-    ArcRotateCamera,
-
     Light,
     DirectionalLight,
     AmbientLight,
@@ -86,9 +81,6 @@ export default {
     PBRMaterial,
     GemMaterial,
     PBREnviroment,
-
-    // TODO: remove this on next major version
-    StandardMaterial,
 
     MeshBuilder,
 

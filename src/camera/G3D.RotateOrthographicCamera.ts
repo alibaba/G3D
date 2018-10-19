@@ -1,5 +1,3 @@
-import Engine from '../core/G3D.Engine';
-
 import BaseOrthographicCamera from './G3D.BaseOrthographicCamera';
 import Tools from '../math/G3D.Tools';
 

@@ -5,9 +5,9 @@ import Tools from '../math/G3D.Tools';
 
 class RotatePerspectiveCamera extends BasePerspectiveCamera {
 
-    radius = 0;
-    alpha = 0;
-    beta = 0;
+    radius = 100;
+    alpha = 45;
+    beta = 45;
 
     constructor(scene) {
         super();

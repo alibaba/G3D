@@ -34,7 +34,7 @@ class Mesh extends Node {
     }
 
     getGlobalVisibility() {
-        let mesh = this;
+        let mesh: any = this;
         while (mesh !== null) {
             if (!mesh.visibility) {
                 return false;
@@ -49,7 +49,7 @@ class Mesh extends Node {
     }
 
     getRenderLayerIndex() {
-        let mesh = this;
+        let mesh: any = this;
         while (mesh !== null) {
             if (mesh.renderLayerIndex !== 0) {
                 return mesh.renderLayerIndex;

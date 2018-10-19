@@ -1,20 +1,19 @@
 import BaseCamera from './G3D.BaseCamera';
-
 import Mat4 from '../math/G3D.Mat4';
 
 class BaseOrthographicCamera extends BaseCamera {
 
-    width = 10;
-    viewRatio = 1;
+    width: number = 10;
+    viewRatio: number = 1;
 
-    near = 1;
-    far = 1000;
+    near: number = 1;
+    far: number = 1000;
 
     constructor() {
         super();
     }
 
-    getPMatrix() {
+    getPMatrix(): Float32Array {
         const { width, viewRatio, near, far } = this;
         const height = width / viewRatio;
 

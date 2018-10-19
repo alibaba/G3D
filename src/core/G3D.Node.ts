@@ -3,25 +3,26 @@ import Quat from '../math/G3D.Quat';
 import Vec3 from '../math/G3D.Vec3';
 import Vec4 from '../math/G3D.Vec4';
 
+import IDirection from '../interfaces/G3D.IDirection';
 
 let Node_ID = 1;
 
 class Node {
 
-    id = Node_ID++;
-    position = { x: 0, y: 0, z: 0 };
-    rotation = { x: 0, y: 0, z: 0 };
-    scale = { x: 1, y: 1, z: 1 };
-    parent = null;
+    id: number = Node_ID++;
 
-    private _quatValues = null;
-    private _positionValues = null;
-    private _scaleValues = null;
-    private _matrixValues = null;
+    position: IDirection = { x: 0, y: 0, z: 0 };
+    rotation: IDirection = { x: 0, y: 0, z: 0 };
+    scale: IDirection = { x: 1, y: 1, z: 1 };
 
-    constructor() {
+    parent: Node = null;
 
-    }
+    private positionValues = null;
+    private quatValues = null;
+    private scaleValues = null;
+    private matrixValues = null;
+
+    constructor() {}
 
     getWorldMatrix() {
         if (this.parent) {
@@ -34,17 +35,17 @@ class Node {
 
     getMatrix() {
 
-        if (!this._quatValues) {
-            this._quatValues = new Float32Array(4);
-            this._positionValues = new Float32Array(3);
-            this._scaleValues = new Float32Array(3);
-            this._matrixValues = new Float32Array(16);
+        if (!this.quatValues) {
+            this.quatValues = new Float32Array(4);
+            this.positionValues = new Float32Array(3);
+            this.scaleValues = new Float32Array(3);
+            this.matrixValues = new Float32Array(16);
         }
 
-        const quat = this._quatValues;
-        const position = this._positionValues;
-        const scale = this._scaleValues;
-        const matrix = this._matrixValues;
+        const quat = this.quatValues;
+        const position = this.positionValues;
+        const scale = this.scaleValues;
+        const matrix = this.matrixValues;
 
         Quat.fromEuler(quat, this.rotation.x, this.rotation.y, this.rotation.z);
         Vec3.set(position, this.position.x, this.position.y, this.position.z);
