@@ -2,6 +2,26 @@ import Buffer from '../core/G3D.Buffer';
 import BufferView from '../core/G3D.BufferView';
 import ElementBufferView from '../core/G3D.ElementBufferView';
 
+
+// bufferview or array of numbers
+type DataType = BufferView | number[];
+type IndiceDataType = ElementBufferView | number[];
+
+interface IGeometryConfig {
+    vertices?: DataType;
+    normals?: DataType;
+    uvs?: DataType | {
+        [propName: string]: DataType
+    };
+    indices?: {
+        [propName: string]: IndiceDataType
+    };
+    mergeNormals?: boolean;
+    facing?: number;
+}
+
+
+
 class Geometry {
 
     static FRONT = 1;
@@ -13,7 +33,7 @@ class Geometry {
     facing = Geometry.FRONT;
 
     constructor(
-        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FRONT }: any = {}
+        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FRONT }: IGeometryConfig = {}
     ) {
 
         if (mergeNormals && vertices && normals) {
@@ -63,13 +83,13 @@ class Geometry {
 
                 if (uvs instanceof BufferView) {
 
-                    this.bufferViews.uvs = uvs;
+                    this.bufferViews.uvs = uvs as BufferView;
 
                 } else {
 
                     this.bufferViews.uvs = new BufferView({
                         buffer: new Buffer({
-                            data: new Float32Array(uvs),
+                            data: new Float32Array(uvs as number[]),
                             target: 'ARRAY_BUFFER'
                         })
                     })
@@ -77,6 +97,7 @@ class Geometry {
                 }
 
             } else {
+
                 this.bufferViews.uvs = {};
 
                 Object.keys(uvs).forEach(key => {
@@ -110,13 +131,14 @@ class Geometry {
                     this.bufferViews.indices[key] = indices[key];
 
                 } else {
+
                     this.bufferViews.indices[key] = new ElementBufferView({
                         buffer: new Buffer({
-                            data: new Uint32Array(indices[key]),
+                            data: new Uint32Array(indices[key] as number[]),
                             target: 'ELEMENT_ARRAY_BUFFER'
                         }),
                         mode: 'TRIANGLES',
-                        count: indices[key].length,
+                        count: (indices[key] as number[]).length,
                         type: 'UNSIGNED_INT',
                         offset: 0
                     });

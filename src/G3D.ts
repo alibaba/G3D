@@ -41,9 +41,6 @@ import Vec3 from './math/G3D.Vec3';
 import Quat from './math/G3D.Quat';
 import Ray from './math/G3D.Ray';
 
-import a from './shaders/material-gem.frag.glsl';
-console.log(a);
-
 export default {
 
     Scene,
