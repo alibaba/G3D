@@ -6,7 +6,6 @@ export type IMat3 = Float32Array;
 
 const EPSILON = 0.000001;
 
-
 // Creates a new identity mat3
 export function create(): IMat3 {
     let out = new Float32Array(9);
