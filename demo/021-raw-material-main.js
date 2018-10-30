@@ -17,7 +17,7 @@ function main(
 
         controlArcRotateCamera(canvas, camera);
 
-        const m1 = G3D.MeshBuilder.createGround(scene, 6, 6);
+        const m1 = G3D.MeshBuilder.createPlane(scene, 6, 6);
         m1.materials.default = new G3D.RawMaterial(m1);
         m1.materials.default.color = {r: 100, g: 200, b: 100};
         m1.position.x = 5;
@@ -25,7 +25,7 @@ function main(
 
         const texture = new G3D.Texture({ image });
 
-        const m2 = G3D.MeshBuilder.createGround(scene, 6);
+        const m2 = G3D.MeshBuilder.createPlane(scene, 6);
         m2.materials.default = new G3D.RawMaterial();
         m2.materials.default.texture = texture;
         m2.position.x = -5;

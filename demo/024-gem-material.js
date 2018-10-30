@@ -5,46 +5,18 @@ import main from './024-gem-material-main';
 import loader from './lib/loader';
 import pbrAssets from './lib/pbr-assets';
 import { controlArcRotateCamera } from './lib/attach-control';
-import * as dat from 'dat.gui';
 
 const canvas = document.getElementById('canvas');
-
 canvas.width = document.documentElement.clientWidth * devicePixelRatio;
 canvas.height = document.documentElement.clientHeight * devicePixelRatio;
 
-canvas.style.width = document.documentElement.clientWidth + 'px';
-canvas.style.height = document.documentElement.clientHeight + 'px';
-
-let stop = false;
-
 main(G3D, {
     canvas,
-    requestAnimationFrame: function (f) {
-        requestAnimationFrame(() => {
-            if (!stop) {
-                f();
-            }
-        });
-    },
+    requestAnimationFrame,
     controlArcRotateCamera,
     pbrAssets,
     loader,
     onClickCanvas: function (callback) {
         canvas.addEventListener('click', callback)
     },
-});
-
-
-// GUI Control
-const data = {
-    destroy: () => {
-        if (G3D.Engine.instance) {
-            stop = true;
-            G3D.Engine.instance.destroy();
-        }
-    }
-}
-var gui = new dat.GUI();
-Object.keys(data).forEach((key) => {
-    gui.add(data, key);
 });

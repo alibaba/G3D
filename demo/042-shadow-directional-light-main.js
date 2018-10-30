@@ -22,7 +22,7 @@ function main(
 
     light.castShadow = true;
 
-    const m = G3D.MeshBuilder.createGround(scene, 6, 4);
+    const m = G3D.MeshBuilder.createPlane(scene, 6, 4);
     m.position.z = -3;
     decorateMaterial(m.materials.default, 200, 100, 100);
 

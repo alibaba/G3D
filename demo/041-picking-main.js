@@ -21,7 +21,7 @@ function main(
     const light2 = new G3D.AmbientLight(scene);
     light2.intensity = 0.5;
 
-    const m1 = G3D.MeshBuilder.createGround(scene, 3, 3);
+    const m1 = G3D.MeshBuilder.createPlane(scene, 3, 3);
     m1.position.z = -2;
 
     const m2 = G3D.MeshBuilder.createSphere(scene, 1.2, 128, 128);

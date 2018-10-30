@@ -45,7 +45,7 @@ function main(
     m3.position.z = 1;
     m3.position.x = -3;
 
-    const ground = G3D.MeshBuilder.createGround(scene, 12, 8);
+    const ground = G3D.MeshBuilder.createPlane(scene, 12, 8);
 
     function render() {
 

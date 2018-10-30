@@ -26,7 +26,7 @@ function main(
     const light3 = new G3D.AmbientLight(scene);
     light3.intensity = 0.2;
 
-    const m1 = G3D.MeshBuilder.createGround(scene, 6, 4);
+    const m1 = G3D.MeshBuilder.createPlane(scene, 6, 4);
     m1.position.z = -1;
     decorateMaterial(m1.materials.default, 100, 200, 100);
 

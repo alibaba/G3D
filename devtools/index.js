@@ -17,14 +17,20 @@ const tasks = dalaran.libraryTasks({
     testEntryPattern: 'test/**/*.spec.js',
     liveReload: true,
     typescript: true,
-    htmlTemplate: './demo/template/html.handlebars',
-    jsTemplate: './demo/template/js.handlebars'
+    htmlTemplate: path.join(__dirname, './template/html.handlebars'),
+    jsTemplate: path.join(__dirname, './template/js.handlebars')
 });
 
 const taskName = process.argv[2];
 
 switch (taskName) {
 
+    case 'new':
+        tasks.add();
+        break;
+    case 'test':
+        tasks.test();
+        break;
     case 'build':
         tasks.build();
         break;
