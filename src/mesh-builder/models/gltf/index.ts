@@ -28,7 +28,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
     });
 
-
     const gTextureCache = [];
     const gTextureCreators = gltf.textures.map((tex, i) => {
 
@@ -41,9 +40,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
             return gTextureCache[i];
         };
     });
-
-
-
 
     const gMaterials = gltf.materials.map(mtl => {
 
@@ -156,7 +152,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                     buffer: gBuffers[accessor.bufferView],
                     stride: accessor.byteStride || 0,
                     offset: accessor.byteOffset || 0,
-                    count: accessor.count
                 });
 
             }

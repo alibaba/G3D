@@ -1,23 +1,22 @@
 import BaseCamera from './G3D.BaseCamera';
-import Mat4 from '../math/G3D.Mat4';
+import Mat4, { IMat4 } from '../math/G3D.Mat4';
 
 class BaseOrthographicCamera extends BaseCamera {
 
     width: number = 10;
     viewRatio: number = 1;
-
     near: number = 1;
     far: number = 1000;
 
-    constructor() {
-        super();
-    }
+    private projectMatrixValues: IMat4 = Mat4.create();
 
-    getPMatrix(): Float32Array {
-        const { width, viewRatio, near, far } = this;
-        const height = width / viewRatio;
+    getPMatrix(): IMat4 {
+        const { width } = this;
+        const height = width / this.viewRatio;
 
-        return Mat4.ortho(Mat4.create(), -width / 2, width / 2, -height / 2, height / 2, near, far);
+        Mat4.ortho(this.projectMatrixValues, -width / 2, width / 2, -height / 2, height / 2, this.near, this.far);
+
+        return this.projectMatrixValues;
     }
 }
 

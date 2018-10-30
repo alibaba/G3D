@@ -1,6 +1,7 @@
 import Node from '../core/G3D.Node';
-import Mat4 from '../math/G3D.Mat4';
-import Vec3 from '../math/G3D.Vec3';
+
+import Mat4, { IMat4 } from '../math/G3D.Mat4';
+import Vec3, { IVec3 } from '../math/G3D.Vec3';
 
 import IPosition from '../interfaces/G3D.IPosition';
 import IDirection from '../interfaces/G3D.IDirection';
@@ -11,26 +12,23 @@ class BaseCamera extends Node {
 
     up: IDirection = { x: 0, y: 1, z: 0 };
 
-    constructor() {
-        super();
+    private cameraPositionValues: IVec3 = Vec3.create();
+    private centerValues: IVec3 = Vec3.create();
+    private upValues: IVec3 = Vec3.create();
+    private viewMatrixValues: IMat4 = Mat4.create();
+
+    getVMatrix(): IMat4 {
+        Vec3.set(this.cameraPositionValues, this.position.x, this.position.y, this.position.z);
+        Vec3.set(this.centerValues, this.center.x, this.center.y, this.center.z);
+        Vec3.set(this.upValues, this.up.x, this.up.y, this.up.z);
+        Mat4.lookAt(this.viewMatrixValues, this.cameraPositionValues, this.centerValues, this.upValues);
+
+        return this.viewMatrixValues;
     }
 
-    // TODO: make it better
-    getVMatrix(): Float32Array {
-
-        const matrix = Mat4.create();
-
-        const center = Vec3.fromValues(this.center.x, this.center.y, this.center.z);
-        const up = Vec3.fromValues(this.up.x, this.up.y, this.up.z);
-        const position = Vec3.fromValues(this.position.x, this.position.y, this.position.z);
-
-        Mat4.lookAt(matrix, position, center, up);
-        Mat4.invert(matrix, matrix);
-
-        const vMatrix = Mat4.create();
-        Mat4.invert(vMatrix, matrix);
-
-        return vMatrix;
+    // TODO: calc position in shader
+    getPosition() {
+        return [this.position.x, this.position.y, this.position.z];
     }
 }
 

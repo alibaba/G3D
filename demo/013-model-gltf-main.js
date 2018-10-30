@@ -91,7 +91,7 @@ function main(
 
         function render() {
 
-            // meshes.forEach(m => m.rotation.y += 0.1);
+            meshes.forEach(m => m.rotation.y += 0.1);
 
             scene.render();
             requestAnimationFrame(render);

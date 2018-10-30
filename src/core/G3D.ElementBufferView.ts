@@ -1,26 +1,35 @@
 import GL from './G3D.GL';
 
+import Buffer from './G3D.Buffer';
+
+interface IElementBufferView {
+    buffer: Buffer;
+    mode?: string | number;
+    count?: number;
+    type?: string | number;
+    offset?: number;
+}
+
 class ElementBufferView {
 
-    buffer = null;
+    buffer: Buffer;
+    mode: number;
+    count: number;
+    type: number;
+    offset: number;
 
-    mode = null;
-    count = null;
-    type = null;
-    offset = null;
-
-    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', offset = 0 }) {
+    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', offset = 0 }: IElementBufferView) {
 
         const { gl } = GL;
 
         this.buffer = buffer;
 
         if (typeof mode === 'string') {
-            mode = gl[mode];
+            mode = gl[mode] as number;
         }
 
         if (typeof type === 'string') {
-            type = gl[type];
+            type = gl[type] as number;
         }
 
         this.mode = mode;

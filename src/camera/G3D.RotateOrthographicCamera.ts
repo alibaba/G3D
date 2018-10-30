@@ -1,13 +1,19 @@
 import BaseOrthographicCamera from './G3D.BaseOrthographicCamera';
-import Tools from '../math/G3D.Tools';
+import { IMat4 } from '../math/G3D.Mat4';
+import Scene from '../scene/G3D.Scene';
+
+import { deg2rad } from '../utils/deg-rad';
+
+
 
 class RotateOrthographicCamera extends BaseOrthographicCamera {
 
-    radius = 0;
-    alpha = 0;
-    beta = 0;
+    radius: number = 100;
+    alpha: number = 45;
+    beta: number = 45;
 
-    constructor(scene) {
+    constructor(scene: Scene) {
+
         super();
 
         const { width, height } = scene.engine;
@@ -16,12 +22,12 @@ class RotateOrthographicCamera extends BaseOrthographicCamera {
         scene.activeCamera = this;
     }
 
-    getVMatrix() {
+    getVMatrix(): IMat4 {
 
-        const r2 = Math.cos(Tools.deg2rad(this.beta)) * this.radius;
-        const y = Math.sin(Tools.deg2rad(this.beta)) * this.radius;
-        const x = Math.sin(Tools.deg2rad(this.alpha)) * r2;
-        const z = Math.cos(Tools.deg2rad(this.alpha)) * r2;
+        const r2 = Math.cos(deg2rad(this.beta)) * this.radius;
+        const y = Math.sin(deg2rad(this.beta)) * this.radius;
+        const x = Math.sin(deg2rad(this.alpha)) * r2;
+        const z = Math.cos(deg2rad(this.alpha)) * r2;
 
         const center = this.center;
         this.position.x = center.x + x;
@@ -31,6 +37,7 @@ class RotateOrthographicCamera extends BaseOrthographicCamera {
         return super.getVMatrix();
     }
 
+    // TODO: add view ray for ortho camera
     getViewRay(x, y, flip) {
         // const { width, height } = Engine.instance;
         // return super.getViewRay(x / width, y / height, flip);

@@ -1,30 +1,32 @@
 import BasePerspectiveCamera from './G3D.BasePerspectiveCamera';
-import Engine from '../core/G3D.Engine';
 
-import Tools from '../math/G3D.Tools';
+import GL from '../core/G3D.GL';
+import Scene from '../scene/G3D.Scene';
+import { deg2rad } from '../utils/deg-rad';
+import { IMat4 } from '../math/G3D.Mat4';
 
 class RotatePerspectiveCamera extends BasePerspectiveCamera {
 
-    radius = 100;
-    alpha = 45;
-    beta = 45;
+    radius: number = 100;
+    alpha: number = 45;
+    beta: number = 45;
 
-    constructor(scene) {
+    constructor(scene: Scene) {
+
         super();
 
-        const { width, height } = Engine.instance;
-
+        const { width, height } = GL;
         this.viewRatio = width / height;
 
         scene.activeCamera = this;
     }
 
-    getVMatrix() {
+    getVMatrix(): IMat4 {
 
-        const r2 = Math.cos(Tools.deg2rad(this.beta)) * this.radius;
-        const y = Math.sin(Tools.deg2rad(this.beta)) * this.radius;
-        const x = Math.sin(Tools.deg2rad(this.alpha)) * r2;
-        const z = Math.cos(Tools.deg2rad(this.alpha)) * r2;
+        const r2 = Math.cos(deg2rad(this.beta)) * this.radius;
+        const y = Math.sin(deg2rad(this.beta)) * this.radius;
+        const x = Math.sin(deg2rad(this.alpha)) * r2;
+        const z = Math.cos(deg2rad(this.alpha)) * r2;
 
         const center = this.center;
         this.position.x = center.x + x;
@@ -34,8 +36,11 @@ class RotatePerspectiveCamera extends BasePerspectiveCamera {
         return super.getVMatrix();
     }
 
+
     getViewRay(x, y, flip) {
-        const { width, height } = Engine.instance;
+
+        const { width, height } = GL;
+
         return super.getViewRay(x / width, y / height, flip);
     }
 }

@@ -20,8 +20,6 @@ interface IGeometryConfig {
     facing?: number;
 }
 
-
-
 class Geometry {
 
     static FRONT = 1;

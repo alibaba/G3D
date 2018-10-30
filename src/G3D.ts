@@ -39,7 +39,6 @@ import Mat3 from './math/G3D.Mat3';
 import Vec4 from './math/G3D.Vec4';
 import Vec3 from './math/G3D.Vec3';
 import Quat from './math/G3D.Quat';
-import Ray from './math/G3D.Ray';
 
 export default {
 
@@ -86,5 +85,4 @@ export default {
     Vec4,
     Vec3,
     Quat,
-    Ray
 };

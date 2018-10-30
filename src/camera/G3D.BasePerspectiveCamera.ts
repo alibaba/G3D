@@ -1,26 +1,24 @@
 import BaseCamera from './G3D.BaseCamera';
 
-import Mat4 from '../math/G3D.Mat4';
+import Mat4, { IMat4 } from '../math/G3D.Mat4';
 import Vec3 from '../math/G3D.Vec3';
 
-import Tools from '../math/G3D.Tools';
-import Ray from '../math/G3D.Ray';
+import { deg2rad } from '../utils/deg-rad';
+
+import ViewRay from './G3D.ViewRay';
 
 class PerspectiveCamera extends BaseCamera {
 
-    fov: number = 60;
+    fov: number = 60;           // in degrees
     viewRatio: number = 1;
-
     near: number = 1;
     far: number = 1000;
 
-    constructor() {
-        super();
-    }
+    private projectMatrixValues: IMat4 = Mat4.create();
 
-    getPMatrix(): Float32Array {
-        const { near, far, fov, viewRatio } = this;
-        return Mat4.perspective(Mat4.create(), Tools.deg2rad(fov), viewRatio, near, far);
+    getPMatrix(): IMat4 {
+        Mat4.perspective(this.projectMatrixValues, deg2rad(this.fov), this.viewRatio, this.near, this.far);
+        return this.projectMatrixValues;
     }
 
     // TODO: make it better
@@ -42,7 +40,7 @@ class PerspectiveCamera extends BaseCamera {
 
         const direction = Vec3.sub(Vec3.create(), p2, Vec3.fromValues(this.position.x, this.position.y, this.position.z));
 
-        const ray = new Ray();
+        const ray = new ViewRay();
         ray.origin.x = this.position.x;
         ray.origin.y = this.position.y;
         ray.origin.z = this.position.z;

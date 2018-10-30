@@ -1,25 +1,34 @@
 import GL from './G3D.GL';
+import Buffer from './G3D.Buffer';
+
+interface IDefinedProgram {
+    fShaderSource: string;
+    vShaderSource: string;
+}
 
 class DefinedProgram {
 
-    program = null;
-    uniforms = {};
-    attributes = {};
-    textureCount = 0;
+    program;
+    uniforms;
+    attributes;
 
-    fShaderSource = '';
-    vShaderSource = '';
+    textureCount: number = 0;
 
-    constructor({ fShaderSource, vShaderSource }) {
+    fShaderSource: string;
+    vShaderSource: string;
+
+    constructor({ fShaderSource, vShaderSource }: IDefinedProgram) {
 
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
+
         this.initProgram();
     }
 
-    initProgram() {
+    private initProgram(): void {
 
         const { gl } = GL;
+
         const fShaderSource = this.fShaderSource;
         const vShaderSource = this.vShaderSource;
 
@@ -105,14 +114,14 @@ class DefinedProgram {
         this.uniforms = uniforms;
     }
 
-    destructor() {
+    destructor(): void {
 
         const { gl } = GL;
 
         gl.deleteProgram(this.program);
     }
 
-    parseType(type) {
+    private parseType(type) {
         const baseType = type.split('_')[0];
         const vecType = type.split('_').length > 1 ? type.split('_')[1] : 'VEC1';
         const baseVecType = vecType.substr(0, 3);
@@ -120,7 +129,7 @@ class DefinedProgram {
         return { baseType, vecType, baseVecType, vecSize };
     }
 
-    uniform(name, value) {
+    uniform(name: string, value): void {
         if (this.uniforms[name]) {
 
             const { gl } = GL;
@@ -165,7 +174,7 @@ class DefinedProgram {
         }
     }
 
-    attribute(name, buffer, stride, offset) {
+    attribute(name: string, buffer: Buffer, stride: number, offset: number): void {
         if (this.attributes[name]) {
             const { gl } = GL;
             const { type, info, position } = this.attributes[name];
@@ -174,35 +183,45 @@ class DefinedProgram {
             gl.vertexAttribPointer(position, vecSize, gl[baseType], false, stride, offset);
             gl.enableVertexAttribArray(position);
         } else {
+            // TODO: restore it?
             // console.log(`[Warning] Attribute ${name} not exits.`, this);
         }
     }
 }
 
 
+
+interface IProgram {
+    fShaderSource: string;
+    vShaderSource: string;
+}
+
 class Program {
 
-    fShaderSource = null;
-    vShaderSource = null;
-    extensions = [];
-    precisions = [];
-    definedPrograms = {};
+    fShaderSource: string;
+    vShaderSource: string;
 
-    constructor({ fShaderSource, vShaderSource, extensions, precisions }) {
+    extensions: string[] = [];
+    precisions: string[] = [];
+
+    definedPrograms: { [prop: string]: DefinedProgram } = {};
+
+    constructor({ fShaderSource, vShaderSource }: IProgram) {
 
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
 
-        Object.keys(extensions).forEach(key => {
-            if (extensions[key] !== null) {
+        for (let key in GL.extensions) {
+            if (GL.extensions[key] !== null) {
                 this.extensions.push(`EXT_${key}`);
             }
-        });
+        }
 
-        this.precisions.push(`PRECISION_FLOAT_${precisions.float.toUpperCase()}`);
+        this.precisions.push(`PRECISION_FLOAT_${GL.precisions.float.toUpperCase()}`);
     }
 
-    define(defines) {
+
+    define(defines: string[]): DefinedProgram {
 
         defines = defines.sort();
 
@@ -216,18 +235,15 @@ class Program {
                 vShaderSource: definesString + this.vShaderSource,
                 fShaderSource: definesString + this.fShaderSource
             });
-
         }
 
         return this.definedPrograms[definesKey];
     }
 
-    destructor() {
-
-        Object.keys(this.definedPrograms).forEach(key => {
+    destructor(): void {
+        for (let key in this.definedPrograms) {
             this.definedPrograms[key].destructor();
-        });
-
+        }
     }
 }
 

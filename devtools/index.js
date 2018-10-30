@@ -11,7 +11,7 @@ const tasks = dalaran.libraryTasks({
         test: /\.glsl$/,
         use: [
             'raw-loader',
-            // path.join(__dirname, './glsl-loader.js')
+            path.join(__dirname, './glsl-loader.js')
         ]
     }],
     devCors: true,

@@ -1,10 +1,15 @@
 import GL from './G3D.GL';
 
+interface IBuffer {
+    data: Float32Array | Uint32Array,
+    target: string | number
+}
+
 class Buffer {
 
-    glBuffer = null;
+    glBuffer;
 
-    constructor({ data, target }: any = {}) {
+    constructor({ data, target }: IBuffer) {
 
         const { gl, buffers } = GL;
 
@@ -21,7 +26,7 @@ class Buffer {
         buffers.push(this);
     }
 
-    destructor() {
+    destructor(): void {
 
         const { gl } = GL;
 

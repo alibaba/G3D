@@ -12,6 +12,7 @@
     "raw-loader": "^0.5.1"
   },
   "scripts": {
+    "dev": "node ./devtools/index.js",
     "prepublishOnly": "gulp library-build",
     "website": "mkdir ../_g3d_build_ && mv ./website/homepage ../_g3d_build_/homepage && mv ./website/playground ../_g3d_build_/playground && git co gh-pages && rm -rf ./* && mv ../_g3d_build_/homepage/* ./ && mv ../_g3d_build_/playground ./playground && rm -rf ./_g3d_build_"
   },

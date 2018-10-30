@@ -7,8 +7,6 @@ function loader(source) {
 
     const load = (source, resourcePath, cb) => {
 
-        console.log(source);
-
         const lines = source.split('\n');
 
         let count = 0;

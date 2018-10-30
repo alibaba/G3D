@@ -42,10 +42,6 @@ class Framebuffer {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-        // Object.assign(this, {
-        //     framebuffer, colorTarget, depthTarget
-        // });
-
         this.framebuffer = framebuffer;
         this.colorTarget = colorTarget;
         this.depthTarget = depthTarget;

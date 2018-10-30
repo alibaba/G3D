@@ -26,12 +26,17 @@ import * as vShaderSkybox from '../shaders/skybox.vert.glsl';
 
 class Engine {
 
-    width = 0;
-    height = 0;
+    width: number = 0;
+    height: number = 0;
+
     currentProgram: any = {};
-    programs = {};
-    framebuffers = {};
+
+    programs: { [prop: string]: Program } = {};
+
+    framebuffers: { [prop: string]: Framebuffer } = {};
+
     extensions: any = {};
+
     precisions: any = {};
 
     gl = null;
@@ -40,11 +45,10 @@ class Engine {
 
     constructor(canvas) {
 
+        // TODO : remove this.gl and Engine.instance
         if (Engine.instance) {
             throw new Error('Only 1 Engine instance is allowed.');
         }
-
-        // TODO : remove
         Engine.instance = this;
 
         const gl = GL.gl = canvas.getContext('webgl', {
@@ -52,61 +56,67 @@ class Engine {
             preserveDrawingBuffer: true
         });
 
-        // TODO : remove
         this.gl = gl;
 
-        this.width = canvas.width;
-        this.height = canvas.height;
+        GL.width = this.width = canvas.width as number;
+        GL.height = this.height = canvas.height as number;
 
-        const extensions = GL.extensions = this.extensions;
+        // extensions
+        {
+            const extensions = GL.extensions = this.extensions;
 
-        extensions.TEX_LOD = gl.getExtension('EXT_shader_texture_lod');
+            extensions.TEX_LOD = gl.getExtension('EXT_shader_texture_lod');
 
-        // TODO : check support
-        gl.getExtension('OES_standard_derivatives');
-        gl.getExtension('OES_element_index_uint');
+            // TODO : check support
+            gl.getExtension('OES_standard_derivatives');
+            gl.getExtension('OES_element_index_uint');
 
-        gl.getExtension('OES_texture_float');
-        gl.getExtension('OES_texture_float_linear');
+            gl.getExtension('OES_texture_float');
+            gl.getExtension('OES_texture_float_linear');
 
-        extensions.SRGB = gl.getExtension('EXT_SRGB');
+            extensions.SRGB = gl.getExtension('EXT_SRGB');
+        }
 
-        const precisions = this.precisions;
-
+        // precisions
         {
             const high = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision !== 0;
             const medium = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT).precision !== 0;
-            precisions.float = high ? 'mediump' : medium ? 'mediump' : 'lowp';
+
+            GL.precisions = {
+                float: high ? 'mediump' : medium ? 'mediump' : 'lowp'
+            };
         }
 
+        // programs
         this.programs = {
             phong: new Program({
-                fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong, extensions, precisions
+                fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong,
             }),
             raw: new Program({
-                fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw, extensions, precisions
+                fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw,
             }),
             pbr: Env.pbrNotReady ? null :
                 new Program({
-                    fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR, extensions, precisions
+                    fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR,
                 }),
             gem: new Program({
-                fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem, extensions, precisions
+                fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem,
             }),
             picker: Env.framebufferNotReady ? null :
                 new Program({
-                    fShaderSource: fShaderPicker, vShaderSource: vShaderPicker, extensions, precisions
+                    fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
                 }),
             shadow: Env.framebufferNotReady ? null :
                 new Program({
-                    fShaderSource: fShaderShadow, vShaderSource: vShaderShadow, extensions, precisions
+                    fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
                 }),
             skybox: Env.framebufferNotReady ? null :
                 new Program({
-                    fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox, extensions, precisions
+                    fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
                 })
         }
 
+        // framebuffers
         this.framebuffers = {
             picker: Env.framebufferNotReady ? null :
                 new Framebuffer({ width: this.width, height: this.height }),
@@ -114,11 +124,13 @@ class Engine {
                 new Framebuffer({ width: 1024, height: 1024 })
         }
 
-        gl.viewport(0, 0, this.width, this.height);
+        // initialize
+        {
+            gl.viewport(0, 0, this.width, this.height);
+            gl.enable(gl.DEPTH_TEST);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        }
 
-        gl.enable(gl.DEPTH_TEST);
-
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }
 
     destroy() {
@@ -151,7 +163,7 @@ class Engine {
         gl.clear(gl.DEPTH_BUFFER_BIT);
     }
 
-    useProgram(key, defines = []) {
+    useProgram(key, defines: string[] = []) {
 
         this.currentProgram = { key, defines };
 

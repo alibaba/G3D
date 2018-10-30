@@ -29,15 +29,9 @@ function main(
     const coord = G3D.MeshBuilder.createCoordinate(scene, 20);
 
     function decMaterial(mesh) {
-        mesh.materials.default.ambientColor.r = 200;
-        mesh.materials.default.ambientColor.g = 100;
-        mesh.materials.default.ambientColor.b = 100;
-        mesh.materials.default.diffuseColor.r = 200;
-        mesh.materials.default.diffuseColor.g = 100;
-        mesh.materials.default.diffuseColor.b = 100;
-        mesh.materials.default.specularColor.r = 200;
-        mesh.materials.default.specularColor.g = 100;
-        mesh.materials.default.specularColor.b = 100;
+        mesh.materials.default.ambientColor = { r: 200, g: 100, b: 100 };
+        mesh.materials.default.diffuseColor = { r: 200, g: 100, b: 100 };
+        mesh.materials.default.specularColor = { r: 200, g: 100, b: 100 };
         mesh.materials.default.phongFactor = 0.5;
     }
 
@@ -47,31 +41,9 @@ function main(
     }
     render();
 
-    const toggleMesh = (mesh) => {
-        if (mesh.materials.default.diffuseColor.g === 100) {
-            mesh.materials.default.diffuseColor.g = 200;
-            mesh.materials.default.specularColor.g = 200;
-            mesh.materials.default.ambientColor.g = 200;
-        } else {
-            mesh.materials.default.diffuseColor.g = 100;
-            mesh.materials.default.specularColor.g = 100;
-            mesh.materials.default.ambientColor.g = 100;
-        }
-    }
-
     let isDragging = false;
     let meshPosCache = null;
     let mousePosCache = null;
-
-
-    // canvas.addEventListener('click', function (e) {
-    //     const { offsetX: x, offsetY: y } = e;
-    //     const ray = camera.getViewRay(x, y);
-    //     const pt = ray.intersectPlane({ normal: { x: 0, y: 0, z: 1 }, offset: 0 });
-    //     console.log([pt.x, pt.y, pt.z].map(i=>i.toFixed(2)));
-    // });
-
-    // return;
 
     canvas.addEventListener('mousedown', function (e) {
         const { offsetX: x, offsetY: y } = e;

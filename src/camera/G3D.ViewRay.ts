@@ -1,10 +1,12 @@
+import Vec3 from '../math/G3D.Vec3';
+
 class Ray {
 
     origin = { x: 0, y: 0, z: 0 };
     direction = { x: 0, y: 0, z: 1 };
 
     intersectPlane({ normal, offset }) {
-        const dist = this.distanceToPlane({normal, offset});
+        const dist = this.distanceToPlane({ normal, offset });
         if (dist === null) {
             return null
         } else {
@@ -33,18 +35,14 @@ class Ray {
         const denominator = Vec3.dot(normal, direction);
 
         if (denominator === 0) {
-            // if ( plane.distanceToPoint( this.origin ) === 0 ) {
-            // 	return 0;
-            // }
             return null;
         }
 
         const t = -(Vec3.dot(origin, normal) - offset) / denominator;
-        
+
         return t > 0 ? t : null;
     }
 
 }
 
 export default Ray;
-
