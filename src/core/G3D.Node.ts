@@ -1,6 +1,6 @@
-import Mat4, { IMat4 } from '../math/G3D.Mat4';
-import Quat, { IQuat } from '../math/G3D.Quat';
-import Vec3, { IVec3 } from '../math/G3D.Vec3';
+import Mat4, { IMat4 } from '../matrix/G3D.Mat4';
+import Quat, { IQuat } from '../matrix/G3D.Quat';
+import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
 
 import IDirection from '../interfaces/G3D.IDirection';
 import IPosition from '../interfaces/G3D.IPosition';

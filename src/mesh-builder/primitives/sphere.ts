@@ -1,7 +1,7 @@
 import Mesh from '../../mesh/G3D.Mesh';
 import Geometry from '../../geometry/G3D.Geometry';
 
-import Vec3 from '../../math/G3D.Vec3';
+import Vec3 from '../../matrix/G3D.Vec3';
 
 
 function createSphere(scene, radius, widthSeg = 16, heightSeg = 12) {
@@ -34,7 +34,7 @@ function createSphere(scene, radius, widthSeg = 16, heightSeg = 12) {
             vertices.push(x, y, z);
 
             const normal = Vec3.normalize(Vec3.create(), Vec3.fromValues(x, y, z));
-            normals.push(...normal);
+            normals.push(normal[0], normal[1], normal[2]);
 
             uvs.push(u, v);
 

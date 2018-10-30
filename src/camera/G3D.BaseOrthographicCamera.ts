@@ -1,5 +1,5 @@
 import BaseCamera from './G3D.BaseCamera';
-import Mat4, { IMat4 } from '../math/G3D.Mat4';
+import Mat4, { IMat4 } from '../matrix/G3D.Mat4';
 
 class BaseOrthographicCamera extends BaseCamera {
 

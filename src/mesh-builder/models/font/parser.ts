@@ -1,5 +1,5 @@
-import Vec2 from '../../../math/G3D.Vec2';
-import Vec3 from '../../../math/G3D.Vec3';
+import Vec2 from '../../../matrix/G3D.Vec2';
+import Vec3 from '../../../matrix/G3D.Vec3';
 
 
 function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
@@ -380,7 +380,6 @@ const PathParser = {
             const [x0, y0, x1, y1, x2, y2] = [...pt(i0), ...pt(i1), ...pt(i2)];
             const v1 = [x1 - x0, y1 - y0];
             const v2 = [x2 - x1, y2 - y1];
-            const cross = Vec2.cross([], v1, v2);
 
             const convex = sign(x2, y2, x0, y0, x1, y1) * clockwiseFactor <= 0;
             if (!convex) {
@@ -551,10 +550,11 @@ const PathParser = {
                     pt(f2Vertices, line[i]),
                     pt(f2Vertices, line[j])
                 ];
-                const norm = normal(v1, v2, v4);
+                const norm2 = normal(v1, v2, v4);
+                const norm = [norm2[0], norm2[1], norm2[2]];
 
                 const s = f3Vertices.length / 3;
-                f3Vertices.push(...v1, ...v2, ...v3, ...v4);
+                f3Vertices.push(...v1 as [], ...v2 as [], ...v3 as [], ...v4 as []);
                 f3Normals.push(...norm, ...norm, ...norm, ...norm);
                 f3UVs.push(0, 0, 0, 0, 0, 0, 0, 0);
                 f3Indices.push(s, s + 1, s + 2, s + 1, s + 2, s + 3);
@@ -601,9 +601,9 @@ const PathParser = {
         }
 
         function normal(v1, v2, v3) {
-            const a1 = Vec3.sub([], v1, v2);
-            const a2 = Vec3.sub([], v2, v3);
-            return Vec3.cross([], a1, a2);
+            const a1 = Vec3.sub(Vec3.create(), v1, v2);
+            const a2 = Vec3.sub(Vec3.create(), v2, v3);
+            return Vec3.cross(Vec3.create(), a1, a2);
         }
     }
 }

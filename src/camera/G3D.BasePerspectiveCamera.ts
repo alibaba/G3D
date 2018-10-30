@@ -1,9 +1,9 @@
 import BaseCamera from './G3D.BaseCamera';
 
-import Mat4, { IMat4 } from '../math/G3D.Mat4';
-import Vec3 from '../math/G3D.Vec3';
+import Mat4, { IMat4 } from '../matrix/G3D.Mat4';
+import Vec3 from '../matrix/G3D.Vec3';
 
-import { deg2rad } from '../utils/deg-rad';
+import { deg2rad } from '../utils/math';
 
 import ViewRay from './G3D.ViewRay';
 

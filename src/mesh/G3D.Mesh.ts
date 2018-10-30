@@ -2,7 +2,8 @@
 import Node from '../core/G3D.Node';
 import Geometry from '../geometry/G3D.Geometry';
 import PhongMaterial from '../material/G3D.PhongMaterial';
-import _ from '../utils/G3D._';
+
+import { findIndex } from '../utils/lodash';
 
 class Mesh extends Node {
 
@@ -26,7 +27,7 @@ class Mesh extends Node {
 
     dispose() {
         if (this.scene) {
-            const i = _.findIndex(this.scene.meshes, { id: this.id });
+            const i = findIndex(this.scene.meshes, { id: this.id });
             if (i !== -1) {
                 this.scene.meshes.splice(i, 1);
             }

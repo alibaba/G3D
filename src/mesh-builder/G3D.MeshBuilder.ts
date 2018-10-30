@@ -16,12 +16,6 @@ export default {
     createPlane,
     createCylinder,
     createCone,
-    createGround: (...args) => {
-        console.log(
-            '[Deprecation Warning] createGround is renamed to createPlane, the createGround method will be removed the next major version.'
-        );
-        return createPlane(...args);
-    },
     createCube: (scene, width, height = width, depth = width) => {
         const w = width / 2;
         const h = height / 2;

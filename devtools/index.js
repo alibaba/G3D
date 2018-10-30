@@ -1,7 +1,6 @@
+
 const path = require('path');
-
 const dalaran = require('dalaran');
-
 const tasks = dalaran.libraryTasks({
     umdName: 'G3D',
     demo: './demo',
@@ -22,4 +21,16 @@ const tasks = dalaran.libraryTasks({
     jsTemplate: './demo/template/js.handlebars'
 });
 
-tasks.dev();
+const taskName = process.argv[2];
+
+switch (taskName) {
+
+    case 'build':
+        tasks.build();
+        break;
+    case 'dev':
+    default:
+        tasks.dev();
+        break;
+}
+

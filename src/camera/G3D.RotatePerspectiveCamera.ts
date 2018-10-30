@@ -2,8 +2,8 @@ import BasePerspectiveCamera from './G3D.BasePerspectiveCamera';
 
 import GL from '../core/G3D.GL';
 import Scene from '../scene/G3D.Scene';
-import { deg2rad } from '../utils/deg-rad';
-import { IMat4 } from '../math/G3D.Mat4';
+import { deg2rad } from '../utils/math';
+import { IMat4 } from '../matrix/G3D.Mat4';
 
 class RotatePerspectiveCamera extends BasePerspectiveCamera {
 

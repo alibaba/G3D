@@ -85,7 +85,7 @@ function createFromObjModel(scene, model) {
                 const image = new Env.Image();
                 image.crossOrigin = true;
                 image.onload = function () {
-                    const texture = new Texture({ Image });
+                    const texture = new Texture({ image });
                     materials[key].specularTexture = texture;
                 }
                 image.src = mtl.specularTexture;
@@ -101,7 +101,7 @@ function createFromObjModel(scene, model) {
         uvs,
         indices
     });
-    mesh.materials = materials;
+    mesh.materials = materials as any;
 
     return mesh;
 }

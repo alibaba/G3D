@@ -34,11 +34,11 @@ import PBREnviroment from './material/G3D.PBREnviroment';
 import GemMaterial from './material/G3D.GemMaterial';
 import MeshBuilder from './mesh-builder/G3D.MeshBuilder';
 
-import Mat4 from './math/G3D.Mat4';
-import Mat3 from './math/G3D.Mat3';
-import Vec4 from './math/G3D.Vec4';
-import Vec3 from './math/G3D.Vec3';
-import Quat from './math/G3D.Quat';
+import Mat4 from './matrix/G3D.Mat4';
+import Mat3 from './matrix/G3D.Mat3';
+import Vec4 from './matrix/G3D.Vec4';
+import Vec3 from './matrix/G3D.Vec3';
+import Quat from './matrix/G3D.Quat';
 
 export default {
 

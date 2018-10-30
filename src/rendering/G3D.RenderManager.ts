@@ -2,9 +2,7 @@ import Env from '../core/G3D.Env';
 import Engine from '../core/G3D.Engine';
 import GL from '../core/G3D.GL';
 
-import _ from '../utils/G3D._';
-
-import Mat3 from '../math/G3D.Mat3';
+import Mat3 from '../matrix/G3D.Mat3';
 
 import RawMaterial from '../material/G3D.RawMaterial';
 import PhongMaterial from '../material/G3D.PhongMaterial';
@@ -16,6 +14,8 @@ import PointLight from '../light/G3D.PointLight';
 import DirectionalLight from '../light/G3D.DirectionalLight';
 
 import Geometry from '../geometry/G3D.Geometry';
+
+import { find } from '../utils/lodash';
 
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
@@ -260,7 +260,7 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        const shadowLight = _.find(lights, light => light.castShadow);
+        const shadowLight = find(lights, light => light.castShadow);
 
         if (shadowLight) {
 

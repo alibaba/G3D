@@ -1,8 +1,8 @@
 import BaseOrthographicCamera from './G3D.BaseOrthographicCamera';
-import { IMat4 } from '../math/G3D.Mat4';
+import { IMat4 } from '../matrix/G3D.Mat4';
 import Scene from '../scene/G3D.Scene';
 
-import { deg2rad } from '../utils/deg-rad';
+import { deg2rad } from '../utils/math';
 
 
 

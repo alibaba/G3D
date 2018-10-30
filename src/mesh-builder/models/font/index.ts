@@ -3,10 +3,7 @@ import LineMesh from '../../../mesh/G3D.LineMesh';
 import LineGeometry from '../../../geometry/G3D.LineGeometry';
 import Geometry from '../../../geometry/G3D.Geometry';
 
-
-
-
-import PathParser from './parser.js';
+import PathParser from './parser';
 
 function createLineFromPath(scene, path, resolution) {
 

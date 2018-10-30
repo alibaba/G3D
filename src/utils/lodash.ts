@@ -1,7 +1,5 @@
 const isFunction = f => typeof f === 'function';
 
-const isObject = o => typeof o === 'object';
-
 function match(target, identifyer) {
     if (isFunction(identifyer)) {
         return !!identifyer(target);
@@ -15,7 +13,7 @@ function match(target, identifyer) {
     }
 }
 
-function findIndex(arr, identifyer) {
+export function findIndex(arr, identifyer) {
     for (let i = 0; i < arr.length; i++) {
         if (match(arr[i], identifyer)) {
             return i;
@@ -24,7 +22,7 @@ function findIndex(arr, identifyer) {
     return -1;
 }
 
-function find(arr, identifyer) {
+export function find(arr, identifyer) {
     const i = findIndex(arr, identifyer);
     if (i !== -1) {
         return arr[i];
@@ -32,5 +30,3 @@ function find(arr, identifyer) {
         return null;
     }
 }
-
-export default { isFunction, isObject, findIndex, find }

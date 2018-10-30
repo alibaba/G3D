@@ -1,4 +1,4 @@
-import Vec3 from '../math/G3D.Vec3';
+import Vec3 from '../matrix/G3D.Vec3';
 
 class Ray {
 

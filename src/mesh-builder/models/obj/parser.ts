@@ -1,4 +1,4 @@
-import Vec3 from '../../../math/G3D.Vec3';
+import Vec3 from '../../../matrix/G3D.Vec3';
 
 
 const vertexPattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
@@ -89,17 +89,17 @@ const OBJParser = {
 
                 if (i % 3 === 0) {
 
-                    const vc = Vec3.fromValues(...positions[iPos]);
+                    const vc = Vec3.fromValues(positions[iPos][0], positions[iPos][1], positions[iPos][2]);
                     const [iPos1] = list[i + 1].split('/').map(k => Number(k) - 1);
-                    const v1 = Vec3.fromValues(...positions[iPos1]);
+                    const v1 = Vec3.fromValues(positions[iPos1][0], positions[iPos1][1], positions[iPos1][2]);
                     const [iPos2] = list[i + 2].split('/').map(k => Number(k) - 1);
-                    const v2 = Vec3.fromValues(...positions[iPos2]);
+                    const v2 = Vec3.fromValues(positions[iPos2][0], positions[iPos2][1], positions[iPos2][2]);
 
                     const arrow1 = Vec3.sub(Vec3.create(), v1, vc);
                     const arrow2 = Vec3.sub(Vec3.create(), v2, vc);
                     const norm = Vec3.cross(Vec3.create(), arrow1, arrow2);
 
-                    normals.push([...norm]);
+                    normals.push(norm);
                     currentiNorm = normals.length - 1;
                 }
 
