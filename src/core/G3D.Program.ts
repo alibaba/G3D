@@ -104,7 +104,7 @@ class DefinedProgram {
                 res.unit = unit;
             }
             let name = uniform.name;
-            if (name.endsWith('[0]')) {
+            if (name.indexOf('[0]') !== -1) {
                 name = name.replace('[0]', '');
             }
             uniforms[name] = res;
