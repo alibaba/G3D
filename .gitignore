@@ -7,4 +7,3 @@ website/playground
 dist
 demo/9*
 demo/assets
-src/global.d.ts

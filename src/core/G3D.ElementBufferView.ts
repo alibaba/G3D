@@ -2,7 +2,7 @@ import GL from './G3D.GL';
 
 import Buffer from './G3D.Buffer';
 
-interface IElementBufferView {
+interface IElementBufferViewConfig {
     buffer: Buffer;
     mode?: string | number;
     count?: number;
@@ -18,7 +18,7 @@ class ElementBufferView {
     type: number;
     offset: number;
 
-    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', offset = 0 }: IElementBufferView) {
+    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', offset = 0 }: IElementBufferViewConfig) {
 
         const { gl } = GL;
 

@@ -1,7 +1,7 @@
 import GL from './G3D.GL';
 import { IWebGLEnum } from '../types/webgl';
 
-interface IBuffer {
+interface IBufferConfig {
     data: Float32Array | Uint32Array,
     target: string | number
 }
@@ -10,7 +10,7 @@ class Buffer {
 
     glBuffer;
 
-    constructor({ data, target }: IBuffer) {
+    constructor({ data, target }: IBufferConfig) {
 
         const { gl, buffers } = GL;
 

@@ -1,17 +1,18 @@
 import GL from './G3D.GL';
+import { IWebGlFramebuffer, IWebGLRenderBuffer } from '../types/webgl';
 
 class Framebuffer {
 
-    width = null;
-    height = null;
+    width: number;
+    height: number;
 
-    framebuffer = null;
+    framebuffer: IWebGlFramebuffer;
 
-    colorTarget = null;
+    colorTarget: IWebGLRenderBuffer;
 
-    depthTarget = null;
+    depthTarget: IWebGLRenderBuffer;
 
-    constructor({ width, height }) {
+    constructor({ width, height }: { width: number, height: number }) {
 
         const { gl } = GL;
 
@@ -47,7 +48,7 @@ class Framebuffer {
         this.depthTarget = depthTarget;
     }
 
-    destructor() {
+    destructor(): void {
 
         const { gl } = GL;
         const { framebuffer, colorTarget, depthTarget } = this;

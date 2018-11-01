@@ -1,6 +1,6 @@
 import Buffer from "./G3D.Buffer";
 
-interface IBufferView {
+interface IBufferViewConfig {
     buffer: Buffer;
     stride?: number;
     offset?: number;
@@ -13,7 +13,7 @@ class BufferView {
     stride: number;
     offset: number;
 
-    constructor({ buffer, stride = 0, offset = 0 }: IBufferView) {
+    constructor({ buffer, stride = 0, offset = 0 }: IBufferViewConfig) {
 
         this.buffer = buffer;
         this.stride = stride;
