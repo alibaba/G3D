@@ -1,4 +1,5 @@
 import GL from './G3D.GL';
+import { IWebGLEnum } from '../types/webgl';
 
 interface IBuffer {
     data: Float32Array | Uint32Array,
@@ -19,9 +20,9 @@ class Buffer {
 
         const glBuffer = this.glBuffer = gl.createBuffer();
 
-        gl.bindBuffer(target, glBuffer);
-        gl.bufferData(target, data, gl.STATIC_DRAW);
-        gl.bindBuffer(target, null);
+        gl.bindBuffer(target as IWebGLEnum, glBuffer);
+        gl.bufferData(target as IWebGLEnum, data, gl.STATIC_DRAW);
+        gl.bindBuffer(target as IWebGLEnum, null);
 
         buffers.push(this);
     }

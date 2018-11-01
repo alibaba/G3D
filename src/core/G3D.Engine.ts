@@ -242,7 +242,7 @@ class Engine {
         return framebuffer;
     }
 
-    lineWidth(value) {
+    lineWidth(value: number) {
         const gl = this.gl;
         gl.lineWidth(value);
     }

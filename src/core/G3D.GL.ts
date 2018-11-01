@@ -9,7 +9,7 @@ interface IGL {
     width: number,
     height: number,
 
-    gl: any,
+    gl: IWebGLRenderingContext,
 
     extensions: { [prop: string]: any },
     precisions: { float: string },

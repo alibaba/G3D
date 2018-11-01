@@ -1,5 +1,6 @@
 import GL from './G3D.GL';
 import Buffer from './G3D.Buffer';
+import { IWebGLRenderingContext } from '../types/webgl';
 
 interface IDefinedProgram {
     fShaderSource: string;
@@ -32,7 +33,7 @@ class DefinedProgram {
         const fShaderSource = this.fShaderSource;
         const vShaderSource = this.vShaderSource;
 
-        function loadShader(gl, type, source) {
+        function loadShader(gl: IWebGLRenderingContext, type, source) {
             var shader = gl.createShader(type);
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
