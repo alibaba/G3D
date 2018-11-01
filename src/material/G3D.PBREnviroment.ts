@@ -1,15 +1,23 @@
 import CubeTexture from '../texture/G3D.CubeTexture';
 import Texture from '../texture/G3D.Texture';
 
+interface IPBREnviromentConfig {
+    diffuse: any,
+    specular: any,
+    brdfLUT: {
+        [propName: string]: any
+    }
+}
+
 class PBREnviroment {
 
-    diffuse = null;
+    diffuse: CubeTexture;
 
-    specular = null;
+    specular: CubeTexture;
 
-    brdfLUT = null;
+    brdfLUT: Texture;
 
-    constructor({ diffuse, specular, brdfLUT }) {
+    constructor({ diffuse, specular, brdfLUT }: IPBREnviromentConfig) {
 
         this.diffuse = new CubeTexture({ images: diffuse, sRGB: true, flipY: false });
 

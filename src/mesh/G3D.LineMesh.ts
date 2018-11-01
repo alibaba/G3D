@@ -1,12 +1,11 @@
-import Mesh from './G3D.Mesh';
-
 import LineGeometry from '../geometry/G3D.LineGeometry';
 import RawMaterial from '../material/G3D.RawMaterial';
+import BaseMesh from './G3D.BaseMesh';
 
 
-class LineMesh extends Mesh {
+class LineMesh extends BaseMesh {
 
-    geometry: any = new LineGeometry();
+    geometry = new LineGeometry();
     materials: any = {
         default: new RawMaterial()
     }

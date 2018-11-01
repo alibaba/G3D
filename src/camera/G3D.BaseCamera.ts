@@ -2,9 +2,9 @@ import Node from '../core/G3D.Node';
 
 import Mat4, { IMat4 } from '../matrix/G3D.Mat4';
 import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
+import { IPosition, IDirection } from '../types/raw';
 
-import IPosition from '../interfaces/G3D.IPosition';
-import IDirection from '../interfaces/G3D.IDirection';
+
 
 class BaseCamera extends Node {
 

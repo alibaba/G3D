@@ -1,28 +1,31 @@
 import Material from './G3D.Material';
+import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
+import { IColorRGB } from '../types/raw';
+import Texture from '../texture/G3D.Texture';
 
 class PhongMaterial extends Material {
 
-    ambientColor = { r: 255, g: 255, b: 255 };
-    ambientTexture = null;
+    ambientColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    ambientTexture: Texture;
 
-    diffuseColor = { r: 255, g: 255, b: 255 };
-    diffuseTexture = null;
+    diffuseColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    diffuseTexture: Texture;
 
-    specularColor = { r: 255, g: 255, b: 255 };
-    specularTexture = null;
-    glossiness = 1.0;
+    specularColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    specularTexture: Texture;
+    glossiness: number = 1.0;
 
-    specularEnvMapTexture = null;
+    specularEnvMapTexture: Texture;
 
-    private _ambientColorValues = null;
-    private _diffuseColorValues = null;
-    private _specularColorValues = null;
+    private ambientColorValues: IVec3 = Vec3.create();
+    private diffuseColorValues: IVec3 = Vec3.create();
+    private specularColorValues: IVec3 = Vec3.create();
 
     constructor() {
         super();
     }
 
-    getDefines() {
+    getDefines(): string[] {
         const defines = [];
         if (this.ambientTexture) {
             defines.push('PHONG_AMBIENT_TEXTURE');
@@ -42,53 +45,28 @@ class PhongMaterial extends Material {
         return defines;
     }
 
-    getAmbientColor() {
+    getAmbientColor(): IVec3 {
 
-        if (!this._ambientColorValues) {
-            this._ambientColorValues = new Float32Array(3);
-        }
+        Vec3.set(this.ambientColorValues, this.ambientColor.r / 255, this.ambientColor.g / 255, this.ambientColor.b / 255);
 
-        const values = this._ambientColorValues;
-
-        values[0] = this.ambientColor.r / 255;
-        values[1] = this.ambientColor.g / 255;
-        values[2] = this.ambientColor.b / 255;
-
-        return values;
+        return this.ambientColorValues;
     }
 
-    getDiffuseColor() {
+    getDiffuseColor(): IVec3 {
 
-        if (!this._diffuseColorValues) {
-            this._diffuseColorValues = new Float32Array(3);
-        }
+        Vec3.set(this.diffuseColorValues, this.diffuseColor.r / 255, this.diffuseColor.g / 255, this.diffuseColor.b / 255);
 
-        const values = this._diffuseColorValues;
-
-        values[0] = this.diffuseColor.r / 255;
-        values[1] = this.diffuseColor.g / 255;
-        values[2] = this.diffuseColor.b / 255;
-
-        return values;
+        return this.diffuseColorValues;
     }
 
-    getSpecularColor() {
+    getSpecularColor(): IVec3 {
 
-        if (!this._specularColorValues) {
-            this._specularColorValues = new Float32Array(3);
-        }
+        Vec3.set(this.specularColorValues, this.specularColor.r / 255, this.specularColor.g / 255, this.specularColor.b / 255);
 
-        const values = this._specularColorValues;
-
-        values[0] = this.specularColor.r / 255;
-        values[1] = this.specularColor.g / 255;
-        values[2] = this.specularColor.b / 255;
-
-        return values;
-
+        return this.specularColorValues;
     }
 
-    getGlossiness() {
+    getGlossiness(): number {
         return this.glossiness;
     }
 

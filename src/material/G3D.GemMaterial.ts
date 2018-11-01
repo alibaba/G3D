@@ -6,6 +6,7 @@ class GemMaterial extends Material {
     envCubeMap = null;
 
     constructor({ refraction, env }) {
+        
         super();
 
         this.refractionCubeMap = refraction;

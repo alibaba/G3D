@@ -1,13 +1,25 @@
 import GL from '../core/G3D.GL';
 import Env from '../core/G3D.Env';
+import { IWebGLTexture } from '../types/webgl';
 
 const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
 
+
+interface ITextureConfig {
+    image: any;
+    width?: number;
+    height?: number;
+    sRGB?: boolean;
+    flipY?: boolean;
+    repeat?: boolean;
+}
+
+
 class Texture {
 
-    glTexture = null;
+    glTexture: IWebGLTexture;
 
-    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = true, repeat = true /*or clamp*/ }) {
+    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = true, repeat = true /*or clamp*/ }: ITextureConfig) {
 
         const { gl, textures } = GL;
 
@@ -26,16 +38,15 @@ class Texture {
                 throw new Error('image height should be power of 2, or you need to set repeat option to false.');
             }
         }
+
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE);
-
 
         // filter
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
         // store
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
-
 
         // fill data
         if (image instanceof Uint8Array) {

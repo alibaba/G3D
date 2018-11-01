@@ -1,30 +1,36 @@
 import Material from './G3D.Material';
+import { IColorRGB } from '../types/raw';
+import Texture from '../texture/G3D.Texture';
 
+import PBREnviroment from './G3D.PBREnviroment';
+import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
 
 
 class PBRMaterial extends Material {
 
-    albedoColor = { r: 0, g: 0, b: 0 };
+    albedoColor: IColorRGB = { r: 0, g: 0, b: 0 };
 
-    albedoTexture = null;
+    albedoTexture: Texture;
 
-    metallic = 0.0;
+    metallic: number = 0.0;
 
-    roughness = 0.1;
+    roughness: number = 0.1;
 
-    metallicRoughnessTexture = null;
+    metallicRoughnessTexture: Texture;
 
-    emissiveTexture = null;
+    emissiveTexture: Texture;
 
-    normalTexture = null;
+    normalTexture: Texture;
 
-    pbrEnviroment = null;
+    pbrEnviroment: PBREnviroment;
+
+    private albedoColorValues: IVec3 = Vec3.create();
 
     constructor() {
         super();
     }
 
-    getDefines() {
+    getDefines(): string[] {
         const defines = [];
 
         if (this.albedoTexture) {
@@ -46,16 +52,18 @@ class PBRMaterial extends Material {
         return defines;
     }
 
-    getAlbedoColor() {
-        const { albedoColor: c } = this;
-        return [c.r / 255, c.g / 255, c.b / 255];
+    getAlbedoColor(): IVec3 {
+
+        Vec3.set(this.albedoColorValues, this.albedoColor.r / 255, this.albedoColor.g / 255, this.albedoColor.b / 255);
+
+        return this.albedoColorValues;
     }
 
-    getMetallic() {
+    getMetallic(): number {
         return this.metallic;
     }
 
-    getRoughness() {
+    getRoughness(): number {
         return this.roughness;
     }
 

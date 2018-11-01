@@ -1,13 +1,23 @@
 import GL from '../core/G3D.GL';
 import Env from '../core/G3D.Env';
+import { IWebGLTexture } from '../types/webgl';
+
+interface ICubeTextureConfig {
+    images: any;
+    width?: number;
+    height?: number;
+    flipY?: boolean;
+    sRGB?: boolean;
+}
+
 
 class CubeTexture {
 
-    glTexture = null;
+    glTexture: IWebGLTexture = null;
 
-    mipLevel = 0;
+    mipLevel: number = 0;
 
-    constructor({ images, width, height, flipY = false, sRGB = true }: any) {
+    constructor({ images, width, height, flipY = false, sRGB = true }: ICubeTextureConfig) {
 
         const { gl, cubeTextures } = GL;
 

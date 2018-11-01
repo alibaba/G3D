@@ -4,6 +4,13 @@ export interface ICanvas {
     getContext: (type: '2d' | 'webgl', options: any) => IWebGLRenderingContext;
 }
 
+export interface IImage {
+    width: number;
+    height: number;
+    onload: () => void;
+    onerror: (error: any) => void;
+}
+
 export type IWebGLEnum = number;
 
 export interface IWebGLRenderingContext {
@@ -46,44 +53,44 @@ export interface IWebGLRenderingContext {
     readonly LINK_STATUS: IWebGLEnum;
     readonly ACTIVE_ATTRIBUTES: IWebGLEnum;
     readonly ACTIVE_UNIFORMS: IWebGLEnum;
-    TEXTURE_2D: IWebGLEnum;
-    TEXTURE_CUBE_MAP: IWebGLEnum;
-    TEXTURE0: IWebGLEnum;
-    TEXTURE1: IWebGLEnum;
-    TEXTURE2: IWebGLEnum;
-    TEXTURE3: IWebGLEnum;
-    TEXTURE4: IWebGLEnum;
-    TEXTURE5: IWebGLEnum;
-    TEXTURE6: IWebGLEnum;
-    TEXTURE7: IWebGLEnum;
-    TEXTURE_WRAP_S: IWebGLEnum;
-    TEXTURE_WRAP_T: IWebGLEnum;
-    REPEAT: IWebGLEnum;
-    CLAMP_TO_EDGE: IWebGLEnum;
-    TEXTURE_MIN_FILTER: IWebGLEnum;
-    TEXTURE_MAG_FILTER: IWebGLEnum;
-    LINEAR: IWebGLEnum;
-    FLOAT: IWebGLEnum;
-    COLOR_ATTACHMENT0: IWebGLEnum;
-    COLOR_ATTACHMENT1: IWebGLEnum;
-    COLOR_ATTACHMENT2: IWebGLEnum;
-    COLOR_ATTACHMENT3: IWebGLEnum;
-    COLOR_ATTACHMENT4: IWebGLEnum;
-    COLOR_ATTACHMENT5: IWebGLEnum;
-    COLOR_ATTACHMENT6: IWebGLEnum;
-    COLOR_ATTACHMENT7: IWebGLEnum;
-    RENDERBUFFER: IWebGLEnum;
-    DEPTH_COMPONENT16: IWebGLEnum;
-    DEPTH_ATTACHMENT: IWebGLEnum;
-    FRAMEBUFFER_COMPLETE: IWebGLEnum;
-    TEXTURE_CUBE_MAP_POSITIVE_X: IWebGLEnum;
-    TEXTURE_CUBE_MAP_NEGATIVE_X: IWebGLEnum;
-    TEXTURE_CUBE_MAP_POSITIVE_Y: IWebGLEnum;
-    TEXTURE_CUBE_MAP_NEGATIVE_Y: IWebGLEnum;
-    TEXTURE_CUBE_MAP_POSITIVE_Z: IWebGLEnum;
-    TEXTURE_CUBE_MAP_NEGATIVE_Z: IWebGLEnum;
-    LINEAR_MIPMAP_LINEAR: IWebGLEnum;
-    STATIC_DRAW: IWebGLEnum;
+    readonly TEXTURE_2D: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP: IWebGLEnum;
+    readonly TEXTURE0: IWebGLEnum;
+    readonly TEXTURE1: IWebGLEnum;
+    readonly TEXTURE2: IWebGLEnum;
+    readonly TEXTURE3: IWebGLEnum;
+    readonly TEXTURE4: IWebGLEnum;
+    readonly TEXTURE5: IWebGLEnum;
+    readonly TEXTURE6: IWebGLEnum;
+    readonly TEXTURE7: IWebGLEnum;
+    readonly TEXTURE_WRAP_S: IWebGLEnum;
+    readonly TEXTURE_WRAP_T: IWebGLEnum;
+    readonly REPEAT: IWebGLEnum;
+    readonly CLAMP_TO_EDGE: IWebGLEnum;
+    readonly TEXTURE_MIN_FILTER: IWebGLEnum;
+    readonly TEXTURE_MAG_FILTER: IWebGLEnum;
+    readonly LINEAR: IWebGLEnum;
+    readonly FLOAT: IWebGLEnum;
+    readonly COLOR_ATTACHMENT0: IWebGLEnum;
+    readonly COLOR_ATTACHMENT1: IWebGLEnum;
+    readonly COLOR_ATTACHMENT2: IWebGLEnum;
+    readonly COLOR_ATTACHMENT3: IWebGLEnum;
+    readonly COLOR_ATTACHMENT4: IWebGLEnum;
+    readonly COLOR_ATTACHMENT5: IWebGLEnum;
+    readonly COLOR_ATTACHMENT6: IWebGLEnum;
+    readonly COLOR_ATTACHMENT7: IWebGLEnum;
+    readonly RENDERBUFFER: IWebGLEnum;
+    readonly DEPTH_COMPONENT16: IWebGLEnum;
+    readonly DEPTH_ATTACHMENT: IWebGLEnum;
+    readonly FRAMEBUFFER_COMPLETE: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_POSITIVE_X: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_NEGATIVE_X: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_POSITIVE_Y: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_NEGATIVE_Y: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_POSITIVE_Z: IWebGLEnum;
+    readonly TEXTURE_CUBE_MAP_NEGATIVE_Z: IWebGLEnum;
+    readonly LINEAR_MIPMAP_LINEAR: IWebGLEnum;
+    readonly STATIC_DRAW: IWebGLEnum;
 
     getExtension(name: string): any;
     getShaderPrecisionFormat(shaderType: IWebGLEnum, precisionType: IWebGLEnum): IWebGLShaderPrecisionFormat;
