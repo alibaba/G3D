@@ -87,6 +87,8 @@ function main(
 
                                     mesh3.materials.default = mtl;
 
+                                    window.mesh = mesh3;
+
                                     const mesh = new G3D.Mesh(scene);
                                     mesh1.parent = mesh;
                                     mesh2.parent = mesh;
