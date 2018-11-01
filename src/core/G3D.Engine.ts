@@ -24,6 +24,9 @@ import * as vShaderShadow from '../shaders/shadow.vert.glsl';
 import * as fShaderSkybox from '../shaders/skybox.frag.glsl';
 import * as vShaderSkybox from '../shaders/skybox.vert.glsl';
 
+import { ICanvas, IWebGLRenderingContext } from '../types/webgl';
+
+
 class Engine {
 
     width: number = 0;
@@ -39,11 +42,11 @@ class Engine {
 
     precisions: any = {};
 
-    gl = null;
+    gl: IWebGLRenderingContext;
 
     static instance = null;
 
-    constructor(canvas) {
+    constructor(canvas: ICanvas) {
 
         // TODO : remove this.gl and Engine.instance
         if (Engine.instance) {

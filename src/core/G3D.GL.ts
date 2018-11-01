@@ -1,6 +1,7 @@
 import Buffer from './G3D.Buffer';
 import Texture from '../texture/G3D.Texture';
 import CubeTexture from '../texture/G3D.CubeTexture';
+import { IWebGLRenderingContext } from '../types/webgl';
 
 
 interface IGL {
