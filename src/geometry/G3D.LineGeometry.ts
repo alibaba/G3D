@@ -2,13 +2,9 @@ import Buffer from '../core/G3D.Buffer';
 import BufferView from '../core/G3D.BufferView';
 import ElementBufferView from '../core/G3D.ElementBufferView';
 
-import Geometry from './G3D.Geometry';
-
 class LineGeometry {
 
     bufferViews: any = {};
-
-    facing = Geometry.BOTH;
 
     constructor({ vertices, indices }: any = {}) {
 

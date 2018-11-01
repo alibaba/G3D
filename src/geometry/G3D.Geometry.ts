@@ -3,35 +3,45 @@ import BufferView from '../core/G3D.BufferView';
 import ElementBufferView from '../core/G3D.ElementBufferView';
 
 
-// bufferview or array of numbers
-type DataType = BufferView | number[];
-type IndiceDataType = ElementBufferView | number[];
-
 interface IGeometryConfig {
-    vertices?: DataType;
-    normals?: DataType;
-    uvs?: DataType | {
-        [propName: string]: DataType
+    vertices?: BufferView | number[];
+    normals?: BufferView | number[];
+    uvs?: BufferView | number[] | {
+        [propName: string]: BufferView | number[]
     };
     indices?: {
-        [propName: string]: IndiceDataType
+        [propName: string]: ElementBufferView | number[]
     };
     mergeNormals?: boolean;
-    facing?: number;
+    facing?: FACING;
 }
+
+interface IGeometryBufferViews {
+    vertices?: BufferView;
+    normals?: BufferView;
+    uvs?: BufferView | {
+        [propName: string]: BufferView
+    },
+    indices?: {
+        [propName: string]: ElementBufferView
+    }
+}
+
+enum FACING {
+    FRONT, BACK, BOTH
+}
+
 
 class Geometry {
 
-    static FRONT = 1;
-    static BACK = 2;
-    static BOTH = 3;
+    static FACING = FACING;
 
-    bufferViews: any = {};
+    facing: FACING;
 
-    facing = Geometry.FRONT;
+    bufferViews: IGeometryBufferViews = {};
 
     constructor(
-        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FRONT }: IGeometryConfig = {}
+        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FACING.FRONT }: IGeometryConfig = {}
     ) {
 
         if (mergeNormals && vertices && normals) {
@@ -41,112 +51,65 @@ class Geometry {
         this.facing = facing;
 
         if (vertices) {
-
-            if (vertices instanceof BufferView) {
-
-                this.bufferViews.vertices = vertices;
-
-            } else {
-
-                this.bufferViews.vertices = new BufferView({
-                    buffer: new Buffer({
-                        data: new Float32Array(vertices),
-                        target: 'ARRAY_BUFFER'
-                    })
-                });
+            this.bufferViews = {
+                vertices: this.createBufferView(vertices) as BufferView,
+                normals: normals ? this.createBufferView(normals) as BufferView : null,
+                uvs: uvs ? this.createBufferView(uvs) : null,
+                indices: this.createELementBufferView(indices)
             }
         }
 
-        if (normals) {
+    }
 
-            if (normals instanceof BufferView) {
+    private createBufferView(data: number[] | BufferView | { [propName: string]: number[] | BufferView }): BufferView | { [propName: string]: BufferView } {
 
-                this.bufferViews.normals = normals;
+        if (Array.isArray(data)) {
 
-            } else {
-
-                this.bufferViews.normals = new BufferView({
-                    buffer: new Buffer({
-                        data: new Float32Array(normals),
-                        target: 'ARRAY_BUFFER'
-                    })
-                });
-
-            }
-        }
-
-        if (uvs) {
-
-            if (uvs instanceof BufferView || typeof uvs.length === 'number') {
-
-                if (uvs instanceof BufferView) {
-
-                    this.bufferViews.uvs = uvs as BufferView;
-
-                } else {
-
-                    this.bufferViews.uvs = new BufferView({
-                        buffer: new Buffer({
-                            data: new Float32Array(uvs as number[]),
-                            target: 'ARRAY_BUFFER'
-                        })
-                    })
-
-                }
-
-            } else {
-
-                this.bufferViews.uvs = {};
-
-                Object.keys(uvs).forEach(key => {
-
-                    if (uvs[key] instanceof BufferView) {
-
-                        this.bufferViews.uvs[key] = uvs[key];
-
-                    } else {
-
-                        this.bufferViews.uvs[key] = new BufferView({
-                            buffer: new Buffer({
-                                data: new Float32Array(uvs[key]),
-                                target: 'ARRAY_BUFFER'
-                            })
-                        })
-                    }
-                });
-            }
-
-        }
-
-        if (indices) {
-
-            this.bufferViews.indices = {};
-
-            Object.keys(indices).forEach(key => {
-
-                if (indices[key] instanceof ElementBufferView) {
-
-                    this.bufferViews.indices[key] = indices[key];
-
-                } else {
-
-                    this.bufferViews.indices[key] = new ElementBufferView({
-                        buffer: new Buffer({
-                            data: new Uint32Array(indices[key] as number[]),
-                            target: 'ELEMENT_ARRAY_BUFFER'
-                        }),
-                        mode: 'TRIANGLES',
-                        count: (indices[key] as number[]).length,
-                        type: 'UNSIGNED_INT',
-                        offset: 0
-                    });
-                }
-
+            return new BufferView({
+                buffer: new Buffer({
+                    data: new Float32Array(data),
+                    target: 'ARRAY_BUFFER'
+                })
             });
+
+        } else if (data instanceof BufferView) {
+
+            return data;
+
+        } else {
+
+            const bufferViews = {};
+            for (let key in data) {
+                bufferViews[key] = this.createBufferView(data) as BufferView;
+            }
+            return bufferViews;
+
         }
     }
 
-    mergeNormals(vertices, normals) {
+    private createELementBufferView(data: { [propName: string]: number[] | ElementBufferView }): { [propName: string]: ElementBufferView } {
+
+        const elementBufferViews = {};
+
+        for (let key in data) {
+
+            elementBufferViews[key] = Array.isArray(data[key]) ? new ElementBufferView({
+                buffer: new Buffer({
+                    data: new Uint32Array(data[key] as number[]),
+                    target: 'ELEMENT_ARRAY_BUFFER'
+                }),
+                mode: 'TRIANGLES',
+                count: (data[key] as number[]).length,
+                type: 'UNSIGNED_INT',
+                offset: 0
+            }) : data[key];
+
+        }
+
+        return elementBufferViews;
+    }
+
+    private mergeNormals(vertices, normals) {
 
         const hash = {};
 

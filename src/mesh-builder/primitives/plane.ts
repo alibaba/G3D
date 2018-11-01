@@ -27,7 +27,7 @@ function createPlane(scene, width, height = width) {
         uvs,
         normals,
         indices,
-        facing: Geometry.BOTH
+        facing: Geometry.FACING.BOTH
     });
 
     return mesh;

@@ -188,7 +188,7 @@ class RenderManager {
 
                             // the first draw (back)
 
-                            this.setFaceCull(mesh.geometry.facing === Geometry.FRONT ? Geometry.BACK : Geometry.FRONT);
+                            this.setFaceCull(mesh.geometry.facing === Geometry.FACING.FRONT ? Geometry.FACING.BACK : Geometry.FACING.FRONT);
 
                             engine.uniform('uCullBack', [true]);
 
@@ -295,7 +295,7 @@ class RenderManager {
     setFaceCull = (facing) => {
 
         Engine.instance.cullFace(
-            facing === Geometry.FRONT ? 'BACK' : facing === Geometry.BACK ? 'FRONT' : false
+            facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : false
         );
     }
 

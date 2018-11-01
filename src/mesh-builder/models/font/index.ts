@@ -34,7 +34,7 @@ function createMeshFromPath(scene, path, thickness, resolution) {
         indices: {
             default: indices
         },
-        facing: Geometry.BOTH
+        facing: Geometry.FACING.BOTH
     });
     
     return mesh;
