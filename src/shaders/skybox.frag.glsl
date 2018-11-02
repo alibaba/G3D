@@ -1,9 +1,9 @@
 precision highp float;
 
-uniform samplerCube uCubeMap;
+uniform samplerCube uCubeTexture;
 
 varying vec3 vUV;
 
 void main() {
-    gl_FragColor = textureCube(uCubeMap, vUV);
+    gl_FragColor = textureCube(uCubeTexture, normalize(vUV));
 }

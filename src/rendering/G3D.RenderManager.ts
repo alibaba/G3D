@@ -32,7 +32,7 @@ class RenderManager {
         this.scene = scene;
     }
 
-    groupMeshLayers() {
+    private groupMeshLayers() {
 
         const { scene } = this;
         const { meshes } = scene;
@@ -89,7 +89,7 @@ class RenderManager {
         }
     }
 
-    renderToScreen(groups) {
+    private renderToScreen(groups) {
 
         const { scene } = this;
 
@@ -254,7 +254,7 @@ class RenderManager {
         })
     }
 
-    renderToShadowRenderBuffer(groups) {
+    private renderToShadowRenderBuffer(groups) {
 
         const { scene } = this;
         const { lights } = scene;
@@ -293,14 +293,14 @@ class RenderManager {
         }
     }
 
-    setFaceCull = (facing) => {
+    private setFaceCull = (facing) => {
 
         Engine.instance.cullFace(
             facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : false
         );
     }
 
-    prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
+    private prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
 
         const engine = Engine.instance;
 
@@ -309,7 +309,7 @@ class RenderManager {
         engine.uniform('uMMatrix', mesh.getWorldMatrix());
     }
 
-    prepareLights() {
+    private prepareLights() {
 
         const { scene } = this;
         const engine = Engine.instance;
@@ -361,7 +361,7 @@ class RenderManager {
         engine.uniform('uLightPosition', lightsData.position);
     }
 
-    prepareGeometry = (geometry) => {
+    private prepareGeometry = (geometry) => {
 
         const engine = Engine.instance;
 
@@ -393,7 +393,7 @@ class RenderManager {
 
     }
 
-    prepareRawMaterial(material) {
+    private prepareRawMaterial(material) {
 
         const engine = Engine.instance;
 
@@ -404,7 +404,7 @@ class RenderManager {
 
     }
 
-    preparePhongMaterial(material) {
+    private preparePhongMaterial(material) {
 
         const engine = Engine.instance;
 
@@ -430,7 +430,7 @@ class RenderManager {
         engine.uniform('uGlossiness', [material.getGlossiness()]);
     }
 
-    preparePBRMaterial(material) {
+    private preparePBRMaterial(material) {
 
         const engine = Engine.instance;
         const { activeCamera } = this.scene;
@@ -467,7 +467,7 @@ class RenderManager {
 
     }
 
-    prepareGemMaterial(material) {
+    private prepareGemMaterial(material) {
 
         const engine = Engine.instance;
 
@@ -481,7 +481,7 @@ class RenderManager {
 
     }
 
-    prepareShadow() {
+    private prepareShadow() {
 
         const engine = Engine.instance;
 
@@ -504,7 +504,7 @@ class RenderManager {
 
     }
 
-    drawMesh = (mesh, key) => {
+    private drawMesh = (mesh, key) => {
 
         const engine = Engine.instance;
 
@@ -516,10 +516,9 @@ class RenderManager {
 
             engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
         }
-
     }
 
-    drawSkybox() {
+    private drawSkybox() {
 
         const engine = Engine.instance;
 
@@ -527,22 +526,21 @@ class RenderManager {
 
         const skybox = scene.skybox;
         const camera = scene.activeCamera;
-        const texture = skybox.cubeMapTexture.glTexture;
-        const mesh = skybox.cubeMapMesh;
-
-        const vmat3 = Mat3.fromMat4(Mat3.create(), camera.getVMatrix());
 
         engine.useProgram('skybox');
 
-        const geometryBuffers = mesh.geometry.bufferViews;
+        const { vertices, indices } = skybox.geometry.bufferViews;
 
-        engine.attribute('aPosition', geometryBuffers.vertices.buffer.glBuffer, geometryBuffers.vertices.stride, geometryBuffers.vertices.offset);
+        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
 
-        engine.uniform('uVMatrix3', vmat3);
+        engine.uniform('uVMatrix', camera.getVMatrix());
         engine.uniform('uPMatrix', camera.getPMatrix());
-        engine.uniform('uCubeMap', texture);
+        engine.uniform('uCubeTexture', skybox.cubeTexture.glTexture);
 
-        this.drawMesh(mesh, 'default');
+        for (let key in indices) {
+            engine.elements(indices[key].buffer.glBuffer);
+            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+        }
     }
 }
 

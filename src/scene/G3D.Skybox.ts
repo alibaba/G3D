@@ -1,22 +1,15 @@
-import Mesh from '../mesh/G3D.Mesh';
 import Geometry from '../geometry/G3D.Geometry';
 import CubeTexture from '../texture/G3D.CubeTexture';
-import Scene from './G3D.Scene';
 
 class Skybox {
 
-    scene: Scene;
-    skyboxSize: number;
+    geometry: Geometry;
 
-    cubeMapMesh: Mesh;
-    cubeMapTexture: CubeTexture;
+    cubeTexture: CubeTexture;
 
     constructor(scene, faceImages, size = 100) {
 
         scene.skybox = this;
-
-        this.scene = scene;
-        this.skyboxSize = size;
 
         const vertices = [
             // front face
@@ -49,7 +42,7 @@ class Skybox {
             size, size, size,
             size, size, -size,
 
-            //bottom face
+            // bottom face
             -size, -size, size,
             -size, -size, -size,
             size, -size, -size,
@@ -65,8 +58,7 @@ class Skybox {
             20, 21, 22, 20, 22, 23
         ];
 
-        const mesh = new Mesh({meshes: []});
-        mesh.geometry = new Geometry({
+        this.geometry = new Geometry({
             vertices,
             indices: {
                 default: indices
@@ -74,9 +66,7 @@ class Skybox {
             facing: Geometry.FACING.BACK
         });
 
-        this.cubeMapMesh = mesh;
-
-        this.cubeMapTexture = new CubeTexture({
+        this.cubeTexture = new CubeTexture({
             images: {
                 front: faceImages.front,
                 back: faceImages.back,
