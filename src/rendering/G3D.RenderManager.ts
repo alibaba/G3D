@@ -14,6 +14,7 @@ import PointLight from '../light/G3D.PointLight';
 import DirectionalLight from '../light/G3D.DirectionalLight';
 
 import Geometry from '../geometry/G3D.Geometry';
+import Scene from '../scene/G3D.Scene';
 
 import { find } from '../utils/lodash';
 
@@ -25,9 +26,9 @@ const LIGHT_TYPE_POINT = 4;
 
 class RenderManager {
 
-    scene = null;
+    scene: Scene = null;
 
-    constructor(scene) {
+    constructor(scene: Scene) {
         this.scene = scene;
     }
 

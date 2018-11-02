@@ -1,7 +1,7 @@
-import Light from './G3D.Light';
+import BaseLight from './G3D.BaseLight';
 import BasePerspectiveCamera from '../camera/G3D.BasePerspectiveCamera';
 
-class PointLight extends Light {
+class PointLight extends BaseLight {
 
     position = { x: 0, y: 0, z: 0 };
     radius = 1;

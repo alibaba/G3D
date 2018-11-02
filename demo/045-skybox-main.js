@@ -29,14 +29,17 @@ function main(
             left, right,
             top, bottom,
         });
+
+        function render() {
+            scene.render();
+            requestAnimationFrame(render);
+        }
+
+        render();
+
     });
 
-    function render() {
-        scene.render();
-        requestAnimationFrame(render);
-    }
 
-    render();
 }
 
 export default main;

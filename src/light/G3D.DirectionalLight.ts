@@ -1,8 +1,8 @@
-import Light from './G3D.Light';
+import BaseLight from './G3D.BaseLight';
 
 import BaseOrthographicCamera from '../camera/G3D.BaseOrthographicCamera';
 
-class DirectionalLight extends Light {
+class DirectionalLight extends BaseLight {
 
     direction = { x: 0, y: 0, z: -1 };
 

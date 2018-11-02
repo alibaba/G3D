@@ -1,4 +1,4 @@
-class Light {
+class BaseLight {
 
     scene = null;
     color = { r: 255, g: 255, b: 255 };
@@ -18,4 +18,4 @@ class Light {
     }
 }
 
-export default Light;
+export default BaseLight;

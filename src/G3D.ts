@@ -15,7 +15,7 @@ import BasePerspectiveCamera from './camera/G3D.BasePerspectiveCamera';
 import RotatePerspectiveCamera from './camera/G3D.RotatePerspectiveCamera';
 import RotateOrthographicCamera from './camera/G3D.RotateOrthographicCamera';
 
-import Light from './light/G3D.Light';
+
 import AmbientLight from './light/G3D.AmbientLight';
 import DirectionalLight from './light/G3D.DirectionalLight';
 import PointLight from './light/G3D.PointLight';
@@ -60,7 +60,7 @@ export default {
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
 
-    Light,
+
     DirectionalLight,
     AmbientLight,
     PointLight,
