@@ -1,0 +1,5 @@
+title: G3D - 一款不依赖 DOM API 的 WebGL 3D 渲染引擎
+description: 不依赖 DOM API，兼容 WebGL 的 JavaScript 3D 渲染引擎
+introduction: G3D 是一款基于 WebGL 实现的 3D 引擎，可用以创建和渲染逼真的 3D 场景。与其他 WebGL 3D 引擎相比，G3D 更加纯粹，它不依赖任何 DOM API，而仅仅依赖一个 Canvas (或类 Canvas )对象。这一特性使得 G3D 不仅可运行在浏览器中，也可运行在一些混合 (hybrid) 环境中，如 GCanvas (ReactNative 或 Weex)。
+tryText: 尝试使用 G3D
+guideText: 教程

@@ -2,8 +2,7 @@
 .vscode
 node_modules/
 package-lock.json
-website/homepage
-website/playground
+website/homepage-dist
 dist
 demo/9*
 demo/assets

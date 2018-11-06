@@ -1,45 +1,45 @@
 
-doc:
+docs:
 
-  docs:
+  api:
     Core:
-      Engine: ./doc/docs/Engine.md
-      Scene: ./doc/docs/Scene.md
-      Node: ./doc/docs/Node.md
+      Engine: Engine.md
+      Scene: Scene.md
+      Node: Node.md
     Cameras:
-      BaseCamera: ./doc/docs/BaseCamera.md
-      OrthographicCamera: ./doc/docs/OrthographicCamera.md
-      PerspectiveCamera: ./doc/docs/PerspectiveCamera.md
-      RotatePerspectiveCamera: ./doc/docs/RotatePerspectiveCamera.md
-      RotateOrthographicCamera: ./doc/docs/RotateOrthographicCamera.md
+      BaseCamera: BaseCamera.md
+      OrthographicCamera: OrthographicCamera.md
+      PerspectiveCamera: PerspectiveCamera.md
+      RotatePerspectiveCamera: RotatePerspectiveCamera.md
+      RotateOrthographicCamera: RotateOrthographicCamera.md
     Mesh:
-      Mesh: ./doc/docs/Mesh.md
-      MorphTargetMesh: ./doc/docs/MorphTargetMesh.md
-      LineMesh: ./doc/docs/LineMesh.md
+      Mesh: Mesh.md
+      MorphTargetMesh: MorphTargetMesh.md
+      LineMesh: LineMesh.md
     MeshUtils:
-      MeshBuilder: ./doc/docs/MeshBuilder.md
+      MeshBuilder: MeshBuilder.md
     Materials:
-      Material: ./doc/docs/Material.md
-      PhongMaterial: ./doc/docs/PhongMaterial.md
-      RawMaterial: ./doc/docs/RawMaterial.md
-      PBRMaterial: ./doc/docs/PBRMaterial.md
+      Material: Material.md
+      PhongMaterial: PhongMaterial.md
+      RawMaterial: RawMaterial.md
+      PBRMaterial: PBRMaterial.md
     Texture:
-      Texture: ./doc/docs/Texture.md
+      Texture: Texture.md
     Geometries:
-      Geometry: ./doc/docs/Geometry.md
-      LineGeometry: ./doc/docs/LineGeometry.md
+      Geometry: Geometry.md
+      LineGeometry: LineGeometry.md
     Lights:
-      Light: ./doc/docs/Light.md
-      AmbientLight: ./doc/docs/AmbientLight.md
-      DirectionalLight: ./doc/docs/DirectionalLight.md
-      PointLight: ./doc/docs/PointLight.md
+      Light: Light.md
+      AmbientLight: AmbientLight.md
+      DirectionalLight: DirectionalLight.md
+      PointLight: PointLight.md
 
   guide:
-    First Steps: ./doc/guide/First Steps.md
-    Positions and Rotations: ./doc/guide/Positions and Rotations.md
-    Create Mesh: ./doc/guide/Create Mesh.md
-    Raw Material: ./doc/guide/Raw Material.md
-    Standard Material: ./doc/guide/Standard Material.md
-    Lights: ./doc/guide/Lights.md
-    Load Models: ./doc/guide/Load Models.md
-    Text Geometry: ./doc/Text Geometry.md
+    First Steps: First Steps.md
+    Positions and Rotations: Positions and Rotations.md
+    Create Mesh: Create Mesh.md
+    Raw Material: Raw Material.md
+    Standard Material: Standard Material.md
+    Lights: Lights.md
+    Load Models: Load Models.md
+    Text Geometry: Text Geometry.md

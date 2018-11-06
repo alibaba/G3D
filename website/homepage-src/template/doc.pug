@@ -15,7 +15,10 @@ block main
                         - for (name in index)
                             - if(typeof index[name] === 'string')
                                 li.item
-                                    a(href="./"+name+".html")= name
+                                    if(langcn && indexcn && indexcn[name])
+                                        a(href="./"+name.split(' ').join('-')+".html")= indexcn[name]
+                                    else
+                                        a(href="./"+name.split(' ').join('-')+".html")= name
                             - else
                                 li.item
                                     .item-title= name

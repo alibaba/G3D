@@ -1,0 +1,10 @@
+docs:
+  guide:
+    First Steps: 万事开头难
+    Positions and Rotations: 平移和旋转
+    Create Mesh: 创建网格体
+    Raw Material: 原始材质
+    Standard Material: 冯氏面材质
+    Lights: 光照
+    Load Models: 加载模型
+    Text Geometry: 文字几何体

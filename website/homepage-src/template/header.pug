@@ -4,13 +4,16 @@
             a.link(href=root)
                 img.logo(src=root+"./assets/logo-g3d.png")
         .item
-            a.link(href=root+"docs/Engine.html") Docs
+            a.link(href=root+"api/Engine.html") API
         .item
-            a.link(href=root+"guide/First Steps.html") Guide
-        .item
-            a.link(target="_blank" href="https://alibaba.github.io/G3D/playground/") Playground
+            a.link(href=root+"guide/First-Steps.html")= guideText
         .item
             a.link(href="https://github.com/alibaba/G3D" target="_blank")
                 img.logo-small(src=root+"assets/logo-github.png")
+        .item-right.item
+            if langcn
+                a.link(href="/") English
+            else
+                a.link(href="/cn/") 中文
         .item-right.item
             a.link(href="https://alibaba.github.io/GCanvas/") GCanvas
