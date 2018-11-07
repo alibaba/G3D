@@ -30,6 +30,8 @@ function main(
             top, bottom,
         });
 
+        G3D.MeshBuilder.createCoordinate(scene, 100);
+
         function render() {
             scene.render();
             requestAnimationFrame(render);

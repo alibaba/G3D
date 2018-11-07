@@ -204,8 +204,6 @@ script.
 
         pbrAssets().ready(function (specular, diffuse, lut) {
 
-            new G3D.Skybox(scene, diffuse, 5.4);
-
             loader.loadText(
                 '//g.alicdn.com/gama/assets/0.0.16/assets/gltf/DamagedHelmet/DamagedHelmet.gltf.json', 
                 function(text) {
@@ -249,9 +247,11 @@ script.
 
                 meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
-                meshes.forEach(m => {
-                    m.rotation.y = 225;
-                });
+                new G3D.Skybox(scene, diffuse, 5.4);
+
+                //- meshes.forEach(m => {
+                    //- m.rotation.y = 225;
+                //- });
             }
         });
 

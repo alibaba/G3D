@@ -529,6 +529,8 @@ class RenderManager {
 
         engine.useProgram('skybox');
 
+        this.setFaceCull(skybox.geometry.facing);
+
         const { vertices, indices } = skybox.geometry.bufferViews;
 
         engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
