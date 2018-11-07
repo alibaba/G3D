@@ -2,31 +2,6 @@
 
 G3D is a pure javascript 3D render engine compatible with WebGL. It depends on no DOM APIs but just a canvas(or canvas-like) object. This feature makes it possible to run on both browser environment and hybrid enviroment(such as Weex or ReactNative), using [GCanvas](https://alibaba.github.io/GCanvas/).
 
-## Playground
-
-The quickest way to try G3D is through the [Playground](https://alibaba.github.io/G3D/playground/). Simply create a 3D scene, create a camera, create lights and meshes as you will. You may create your own scene, or edit an existing one (in Storage -> Sample Examples menu).
-
-In this series of guide, playground will appear as parts of the page. Just as the following:
-
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed"></iframe>
-
-You can edit the code, and the scene rendered on the up-left corner will react quickly. If your code leads to error, the error message will be printed on the left-bottom block.
-
-The playground code must be a function named `run`, which returns the `render` function. The `run` function will be called once and the `render` function will be called frequently (about 16ms once).
-
-```javascript
-function run(G3D, canvas){
-
-    // initialize code
-    
-    return function () {
-
-        // animation code
-
-        scene.render();
-    }
-}
-```
 
 ## Usage
 

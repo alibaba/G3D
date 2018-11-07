@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera }
+    { canvas, requestAnimationFrame, controlRotateCamera }
 ) {
     const image = new G3D.Env.Image();
     image.crossOrigin = true;
@@ -15,7 +15,7 @@ function main(
         camera.beta = -5;
         camera.radius = 20;
 
-        controlArcRotateCamera(canvas, camera);
+        controlRotateCamera(canvas, camera);
 
         const m1 = G3D.MeshBuilder.createPlane(scene, 6, 6);
         m1.materials.default = new G3D.RawMaterial(m1);

@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader, pbrAssets }
+    { canvas, requestAnimationFrame, controlRotateCamera, loader, pbrAssets }
 ) {
 
     const models = {
@@ -16,7 +16,7 @@ function main(
 
     const model = models['damagedHelmet'];
 
-    pbrAssets('default').ready((specular, diffuse, lut) => {
+    pbrAssets((specular, diffuse, lut) => {
 
         loader.loadText(model.uri, (text) => {
 
@@ -77,7 +77,7 @@ function main(
         camera.far = model.cameraRadius * 3;
         camera.radius = model.cameraRadius;
 
-        controlArcRotateCamera(canvas, camera);
+        controlRotateCamera(canvas, camera);
 
         const light1 = new G3D.DirectionalLight(scene);
         light1.direction = { x: 1, y: -1, z: 0 };

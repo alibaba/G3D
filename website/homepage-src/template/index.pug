@@ -1,4 +1,4 @@
-extends layout
+extends layout-index
 
 block meta
     title G3D - A pure WebGL-compatible 3D render engine, works without DOM API
@@ -14,14 +14,5 @@ block main
                 .description= description
                 .github
                     a(href="https://github.com/alibaba/G3D") Github
-            .mask
-        .intro
-            .content
-                .logo
-                    img(src=root+"assets/logo-g3d.png")
-                .title= title
-                .description= introduction 
-                .blueprint
-                    .title= tryText
-                    <a class="jsbin-embed" href="https://jsbin.com/fiquyiz/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script>
+            .mask                    
         include banner

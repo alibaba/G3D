@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader, pbrAssets }
+    { canvas, requestAnimationFrame, controlRotateCamera, loader, pbrAssets }
 ) {
 
     pbrAssets('apartment').ready((specular, diffuse, lut) => {
@@ -52,7 +52,7 @@ function main(
                                     camera.near = 0.001;
                                     camera.far = 100;
 
-                                    controlArcRotateCamera(canvas, camera);
+                                    controlRotateCamera(canvas, camera);
 
                                     // const mesh = G3D.MeshBuilder.createSphere(scene, 2);
 

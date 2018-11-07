@@ -1,67 +1,42 @@
 # 万事开头难
 
-G3D 是一款基于 WebGL 实现的 JavaScript 3D 渲染引擎。G3D 不依赖 DOM API，仅依赖一个 canvas (或类 canvas) 对象。因此，G3D 即可以运行在浏览器环境，也可以借助 [GCanvas](https://alibaba.github.io/GCanvas/) 运行在一些 hybrid 环境如 ReactNative 或 Weex 中。
+G3D 是一款基于 WebGL 实现的 JavaScript 3D 渲染引擎。本系列教程将教会你如何使用 G3D。
 
-## Playground
+## 安装和引用
 
-The quickest way to try G3D is through the [Playground](https://alibaba.github.io/G3D/playground/). Simply create a 3D scene, create a camera, create lights and meshes as you will. You may create your own scene, or edit an existing one (in Storage -> Sample Examples menu).
-
-In this series of guide, playground will appear as parts of the page. Just as the following:
-
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed"></iframe>
-
-You can edit the code, and the scene rendered on the up-left corner will react quickly. If your code leads to error, the error message will be printed on the left-bottom block.
-
-The playground code must be a function named `run`, which returns the `render` function. The `run` function will be called once and the `render` function will be called frequently (about 16ms once).
-
-```javascript
-function run(G3D, canvas){
-
-    // initialize code
-    
-    return function () {
-
-        // animation code
-
-        scene.render();
-    }
-}
-```
-
-## Usage
-
-G3D library is published on [NPM](https://www.npmjs.com/package/g3d). You need to install G3D first.
+G3D 库已经发布在 [NPM](https://www.npmjs.com/package/g3d) 上；你需要手动安装 G3D。
 
 ```dash
-npm install g3d
+npm install g3d --save
 ```
 
-And involve G3D in your own building progress(using Webpack, eg).
+然后在自己的代码里，把 G3D 引入进来。通常，你需要使用一些前端构建工具来辅助（如 Webpack）。
 
 ```javascript
 import G3D from 'g3d';
+console.log(G3D);
 ```
 
-If you want to load G3D through a `&lt;script&gt;` tag (thought we don't recommed you to do so), you can find a UMD file at `dist/g3d.min.js` inside package. You need to put it on your server and load it using a `&lt;script&gt;` tag.
+如果你希望通过 `&lt;script&gt;` 标签来引入 G3D, 你可以在 G3D 的 `dist` 目录下找到 `g3d.min.js` 文件。你可以把这个文件放在自己的服务器上，然后使用 `&lt;script&gt;` 标签引用；或者，你也可以直接引用 `https://unpkg.com/g3d@0.2.1/dist/g3d.min.js`。
 
 ```html
-<script src="g3d.min.jd"></script>
+<script src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js"></script>
 
 <script>
-    console.log(window.G3D);
+    console.log(G3D);
 </script>
 ```
 
-## Basics
+## 基础
 
-To create and render a 3D scene, you need to follow the progress:
+遵循以下几个步骤，以创建最基础的 3D 场景。
 
-1. Create an [engine](../docs/Engine), specify the canvas (a `CanvasHTMLElement` in web environment or a canvas-like object in hybrid environment).
-2. Create a [scene](../docs/Scene), specify the engine you just created.
-3. Create a [camera](../docs/Camera). In most situations, we need to create a [perspective camera](../docs/PerspectiveCamera), and here we create a [arc rotate camera](../docs/ArcRotateCamera) which extends from perspective camera.
-4. Create some [lights](../docs/light). There're several types of light, here wo create a [directional light](../docs/DirectionalLight) and a [hemisphere light](../docs/HemisphereLight).
-5. Create some [meshes](../docs/mesh). Here, we use [MeshBuilder](../docs/MeshBuilder) and create a cube mesh, and specify some [Material](../docs/StandardMaterial) options.
-6. Tell scene to render.
+1. 创建一个 [engine](../docs/Engine)（引擎），传入 canvas 对象。
+2. 创建一个 [scene](../docs/Scene)（场景），传入刚刚创建好的 engine。
+3. 创建一个 [camera](../docs/Camera)（相机）。在大多数情况下，你需要创建 [perspective camera](../docs/PerspectiveCamera)（透视相机），这里我们创建一个[rotate perspective camera](../docs/RotatePerspectiveCamera)（旋转透视相机），它继承自透视相机。
+4. 创建一些 [lights](../docs/light)（光源）。G3D 提供了几种不同类型的光源，这里我们创建了一个 [directional light](../docs/DirectionalLight)（平行光）。
+5. 创建一些 [meshes](../docs/mesh)（网格体）。这里，我们使用 [MeshBuilder](../docs/MeshBuilder) 创建了一个 sphere mesh（球形的网格体）和一个 plane mesh（矩形的网格体）。
+6. 使场景开始渲染。
 
 ```javascript
 function run(G3D, canvas){
@@ -101,6 +76,8 @@ function run(G3D, canvas){
 }
 ```
 
-Try to change some values and see what happened.
+
+
+
 
 [Next Chapter](./Positions and Rotations).
