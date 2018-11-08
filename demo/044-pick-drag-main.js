@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlRotateCamera }
+    { canvas, requestAnimationFrame }
 ) {
 
     const engine = new G3D.Engine(canvas);

@@ -31,53 +31,40 @@ console.log(G3D);
 
 遵循以下几个步骤，以创建最基础的 3D 场景。
 
-1. 创建一个 [engine](../docs/Engine)（引擎），传入 canvas 对象。
-2. 创建一个 [scene](../docs/Scene)（场景），传入刚刚创建好的 engine。
-3. 创建一个 [camera](../docs/Camera)（相机）。在大多数情况下，你需要创建 [perspective camera](../docs/PerspectiveCamera)（透视相机），这里我们创建一个[rotate perspective camera](../docs/RotatePerspectiveCamera)（旋转透视相机），它继承自透视相机。
-4. 创建一些 [lights](../docs/light)（光源）。G3D 提供了几种不同类型的光源，这里我们创建了一个 [directional light](../docs/DirectionalLight)（平行光）。
-5. 创建一些 [meshes](../docs/mesh)（网格体）。这里，我们使用 [MeshBuilder](../docs/MeshBuilder) 创建了一个 sphere mesh（球形的网格体）和一个 plane mesh（矩形的网格体）。
+1. 创建一个渲染引擎(Engine)，传入 canvas 对象。
+2. 创建一个场景(Scene)，传入刚刚创建好的渲染引擎。
+3. 创建一个相机。在大多数情况下，你需要创建透视相机(PerspectiveCamera)，这里我们创建一个环绕透视相机(RotatePerspectiveCamera)，它继承自透视相机。
+4. 创建一些光源。G3D 提供了几种不同类型的光源，这里我们创建了一个平行光源(DirectionalLight)。
+5. 创建一些网格体(Mesh)。这里，我们创建了一个球形的网格体和一个矩形平面的网格体。
 6. 使场景开始渲染。
 
+<a class="jsbin-embed" href="https://jsbin.com/fiquyiz/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script>
+
+## 场景和相机
+
+场景(Scene)中包含了一个三维的空间。在三维空间中，物体的位置使用三个坐标值(x, y, z)来表示。然后我们创建了一个环绕透视相机，这个相机可以在一个球面上环绕着原点旋转，并始终把镜头对准原点。相机的 `alpha` 和 `beta` 参数确定了相机在球面上的位置，而相机的 `radius` 参数确定了球面的大小。
+
 ```javascript
-function run(G3D, canvas){
+const camera = new G3D.RotatePerspectiveCamera(scene);
+camera.alpha = 0;
+camera.beta = 0;
+camera.radius = 8;
+```
 
-    // create 3d engine
-    const engine = new G3D.Engine(canvas);
+图
 
-    // create a scene
-    const scene = new G3D.Scene(engine);
-    
-    // create camera
-    const camera = new G3D.RotatePerspectiveCamera(scene);
-    camera.alpha = 45;
-    camera.beta = 30;
-    camera.radius = 12;
-    camera.fov = 60;
-    
-    // create 3 lights
-    const light1 = new G3D.DirectionalLight(scene);
-    light1.direction.x = -1;
-    light1.direction.y = 0;
-    light1.direction.z = 1;
-    
-    const light2 = new G3D.HemisphereLight(scene);
-    
-    // create mesh
-    const mesh = G3D.MeshBuilder.createCube(scene, 6);
-    
-    Object.assign(mesh.materials.default.diffuseColor, {r: 200, g: 100, b: 100});
-    Object.assign(mesh.materials.default.specularColor, {r: 200, g: 100, b: 100});
-    mesh.materials.default.glossiness = 10;
-    
-    return function () {
-        mesh.rotation.y +=1;
-        scene.render();
-    }
+在上面的 playground 中，你可以在右侧渲染区域拖动鼠标以从各个视角查看场景（这是在 `main` 函数之外完成），本质上，就是更改了相机的 `alpha` 和 `beta` 参数。你也可以在 `render` 函数中改变相机的这两个参数，看看会发生什么。比如，当你在 `render` 函数中为 `camera.alpha` 加上固定的数值1，相机就会自动围绕场景旋转。
+
+```javascript
+function render() {
+    camera.alpha += 1;
+    scene.render();
+    requestAnimationFrame(render);
 }
 ```
 
+图
 
+## 光源
 
-
-
-[Next Chapter](./Positions and Rotations).
+光照是 3D 渲染的基础，没有光，

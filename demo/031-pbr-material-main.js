@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlRotateCamera, loader, pbrAssets }
+    { canvas, requestAnimationFrame, loader, pbrAssets }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -15,7 +15,7 @@ function main(
     camera.beta = 0;
     camera.radius = 16;
 
-    controlRotateCamera(canvas, camera);
+
 
     function createDirectionalLight(x, y, z, intensity = 1.0) {
 

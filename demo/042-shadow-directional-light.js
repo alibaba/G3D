@@ -15,10 +15,11 @@ canvas.style.height = document.documentElement.clientHeight + 'px';
 main(G3D, {
     canvas,
     requestAnimationFrame,
-    controlRotateCamera,
     pbrAssets,
     loader,
     onClickCanvas: function (callback) {
         canvas.addEventListener('click', callback)
     },
 });
+
+controlRotateCamera(canvas, G3D.Engine.instance.currentScene.activeCamera);
