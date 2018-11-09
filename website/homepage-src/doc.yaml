@@ -37,7 +37,7 @@ docs:
       Geometry: Geometry.md
       LineGeometry: LineGeometry.md
     Lights:
-      Light: Light.md
+      BaseLight: BaseLight.md
       AmbientLight: AmbientLight.md
       DirectionalLight: DirectionalLight.md
       PointLight: PointLight.md
