@@ -1,3 +1,5 @@
+script.
+    document.querySelector('.banner').style.height = document.documentElement.clientHeight - 64 + 'px';
 script(src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js")
 script.
     const loader = (function () {
@@ -169,8 +171,7 @@ script.
     function main() {
 
         const container = document.querySelector('.banner');
-        container.style.height = document.documentElement.clientHeight - 64 + 'px';
-
+        
         const width = container.clientWidth;
         const height = container.clientHeight;
 

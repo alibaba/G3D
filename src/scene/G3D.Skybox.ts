@@ -7,7 +7,7 @@ class Skybox {
 
     cubeTexture: CubeTexture;
 
-    constructor(scene, faceImages, size = 100) {
+    constructor(scene, images, size = 100) {
 
         scene.skybox = this;
 
@@ -68,12 +68,12 @@ class Skybox {
 
         this.cubeTexture = new CubeTexture({
             images: {
-                front: faceImages.front,
-                back: faceImages.back,
-                left: faceImages.left,
-                right: faceImages.right,
-                top: faceImages.top,
-                bottom: faceImages.bottom
+                front: images.front,
+                back: images.back,
+                left: images.left,
+                right: images.right,
+                top: images.top,
+                bottom: images.bottom
             }
         });
     }

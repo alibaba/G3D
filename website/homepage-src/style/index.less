@@ -65,6 +65,14 @@ html, body{
             }
 
         }
+
+        .language{
+            .link{
+                background-color: #3498db;
+                padding: 8px 16px;
+                border-radius: 20px;
+            }
+        }
     }
 }
 
@@ -204,7 +212,7 @@ html, body{
 .doc{
     padding-top: 20px;
     padding-bottom: 100px;
-    line-height: 25px;
+    line-height: 20px;
     .content{
         width: 1200px;
         margin: auto;
@@ -257,6 +265,19 @@ html, body{
         }
     }
 
+    h2{
+        margin-top: 40px;
+    }
+    h3{
+        margin-top: 25px;
+    }
+    h4{
+        color: #555555;
+        &::before{
+            content: '▸ ';
+        }
+    }
+
     pre{
         overflow-y: auto;
         padding: 10px;
@@ -280,14 +301,6 @@ html, body{
         width: 100%;
 
         color:#444;
-
-        // th, td{
-        //     max-width:500px;
-        //     min-width:100px;
-        //     text-align:left;
-        //     vertical-align:top;
-        //     padding: 0 20px 0 0;
-        // }
 
         thead{
             tr{

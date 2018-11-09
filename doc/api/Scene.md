@@ -32,7 +32,7 @@ No options.
 
 Void.
 
-### pick(x, y, flip)
+### pick(x, y)
 
 #### options
 
@@ -40,7 +40,6 @@ Void.
 | ---- | ------- | ---------------------------------------------- |
 | x    | Number  | the picking coordinate X value in canvas       |
 | y    | Number  | the picking coordinate Y value in canvas       |
-| flip | Boolean | whether to flip Y coordinates, default is true |
 
 #### returns
 
@@ -50,10 +49,7 @@ id: Number | null, the picked mesh's id or null (picked no mesh)
 
 ```javascript
 const scene = new G3D.Scene(engine);
-
-scene.clearColor.r = 20;
-scene.clearColor.g = 20;
-scene.clearColor.b = 20;
+scene.clearColor = {r: 200, g: 200, b: 200};
 
 function render(){
     scene.render();

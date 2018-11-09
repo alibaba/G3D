@@ -15,8 +15,6 @@ function main(
     camera.beta = 0;
     camera.radius = 16;
 
-
-
     function createDirectionalLight(x, y, z, intensity = 1.0) {
 
         const light = new G3D.DirectionalLight(scene);

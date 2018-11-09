@@ -14,43 +14,26 @@ There's no options for `Node` constructor.
 
 ## Properties
 
-| name     | type                              | description                                                                                     |
-| -------- | --------------------------------- | ----------------------------------------------------------------------------------------------- |
-| position | {x: Number, y: Number, z: Number} | position, default is {x: 0, y: 0, z: 0}                                                         |
-| rotation | {x: Number, y: Number, z: Number} | position, default is {x: 0, y: 0, z: 0}                                                         |
-| scale    | {x: Number, y: Number, z: Number} | scale, default is {x: 1, y: 1, z: 1}                                                            |
-| parent   | G3D.Node                          | parent of the node, a Node's position in world will be affected by it's parent, default is null |
+| name     | type                              | description                                             |
+| -------- | --------------------------------- | ------------------------------------------------------- |
+| position | {x: Number, y: Number, z: Number} | position, default is {x: 0, y: 0, z: 0}                 |
+| rotation | {x: Number, y: Number, z: Number} | rotation in euler angles, default is {x: 0, y: 0, z: 0} |
+| scale    | {x: Number, y: Number, z: Number} | scale, default is {x: 1, y: 1, z: 1}                    |
+| parent   | G3D.Node                          | parent of the node, default is null                     |
 
 ## Methods
 
-### transformCoordinate(x, y, z)
 
-Transform a position from node's local coordinate system to world coordinate system.
+### getMatrix()
 
-#### options
-
-| name | type   | description      |
-| ---- | ------ | ---------------- |
-| x    | Number | position x value |
-| y    | Number | position y value |
-| z    | Number | position z value |
-
-#### returns
-
-position: {x: Number, y: Number, z: Number}, the transformed position.
-
-### transformNormal(x, y, z)
+Get the transform
 
 Transform a direction vector from node's local coordinate system to world coordinate system.
 
-#### options
+#### arguments
 
-| name | type   | description      |
-| ---- | ------ | ---------------- |
-| x    | Number | direction x value |
-| y    | Number | direction y value |
-| z    | Number | direction z value |
+There's no options for ``
 
 #### returns
 
-direction: {x: Number, y: Number, z: Number}, the transformed direction.
+matrix: Float32Array, the transform matrix.

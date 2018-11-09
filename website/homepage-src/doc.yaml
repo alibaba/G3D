@@ -4,28 +4,36 @@ docs:
   api:
     Core:
       Engine: Engine.md
-      Scene: Scene.md
       Node: Node.md
+    Scene:
+      Scene: Scene.md
+      Skybox: Skybox.md
     Cameras:
       BaseCamera: BaseCamera.md
-      OrthographicCamera: OrthographicCamera.md
-      PerspectiveCamera: PerspectiveCamera.md
+      BasePerspectiveCamera: BasePerspectiveCamera.md
+      BaseOrthographicCamera: BaseOrthographicCamera.md
       RotatePerspectiveCamera: RotatePerspectiveCamera.md
       RotateOrthographicCamera: RotateOrthographicCamera.md
     Mesh:
+      BaseMesh: BaseMesh.md
       Mesh: Mesh.md
-      MorphTargetMesh: MorphTargetMesh.md
       LineMesh: LineMesh.md
     MeshUtils:
       MeshBuilder: MeshBuilder.md
     Materials:
       Material: Material.md
-      PhongMaterial: PhongMaterial.md
       RawMaterial: RawMaterial.md
+      PhongMaterial: PhongMaterial.md
       PBRMaterial: PBRMaterial.md
+      PBREnviroment: PBREnviroment.md
     Texture:
       Texture: Texture.md
+      CubeTexture: CubeTexture.md
     Geometries:
+      Buffer: Buffer.md
+      BufferView: BufferView.md
+      ElementBufferView: ElementBufferView.md
+      BaseGeometry: BaseGeometry.md
       Geometry: Geometry.md
       LineGeometry: LineGeometry.md
     Lights:
@@ -36,10 +44,3 @@ docs:
 
   guide:
     First Steps: First Steps.md
-    Positions and Rotations: Positions and Rotations.md
-    Create Mesh: Create Mesh.md
-    Raw Material: Raw Material.md
-    Standard Material: Standard Material.md
-    Lights: Lights.md
-    Load Models: Load Models.md
-    Text Geometry: Text Geometry.md

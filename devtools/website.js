@@ -46,11 +46,11 @@ new Promise((resolve) => {
 
         if (typeof target === 'string') {
 
-            const content = fs.readFileSync(`${docDir}/${scope}/${k}.md`, 'utf-8');
+            console.log(docDir, scope, k);
+
+            const content = fs.readFileSync(`${docDir}/${scope}/${k}.md`, 'utf-8') || '  ';
             const contentcn = fs.existsSync(`${docDir}/${scope}/${k}.cn.md`) ?
                 fs.readFileSync(`${docDir}/${scope}/${k}.cn.md`, 'utf-8') : content;
-
-            console.log(docDir, scope, k);
 
             if (content) {
 
