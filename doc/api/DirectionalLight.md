@@ -1,6 +1,6 @@
 # DirectionalLight
 
-The directional light, extends from [Light](./Light).
+Directional light, extends from [Light](./Light).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ The directional light, extends from [Light](./Light).
 new G3D.DirectionalLight(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                            |
 | ----- | --------- | -------------------------------------- |
@@ -24,10 +24,7 @@ new G3D.DirectionalLight(scene);
 
 ```javascript
 const light = new DirectionalLight(scene);
-
-Object.assign(light.color, {r: 255, g: 255, b: 255});
-
-Object.assign(light.direction, {x : 1, y : 1, z : 1});
-
-light.intensity = 0.5;
+light.color = {r: 255, g: 0, b: 0};
+light.direction = {x : 1, y : 1, z : 1};
+light.intensity = 1.5;
 ```

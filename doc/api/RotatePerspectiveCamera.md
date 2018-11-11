@@ -8,7 +8,7 @@ The camera moving by a sphere polar coordinates. Extends from [PerspectiveCamera
 new G3D.RotatePerspectiveCamera(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                 |
 | ----- | --------- | ------------------------------------------- |
@@ -22,19 +22,11 @@ new G3D.RotatePerspectiveCamera(scene);
 | alpha  | Number | the alpha angle (on X-Z plane), from 0 to 360                     |
 | beta   | Number | the beta angle (vertical to Y axis), from -180 to 180             |
 
-## Methods
-
-There's no public methods for `Engine`.
-
-## Examples
+## Example
 
 ```javascript
 const camera = new G3D.RotatePerspectiveCamera(scene);
-
-camera.alpha = 90;
+camera.alpha = 60;
 camera.beta = 45;
-camera.radius = 500;
-
-camera.near = 1;
-camera.far = 3000;
+camera.radius = 100;
 ```

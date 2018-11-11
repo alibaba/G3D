@@ -1,5 +1,7 @@
 # PBREnviroment
 
+PBR 环境配置对象。
+
 ## 构造函数
 
 ```javascript

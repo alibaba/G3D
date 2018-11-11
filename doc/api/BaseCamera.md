@@ -1,6 +1,6 @@
 # BaseCamera
 
-Base Camera. Extends from [Node](./Node).
+Base camera, extends from [Node](./Node).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ Base Camera. Extends from [Node](./Node).
 new G3D.BaseCamera(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                 |
 | ----- | --------- | ------------------------------------------- |
@@ -18,9 +18,5 @@ new G3D.BaseCamera(scene);
 
 | name   | type                              | description                                                              |
 | ------ | --------------------------------- | ------------------------------------------------------------------------ |
-| center | {x: Number, y: Number, z: Number} | the center point the camera is looking at, default is {x: 0, y: 1, z: 0} |
+| center | {x: Number, y: Number, z: Number} | the center point the camera is looking at, default is {x: 0, y: 0, z: 0} |
 | up     | {x: Number, y: Number, z: Number} | the up direction of the camera, default is {x: 0, y: 1, z: 0}            |
-
-## Methods
-
-There's no public methods for `G3D.BaseCamera`.

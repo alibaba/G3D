@@ -1,6 +1,6 @@
 # Scene
 
-The render scene of G3D.
+Scene.
 
 ## Constructor
 
@@ -8,7 +8,7 @@ The render scene of G3D.
 new G3D.Scene(engine);
 ```
 
-### options
+### Arguments
 
 | name   | type       | description                              |
 | ------ | ---------- | ---------------------------------------- |
@@ -24,28 +24,26 @@ new G3D.Scene(engine);
 
 ### render()
 
-#### options
-
-No options.
-
-#### returns
-
-Void.
+Render the scene.
 
 ### pick(x, y)
 
-#### options
+Try to pick some mesh in the scene.
 
-| name | type    | description                                    |
-| ---- | ------- | ---------------------------------------------- |
-| x    | Number  | the picking coordinate X value in canvas       |
-| y    | Number  | the picking coordinate Y value in canvas       |
+#### Arguments
+
+| name | type   | description                              |
+| ---- | ------ | ---------------------------------------- |
+| x    | Number | the picking coordinate X value in canvas |
+| y    | Number | the picking coordinate Y value in canvas |
 
 #### returns
 
-id: Number | null, the picked mesh's id or null (picked no mesh)
+| type           | description                                   |
+| -------------- | --------------------------------------------- |
+| Number \| null | the picked mesh's id or null (picked no mesh) |
 
-## Examples
+## Example
 
 ```javascript
 const scene = new G3D.Scene(engine);

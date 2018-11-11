@@ -106,7 +106,7 @@
 
 | 名称  | 类型      | 描述               |
 | ----- | --------- | ------------------ |
-| scene | G3D.Scene | 创建出的网格体对象 |
+| scene | G3D.Scene | 网格体所属的场景 |
 | size  | Number    | 每个轴的长度       |
 
 #### 返回值
@@ -123,7 +123,7 @@
 
 | 名称  | 类型                       | 描述               |
 | ----- | -------------------------- | ------------------ |
-| scene | G3D.Scene                  | 创建出的网格体对象 |
+| scene | G3D.Scene                  | 网格体所属的场景 |
 | model | {obj: String, mtl: String} | OBJ 模型数据       |
 
 #### 返回值
@@ -140,7 +140,7 @@
 
 | 名称  | 类型      | 描述               |
 | ----- | --------- | ------------------ |
-| scene | G3D.Scene | 创建出的网格体对象 |
+| scene | G3D.Scene | 网格体所属的场景 |
 | model | String    | STL 模型数据       |
 
 #### 返回值
@@ -157,7 +157,7 @@
 
 | 名称          | 类型              | 描述               |
 | ------------- | ----------------- | ------------------ |
-| scene         | G3D.Scene         | 创建出的网格体对象 |
+| scene         | G3D.Scene         | 网格体所属的场景 |
 | model         | String            | STL 模型数据       |
 | pbrEnviroment | G3D.PBREnviroment | PBR 环境对象       |
 
@@ -175,7 +175,7 @@
 
 | 名称       | 类型      | 描述               |
 | ---------- | --------- | ------------------ |
-| scene      | G3D.Scene | 创建出的网格体对象 |
+| scene      | G3D.Scene | 网格体所属的场景 |
 | path       | String    | SVGPath 数据       |
 | resolution | Number    | 分辨率             |
 
@@ -193,7 +193,7 @@
 
 | 名称       | 类型      | 描述               |
 | ---------- | --------- | ------------------ |
-| scene      | G3D.Scene | 创建出的网格体对象 |
+| scene      | G3D.Scene | 网格体所属的场景 |
 | path       | String    | SVGPath 数据       |
 | thickness  | Number    | 厚度               |
 | resolution | Number    | 分辨率             |

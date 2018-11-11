@@ -1,6 +1,6 @@
 # Geometry
 
-The LineGeometry.
+Line geometry.
 
 ## Constructor
 
@@ -8,15 +8,25 @@ The LineGeometry.
 new G3D.LineGeometry(mesh);
 ```
 
-### options
+### Arguments
 
-| name | type     | description         |
-| ---- | -------- | ------------------- |
-| mesh | G3D.Mesh | the geometry's mesh |
+| name            | type                                    | description         |
+| --------------- | --------------------------------------- | ------------------- |
+| config          | Object                                  | config object       |
+| config.vertices | G3D.BufferView \| Array                 | vertices data       |
+| config.indices  | {[key]: G3D.ElementBufferView \| Array} | vertices index data |
 
-## Properties
+## Example
 
-| name     | type              | description                 |
-| -------- | ----------------- | --------------------------- |
-| vertices | [Number]          | the vertices array          |
-| indices  | {[key]: [Number]} | the indice array collection |
+```javascript
+const lineGeometry = new G3D.LineGeomtry({
+    vertices: [
+        0, 0, 1,
+        0, 1, 1,
+        1, 1, 1
+    ],
+    indices: {
+        foo: [0, 1, 1, 2]
+    }
+});
+```

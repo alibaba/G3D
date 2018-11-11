@@ -1,24 +1,47 @@
 # Geometry
 
-The Geometry.
+Face geometry.
 
 ## Constructor
 
 ```javascript
-new G3D.Geometry(mesh);
+new Geometry(config);
 ```
 
-### options
+### Arguments
 
-| name | type     | description         |
-| ---- | -------- | ------------------- |
-| mesh | G3D.Mesh | the geometry's mesh |
+| name                | type                                    | description                                              |
+| ------------------- | --------------------------------------- | -------------------------------------------------------- |
+| config              | Object                                  | config object                                            |
+| config.vertices     | G3D.BufferView \| Array                 | vertices data                                            |
+| config.normals      | G3D.BufferView \| Array                 | normal data                                              |
+| config.uvs          | G3D.BufferView \| Array                 | uv data                                                  |
+| config.indices      | {[key]: G3D.ElementBufferView \| Array} | vertices index data                                      |v
+| config.mergeNormals | Boolean                                 | whether to merge normals                                 |
+| config.facing       | Enum                                    | can be Geometry.Facing.FRONT，Facing.BACK 或 Facing.BOTH |
 
-## Properties
+## Example
 
-| name     | type              | description                 |
-| -------- | ----------------- | --------------------------- |
-| vertices | [Number]          | the vertices array          |
-| normals  | [Number]          | the normal array            |
-| uvs      | [Number]          | the uv array                |
-| indices  | {[key]: [Number]} | the indice array collection |
+```javascript
+const geometry = new G3D.Geometry({
+    vertices: [
+        1, 0, 0, 
+        0, 1, 0, 
+        0, 0, 1
+    ],
+    normals: [
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1
+    ],
+    uvs: [
+        0, 0,
+        1, 0,
+        1, 1
+    ],
+    indices: {
+        foo: [0, 1, 2]
+    },
+    facing: Geometry.BOTH
+})
+```

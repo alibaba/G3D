@@ -1,6 +1,6 @@
-# PerspectiveCamera
+# BasePerspectiveCamera
 
-Perspective Camera. Extends from [Node](./Node).
+Base perspective camera, extends from [BaseCamera](./BaseCamera).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ Perspective Camera. Extends from [Node](./Node).
 new G3D.PerspectiveCamera(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                 |
 | ----- | --------- | ------------------------------------------- |
@@ -20,23 +20,15 @@ new G3D.PerspectiveCamera(scene);
 | --------- | ------ | ---------------------------------------------------------- |
 | near      | Number | distance between camera and the near plane, default is 1   |
 | far       | Number | distance between camera and the far plane, default is 1000 |
-| fov       | Number | field of view, default is 90                               |
+| fov       | Number | field of view, default is 60                               |
 | viewRatio | Number | view's width / height, default is 1                        |
 
-## Methods
+## Example
 
-### getViewRay(x, y, flip)
-
-Create a ray from camera position to the mouse-click direction.
-
-#### options
-
-| name | type    | description                                  |
-| ---- | ------- | -------------------------------------------- |
-| x    | Number  | mouse-click position x value in the canvas   |
-| y    | Number  | mouse-click position y value in the canvas   |
-| flip | Boolean | whether to flip the y value, default is true |
-
-#### returns
-
-ray: G3D.Ray | null, the created ray
+```javascript
+const camera = new G3D.BasePerspectiveCamera(scene);
+camera.near = 0.01;
+camera.far = 100;
+camera.fov = 75;
+camera.viewRatio = canvas.width / canvas.height;
+```

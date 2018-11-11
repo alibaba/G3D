@@ -8,7 +8,7 @@ The sky box in 3D scene.
 new G3D.Skybox(scene, images, size);
 ```
 
-### options
+### Arguments
 
 | name   | type      | description                                                               |
 | ------ | --------- | ------------------------------------------------------------------------- |
@@ -23,16 +23,12 @@ There's no public methods for `Skybox`.
 ## Examples
 
 ```javascript
-const engine = new G3D.Engine(canvas);
-const scene = new G3D.Scene(engine);
-
-const camera = new G3D.RotatePerspectiveCamera(scene);
-
 const skybox = new G3D.Skybox(scene, {
     front: frontImage,
     back: backImage,
-    ...
-});
-
-scene.render();
+    top: topImage,
+    bottom: bottomImage,
+    left: leftImage,
+    right: rightImage
+}, 200);
 ```

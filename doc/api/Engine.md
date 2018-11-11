@@ -8,23 +8,13 @@ The render Engine of G3D.
 new G3D.Engine(canvas);
 ```
 
-### options
+### Arguments
 
-| name   | type                                  | description                          |
-| ------ | ------------------------------------- | ------------------------------------ |
-| canvas | HTMLCanvasElement or GCanvas instance | the canvas instance to display scene |
+| name   | type              | description                          |
+| ------ | ----------------- | ------------------------------------ |
+| canvas | HTMLCanvasElement | the canvas instance to display scene |
 
-## Properties
-
-There's no public properties for `Engine`.
-
-## Methods
-
-There's no public methods for `Engine`.
-
-## Examples
-
-The only way to use Engine is passing `engine` to `Scene` constructor as the only parameter.
+## Example
 
 ```javascript
 const engine = new G3D.Engine(canvas);

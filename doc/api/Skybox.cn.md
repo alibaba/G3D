@@ -19,11 +19,6 @@ new G3D.Skybox(scene, images, size);
 ## 示例
 
 ```javascript
-const engine = new G3D.Engine(canvas);
-const scene = new G3D.Scene(engine);
-
-const camera = new G3D.RotatePerspectiveCamera(scene);
-
 const skybox = new G3D.Skybox(scene, {
     front: frontImage,
     back: backImage,
@@ -32,6 +27,4 @@ const skybox = new G3D.Skybox(scene, {
     left: leftImage,
     right: rightImage
 }, 200);
-
-scene.render();
 ```

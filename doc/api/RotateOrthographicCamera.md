@@ -1,6 +1,6 @@
 # RotateOrthographicCamera
 
-The camera moving by a sphere polar coordinates. Extends from [OrthographicCamera](./OrthographicCamera).
+The camera moving in a sphere polar coordinates. Extends from [BaseOrthographicCamera](./BaseOrthographicCamera).
 
 ## Contructor
 
@@ -8,7 +8,7 @@ The camera moving by a sphere polar coordinates. Extends from [OrthographicCamer
 new G3D.RotateOrthographicCamera(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                 |
 | ----- | --------- | ------------------------------------------- |
@@ -22,19 +22,12 @@ new G3D.RotateOrthographicCamera(scene);
 | alpha  | Number | the alpha angle (on X-Z plane), from 0 to 360                     |
 | beta   | Number | the beta angle (vertical to Y axis), from -180 to 180             |
 
-## Methods
-
-There's no public methods for `RotateOrthographicCamera`.
 
 ## Examples
 
 ```javascript
-const camera = new G3D.RotateOrthographicCamera(scene);
-
-camera.alpha = 90;
+const camera = new G3D.RotatePerspectiveCamera(scene);
+camera.alpha = 60;
 camera.beta = 45;
-camera.radius = 500;
-
-camera.near = 1;
-camera.far = 3000;
+camera.radius = 100;
 ```

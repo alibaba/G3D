@@ -12,7 +12,7 @@ new G3D.Engine(canvas);
 
 | 名称   | 类型                              | 描述                       |
 | ------ | --------------------------------- | -------------------------- |
-| canvas | HTMLCanvasElement 或 GCanvas 实例 | 显示渲染结果的 canvas 对象 |
+| canvas | HTMLCanvasElement | 显示渲染结果的 canvas 对象 |
 
 ## 示例
 
