@@ -1,6 +1,6 @@
 # PBRMaterial
 
-Standard material, representing phong reflection face. Extends from [Material](./Material).
+Physical based rendering material, extends from [Material](./Material).
 
 ## Constructor
 
@@ -10,10 +10,26 @@ new G3D.PBRMaterial();
 
 ## Properties
 
-| name               | type                              | description                     |
-| ------------------ | --------------------------------- | ------------------------------- |
-| albedoColor        | {r: Number, g: Number, b: Number} | base color                      |
-| metallic           | Number                            | metallic, varies in [0, 1]      |
-| roughness          | Number                            | roughness, varies in [0, 1]     |
-| diffuseMapTexture  | G3D.CubeTexture                   | env diffuse light cube texture  |
-| specularMapTexture | G3D.CubeTexture                   | env specular light cube texture |
+| name                     | type                              | description                                   |
+| ------------------------ | --------------------------------- | --------------------------------------------- |
+| albedoColor              | {r: Number, g: Number, b: Number} | base color, default is {r: 255, g:255, b:255} |
+| albedoTexture            | G3D.Texture                       | base texture                                  |
+| metallic                 | Number                            | metallic, varies in [0, 1]                    |
+| roughness                | Number                            | roughness, varies in [0, 1]                   |
+| metallicRoughnessTexture | G3D.Texture                       | metallic and Roughtness texture               |
+| emissiveTexture          | G3D.Texture                       | emissive texture                              |
+| normalTexture            | G3D.Texture                       | normal texture                                |
+| pbrEnviroment            | G3D.PBREnviroment                 | PBR enviroment config                         |
+
+## Example
+
+```javascript
+const material = new G3D.PBRMaterial();
+material.albedoColor = {r: 255, g: 255, b: 255};
+material.albedoTexture = new G3D.Texture(textureConfig);
+material.matallic = 0.8;
+material.roughness = 0.3;
+material.pbrEnviroment = new G3D.PBREnviroment(pbrEnvConfig);
+
+mesh.materials['default'] = material;
+```

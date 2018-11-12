@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader, pbrAssets }
+    { canvas, requestAnimationFrame, loader, pbrAssets }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -14,8 +14,6 @@ function main(
     camera.alpha = 0;
     camera.beta = 0;
     camera.radius = 16;
-
-    controlArcRotateCamera(canvas, camera);
 
     function createDirectionalLight(x, y, z, intensity = 1.0) {
 
@@ -49,7 +47,7 @@ function main(
 
     G3D.MeshBuilder.createCoordinate(scene, 5);
 
-    pbrAssets('default').ready((specular, diffuse, lut) => {
+    pbrAssets((specular, diffuse, lut) => {
 
         const pbrEnv = new G3D.PBREnviroment({
             diffuse,

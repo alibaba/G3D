@@ -13,7 +13,7 @@ const lightConfigList = {
 
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
+    { canvas, requestAnimationFrame, loader }
 ) {
 
     const attachMaterialBasic = function (mesh, r, g, b, image) {
@@ -44,7 +44,7 @@ function main(
     camera.radius = 60;
     camera.far = 400;
 
-    controlArcRotateCamera(canvas, camera);
+
 
     lightConfigList.direction.forEach(([x, y, z, intensity]) => {
         const light = new G3D.DirectionalLight(scene);

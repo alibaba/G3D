@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
+    { canvas, requestAnimationFrame, loader }
 ) {
     const engine = new G3D.Engine(canvas);
 
@@ -13,7 +13,7 @@ function main(
     camera.near = 0.001;
     camera.far = 1000;
 
-    controlArcRotateCamera(canvas, camera);
+
 
     loader.loadImageQueue({
         front: '//gw.alicdn.com/tfs/TB1qZBqATtYBeNjy1XdXXXXyVXa-1024-1024.png',

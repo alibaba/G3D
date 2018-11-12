@@ -22,6 +22,7 @@ class Scene {
 
     constructor(engine) {
         this.engine = engine;
+        this.engine.currentScene = this;
     }
 
     render() {

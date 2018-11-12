@@ -1,6 +1,6 @@
 # OrthographicCamera
 
-Orthographic Camera. Extends from [BaseCamera](./BaseCamera).
+Orthographic Camera, extends from [BaseCamera](./BaseCamera).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ Orthographic Camera. Extends from [BaseCamera](./BaseCamera).
 new G3D.OrthographicCamera(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                 |
 | ----- | --------- | ------------------------------------------- |
@@ -20,9 +20,15 @@ new G3D.OrthographicCamera(scene);
 | --------- | ------ | ---------------------------------------------------------- |
 | near      | Number | distance between camera and the near plane, default is 1   |
 | far       | Number | distance between camera and the far plane, default is 1000 |
-| width     | Number | width of the camera's view                                 |
-| viewRatio | Number | view's width / height of the camera                        |
+| width     | Number | width of the camera's view, default is 10                  |
+| viewRatio | Number | view's width / height of the camera, default is 1          |
 
-## Methods
+## Example
 
-There's no public methods for `G3D.OrthographicCamera`.
+```javascript
+const camera = new G3D.BaseOrthographicCamera(scene);
+camera.near = 0.01;
+camera.far = 100;
+camera.width = 3;
+camera.viewRatio = canvas.width / canvas.height;
+```

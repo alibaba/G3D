@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
+    { canvas, requestAnimationFrame, loader }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -12,7 +12,7 @@ function main(
     camera.beta = 30;
     camera.radius = 8;
 
-    controlArcRotateCamera(canvas, camera);
+
 
     const light1 = new G3D.DirectionalLight(scene);
     light1.direction = { x: 1, y: 1, z: 1 };

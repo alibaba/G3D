@@ -1,6 +1,6 @@
 # Mesh
 
-The Mesh. Extends from Node.
+Face Mesh, extends from [BaseMesh](./BaseMesh).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ The Mesh. Extends from Node.
 new G3D.Mesh(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                           |
 | ----- | --------- | ------------------------------------- |
@@ -16,43 +16,26 @@ new G3D.Mesh(scene);
 
 ## Properties
 
-| name             | type                  | description                                                                             |
-| ---------------- | --------------------- | --------------------------------------------------------------------------------------- |
-| geometry         | G3D.Geometry          | the geometry object                                                                     |
-| materials        | {[key]: G3D.Material} | the material collection                                                                 |
-| visibility       | Boolean               | whether the mesh is visible, default is true                                            |
-| pickable         | Boolean               | whether the mesh could be picked using scene.pick(), default is true                    |
-| renderLayerIndex | Number                | the render layer index, higher layer covers on those lower layers(no matter the depths) |
+| name      | type                  | description             |
+| --------- | --------------------- | ----------------------- |
+| geometry  | G3D.Geometry          | the geometry object     |
+| materials | {[key]: G3D.Material} | the material collection |
 
-## Methods
-
-### dispose()
-
-Remove the mesh from the scene.
-
-#### options
-
-There's no options for the dispose method.
-
-#### returns
-
-Void.
-
-## Examples
+## Example
 
 ```javascript
 const mesh = new G3D.Mesh(scene);
-
-mesh.geometry.vertices = [...yourVertices];
-mesh.geometry.normals = [...yourNormals];
-mesh.geometry.uvs = [...yourUVs];
-
-mesh.indices = {
-    foo: [...indicesK1],
-    bar: [...indicesK2]
-}
-
-mesh.materials.foo.ambientColor = {r: 255, g: 255, b: 0};
-
-mesh.materials.bar.diffuseTexture.image = loadedImageObject;
+mesh.geomtry = new G3D.Geomtry({
+    vertices, 
+    normals,
+    uvs,
+    indices: {
+        foo: indices1,
+        bar: indices2
+    }
+});
+mesh.materials = {
+    foo: new G3D.RawMaterial(rawMaterialConfig),
+    bar: new G3D.PhongMaterial(phongMaterialConfig)
+};
 ```

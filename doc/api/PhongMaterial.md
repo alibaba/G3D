@@ -1,30 +1,34 @@
 # PhongMaterial
 
-Standard material, representing phong reflection face. Extends from [Material](./Material).
+Phong material, representing phong reflection face, extends from [Material](./Material).
 
 ## Constructor
 
 ```javascript
-new G3D.PhongMaterial(mesh);
+new G3D.PhongMaterial();
 ```
-
-| name | type     | description                 |
-| ---- | -------- | --------------------------- |
-| mesh | G3D.Mesh | the mesh the material is on |
 
 ## Properties
 
-| name            | type                                    | description                              |
-| --------------- | --------------------------------------- | ---------------------------------------- |
-| ambientColor    | {r: Number, g: Number, b: Number}       | ambient color                            |
-| ambientTexture  | G3D.Texture                             | ambient texture                          |
-| ambientSource   | enum {Material.COLOR, Material.TEXTURE} | whether to use ambient color or texture  |
-| diffuseColor    | {r: Number, g: Number, b: Number}       | diffuse color                            |
-| diffuseTexture  | G3D.Texture                             | diffuse texture                          |
-| diffuseSource   | enum {Material.COLOR, Material.TEXTURE} | whether to use diffuse color or texture  |
-| specularColor   | {r: Number, g: Number, b: Number}       | specular color                           |
-| specularTexture | G3D.Texture                             | specular texture                         |
-| specularSource  | enum {Material.COLOR, Material.TEXTURE} | whether to use specular color or texture |
-| glossiness      | Number                                  | glossiness, from 1 to 1000               |
-| envMapTexture   | G3D.Texture                             | env map texture                          |
-| useEnvMap       | Boolean                                 | wether to use env map                    |
+| name                  | type                              | description                |
+| --------------------- | --------------------------------- | -------------------------- |
+| ambientColor          | {r: Number, g: Number, b: Number} | ambient color              |
+| ambientTexture        | G3D.Texture                       | ambient texture            |
+| diffuseColor          | {r: Number, g: Number, b: Number} | diffuse color              |
+| diffuseTexture        | G3D.Texture                       | diffuse texture            |
+| specularColor         | {r: Number, g: Number, b: Number} | specular color             |
+| specularTexture       | G3D.Texture                       | specular texture           |
+| glossiness            | Number                            | glossiness, from 1 to 1000 |
+| specularEnvMapTexture | G3D.Texture                       | env map texture            |
+
+## Example
+
+```javascript
+const material = new G3D.PhongMaterial();
+material.ambientColor = {r: 255, g: 255, b: 255};
+material.diffuse = {r: 100, g: 100, b: 100};
+material.diffuseTexture = new G3D.Texture(textureConfig);
+material.specular = {r: 100, g: 100, b: 100};
+
+mesh.materials['default'] = material;
+```

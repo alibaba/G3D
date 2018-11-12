@@ -1,4 +1,6 @@
-script(src="https://unpkg.com/g3d@0.2.0/dist/g3d.min.js")
+script.
+    document.querySelector('.banner').style.height = document.documentElement.clientHeight - 64 + 'px';
+script(src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js")
 script.
     const loader = (function () {
 
@@ -169,14 +171,13 @@ script.
     function main() {
 
         const container = document.querySelector('.banner');
-        container.style.height = document.documentElement.clientHeight - 64 + 'px';
-
+        
         const width = container.clientWidth;
         const height = container.clientHeight;
 
         const canvas = document.createElement('canvas');
-        canvas.width = width * 1.5 * devicePixelRatio;
-        canvas.height = height * devicePixelRatio;
+        canvas.width = width * 1.5;
+        canvas.height = height;
         canvas.style.position = 'absolute';
         canvas.style.left = 0;
         canvas.style.top = 0;
@@ -265,7 +266,7 @@ script.
             const { offsetX, offsetY } = e;
             const id = scene.pick(offsetX, offsetY);
             targetY = (offsetY / height) * 2 - 1;
-            if (id === meshes[0].id) {
+            if (meshes[0] && id === meshes[0].id) {
                 hover = true;
             } else {
                 hover = false;

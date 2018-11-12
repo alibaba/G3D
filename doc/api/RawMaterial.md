@@ -1,21 +1,26 @@
 # RawMaterial
 
-Raw material, whose rendered color is independent from lights. Extends from [Material](./Material).
+Raw material, the rendered color is independent from lights, extends from [Material](./Material).
 
 ## Constructor
 
 ```javascript
-new G3D.RawMaterial(mesh);
+new G3D.RawMaterial();
 ```
-
-| name | type     | description                 |
-| ---- | -------- | --------------------------- |
-| mesh | G3D.Mesh | the mesh the material is on |
 
 ## Properties
 
-| name    | type                                    | description                             |
-| ------- | --------------------------------------- | --------------------------------------- |
-| color   | {r: Number, g: Number, b: Number}       | ambient color                           |
-| texture | G3D.Texture                             | ambient texture                         |
-| source  | enum {Material.COLOR, Material.TEXTURE} | whether to use ambient color or texture |
+| name    | type                              | description     |
+| ------- | --------------------------------- | --------------- |
+| color   | {r: Number, g: Number, b: Number} | ambient color   |
+| texture | G3D.Texture                       | ambient texture |
+
+## Example
+
+```javascript
+const material = new G3D.RawMaterial();
+material.color = {r: 100, g: 100, b: 200};
+material.texture = new G3D.Texture(textureConfig);
+
+mesh.materials['default'] = material;
+```

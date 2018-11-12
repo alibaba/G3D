@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, controlArcRotateCamera, loader }
+    { canvas, requestAnimationFrame, loader }
 ) {
 
     const engine = new G3D.Engine(canvas);
@@ -13,7 +13,7 @@ function main(
     camera.radius = 5500;
     camera.far = 10000;
 
-    controlArcRotateCamera(canvas, camera);
+
 
     const light0 = new G3D.AmbientLight(scene);
     light0.intensity = 0.7;

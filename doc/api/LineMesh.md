@@ -1,6 +1,6 @@
 # LineMesh
 
-The line mesh. Extends from Mesh.
+Line mesh, extends from [BaseMesh](./BaseMesh).
 
 ## Constructor
 
@@ -8,7 +8,7 @@ The line mesh. Extends from Mesh.
 new G3D.LineMesh(scene);
 ```
 
-### options
+### Arguments
 
 | name  | type      | description                                |
 | ----- | --------- | ------------------------------------------ |
@@ -16,10 +16,23 @@ new G3D.LineMesh(scene);
 
 ## Properties
 
-| name      | type   | description            |
-| --------- | ------ | ---------------------- |
-| lineWidth | Number | line width of the line mesh |
+| name      | type                  | description             |
+| --------- | --------------------- | ----------------------- |
+| geometry  | G3D.LineGeometry      | line geomtry object     |
+| materials | {[key]: G3D.Material} | collection of materials |
+| lineWidth | Number                | line width              |
 
-## Methods
+## Example
 
-There's no public methods for LineMesh.
+```javascript
+const mesh = new G3D.LineMesh(scene);
+mesh.geomtry = new G3D.LineGeomtry({
+    vertices, 
+    indices: {
+        foo: indices
+    }
+});
+mesh.materials = {
+    foo: new G3D.RawMaterial(rawMaterialConfig)
+};
+```

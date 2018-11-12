@@ -3,8 +3,6 @@ import Program from './G3D.Program';
 import Framebuffer from './G3D.Framebuffer';
 import Env from './G3D.Env';
 
-
-
 import * as fShaderMaterialPhong from '../shaders/material-phong.frag.glsl';
 import * as vShaderMaterialPhong from '../shaders/material-phong.vert.glsl';
 
@@ -27,6 +25,7 @@ import * as fShaderSkybox from '../shaders/skybox.frag.glsl';
 import * as vShaderSkybox from '../shaders/skybox.vert.glsl';
 
 import { ICanvas, IWebGLRenderingContext } from '../types/webgl';
+import Scene from '../scene/G3D.Scene';
 
 
 class Engine {
@@ -35,6 +34,7 @@ class Engine {
     height: number = 0;
 
     currentProgram: any = {};
+    currentScene: Scene;
 
     programs: { [prop: string]: Program } = {};
 
