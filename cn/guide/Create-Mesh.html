@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item"><a class="link" href="/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">万事开头难</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">平移和旋转</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
+              </li>
+              <li class="item"><a href="./Raw-Material.html">原始材质</a>
+              </li>
+              <li class="item"><a href="./Standard-Material.html">冯氏面材质</a>
+              </li>
+              <li class="item"><a href="./Lights.html">光照</a>
+              </li>
+              <li class="item"><a href="./Load-Models.html">加载模型</a>
+              </li>
+              <li class="item"><a href="./Text-Geometry.html">文字几何体</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="create-mesh">Create Mesh</h1>
+<p>We can create mesh through three ways. </p>
+<ol>
+<li>Create predefined shaped mesh.</li>
+<li>Create custom mesh, mannually specify vertices, normals and so on.</li>
+<li>Create mesh from 3d model file.</li>
+</ol>
+<p>Let&#39;s walk throught one by one.</p>
+<h2 id="create-predefined-shaped-mesh-">Create predefined shaped mesh.</h2>
+<p>Last chapter we created a cube-shape mesh. Actually G3D allows us to create a number of shapes: Sphere, Cylinder, Cone, Plane(ground).</p>
+<p>See the following case:</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=shapes"></iframe>
+
+<p>We created a sphere mesh by callding <code>G3D.MeshBuilder.createSphere</code>. The first argument is the <code>scene</code> object, the second is sphere&#39;s radius. There&#39;s two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.</p>
+<pre><code class="language-javascript">mesh = G3D.MeshBuilder.createSphere(scene, 1);</code></pre>
+<p>Basiclly, the <code>MeshBuider.createXXX</code> methods follow this pattern:</p>
+<ul>
+<li>First argument should be your scene object.</li>
+<li>Following is one or more arguments representing the size of the mesh.</li>
+<li>Last is one or more arguments is the curve&#39;s segments number.</li>
+</ul>
+<p>Read the <a href="../docs/MeshBuilder">API Reference</a> for more information.</p>
+<p>Try uncomment one of these lines and comment other lines, to see what kind of mesh it will create.</p>
+<pre><code class="language-javascript">    mesh = G3D.MeshBuilder.createSphere(scene, 1);
+    // mesh = G3D.MeshBuilder.createGround(scene, 2, 1);
+    // mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
+    // mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
+    // mesh = G3D.MeshBuilder.createCube(scene, 1);</code></pre>
+<h2 id="create-custom-mesh">Create Custom Mesh</h2>
+<p>You can also create custom mesh by mannually specify the mesh&#39;s geometry vertices, normals and so on.</p>
+<p>See the following example:</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=custom-geometry"></iframe>
+
+<p>In <code>createCustomTriangleMesh</code> method, we call <code>new G3D.Mesh</code> to create an empty mesh.</p>
+<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);</code></pre>
+<p>We got a mesh instance, which structure is:</p>
+<ul>
+<li>mesh: instance of <code>G3D.Mesh</code><ul>
+<li>geometry: instance of <code>G3D.Geometry</code><ul>
+<li>vertices: array of <code>Number</code>, default is empty (<code>[]</code>)</li>
+<li>normals: array of <code>Number</code>, default is empty</li>
+<li>uvs: array of <code>Number</code></li>
+<li>indices: object<ul>
+<li>default: array of <code>Number</code>, default is empty. <code>default</code> is a default name, which maps the material with the same name in <code>materials</code>. A mesh may has multiple indices arrays and materials. For example, <code>mesh.geometry.indices.default</code> maps with <code>mesh.materials.default</code>, also <code>mesh.geometry.indices.foo</code> maps with <code>mesh.materials.foo</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>materials: object<ul>
+<li>default: instance of <code>G3D.StandardMaterial</code>, maps with indices array with the same name <code>default</code> in <code>geometry.indices</code> (<code>geometry.indices.default</code>, ie). More details in material instance will be discussed in later chapters.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>If we want to create a custom mesh, we need to manually fill <code>geometry.vertices</code>, <code>geometry.normals</code>, <code>geometry.uvs</code>, <code>geometry.indice.default</code>, as following:</p>
+<pre><code class="language-javascript">mesh.geometry.vertices = [
+    2, 0, 0,
+    0, 2, 0,
+    0, 0, 2
+];
+mesh.geometry.uvs = [0, 0, 0, 0, 0, 0];
+mesh.geometry.normals = [
+    1, 1, 1,
+    1, 1, 1,
+    1, 1, 1
+];
+mesh.geometry.indices = {
+    foo: [
+        0, 1, 2
+    ]
+};</code></pre>
+<ul>
+<li>Each 3 numbers in <code>vertices</code> array represents a vertice&#39;s position (x, y, z). Here we have 3 vertices, the one which coordinate is (2, 0, 0) is on the X axis, and the other two are on Y axis and Z axis.</li>
+<li>Each 2 numbers in <code>uvs</code> array represents a vertice&#39;s uv, which is useful when we apply texture on the mesh. Cause we don&#39;t use texture for the example, we just specify [0, 0] for each vertices.</li>
+<li>Each 3 numbers in <code>normals</code> array represents a vertice&#39;s normal vector. Because the 3 vertices are in the same face (see indices following).</li>
+<li>Each 3 numbers in <code>indices.{xxx}</code> (such as <code>indices.default</code>) represents a face, each number is the index of the vertices, for example, the first item number <code>0</code> in <code>indices.foo</code> represents vertice (2, 0, 0) in vertices array.</li>
+</ul>
+<p>You can change the numbers in those arrays and verify the above explaination.</p>
+<h2 id="create-from-3d-model-files">Create From 3D Model Files</h2>
+<p>When your 3D project grows larger, you should consider creating 3D models using applications such as Blender, 3D Max, SketchUp and so on. Most 3D modeling applications share some common model file format, G3D can load two of them: obj and stl (currently).</p>
+<p>See the following example, check how to use G3D to load obj format 3D model files.</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=create-from-model"></iframe>
+
+<p>As we mentioned above, G3D is a pure render engine and the &#39;load&#39; thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the &#39;load&#39; thing yourself, and pass the loaded text to <code>MeshBuilder.createFromObjModel</code>.</p>
+<pre><code class="language-javascript">const objStr = `
+    # Alias OBJ Model File
+    # File units = meters
+    mtllib triangle.mtl
+    usemtl FrontColor
+    v 0 0 1
+    vt -27.8388 -16.0728
+    vn -0.57735 -0.57735 0.57735
+    v 1 0 0
+    vt 27.8388 -16.0728
+    v 0 1 0
+    vt 0 32.1455
+    f 1/1/1 2/2/1 3/3/1
+`;
+
+const mtlStr = `
+    # Alias OBJ Material File
+    newmtl FrontColor
+    Ka 0.000000 0.000000 0.000000
+    Kd 0.882353 0.882353 0.784314
+    Ks 0.330000 0.330000 0.330000
+`;
+
+return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr });</code></pre>
+<p>An obj-formatted model usually contains a *.obj file and a *.mtl file. You should load it yourself. Here we hard coded a simple model (a triangle just like the one in the previous example).</p>
+<p>For more information about obj format, you can refer to <a href="http://www.martinreddy.net/gfx/3d/OBJ.spec">Obj Spec</a>. And try change the hard coded string to see what happened.</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

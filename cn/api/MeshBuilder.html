@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item">
+                <div class="item-title">Core</div>
+                <ol>
+                  <li class="item"><a href="./Engine.html">Engine</a></li>
+                  <li class="item"><a href="./Node.html">Node</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Scene</div>
+                <ol>
+                  <li class="item"><a href="./Scene.html">Scene</a></li>
+                  <li class="item"><a href="./Skybox.html">Skybox</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Cameras</div>
+                <ol>
+                  <li class="item"><a href="./BaseCamera.html">BaseCamera</a></li>
+                  <li class="item"><a href="./BasePerspectiveCamera.html">BasePerspectiveCamera</a></li>
+                  <li class="item"><a href="./BaseOrthographicCamera.html">BaseOrthographicCamera</a></li>
+                  <li class="item"><a href="./RotatePerspectiveCamera.html">RotatePerspectiveCamera</a></li>
+                  <li class="item"><a href="./RotateOrthographicCamera.html">RotateOrthographicCamera</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Mesh</div>
+                <ol>
+                  <li class="item"><a href="./BaseMesh.html">BaseMesh</a></li>
+                  <li class="item"><a href="./Mesh.html">Mesh</a></li>
+                  <li class="item"><a href="./LineMesh.html">LineMesh</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">MeshUtils</div>
+                <ol>
+                  <li class="item"><a href="./MeshBuilder.html">MeshBuilder</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Materials</div>
+                <ol>
+                  <li class="item"><a href="./Material.html">Material</a></li>
+                  <li class="item"><a href="./RawMaterial.html">RawMaterial</a></li>
+                  <li class="item"><a href="./PhongMaterial.html">PhongMaterial</a></li>
+                  <li class="item"><a href="./PBRMaterial.html">PBRMaterial</a></li>
+                  <li class="item"><a href="./PBREnviroment.html">PBREnviroment</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Texture</div>
+                <ol>
+                  <li class="item"><a href="./Texture.html">Texture</a></li>
+                  <li class="item"><a href="./CubeTexture.html">CubeTexture</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Geometries</div>
+                <ol>
+                  <li class="item"><a href="./Buffer.html">Buffer</a></li>
+                  <li class="item"><a href="./BufferView.html">BufferView</a></li>
+                  <li class="item"><a href="./ElementBufferView.html">ElementBufferView</a></li>
+                  <li class="item"><a href="./BaseGeometry.html">BaseGeometry</a></li>
+                  <li class="item"><a href="./Geometry.html">Geometry</a></li>
+                  <li class="item"><a href="./LineGeometry.html">LineGeometry</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Lights</div>
+                <ol>
+                  <li class="item"><a href="./BaseLight.html">BaseLight</a></li>
+                  <li class="item"><a href="./AmbientLight.html">AmbientLight</a></li>
+                  <li class="item"><a href="./DirectionalLight.html">DirectionalLight</a></li>
+                  <li class="item"><a href="./PointLight.html">PointLight</a></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="meshbuilder">MeshBuilder</h1>
+<p>通过不同方式创建各种网格体的工厂函数集合。每一个方法返回一个创建好的网格体。</p>
+<h2 id="-">属性</h2>
+<h3 id="createplane-scene-width-height-">createPlane(scene, width, height)</h3>
+<p>创建一个位于 X-Y 平面上，中心为原点的矩形平面。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>width</td>
+<td>Number</td>
+<td>宽度，沿 X 轴的距离</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+<td>高度，沿 Y 轴的距离</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createcube-scene-width-height-depth-">createCube(scene, width, height, depth)</h3>
+<p>创建一个中心为原点的立方体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>width</td>
+<td>Number</td>
+<td>宽度，沿 X 轴的距离</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+<td>高度，沿 Y 轴的距离</td>
+</tr>
+<tr>
+<td>depth</td>
+<td>Number</td>
+<td>深度，沿 Z 轴的距离</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createsphere-scene-radius-widthsegs-heightsegs-">createSphere(scene, radius, widthSegs, heightSegs)</h3>
+<p>创建一个中心为原点的球体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>Number</td>
+<td>半径</td>
+</tr>
+<tr>
+<td>widthSegs</td>
+<td>Number</td>
+<td>纬线方向的顶点密度，默认为 16</td>
+</tr>
+<tr>
+<td>heightSegs</td>
+<td>Number</td>
+<td>经线方向的顶点密度，默认为 12</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createcylinder-scene-radius-height-segs-">createCylinder(scene, radius, height, segs)</h3>
+<p>创建一个顶底面平行于 X-Z 平面，中心在原点的圆柱体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>Number</td>
+<td>顶底面的半径</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+<td>高度</td>
+</tr>
+<tr>
+<td>segs</td>
+<td>Number</td>
+<td>顶底面的顶点密度</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createcone-scene-radius-height-segs-">createCone(scene, radius, height, segs)</h3>
+<p>创建一个底面在 X-Z 平面，底面中心在原点的圆锥体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>Number</td>
+<td>底面的半径</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+<td>高度</td>
+</tr>
+<tr>
+<td>segs</td>
+<td>Number</td>
+<td>底面的顶点密度</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createcoordinate-scene-size-">createCoordinate(scene, size)</h3>
+<p>创建一个坐标轴形状的线状网格体，X 轴呈红色，Y 轴呈绿色，Z 轴呈蓝色。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>size</td>
+<td>Number</td>
+<td>每个轴的长度</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.LineMesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createfromobjmodel-scene-model-">createFromObjModel(scene, model)</h3>
+<p>从 OBJ 格式的模型数据创建网格体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>model</td>
+<td>{obj: String, mtl: String}</td>
+<td>OBJ 模型数据</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createfromstlmodel-scene-model-">createFromStlModel(scene, model)</h3>
+<p>从 STL 格式的模型数据创建网格体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>model</td>
+<td>String</td>
+<td>STL 模型数据</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createmeshfromgltf-scene-model-pbrenviroment-">createMeshFromGLTF(scene, model, pbrEnviroment)</h3>
+<p>从 GLTF 格式的模型数据创建网格体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>model</td>
+<td>String</td>
+<td>STL 模型数据</td>
+</tr>
+<tr>
+<td>pbrEnviroment</td>
+<td>G3D.PBREnviroment</td>
+<td>PBR 环境对象</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createlinefrompath-scene-path-resolution-">createLineFromPath(scene, path, resolution)</h3>
+<p>通过 SVGPath 创建线型网格体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>path</td>
+<td>String</td>
+<td>SVGPath 数据</td>
+</tr>
+<tr>
+<td>resolution</td>
+<td>Number</td>
+<td>分辨率</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.LineMesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+<h3 id="createmeshfrompath-scene-path-thickness-resolution-">createMeshFromPath(scene, path, thickness, resolution)</h3>
+<p>通过 SVGPath 创建面型网格体。</p>
+<h4 id="-">参数</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scene</td>
+<td>G3D.Scene</td>
+<td>网格体所属的场景</td>
+</tr>
+<tr>
+<td>path</td>
+<td>String</td>
+<td>SVGPath 数据</td>
+</tr>
+<tr>
+<td>thickness</td>
+<td>Number</td>
+<td>厚度</td>
+</tr>
+<tr>
+<td>resolution</td>
+<td>Number</td>
+<td>分辨率</td>
+</tr>
+</tbody></table>
+<h4 id="-">返回值</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G3D.Mesh</td>
+<td>创建出的网格体对象</td>
+</tr>
+</tbody></table>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

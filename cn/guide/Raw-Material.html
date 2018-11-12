@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item"><a class="link" href="/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">万事开头难</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">平移和旋转</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
+              </li>
+              <li class="item"><a href="./Raw-Material.html">原始材质</a>
+              </li>
+              <li class="item"><a href="./Standard-Material.html">冯氏面材质</a>
+              </li>
+              <li class="item"><a href="./Lights.html">光照</a>
+              </li>
+              <li class="item"><a href="./Load-Models.html">加载模型</a>
+              </li>
+              <li class="item"><a href="./Text-Geometry.html">文字几何体</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="raw-material">Raw Material</h1>
+<p>Material and Light decide what exact color each pixel is filled with. When we created a mesh, a StandardMaterial will be created and assigned to <code>mesh.materials.default</code>.</p>
+<p><code>StandardMaterial</code> works with lights, without light any face with <code>StandardMaterial</code> will be black. The <code>StandardMaterial</code> is a little difficult to explain, so this chapter we&#39;ll learn a much simpler material, the <code>RawMaterial</code>.</p>
+<p><code>RawMaterial</code> is the kind of material that is not affected by lights. No matter what the lights are, raw material face will looks its own color.</p>
+<p><code>RawMaterial</code>&#39;s structure is like:</p>
+<ul>
+<li><code>RawMaterial</code><ul>
+<li><code>color</code>: object, following <code>{r, g, b}</code> pattern.</li>
+<li><code>texture</code>: instance of <code>G3D.Texture</code>.<ul>
+<li><code>image</code>: instance of <code>G3D.Env.Image</code> (In browser, it&#39;s just <code>Image</code>, in hybrid envronment, it&#39;s defined by <code>GCanvas</code>).</li>
+</ul>
+</li>
+<li><code>source</code>: enum, value may be <code>G3D.Material.COLOR</code> or <code>G3D.Material.TEXTURE</code>.</li>
+</ul>
+</li>
+</ul>
+<p>If <code>material.source</code> is <code>G3D.Material.COLOR</code>, the rendered pixel color will be <code>material.color</code> assigned, otherwise, the rendered pixel color will be picked from the texture image (this is where <code>uv</code> makes sense).</p>
+<p>See the following example:</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=raw-material"></iframe>
+
+<p>Notice that there&#39;s no lights in the scene. Every pixel of the cube is the same color, it&#39;s a little wired that you can hardly sense it&#39;s a 3D cube.</p>
+<p>Let&#39;s load an image as following and set the texture.</p>
+<p><img src="https://img.alicdn.com/tfs/TB11aE5XKSSBuNjy0FlXXbBpVXa-256-256.png" alt=""></p>
+<p>Uncomment these lines, see what happens.</p>
+<pre><code class="language-javascript">loadImage(
+    &#39;https://img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png&#39;,
+    function (image) {
+        mesh.materials.default.texture.image = image;
+        mesh.materials.default.source = G3D.Material.TEXTURE;
+    }
+)</code></pre>
+<p>Wati until the image is loaded, set to the texture&#39;s <code>image</code> property, nothing changed. We need to switch the <code>source</code> flag from <code>COLOR</code> (which is the default option) to <code>TEXTURE</code>.</p>
+<p>OK, now we know how <code>RawMaterial</code> works, it&#39;s simple and effective, but not realistic. Next chapter we&#39;ll deal with <code>StandardMaterial</code>, a more complex type of material.</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

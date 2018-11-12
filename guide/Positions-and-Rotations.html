@@ -43,24 +43,42 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="lights">Lights</h1>
-<p>As we mentioned in the previous chapters, light will affect <code>StandardMaterial</code>. There&#39;re several types of light, let&#39;s see one by one.</p>
-<h2 id="ambientlight">AmbientLight</h2>
-<p>Ambient light affect the face&#39;s color by simple apply to the face&#39;s color, without the face&#39;s direction. So if there&#39;s only ambient light, the scene will look likes that every mesh&#39;s materials is RawMaterial. But ambient light is not meaningless, because if there&#39;s no ambient light in the scene, certain parts of our scene will be totally black, whick is counter-intutive.</p>
-<p>Usually, we set ambient color&#39;s intensity as a low number (0.1, for example), and apply other lights to make a reseanable scene.</p>
-<p>See the scene with only ambient light:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=ambient-light"></iframe>
+          <div class="body"><h1 id="positions-and-rotations">Positions and Rotations</h1>
+<p>We use 3D coordinates to locate objects in a 3D space, as the following picture shows:</p>
+<p><img src="https://img.alicdn.com/tfs/TB1HluJXQyWBuNjy0FpXXassXXa-700-375.png" alt="coordinates"></p>
+<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It&#39;s convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
+<p>Take a look at this example:</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=positions-and-rotations"></iframe>
 
-<h2 id="directional-light">Directional Light</h2>
-<p>Directional light is a kind of light like the sunlight. Directional light has a direction (position). The face perpendicular to the direction will be lighted more than the face oblique the light&#39;s direction. And the face paralle with the light&#39;s direction will be totally not lighted by the light.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=directional-light"></iframe>
+<p>Basiclly, you can locate meshes by assigning to <code>mesh.position</code>, <code>mesh.rotation</code> and <code>mesh.scale</code>.</p>
+<ul>
+<li>Position: By assigning to <code>mesh.position</code>, the mesh moves along the specified axis.</li>
+<li>Rotation: By assigning to <code>mesh.rotation</code>, the mesh rotates around the specified axis.</li>
+<li>Scale: By assigning to <code>mesh.scale</code>, the mesh scale along the specified axis.</li>
+</ul>
+<p>Try uncomment these lines, you&#39;ll find the cube&#39;s initial state is changed.</p>
+<pre><code class="language-javascript">// init mesh position
+// Object.assign(mesh.position, {x: 3, y: 0, z: 0});
 
-<p>See the example above, check when the light&#39;s <code>direction</code> is changing, how the light is affecting the cylinder mesh.</p>
-<pre><code class="language-javascript">light1.direction.x = Math.sin(Date.now() / 1000) * 1.0;</code></pre>
-<h2 id="point-light">Point Light</h2>
-<p>Point light is a little like directional light, how much the face is lighted depends on the light&#39;s direction and the face&#39;s direction, but point light has an origin, for each face (each pixel, actually), the light&#39;s direction is computed using the pixels position and the light&#39;s origin.</p>
-<p>See the example.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=point-light"></iframe></div>
+// init mesh rotation
+// Object.assign(mesh.rotation, {x: 45, y: 0, z: 0});
+
+// init mesh scale
+// Object.assign(mesh.scale, {x: 2, y: 1, z: 1});</code></pre>
+<p>Try uncomment these lines, you&#39;ll find the cube is animated.</p>
+<pre><code class="language-javascript">// rotate camera for viewing the scene
+// camera.alpha += 1;
+
+// translate mesh animation
+// mesh.position.x += 0.005;
+
+// rotate mesh animation
+// mesh.rotation.x += 1;
+
+// scale mesh animation
+// mesh.scale.x *= 1.0001;</code></pre>
+<p>[Next Chapter](./Create Mesh)</p>
+</div>
         </div>
       </div>
     </div>

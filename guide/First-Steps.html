@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/cn/">中文</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">First Steps</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="first-steps">First Steps</h1>
+<p>G3D is JavaScript 3D render engine based on WebGL. This series of guides will help you learn how to use G3D.</p>
+<h2 id="installation-and-usage">Installation and Usage</h2>
+<p>G3D library is published on <a href="https://www.npmjs.com/package/g3d">NPM</a>. You need to install G3D first.</p>
+<pre><code class="language-dash">npm install g3d --save</code></pre>
+<p>And involve G3D in your own building progress(using Webpack, eg).</p>
+<pre><code class="language-javascript">import G3D from &#39;g3d&#39;;
+console.log(G3D);</code></pre>
+<p>If you want to load G3D through a <code>script</code> tag (thought we don&#39;t recommed you to do so), you can find a UMD file at <code>dist/g3d.min.js</code> inside the package. You may need put the file on your server and load it using a <code>script</code> tag. Or you can easily use <code>https://unpkg.com/g3d@0.2.1/dist/g3d.min.js</code>.</p>
+<pre><code class="language-html">&lt;script src=&quot;https://unpkg.com/g3d@0.2.1/dist/g3d.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    console.log(G3D);
+&lt;/script&gt;</code></pre>
+<h2 id="basics">Basics</h2>
+<p>To create and render a 3D scene, you need to follow the progress:</p>
+<ol>
+<li>Create an engine, specify the canvas instance(a <code>CanvasHTMLElement</code> in web environment or a canvas-like object in hybrid environment).</li>
+<li>Create a scene, specify the engine you just created.</li>
+<li>Create a camera. Mostly, you need to create a perspective camera, and here we create a rotate perspective camera.</li>
+<li>Create some lights. There&#39;re several types of lights here in G3D, we will create a directional light in this guide.</li>
+<li>Create some meshes. Here, we use MeshBuilder to create a plane mesh and a sphere mesh.</li>
+<li>Make the scene to render.</li>
+</ol>
+<p><a class="jsbin-embed" href="https://jsbin.com/fiquyiz/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<h2 id="scene-and-camera">Scene and camera</h2>
+<p>Scene is a 3D space. In the space, object are positioned using three coordinate values (x, y, z). We created a rotate perspective camera, which can rotate in a sphere centered by the origin point (0, 0, 0). The camera is always aiming at the origin point. The <code>alpha</code> and <code>beta</code> value determined it&#39;s position in the sphere, and <code>radius</code> value determined how large the sphere is.</p>
+<pre><code class="language-javascript">const camera = new G3D.RotatePerspectiveCamera(scene);
+camera.alpha = 0;
+camera.beta = 0;
+camera.radius = 8;</code></pre>
+<p><img src="https://gw.alicdn.com/tfs/TB1Z7RWo4TpK1RjSZR0XXbEwXXa-458-359.png" alt=""></p>
+<p>In the playground above, you can drag the mouse to rotate the camera, looking at the scene from different directions. (This function is done outside the <code>main</code> function.) Actually, I changed camera&#39;s <code>alpha</code> and <code>beta</code> properties. You may change them in <code>render</code> function to see what will happen. For example, you can add 1 to <code>camera.alpha</code>, and the camera will be rotating.</p>
+<pre><code class="language-javascript">function render() {
+    camera.alpha += 1;
+    ...
+}</code></pre>
+<p><img src="https://gw.alicdn.com/tfs/TB1LpKpo5LaK1RjSZFxXXamPFXa-454-359.png" alt=""></p>
+<h2 id="lights">Lights</h2>
+<p>Lighting is the basis of 3D rendering. Most objects&#39; color relies on lighting, except those can emit lights themselves. In the previous example, we created a directional light, specified it&#39;s color, direction and intensity. The direction if (1, 0, 1), which means that the light&#39;s direction is parallal with the ray from (1, 0, 1) to the origin point (0, 0, 0). So, technically the light&#39;s literal &#39;direction&#39; is (-1, 0, 01), exact the negative value of what we specified, and this is a convention of G3D.</p>
+<pre><code class="language-javascript">const light1 = new G3D.DirectionalLight(scene);
+light1.color = {r: 255, g: 200, b: 200};
+light1.direction = {x: 1, y: 0, z: 1};
+light1.intensity = 0.8;</code></pre>
+<p><img src="https://gw.alicdn.com/tfs/TB1R3p0oVzqK1RjSZFoXXbfcXXa-454-384.png" alt=""></p>
+<p>Light&#39;s color results in what the object will look like. Here the light is red, and mesh&#39;s face is white by default, so at last the mesh looks a bit red.</p>
+<h2 id="-s">创建网格体s</h2>
+<p>Every object seeable in the scene is a mesh. Mesh is made of vertices and triangle faces. In the example abolve, we used some factory methods in <code>G3D.MeshBuilder</code> to create two face meshes with build-in geometries.</p>
+<ol>
+<li>First we called <code>MeshBuilder.createPlane(scene, width, height)</code> and created a rectangle plan mesh, with width 6 and height 4. The center of the rectangle is origin point (0, 0, 0), so we set <code>position.z</code> to -1, thus translated the rectangle along Z axis by -1. The center is (0, 0, -1) after translation.</li>
+<li>Then we called <code>MeshBuilder.createSphere(scene, radius[, widthSegs, heightSegs])</code> and created a sphere, with radius 1. The center of the sphere is also (0, 0, 0), we set <code>position.z</code> to 1, thus translated it along Z axis by 1. The center is (0, 0, 1) after translation.</li>
+</ol>
+<pre><code class="language-javascript">const m1 = G3D.MeshBuilder.createPlane(
+scene, 6, 4
+);
+m1.position.z = -1;
+
+const m2 = G3D.MeshBuilder.createSphere(
+scene, 1
+);
+m2.position.z = 1;</code></pre>
+<p><img src="https://gw.alicdn.com/tfs/TB1PLF6o7zoK1RjSZFlXXai4VXa-467-359.png" alt=""></p>
+<h2 id="render">Render</h2>
+<p>At last, let&#39;s start rendering! Literally, you only need to call <code>scene.render()</code> once, and the scene will be rendered to the canvas. But if anything, including the camera, the lights and meshes changed, the canvas will not update. You need to call <code>scene.render()</code> again to update the scene to the canvas.</p>
+<p>Mostly we use a function named <code>render</code>, inside it we request to call <code>render</code> again at the next frame, thus we can begin a &#39;render loop&#39;, the loop body (ths <code>render</code> function) would be called on exactly every frame, so the canvas is always updated.</p>
+<pre><code class="language-javascript">function render(){
+    scene.render();
+    requestAnimationFrame(render);
+}</code></pre>
+<p>Everything is good, we call <code>render()</code> once, and there it goes!</p>
+<p>In this section, we learned some basic knowledge about 3D programing and basic usage about G3D the engine, including scene, lighting, meshes and so on. I wish it would help you!</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item">
+                <div class="item-title">Core</div>
+                <ol>
+                  <li class="item"><a href="./Engine.html">Engine</a></li>
+                  <li class="item"><a href="./Node.html">Node</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Scene</div>
+                <ol>
+                  <li class="item"><a href="./Scene.html">Scene</a></li>
+                  <li class="item"><a href="./Skybox.html">Skybox</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Cameras</div>
+                <ol>
+                  <li class="item"><a href="./BaseCamera.html">BaseCamera</a></li>
+                  <li class="item"><a href="./BasePerspectiveCamera.html">BasePerspectiveCamera</a></li>
+                  <li class="item"><a href="./BaseOrthographicCamera.html">BaseOrthographicCamera</a></li>
+                  <li class="item"><a href="./RotatePerspectiveCamera.html">RotatePerspectiveCamera</a></li>
+                  <li class="item"><a href="./RotateOrthographicCamera.html">RotateOrthographicCamera</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Mesh</div>
+                <ol>
+                  <li class="item"><a href="./BaseMesh.html">BaseMesh</a></li>
+                  <li class="item"><a href="./Mesh.html">Mesh</a></li>
+                  <li class="item"><a href="./LineMesh.html">LineMesh</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">MeshUtils</div>
+                <ol>
+                  <li class="item"><a href="./MeshBuilder.html">MeshBuilder</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Materials</div>
+                <ol>
+                  <li class="item"><a href="./Material.html">Material</a></li>
+                  <li class="item"><a href="./RawMaterial.html">RawMaterial</a></li>
+                  <li class="item"><a href="./PhongMaterial.html">PhongMaterial</a></li>
+                  <li class="item"><a href="./PBRMaterial.html">PBRMaterial</a></li>
+                  <li class="item"><a href="./PBREnviroment.html">PBREnviroment</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Texture</div>
+                <ol>
+                  <li class="item"><a href="./Texture.html">Texture</a></li>
+                  <li class="item"><a href="./CubeTexture.html">CubeTexture</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Geometries</div>
+                <ol>
+                  <li class="item"><a href="./Buffer.html">Buffer</a></li>
+                  <li class="item"><a href="./BufferView.html">BufferView</a></li>
+                  <li class="item"><a href="./ElementBufferView.html">ElementBufferView</a></li>
+                  <li class="item"><a href="./BaseGeometry.html">BaseGeometry</a></li>
+                  <li class="item"><a href="./Geometry.html">Geometry</a></li>
+                  <li class="item"><a href="./LineGeometry.html">LineGeometry</a></li>
+                </ol>
+              </li>
+              <li class="item">
+                <div class="item-title">Lights</div>
+                <ol>
+                  <li class="item"><a href="./BaseLight.html">BaseLight</a></li>
+                  <li class="item"><a href="./AmbientLight.html">AmbientLight</a></li>
+                  <li class="item"><a href="./DirectionalLight.html">DirectionalLight</a></li>
+                  <li class="item"><a href="./PointLight.html">PointLight</a></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="rawmaterial">RawMaterial</h1>
+<p>原始材质，颜色与光源无关，继承自 <a href="./Material">Material</a>。</p>
+<h2 id="-">构造函数</h2>
+<pre><code class="language-javascript">new G3D.RawMaterial(mesh);</code></pre>
+<h2 id="-">属性</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>color</td>
+<td>{r: Number, g: Number, b: Number}</td>
+<td>材质颜色，默认为 {r: 255, g: 255, b: 255}</td>
+</tr>
+<tr>
+<td>texture</td>
+<td>G3D.Texture</td>
+<td>材质纹理</td>
+</tr>
+</tbody></table>
+<h2 id="-">示例</h2>
+<pre><code class="language-javascript">const material = new G3D.RawMaterial();
+material.color = {r: 100, g: 100, b: 200};
+material.texture = new G3D.Texture(textureConfig);
+
+mesh.materials[&#39;default&#39;] = material;</code></pre>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

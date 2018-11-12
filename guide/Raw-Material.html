@@ -43,24 +43,40 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="lights">Lights</h1>
-<p>As we mentioned in the previous chapters, light will affect <code>StandardMaterial</code>. There&#39;re several types of light, let&#39;s see one by one.</p>
-<h2 id="ambientlight">AmbientLight</h2>
-<p>Ambient light affect the face&#39;s color by simple apply to the face&#39;s color, without the face&#39;s direction. So if there&#39;s only ambient light, the scene will look likes that every mesh&#39;s materials is RawMaterial. But ambient light is not meaningless, because if there&#39;s no ambient light in the scene, certain parts of our scene will be totally black, whick is counter-intutive.</p>
-<p>Usually, we set ambient color&#39;s intensity as a low number (0.1, for example), and apply other lights to make a reseanable scene.</p>
-<p>See the scene with only ambient light:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=ambient-light"></iframe>
+          <div class="body"><h1 id="raw-material">Raw Material</h1>
+<p>Material and Light decide what exact color each pixel is filled with. When we created a mesh, a StandardMaterial will be created and assigned to <code>mesh.materials.default</code>.</p>
+<p><code>StandardMaterial</code> works with lights, without light any face with <code>StandardMaterial</code> will be black. The <code>StandardMaterial</code> is a little difficult to explain, so this chapter we&#39;ll learn a much simpler material, the <code>RawMaterial</code>.</p>
+<p><code>RawMaterial</code> is the kind of material that is not affected by lights. No matter what the lights are, raw material face will looks its own color.</p>
+<p><code>RawMaterial</code>&#39;s structure is like:</p>
+<ul>
+<li><code>RawMaterial</code><ul>
+<li><code>color</code>: object, following <code>{r, g, b}</code> pattern.</li>
+<li><code>texture</code>: instance of <code>G3D.Texture</code>.<ul>
+<li><code>image</code>: instance of <code>G3D.Env.Image</code> (In browser, it&#39;s just <code>Image</code>, in hybrid envronment, it&#39;s defined by <code>GCanvas</code>).</li>
+</ul>
+</li>
+<li><code>source</code>: enum, value may be <code>G3D.Material.COLOR</code> or <code>G3D.Material.TEXTURE</code>.</li>
+</ul>
+</li>
+</ul>
+<p>If <code>material.source</code> is <code>G3D.Material.COLOR</code>, the rendered pixel color will be <code>material.color</code> assigned, otherwise, the rendered pixel color will be picked from the texture image (this is where <code>uv</code> makes sense).</p>
+<p>See the following example:</p>
+<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=raw-material"></iframe>
 
-<h2 id="directional-light">Directional Light</h2>
-<p>Directional light is a kind of light like the sunlight. Directional light has a direction (position). The face perpendicular to the direction will be lighted more than the face oblique the light&#39;s direction. And the face paralle with the light&#39;s direction will be totally not lighted by the light.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=directional-light"></iframe>
-
-<p>See the example above, check when the light&#39;s <code>direction</code> is changing, how the light is affecting the cylinder mesh.</p>
-<pre><code class="language-javascript">light1.direction.x = Math.sin(Date.now() / 1000) * 1.0;</code></pre>
-<h2 id="point-light">Point Light</h2>
-<p>Point light is a little like directional light, how much the face is lighted depends on the light&#39;s direction and the face&#39;s direction, but point light has an origin, for each face (each pixel, actually), the light&#39;s direction is computed using the pixels position and the light&#39;s origin.</p>
-<p>See the example.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=point-light"></iframe></div>
+<p>Notice that there&#39;s no lights in the scene. Every pixel of the cube is the same color, it&#39;s a little wired that you can hardly sense it&#39;s a 3D cube.</p>
+<p>Let&#39;s load an image as following and set the texture.</p>
+<p><img src="https://img.alicdn.com/tfs/TB11aE5XKSSBuNjy0FlXXbBpVXa-256-256.png" alt=""></p>
+<p>Uncomment these lines, see what happens.</p>
+<pre><code class="language-javascript">loadImage(
+    &#39;https://img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png&#39;,
+    function (image) {
+        mesh.materials.default.texture.image = image;
+        mesh.materials.default.source = G3D.Material.TEXTURE;
+    }
+)</code></pre>
+<p>Wati until the image is loaded, set to the texture&#39;s <code>image</code> property, nothing changed. We need to switch the <code>source</code> flag from <code>COLOR</code> (which is the default option) to <code>TEXTURE</code>.</p>
+<p>OK, now we know how <code>RawMaterial</code> works, it&#39;s simple and effective, but not realistic. Next chapter we&#39;ll deal with <code>StandardMaterial</code>, a more complex type of material.</p>
+</div>
         </div>
       </div>
     </div>
