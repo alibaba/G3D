@@ -18,7 +18,7 @@ new ElementBufferView(config);
 | config.count  | Number     | vertices count indexed                   |
 | config.offset | Number     | offset                                   |
 
-## Examples
+## Example
 
 ```javascript
 const eleBufferView = new G3D.ElementBufferView({

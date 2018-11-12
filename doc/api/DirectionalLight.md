@@ -20,7 +20,7 @@ new G3D.DirectionalLight(scene);
 | --------- | --------------------------------- | --------------------------------------------------------------------------- |
 | direction | {x: Number, y: Number, z: Number} | light direction from origin to light source, default is {x: 0, y: 0, z: -1} |
 
-## Examples
+## Example
 
 ```javascript
 const light = new DirectionalLight(scene);

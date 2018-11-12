@@ -20,7 +20,7 @@ new G3D.Skybox(scene, images, size);
 
 There's no public methods for `Skybox`.
 
-## Examples
+## Example
 
 ```javascript
 const skybox = new G3D.Skybox(scene, {

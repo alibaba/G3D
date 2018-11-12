@@ -23,7 +23,7 @@ new G3D.RotateOrthographicCamera(scene);
 | beta   | Number | the beta angle (vertical to Y axis), from -180 to 180             |
 
 
-## Examples
+## Example
 
 ```javascript
 const camera = new G3D.RotatePerspectiveCamera(scene);
