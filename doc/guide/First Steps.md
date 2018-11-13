@@ -79,7 +79,7 @@ light1.intensity = 0.8;
 
 Light's color results in what the object will look like. Here the light is red, and mesh's face is white by default, so at last the mesh looks a bit red.
 
-## 创建网格体s
+## Create Meshes
 
 Every object seeable in the scene is a mesh. Mesh is made of vertices and triangle faces. In the example abolve, we used some factory methods in `G3D.MeshBuilder` to create two face meshes with build-in geometries.
 

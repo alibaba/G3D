@@ -1,4 +1,4 @@
-# Create Mesh
+# Create Primitive Mesh
 
 We can create mesh through three ways. 
 
