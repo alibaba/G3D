@@ -15,7 +15,7 @@
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
         <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item"><a class="link" href="/cn/">中文</a>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -29,55 +29,56 @@
               </li>
               <li class="item"><a href="./Positions-and-Rotations.html">Positions and Rotations</a>
               </li>
-              <li class="item"><a href="./Create-Mesh.html">Create Mesh</a>
-              </li>
-              <li class="item"><a href="./Raw-Material.html">Raw Material</a>
-              </li>
-              <li class="item"><a href="./Standard-Material.html">Standard Material</a>
-              </li>
-              <li class="item"><a href="./Lights.html">Lights</a>
-              </li>
-              <li class="item"><a href="./Load-Models.html">Load Models</a>
-              </li>
-              <li class="item"><a href="./Text-Geometry.html">Text Geometry</a>
-              </li>
             </ol>
           </div>
           <div class="body"><h1 id="positions-and-rotations">Positions and Rotations</h1>
-<p>We use 3D coordinates to locate objects in a 3D space, as the following picture shows:</p>
-<p><img src="https://img.alicdn.com/tfs/TB1HluJXQyWBuNjy0FpXXassXXa-700-375.png" alt="coordinates"></p>
-<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It&#39;s convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
-<p>Take a look at this example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=positions-and-rotations"></iframe>
-
-<p>Basiclly, you can locate meshes by assigning to <code>mesh.position</code>, <code>mesh.rotation</code> and <code>mesh.scale</code>.</p>
-<ul>
-<li>Position: By assigning to <code>mesh.position</code>, the mesh moves along the specified axis.</li>
-<li>Rotation: By assigning to <code>mesh.rotation</code>, the mesh rotates around the specified axis.</li>
-<li>Scale: By assigning to <code>mesh.scale</code>, the mesh scale along the specified axis.</li>
-</ul>
-<p>Try uncomment these lines, you&#39;ll find the cube&#39;s initial state is changed.</p>
-<pre><code class="language-javascript">// init mesh position
-// Object.assign(mesh.position, {x: 3, y: 0, z: 0});
-
-// init mesh rotation
-// Object.assign(mesh.rotation, {x: 45, y: 0, z: 0});
-
-// init mesh scale
-// Object.assign(mesh.scale, {x: 2, y: 1, z: 1});</code></pre>
-<p>Try uncomment these lines, you&#39;ll find the cube is animated.</p>
-<pre><code class="language-javascript">// rotate camera for viewing the scene
-// camera.alpha += 1;
-
-// translate mesh animation
-// mesh.position.x += 0.005;
-
-// rotate mesh animation
-// mesh.rotation.x += 1;
-
-// scale mesh animation
-// mesh.scale.x *= 1.0001;</code></pre>
-<p>[Next Chapter](./Create Mesh)</p>
+<p>A basic issue of objects in 3D scene is: where are they positioned ? When a mesh is created, it is position at the origin point (0, 0, 0) by default. If you want to put it somewhere else, you need to specify it&#39;s position (and rotation, scale).</p>
+<p><code>G3D.Mesh</code> extends from <code>G3D.Node</code>, which has three properties: <code>position</code>, <code>rotation</code>, <code>scale</code>. These properties are used for 3D object&#39;s positioning.</p>
+<h2 id="basic-usage">Basic usage</h2>
+<p>The <code>position</code>, <code>rotation</code> and <code>scale</code>, each one has three properties <code>x</code>, <code>y</code>, <code>z</code>. Modify <code>position</code>, you are translating the mesh, modify <code>rotation</code>, you are rotating the mesh, modify <code>scale</code>, you are scaling the mesh. You can replace the whole <code>position</code> object (as well as for <code>rotation</code> and <code>scale</code>):</p>
+<pre><code class="language-javascript">mesh.position = {x: 5, y: 3, z: 4};</code></pre>
+<p>Also, you can modify <code>x</code>, <code>y</code> or <code>z</code>, the are nearly the same for G3D.</p>
+<pre><code class="language-javascript">mesh.position.x = 5;
+mesh.position.y = 4;
+mesh.position.z = 3;</code></pre>
+<p>Then, let&#39;s follow the example to understand translating, rotating and scaling better.</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/jarocek/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<h2 id="mesh">Mesh</h2>
+<p>To make it clear, we first created a visible coordinate, which has three axis (lines), the red one is X, the green one is Y, the blue one is Z. Each of the line is upto 10 in length.</p>
+<pre><code class="language-javascript">const coord = G3D.MeshBuilder.createCoordinate(scene, 10);</code></pre>
+<p>Then, we created a cube with size 1.</p>
+<pre><code class="language-javascript">const cube = G3D.MeshBuilder.createCube(scene, 1);</code></pre>
+<p>At last, we created another coordinate mesh. This one is smaller (size is 3) than the previous one, and we specify the cube created before as it&#39;s <strong>parent</strong>. A parent of a mesh, is the one that the mesh belongs to. When parent is translated, rotated or scaled, children meshes will be moved or rotated as well. So in our case, when we transform the cube, the smaller coordinate will follow the cube.</p>
+<pre><code class="language-javascript">const cubeCoord = G3D.MeshBuilder.createCoordinate(scene, 3);
+cubeCoord.parent = cube;</code></pre>
+<h2 id="dat-gui">dat.GUI</h2>
+<p>Then, we imported <a href="http://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage">dat.GUI</a> the library. This small libray can help us put a nice small dashboard on page&#39;s right top corner, and what we do on the dashboard will impact the scene.</p>
+<p>For example, use dat.GUI to create a slider binding to <code>cube.position.x</code>:</p>
+<pre><code class="language-javascript">folder.add(cube.position, &#39;x&#39;, -5, 5);</code></pre>
+<p>It&#39;s a little like:</p>
+<pre><code class="language-javascript">slider.onChange(function(value){
+    cube.position.x = value;
+});</code></pre>
+<p>So, we create 9 sliders for 9 properties, each of <code>x</code>, <code>y</code> and <code>z</code> for each of <code>position</code>, <code>rotation</code> and <code>scale</code>. Drag the slider and see what happens.</p>
+<h2 id="position-and-scale">Position and Scale</h2>
+<p>It&#39;s pretty clear for position and scale. When translate a mesh, it&#39;s position is changeing, moving from a place to another. When scale a mesh, the size of the mesh changes, seems like it&#39;s been streched or squezzed.</p>
+<h2 id="rotation-the-euler-angle">Rotation, the Euler Angle</h2>
+<p>Rotation is more complicated. Actually, there&#39;re several different ways to present rotation. G3D use a tradition way named euler angle, which present a rotation with three numbers <code>x</code>, <code>y</code> and <code>z</code>. For example, we set a mesh&#39;s rotation is [30, 45, 60] the euler angle, it means we rotate the mesh around X axis by 30 degreee, around Y axis by 45 degree, around Z axis by 60 degree.</p>
+<blockquote>
+<p>Rotating following the Right Hand Rule: use you right hand thumb to point along the rotation axis, and rotation direction is what the other four fingers are pointing.</p>
+</blockquote>
+<pre><code class="language-javascript">cube.rotation = {x: 30, y: 45, z: 60};</code></pre>
+<p>Besides the three numbers, euler need an order to rotate the mesh. 1) Rotate 30 degrees around X axis, and then rotate 45 around Y axis; 2) rotate 45 degrees around Y axis, and then rotate 30 around X axis; these two transformation is totally different. G3D used a common convention order: ZYX, which means: </p>
+<ol>
+<li>Firstly, rotate the specified <code>z</code> degrees around Z axis;</li>
+<li>Secondly, rotate the specified <code>y</code> degrees around Y axis (Y axis here is the axis transformed by step 1, ie the smaller coordinate);</li>
+<li>Finally, rotate the specified <code>x</code> degrees around X axis (X axis here is the axis transformed by step 1 and 2).</li>
+</ol>
+<p>Play with the dashboard, you will find that rotating the cube in ZYX order is the only way to get what you expected.</p>
+<blockquote>
+<p>Here we use local coordinate (the smaller coordinate) to describe rotation, the order is ZYX; but if you rotate the mesh using the global coordinate (the bigger coordinate), you&#39;ll find the right order is XYZ.</p>
+</blockquote>
+<p>In this section, we discussed about translating, rotating and scale in 3D space. Sometimes we call them transform generally.</p>
 </div>
         </div>
       </div>

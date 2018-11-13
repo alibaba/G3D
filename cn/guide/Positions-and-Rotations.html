@@ -15,7 +15,7 @@
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
         <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item"><a class="link" href="/">English</a>
+        <div class="item-right item language"><a class="link" href="/G3D/">English</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -29,55 +29,56 @@
               </li>
               <li class="item"><a href="./Positions-and-Rotations.html">平移和旋转</a>
               </li>
-              <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
-              </li>
-              <li class="item"><a href="./Raw-Material.html">原始材质</a>
-              </li>
-              <li class="item"><a href="./Standard-Material.html">冯氏面材质</a>
-              </li>
-              <li class="item"><a href="./Lights.html">光照</a>
-              </li>
-              <li class="item"><a href="./Load-Models.html">加载模型</a>
-              </li>
-              <li class="item"><a href="./Text-Geometry.html">文字几何体</a>
-              </li>
             </ol>
           </div>
-          <div class="body"><h1 id="positions-and-rotations">Positions and Rotations</h1>
-<p>We use 3D coordinates to locate objects in a 3D space, as the following picture shows:</p>
-<p><img src="https://img.alicdn.com/tfs/TB1HluJXQyWBuNjy0FpXXassXXa-700-375.png" alt="coordinates"></p>
-<p>We could call <code>G3D.MeshBuilder.createCoordinate</code> to create a coordinate marker in the scene. It&#39;s convinient when you are debugging and want to know what position you put your mesh at. The coordinate has three axis, the red one is X axis, green one is Y axis, blue one is Z axis.</p>
-<p>Take a look at this example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=positions-and-rotations"></iframe>
-
-<p>Basiclly, you can locate meshes by assigning to <code>mesh.position</code>, <code>mesh.rotation</code> and <code>mesh.scale</code>.</p>
-<ul>
-<li>Position: By assigning to <code>mesh.position</code>, the mesh moves along the specified axis.</li>
-<li>Rotation: By assigning to <code>mesh.rotation</code>, the mesh rotates around the specified axis.</li>
-<li>Scale: By assigning to <code>mesh.scale</code>, the mesh scale along the specified axis.</li>
-</ul>
-<p>Try uncomment these lines, you&#39;ll find the cube&#39;s initial state is changed.</p>
-<pre><code class="language-javascript">// init mesh position
-// Object.assign(mesh.position, {x: 3, y: 0, z: 0});
-
-// init mesh rotation
-// Object.assign(mesh.rotation, {x: 45, y: 0, z: 0});
-
-// init mesh scale
-// Object.assign(mesh.scale, {x: 2, y: 1, z: 1});</code></pre>
-<p>Try uncomment these lines, you&#39;ll find the cube is animated.</p>
-<pre><code class="language-javascript">// rotate camera for viewing the scene
-// camera.alpha += 1;
-
-// translate mesh animation
-// mesh.position.x += 0.005;
-
-// rotate mesh animation
-// mesh.rotation.x += 1;
-
-// scale mesh animation
-// mesh.scale.x *= 1.0001;</code></pre>
-<p>[Next Chapter](./Create Mesh)</p>
+          <div class="body"><h1 id="-">平移和旋转</h1>
+<p>关于 3D 场景中对象的一个基本问题是：它们<strong>位于</strong>何处？一个网格体(Mesh)被创建出来后，总是位于原点(0, 0, 0)的。如果想让它位于其他地方，就需要手动指定位置。</p>
+<p><code>G3D.Mesh</code> 类继承自 <code>G3D.Node</code> 类，而 <code>Node</code> 类具有三个属性，<code>position</code>，<code>rotation</code>，<code>scale</code>。这三个属性可用来表示物体在三维空间中的位置，旋转和缩放。</p>
+<h2 id="-">基本操作</h2>
+<p>网格体对象上的 <code>position</code>，<code>rotation</code> 和 <code>scale</code> 都是具有 <code>x</code>，<code>y</code> 和 <code>z</code> 属性的普通对象。更改网格体的 <code>position</code> 属性，就是在平移网格体，更改 <code>rotation</code> 就是在旋转网格体，更改 <code>scale</code> 就是在缩放网格体。你可以覆盖整个 <code>position</code> 对象（<code>rotation</code> 和 <code>scale</code> 同理）：</p>
+<pre><code class="language-javascript">mesh.position = {x: 5, y: 3, z: 4};</code></pre>
+<p>也可以逐个改写其中的 <code>x</code>，<code>y</code> 和 <code>z</code> 坐标值，两者是等价的：</p>
+<pre><code class="language-javascript">mesh.position.x = 5;
+mesh.position.y = 4;
+mesh.position.z = 3;</code></pre>
+<p>接下来，我们通过这个例子来深入理解平移，缩放和旋转。</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/jarocek/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<h2 id="-">网格体</h2>
+<p>为了使场景更直观，我们首先创建了一个可视的坐标轴网格体。它由三根线段组成，红色表示 X 轴，绿色表示 Y 轴，蓝色表示 Z 轴。每一根线段的长度均为 10。</p>
+<pre><code class="language-javascript">const coord = G3D.MeshBuilder.createCoordinate(scene, 10);</code></pre>
+<p>然后，我们创建了长宽高均为 1 的一个立方体。</p>
+<pre><code class="language-javascript">const cube = G3D.MeshBuilder.createCube(scene, 1);</code></pre>
+<p>最后，我们又创建了一个坐标轴网格体，这个网格体的尺寸稍小一些（为 3），而且我们指定这个坐标轴网格体的<strong>父节点</strong>(parent)是立方体网格体。所谓父节点，是网格体「从属于」的那个节点，父节点通常也是网格体。当父节点发生平移，旋转和缩放时，子网格体也会跟着受到影响。也就是说，当我们移动立方体时，较小的坐标轴也会跟着动。</p>
+<pre><code class="language-javascript">const cubeCoord = G3D.MeshBuilder.createCoordinate(scene, 3);
+cubeCoord.parent = cube;</code></pre>
+<h2 id="dat-gui">dat.GUI</h2>
+<p>然后，我们引入了 <a href="http://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage">dat.GUI</a> 这个工具库。这个简单精巧的工具库，能够帮助我们轻易地在页面右上角生成一个精致的仪表盘，在仪表盘上的操作可以实时地更新到代码中。</p>
+<p>比如，我们可以通过 dat.GUI 创建了一个和 <code>cube.position.x</code> 属性绑定的滑块：</p>
+<pre><code class="language-javascript">folder.add(cube.position, &#39;x&#39;, -5, 5);</code></pre>
+<p>这就有点相当于：</p>
+<pre><code class="language-javascript">slider.onChange(function(value){
+    cube.position.x = value;
+});</code></pre>
+<p>接下来，我们为 <code>position</code>，<code>rotation</code>，<code>scale</code> 各自的 <code>x</code>，<code>y</code>，<code>z</code> 一共 9 个属性创建了 9 个滑块，你可以去试着拖拽滑块看看会发生什么。</p>
+<h2 id="-">描述平移，缩放</h2>
+<p>平移和缩放很直观。平移物体时，物体的位置发生了变化，从一处移动到了另一处。缩放物体时，物体的尺寸和体积发生了变化，似乎遭受了拉伸或挤压。</p>
+<h2 id="-">欧拉角：描述旋转</h2>
+<p>比较复杂的是旋转。事实上，业界存在多种描述物体旋转的方式，G3D 采取的是较传统的一种名为「欧拉角」的描述方式：通过 3 个数值 <code>x</code>，<code>y</code>，<code>z</code> 来描述。比如，我们可以将一个物体的欧拉角设定为 [30, 45, 60]，这意味着我们把这个物体围绕 X 轴旋转 30 度，围绕 Y 轴旋转 45 度，围绕 Z 轴旋转 60 度。</p>
+<blockquote>
+<p>旋转的方向遵循右手螺旋法则：用右手的大拇指指向旋转轴的正方向，那么围绕此轴旋转的方向，就是右手的其他四个手指指向的方向。</p>
+</blockquote>
+<pre><code class="language-javascript">cube.rotation = {x: 30, y: 45, z: 60};</code></pre>
+<p>除了围绕三个轴的旋转角度值，欧拉角还需要指定围绕这三个轴旋转的发生顺序。因为，先围绕 X 轴旋转 30 度再围绕 Y 轴旋转 45 度，与先围绕 Y 轴旋转 45 度再围绕 X 轴旋转 30 度，两者的结果是完全不同的。G3D 中，采取了一种较为常见的顺序：ZYX 顺序，即：</p>
+<ol>
+<li>先围绕 Z 轴旋转指定的角度；</li>
+<li>再围绕 Y 轴旋转指定的角度，注意这里的 Y 轴已经是经过第 1 步变换后的 Y 轴，即示例中较小的那个坐标轴；</li>
+<li>最后围绕 X 轴旋转指定的角度，这里的 X 轴也已经是经过第 1、2 步变换后的。</li>
+</ol>
+<p>调整这几个坐标值来旋转此立方体，你会发现，只有严格按照 ZYX 的顺序去调整，立方体的旋转才是严格围绕着对应轴的。</p>
+<blockquote>
+<p>使用局部坐标系（较小坐标轴）描述时，欧拉角是 ZYX 顺序的；但是如果通过世界坐标系（较大坐标轴）来描述，你会发现是 XYZ 顺序的。</p>
+</blockquote>
+<p>这一节，我们简单讨论了关于 3D 空间中的平移、旋转和缩放。有时候，我们又把这三种操作统称为「变换」(transform)。</p>
 </div>
         </div>
       </div>
