@@ -115,4 +115,6 @@ function render(){
 
 Everything is good, we call `render()` once, and there it goes!
 
+## Summary
+
 In this section, we learned some basic knowledge about 3D programing and basic usage about G3D the engine, including scene, lighting, meshes and so on. I wish it would help you!

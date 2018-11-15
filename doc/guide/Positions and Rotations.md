@@ -89,4 +89,6 @@ Play with the dashboard, you will find that rotating the cube in ZYX order is th
 
 > Here we use local coordinate (the smaller coordinate) to describe rotation, the order is ZYX; but if you rotate the mesh using the global coordinate (the bigger coordinate), you'll find the right order is XYZ.
 
+## Summary
+
 In this section, we discussed about translating, rotating and scale in 3D space. Sometimes we call them transform generally.

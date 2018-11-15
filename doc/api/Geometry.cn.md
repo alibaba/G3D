@@ -42,6 +42,6 @@ const geometry = new G3D.Geometry({
     indices: {
         foo: [0, 1, 2]
     },
-    facing: Geometry.BOTH
+    facing: G3D.Geometry.FACING.BOTH
 })
 ```

@@ -2,7 +2,7 @@ docs:
   guide:
     First Steps: 万事开头难
     Positions and Rotations: 平移和旋转
-    Primitive Mesh: 几何网格体
+    Create Mesh: 创建网格体
     Raw Material: 原始材质
     Standard Material: 冯氏面材质
     Lights: 光照
