@@ -1,7 +1,5 @@
 # Create Mesh
 
-3D 场景中所有可视的物体都是网格体。不同的网格体具有不同的形状。在之前的教程中，我们创建过矩形平面，球形网格体等面状网格体，也创建过坐标轴等线状网格体。这一节，我们将进一步了解，如何创建不同形状的网格体。
-
 All visible objects in 3D scene are meshes. Different meshes has different shapes. In previous sections, we once created face meshes such as rectangle planes, cubes, spheres, we also created line geometries such as coordinate meshes. In this section, we'll discuss how to create meshes with different shapes.
 
 ## Primitive Meshes
