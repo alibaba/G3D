@@ -144,7 +144,7 @@ mesh.geometry = new G3D.Geometry({
 });
 ```
 
-接下来，请在示例右侧显示区域拖拽鼠标，把相机转到这两个矩形平面的背后去（或者，你也在代码里更改相机的属性，`camera.alpha = 200`）。你会发现，当相机转到平面背后时，矩形平面消失了！（但是你通过 `MeshBuilder.createPlane()` 方法创建的平面不会这样）。
+接下来，请在示例右侧显示区域拖拽鼠标，把相机转到这两个矩形平面的背后去（或者，你也在代码里更改相机的属性，`camera.alpha = 200`）。你会发现，当相机转到平面背后时，矩形平面消失了！（但是通过 `MeshBuilder.createPlane()` 方法创建的平面不会这样）。
 
 这是因为，通常情况下，面状网格体是闭合的，你不应该看到一个平面的背面，为了提高性能，默认是不渲染背面的。在 G3D 中，`Geomtry` 对象具有朝向 (facing) 的概念，在初始化 `Geometry` 对象时，可以指定一个 `facing` 属性，可以将其指定为 `Geometry.FACING.FRONT`（这是默认值），`Geometry.FACING.BACK` 或 `Geometry.FACING.BOTH`。
 
