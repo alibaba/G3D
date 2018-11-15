@@ -15,7 +15,7 @@
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
         <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item"><a class="link" href="/">English</a>
+        <div class="item-right item language"><a class="link" href="/G3D/">English</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -31,129 +31,115 @@
               </li>
               <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
               </li>
-              <li class="item"><a href="./Raw-Material.html">原始材质</a>
-              </li>
-              <li class="item"><a href="./Standard-Material.html">冯氏面材质</a>
-              </li>
-              <li class="item"><a href="./Lights.html">光照</a>
-              </li>
-              <li class="item"><a href="./Load-Models.html">加载模型</a>
-              </li>
-              <li class="item"><a href="./Text-Geometry.html">文字几何体</a>
-              </li>
             </ol>
           </div>
-          <div class="body"><h1 id="create-mesh">Create Mesh</h1>
-<p>We can create mesh through three ways. </p>
+          <div class="body"><h1 id="-">创建网格体</h1>
+<p>3D 场景中所有可视的物体都是网格体。不同的网格体具有不同的形状。在之前的教程中，我们创建过矩形平面，立方体，球形网格体等面状网格体，也创建过坐标轴等线状网格体。这一节，我们将进一步了解，如何创建不同形状的网格体。</p>
+<h2 id="-">基础几何网格体</h2>
+<p>基础几何网格体包括：矩形平面，立方体，球体，圆柱体，圆锥体。之前的教程中，我们创建过矩形平面和立方体。接下来，我们看看如何创建球体，圆柱体和圆锥体。</p>
 <ol>
-<li>Create predefined shaped mesh.</li>
-<li>Create custom mesh, mannually specify vertices, normals and so on.</li>
-<li>Create mesh from 3d model file.</li>
+<li>使用 <code>MeshBuilder.createSphere(scene, radius, widthSegs, heightSegs)</code> 创建球体。</li>
+<li>使用 <code>MeshBuilder.createCylinder(scene, radius, height, segs)</code> 创建圆柱体。</li>
+<li>使用 <code>MeshBuilder.createCone(scene, radius, height, segs)</code> 创建圆锥体。</li>
 </ol>
-<p>Let&#39;s walk throught one by one.</p>
-<h2 id="create-predefined-shaped-mesh-">Create predefined shaped mesh.</h2>
-<p>Last chapter we created a cube-shape mesh. Actually G3D allows us to create a number of shapes: Sphere, Cylinder, Cone, Plane(ground).</p>
-<p>See the following case:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=shapes"></iframe>
+<p>创建所有网格体时，都需要指定当前场景。创建球体时，需要指定球体的半径；创建圆柱和圆锥时，不仅需要指定半径（圆柱或圆锥的底面半径），还需要指定高度。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1ApAjphTpK1RjSZR0XXbEwXXa-591-202.png" alt=""></p>
+<p>这几种网格体的表面包含曲面，G3D 是通过短折线来模拟曲线的。比如，一个圆形，可以用 6 段短直线段来粗糙地模拟，也可以用 128 条短直线段来精细地模拟。上述几个函数的 <code>segs</code> 相关参数即是指定使用多少段直线来模拟一个圆形，数值越大，模拟就约精细（当然性能开销也越大）。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1lS7kphTpK1RjSZFGXXcHqFXa-264-264.png" alt=""></p>
+<p>下面这个例子展示了创建球体、圆柱体和圆锥体的方法，以及不同 <code>segs</code> 参数生成的网格体的区别。</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/yejoxam/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>例子中创建了三个圆柱体，三个球体，三个圆锥体，<code>segs</code> 分别是 6，16 和 128。很明显，不同 <code>segs</code> 参数值对对曲面的逼真程度是有显著影响的。</p>
+<h2 id="-">自定义形状的网格体</h2>
+<p>除了这些预置好的网格体，我们还可以手动生成顶点，然后拼装成自定义形状的网格体。这项工作需要一些小技巧，我们先看一个简单的情形：如何创建自定义的<strong>线状</strong>网格体（球体，立方体这些属于面状网格体，而之前创建的坐标轴则是线状网格体）。</p>
+<h3 id="-">线状网格体</h3>
+<p>假设我们需要创建如下图所示的，在 X-Y 平面中的折线，依次经过 (0, 0, 0)，(1, 1, 0)，(1, 0, 0)，(2, 1, 0)，(2, 0, 0) 等等。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1vWqMpCzqK1RjSZFjXXblCFXa-619-314.png" alt=""></p>
+<p>我们看看接下来这个示例是怎么做的。</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/qizitep/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>首先，创建两个数组 <code>vertices</code> 和 <code>indices</code>：</p>
+<pre><code class="language-javascript">const vertices = [];
+const indices = [];
+for(let i=0; i&lt;4; i++){
+    vertices.push(0+i, 0, 0, 1+i, 1, 0);
+    if(i!==0){
+        indices.push(i*2-1, i*2);
+    }
+    indices.push(i*2, i*2+1);
+}
 
-<p>We created a sphere mesh by callding <code>G3D.MeshBuilder.createSphere</code>. The first argument is the <code>scene</code> object, the second is sphere&#39;s radius. There&#39;s two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.</p>
-<pre><code class="language-javascript">mesh = G3D.MeshBuilder.createSphere(scene, 1);</code></pre>
-<p>Basiclly, the <code>MeshBuider.createXXX</code> methods follow this pattern:</p>
-<ul>
-<li>First argument should be your scene object.</li>
-<li>Following is one or more arguments representing the size of the mesh.</li>
-<li>Last is one or more arguments is the curve&#39;s segments number.</li>
-</ul>
-<p>Read the <a href="../docs/MeshBuilder">API Reference</a> for more information.</p>
-<p>Try uncomment one of these lines and comment other lines, to see what kind of mesh it will create.</p>
-<pre><code class="language-javascript">    mesh = G3D.MeshBuilder.createSphere(scene, 1);
-    // mesh = G3D.MeshBuilder.createGround(scene, 2, 1);
-    // mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCube(scene, 1);</code></pre>
-<h2 id="create-custom-mesh">Create Custom Mesh</h2>
-<p>You can also create custom mesh by mannually specify the mesh&#39;s geometry vertices, normals and so on.</p>
-<p>See the following example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=custom-geometry"></iframe>
-
-<p>In <code>createCustomTriangleMesh</code> method, we call <code>new G3D.Mesh</code> to create an empty mesh.</p>
-<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);</code></pre>
-<p>We got a mesh instance, which structure is:</p>
-<ul>
-<li>mesh: instance of <code>G3D.Mesh</code><ul>
-<li>geometry: instance of <code>G3D.Geometry</code><ul>
-<li>vertices: array of <code>Number</code>, default is empty (<code>[]</code>)</li>
-<li>normals: array of <code>Number</code>, default is empty</li>
-<li>uvs: array of <code>Number</code></li>
-<li>indices: object<ul>
-<li>default: array of <code>Number</code>, default is empty. <code>default</code> is a default name, which maps the material with the same name in <code>materials</code>. A mesh may has multiple indices arrays and materials. For example, <code>mesh.geometry.indices.default</code> maps with <code>mesh.materials.default</code>, also <code>mesh.geometry.indices.foo</code> maps with <code>mesh.materials.foo</code>.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>materials: object<ul>
-<li>default: instance of <code>G3D.StandardMaterial</code>, maps with indices array with the same name <code>default</code> in <code>geometry.indices</code> (<code>geometry.indices.default</code>, ie). More details in material instance will be discussed in later chapters.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>If we want to create a custom mesh, we need to manually fill <code>geometry.vertices</code>, <code>geometry.normals</code>, <code>geometry.uvs</code>, <code>geometry.indice.default</code>, as following:</p>
-<pre><code class="language-javascript">mesh.geometry.vertices = [
-    2, 0, 0,
-    0, 2, 0,
-    0, 0, 2
+// vertices: [0,0,0, 1,1,0, 1,0,0, 2,1,0, 2,0,0, 3,1,0, ...]
+//            0      1      2      3      4      5
+// indices:  [0,1, 1,2, 2,3, 3,4, 4,5, ...]</code></pre>
+<p>数组 <code>vertices</code> 包含了沿折线所有顶点的位置，每三个值表示一个顶点。这个例子中的折线共有 8 个顶点，所以 <code>vertices</code> 的长度是 24。</p>
+<p>数组 <code>indices</code> 描述了 <code>vertices</code> 中的顶点是<strong>如何构成</strong>一条折线的。<code>indices</code> 中的每一个值都是 <code>vertices</code> 中的索引值，都对应了 <code>vertices</code> 中的一个顶点。在这个例子中，<code>indices</code> 是 [0,1,1,2,...]。前两个值 0 和 1 表示：首先，取一根线段，首端是 <code>vertices</code> 中的第 0 个顶点即 (0, 0, 0)，尾端是第 1 个顶点即 (1, 1, 0)。接下来的两个值 1 和 2 表示：第二根线段，首端是 <code>vertices</code> 中的第 1 个端点 (1, 1, 0)，尾端是第 2 个端点 (1, 0, 0)。首尾相接，依此类推。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1rd6ypxTpK1RjSZFGXXcHqFXa-619-321.png" alt=""></p>
+<p>然后，就可以新建 <code>LineMesh</code> 即线状网格体对象，然后为其创建一个 <code>LineGeometry</code> 即线状几何体对象，传入 <code>vertices</code> 和 <code>indices</code> 拼成的一个 Config 对象。注意，这里我们将 <code>indices</code> 放在 <code>default</code> 字段中，这是因为一个线状网格体可能包含多条独立的折线，默认第一条折线的名称为 <code>default</code>。</p>
+<pre><code class="language-javascript">const lines = new G3D.LineMesh(scene);
+lines.geometry = new G3D.LineGeometry({
+    vertices,
+    indices: {
+        default: indices
+    }
+})</code></pre>
+<p>这样，我们就创建了一个自定义形状的线状网格体。</p>
+<h3 id="-">面状网格体</h3>
+<p>创建面状网格体的过程稍微复杂一点。假设我们想要创建下图中，由两个正方形平面 ABCD 和 EFGH 组成的网格体：</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1T5nOpsfpK1RjSZFOXXa6nFXa-505-443.png" alt=""></p>
+<p>看看示例是怎么做的。</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/fesokig/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>除了顶点数组 <code>vertices</code> 和索引数组 <code>indices</code>，我们还要创建 UV 数组 <code>uvs</code> 和法线数组 <code>normals</code>。</p>
+<pre><code class="language-javascript">const vertices = [
+    0,1,2, // A
+    0,0,2, // B
+    1,1,2, // C
+    1,0,2, // D
+    1,1,2, // E
+    1,0,2, // F
+    1,1,0, // G
+    1,0,0  // H
 ];
-mesh.geometry.uvs = [0, 0, 0, 0, 0, 0];
-mesh.geometry.normals = [
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1
-];
-mesh.geometry.indices = {
-    foo: [
-        0, 1, 2
-    ]
-};</code></pre>
-<ul>
-<li>Each 3 numbers in <code>vertices</code> array represents a vertice&#39;s position (x, y, z). Here we have 3 vertices, the one which coordinate is (2, 0, 0) is on the X axis, and the other two are on Y axis and Z axis.</li>
-<li>Each 2 numbers in <code>uvs</code> array represents a vertice&#39;s uv, which is useful when we apply texture on the mesh. Cause we don&#39;t use texture for the example, we just specify [0, 0] for each vertices.</li>
-<li>Each 3 numbers in <code>normals</code> array represents a vertice&#39;s normal vector. Because the 3 vertices are in the same face (see indices following).</li>
-<li>Each 3 numbers in <code>indices.{xxx}</code> (such as <code>indices.default</code>) represents a face, each number is the index of the vertices, for example, the first item number <code>0</code> in <code>indices.foo</code> represents vertice (2, 0, 0) in vertices array.</li>
-</ul>
-<p>You can change the numbers in those arrays and verify the above explaination.</p>
-<h2 id="create-from-3d-model-files">Create From 3D Model Files</h2>
-<p>When your 3D project grows larger, you should consider creating 3D models using applications such as Blender, 3D Max, SketchUp and so on. Most 3D modeling applications share some common model file format, G3D can load two of them: obj and stl (currently).</p>
-<p>See the following example, check how to use G3D to load obj format 3D model files.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=create-from-model"></iframe>
-
-<p>As we mentioned above, G3D is a pure render engine and the &#39;load&#39; thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the &#39;load&#39; thing yourself, and pass the loaded text to <code>MeshBuilder.createFromObjModel</code>.</p>
-<pre><code class="language-javascript">const objStr = `
-    # Alias OBJ Model File
-    # File units = meters
-    mtllib triangle.mtl
-    usemtl FrontColor
-    v 0 0 1
-    vt -27.8388 -16.0728
-    vn -0.57735 -0.57735 0.57735
-    v 1 0 0
-    vt 27.8388 -16.0728
-    v 0 1 0
-    vt 0 32.1455
-    f 1/1/1 2/2/1 3/3/1
-`;
-
-const mtlStr = `
-    # Alias OBJ Material File
-    newmtl FrontColor
-    Ka 0.000000 0.000000 0.000000
-    Kd 0.882353 0.882353 0.784314
-    Ks 0.330000 0.330000 0.330000
-`;
-
-return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr });</code></pre>
-<p>An obj-formatted model usually contains a *.obj file and a *.mtl file. You should load it yourself. Here we hard coded a simple model (a triangle just like the one in the previous example).</p>
-<p>For more information about obj format, you can refer to <a href="http://www.martinreddy.net/gfx/3d/OBJ.spec">Obj Spec</a>. And try change the hard coded string to see what happened.</p>
+const normals = [];
+const uvs = [];
+for(let i=0; i&lt;8; i++){
+    if(i&lt;=3){
+        normals.push(0,0,1);      
+    }else{
+        normals.push(1,0,0);
+    }
+    uvs.push(0,0);
+}</code></pre>
+<p>顶点数组 <code>vertices</code> 由 8 个顶点组成，这与之前创建线状网格体时的操作是一致的。</p>
+<p>法线 <code>normals</code> 是垂直于表面的矢量。对于线状网格体而言，顶点是无所谓法线的，但是对于面状网格体，法线会参与光照的计算，影响最终表面呈现的颜色。所以对面状网格体，法线至关重要。这里，对于前四个顶点，法线为 (0, 0, 1)；而对后四个顶点，法线为 (1, 0, 0)。</p>
+<p>你也许已经注意到了，其实这个网格体只有 6 个顶点，因为顶点 C 和顶点 E 是同一个顶点，而顶点 D 和顶点 F 也是同一个顶点。但是由于 C 和 E 虽然具有相同的位置，但是法线的值不同，所以不得不将其拆分为两个顶点表示。</p>
+<blockquote>
+<p>UV 与法线类似，也是顶点的属性，但 UV 只需要用两个值来表示。UV 与网格体表面材质上的纹理贴图有关，目前还没有涉及，所以这里为了简单，为每个顶点都指定 UV 为 (0,0) 好了。</p>
+</blockquote>
+<p>最后创建顶点索引数组 <code>indices</code>。在线状网格体中，顶点索引的规则是「每两个点表示一个线段」，而在面状网格体中，规则是「每三个点表示一个三角形」。所有面状网格体都是由三角形组成的，矩形平面需要拆分为两个三角形表达。例子中的 <code>indices</code> 描述了四个三角形，分别是三角形 ABC 与 BDC（它们构成了矩形平面 ABCD），以及三角形 EFH 和 HGE（它们构成了矩形平面 EFGH）。</p>
+<pre><code class="language-javascript">const indices = [
+    0,1,2, // triangle ABC
+    1,3,2, // triangle BDC
+    4,5,7, // triangle EFH
+    7,6,4  // triangle HGE
+]</code></pre>
+<p>最后，利用上面生成的这些数组来创建 <code>Mesh</code> 对象。之前构建线状网格体时，我们使用了 <code>LineMesh</code> 和 <code>LineGeometry</code>；此时我们构建面状网格体，需要使用 <code>Mesh</code> 和 <code>Geometry</code>。同样，<code>indices</code> 数组放在了 <code>default</code> 属性中。</p>
+<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);
+mesh.geometry = new G3D.Geometry({
+    vertices,
+    normals,
+    uvs,
+    indices: {
+        default: indices
+    }
+});</code></pre>
+<p>接下来，请在示例右侧显示区域拖拽鼠标，把相机转到这两个矩形平面的背后去（或者，你也在代码里更改相机的属性，<code>camera.alpha = 200</code>）。你会发现，当相机转到平面背后时，矩形平面消失了！（但是你通过 <code>MeshBuilder.createPlane()</code> 方法创建的平面不会这样）。</p>
+<p>这是因为，通常情况下，面状网格体是闭合的，你不应该看到一个平面的背面，为了提高性能，默认是不渲染背面的。在 G3D 中，<code>Geomtry</code> 对象具有朝向 (facing) 的概念，在初始化 <code>Geometry</code> 对象时，可以指定一个 <code>facing</code> 属性，可以将其指定为 <code>Geometry.FACING.FRONT</code>（这是默认值），<code>Geometry.FACING.BACK</code> 或 <code>Geometry.FACING.BOTH</code>。</p>
+<p>如果我们希望矩形平面的两侧都可以被看到，那么在初始化时传入 <code>BOTH</code> 即可，如下所示。</p>
+<pre><code>mesh.geometry = new G3D.Geometry({
+    ...
+    facing: G3D.Geometry.FACING.BOTH
+})</code></pre><p>如何区分一个平面的正面和背面呢？这时又要用到右手螺旋法则了。拿出右手，使除了大拇指外的四个手指，沿着三角形三个顶点的排列顺序旋转（比如 A-&gt;B-&gt;C），此时大拇指指向的方向的就是这个平面的「正面」(front)。</p>
+<h2 id="-">小结</h2>
+<p>这一节，我们学习了两点：1) 如何通过 <code>MeshBuilder</code> 的工厂函数创建具有内置形状的网格体；2) 如何根据实际场景创建自定义形状的网格体。希望能够对你有所帮助。</p>
 </div>
         </div>
       </div>

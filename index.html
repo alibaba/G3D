@@ -280,9 +280,9 @@
         
                     new G3D.Skybox(scene, diffuse, 5.4);
         
-                    //- meshes.forEach(m => {
-                        //- m.rotation.y = 225;
-                    //- });
+                    meshes.forEach(m => {
+                        m.rotation.y = 225;
+                    });
                 }
             });
         
@@ -308,7 +308,7 @@
                     if (hover) {
                         speed = Math.max(speed - 0.01, 0);
                     } else {
-                        speed = Math.min(0.1, speed + 0.005);
+                        speed = Math.min(0.05, speed + 0.005);
                     }
                     if (Math.abs(currentY - targetY) > 0.05) {
                         currentY += (targetY - currentY) / 5;

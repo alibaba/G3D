@@ -15,7 +15,7 @@
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
         <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item"><a class="link" href="/cn/">中文</a>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -31,129 +31,115 @@
               </li>
               <li class="item"><a href="./Create-Mesh.html">Create Mesh</a>
               </li>
-              <li class="item"><a href="./Raw-Material.html">Raw Material</a>
-              </li>
-              <li class="item"><a href="./Standard-Material.html">Standard Material</a>
-              </li>
-              <li class="item"><a href="./Lights.html">Lights</a>
-              </li>
-              <li class="item"><a href="./Load-Models.html">Load Models</a>
-              </li>
-              <li class="item"><a href="./Text-Geometry.html">Text Geometry</a>
-              </li>
             </ol>
           </div>
           <div class="body"><h1 id="create-mesh">Create Mesh</h1>
-<p>We can create mesh through three ways. </p>
+<p>All visible objects in 3D scene are meshes. Different meshes has different shapes. In previous sections, we once created face meshes such as rectangle planes, cubes, spheres, we also created line geometries such as coordinate meshes. In this section, we&#39;ll discuss how to create meshes with different shapes.</p>
+<h2 id="primitive-meshes">Primitive Meshes</h2>
+<p>Primitive meshes includes rectangle plane, cubes, spheres, cylinders, cones. We created planes and cubes before, now let&#39;s see how to create spheres, cylinders and cones.</p>
 <ol>
-<li>Create predefined shaped mesh.</li>
-<li>Create custom mesh, mannually specify vertices, normals and so on.</li>
-<li>Create mesh from 3d model file.</li>
+<li>Use <code>MeshBuilder.createSphere(scene, radius, widthSegs, heightSegs)</code> to create sphere.</li>
+<li>Use <code>MeshBuilder.createCylinder(scene, radius, height, segs)</code> to create cylinder.</li>
+<li>Use <code>MeshBuilder.createCone(scene, radius, height, segs)</code> to create cone.</li>
 </ol>
-<p>Let&#39;s walk throught one by one.</p>
-<h2 id="create-predefined-shaped-mesh-">Create predefined shaped mesh.</h2>
-<p>Last chapter we created a cube-shape mesh. Actually G3D allows us to create a number of shapes: Sphere, Cylinder, Cone, Plane(ground).</p>
-<p>See the following case:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=shapes"></iframe>
+<p>When creating a mesh, you need to specify the scene. You need to specify the radius when creating a sphere; and you need to specify radius and height when creating a cylinder or a cone.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1ApAjphTpK1RjSZR0XXbEwXXa-591-202.png" alt=""></p>
+<p>These meshes&#39; surface is curved, G3D use line strip to simulate curve line. For example, a circle could be roughly simulated using 6 lines, or nicely simulated using 128 lines. The <code>segs</code> argument is used to specify how many lines should be used to simulate a circle. The larger the number is, the nicer G3D simulates (and cost more, of course).</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1lS7kphTpK1RjSZFGXXcHqFXa-264-264.png" alt=""></p>
+<p>This example demonstrated how to create sphere, cylinder and cones, with different <code>segs</code> arguments.</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/yejoxam/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>We created three cylinders, three spheres and three cones, with <code>segs</code> 6, 16 and 128. It&#39;s obvious that segs deeply affect how nice the curved face is simulated.</p>
+<h2 id="meshes-with-custom-shapes">Meshes with Custom Shapes</h2>
+<p>Except for these pre-defined shaped meshes, we can alse mannually create vertices and make up our own custom shaped meshes. It&#39;s a little bit tricky, so let&#39;s begin with a simple issue: How to create custom shaped <strong>line</strong> mesh. (Spheres, cubes and so on are face meshes, but the coordinate mesh we created before is line mesh).</p>
+<h3 id="line-mesh">Line Mesh</h3>
+<p>Assume that we want to create a line strip in X-Y plane, passing through (0, 0, 0), (1, 1, 0), (1, 0, 0), (2, 1, 0), (2, 0, 0) and so on, as the following image shows:</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1vWqMpCzqK1RjSZFjXXblCFXa-619-314.png" alt=""></p>
+<p>Let&#39;s see the demo:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/qizitep/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>First, create two arrays <code>vertices</code> and <code>indices</code>:</p>
+<pre><code class="language-javascript">const vertices = [];
+const indices = [];
+for(let i=0; i&lt;4; i++){
+    vertices.push(0+i, 0, 0, 1+i, 1, 0);
+    if(i!==0){
+        indices.push(i*2-1, i*2);
+    }
+    indices.push(i*2, i*2+1);
+}
 
-<p>We created a sphere mesh by callding <code>G3D.MeshBuilder.createSphere</code>. The first argument is the <code>scene</code> object, the second is sphere&#39;s radius. There&#39;s two optional arguments (the third and the fourth one), widthSegs and heightSegs, which decides how much vertices the mesh should have. Larger the number, smoother the curve of the mesh will be.</p>
-<pre><code class="language-javascript">mesh = G3D.MeshBuilder.createSphere(scene, 1);</code></pre>
-<p>Basiclly, the <code>MeshBuider.createXXX</code> methods follow this pattern:</p>
-<ul>
-<li>First argument should be your scene object.</li>
-<li>Following is one or more arguments representing the size of the mesh.</li>
-<li>Last is one or more arguments is the curve&#39;s segments number.</li>
-</ul>
-<p>Read the <a href="../docs/MeshBuilder">API Reference</a> for more information.</p>
-<p>Try uncomment one of these lines and comment other lines, to see what kind of mesh it will create.</p>
-<pre><code class="language-javascript">    mesh = G3D.MeshBuilder.createSphere(scene, 1);
-    // mesh = G3D.MeshBuilder.createGround(scene, 2, 1);
-    // mesh = G3D.MeshBuilder.createCylinder(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCone(scene, 1, 1);
-    // mesh = G3D.MeshBuilder.createCube(scene, 1);</code></pre>
-<h2 id="create-custom-mesh">Create Custom Mesh</h2>
-<p>You can also create custom mesh by mannually specify the mesh&#39;s geometry vertices, normals and so on.</p>
-<p>See the following example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=custom-geometry"></iframe>
-
-<p>In <code>createCustomTriangleMesh</code> method, we call <code>new G3D.Mesh</code> to create an empty mesh.</p>
-<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);</code></pre>
-<p>We got a mesh instance, which structure is:</p>
-<ul>
-<li>mesh: instance of <code>G3D.Mesh</code><ul>
-<li>geometry: instance of <code>G3D.Geometry</code><ul>
-<li>vertices: array of <code>Number</code>, default is empty (<code>[]</code>)</li>
-<li>normals: array of <code>Number</code>, default is empty</li>
-<li>uvs: array of <code>Number</code></li>
-<li>indices: object<ul>
-<li>default: array of <code>Number</code>, default is empty. <code>default</code> is a default name, which maps the material with the same name in <code>materials</code>. A mesh may has multiple indices arrays and materials. For example, <code>mesh.geometry.indices.default</code> maps with <code>mesh.materials.default</code>, also <code>mesh.geometry.indices.foo</code> maps with <code>mesh.materials.foo</code>.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>materials: object<ul>
-<li>default: instance of <code>G3D.StandardMaterial</code>, maps with indices array with the same name <code>default</code> in <code>geometry.indices</code> (<code>geometry.indices.default</code>, ie). More details in material instance will be discussed in later chapters.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>If we want to create a custom mesh, we need to manually fill <code>geometry.vertices</code>, <code>geometry.normals</code>, <code>geometry.uvs</code>, <code>geometry.indice.default</code>, as following:</p>
-<pre><code class="language-javascript">mesh.geometry.vertices = [
-    2, 0, 0,
-    0, 2, 0,
-    0, 0, 2
+// vertices: [0,0,0, 1,1,0, 1,0,0, 2,1,0, 2,0,0, 3,1,0, ...]
+//            0      1      2      3      4      5
+// indices:  [0,1, 1,2, 2,3, 3,4, 4,5, ...]</code></pre>
+<p>The array <code>vertices</code> container all vertice positions along the line strip, each three values for a vertices. The line containers 8 vertices, so the length of <code>vertices</code> is 24.</p>
+<p>The array <code>indices</code> defines how the vertices in <code>vertices</code> composite a line strip. Each value in <code>indices</code> is an index for <code>vertices</code> array, corresponding with a vertice. In the example, <code>indices</code> is [0,1,1,2,...]. The first two value 0 and 1 means: The first line, start with the 0th vertice in <code>vertices</code> which is (0, 0, 0), ends with the 1st vertice which is (1, 1, 0); the following two value 1 and 2 means: the second line, start with 1st vertice which is (1, 1, 0) and ends with the 2nd vertice which is (1, 0, 0); and so on.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1rd6ypxTpK1RjSZFGXXcHqFXa-619-321.png" alt=""></p>
+<p>Then we can create a <code>LineMesh</code> object, and create a <code>LineGeometry</code>, passing <code>vertices</code> and <code>indices</code> in. Notice that we put <code>indices</code> in a <code>default</code> property, this is because a line mesh may contain multiple line strips, the first one&#39;s name is <code>default</code> by default.</p>
+<pre><code class="language-javascript">const lines = new G3D.LineMesh(scene);
+lines.geometry = new G3D.LineGeometry({
+    vertices,
+    indices: {
+        default: indices
+    }
+})</code></pre>
+<p>So we finished creating a custom shaped line mesh.</p>
+<h3 id="face-mesh">Face Mesh</h3>
+<p>Creating face mesh is a little complecated. Assum that we want to create a face mesh composited of two rectangle planes ABCD and EFGH:</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1T5nOpsfpK1RjSZFOXXa6nFXa-505-443.png" alt=""></p>
+<p>See the example:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/fesokig/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>Except for <code>vertices</code> and <code>indices</code>, we need to create <code>uvs</code> and <code>normals</code>.</p>
+<pre><code class="language-javascript">const vertices = [
+    0,1,2, // A
+    0,0,2, // B
+    1,1,2, // C
+    1,0,2, // D
+    1,1,2, // E
+    1,0,2, // F
+    1,1,0, // G
+    1,0,0  // H
 ];
-mesh.geometry.uvs = [0, 0, 0, 0, 0, 0];
-mesh.geometry.normals = [
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1
-];
-mesh.geometry.indices = {
-    foo: [
-        0, 1, 2
-    ]
-};</code></pre>
-<ul>
-<li>Each 3 numbers in <code>vertices</code> array represents a vertice&#39;s position (x, y, z). Here we have 3 vertices, the one which coordinate is (2, 0, 0) is on the X axis, and the other two are on Y axis and Z axis.</li>
-<li>Each 2 numbers in <code>uvs</code> array represents a vertice&#39;s uv, which is useful when we apply texture on the mesh. Cause we don&#39;t use texture for the example, we just specify [0, 0] for each vertices.</li>
-<li>Each 3 numbers in <code>normals</code> array represents a vertice&#39;s normal vector. Because the 3 vertices are in the same face (see indices following).</li>
-<li>Each 3 numbers in <code>indices.{xxx}</code> (such as <code>indices.default</code>) represents a face, each number is the index of the vertices, for example, the first item number <code>0</code> in <code>indices.foo</code> represents vertice (2, 0, 0) in vertices array.</li>
-</ul>
-<p>You can change the numbers in those arrays and verify the above explaination.</p>
-<h2 id="create-from-3d-model-files">Create From 3D Model Files</h2>
-<p>When your 3D project grows larger, you should consider creating 3D models using applications such as Blender, 3D Max, SketchUp and so on. Most 3D modeling applications share some common model file format, G3D can load two of them: obj and stl (currently).</p>
-<p>See the following example, check how to use G3D to load obj format 3D model files.</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=create-from-model"></iframe>
-
-<p>As we mentioned above, G3D is a pure render engine and the &#39;load&#39; thing is related to the environment (the way to load text from internet is different from in browser to in hybrid envronments), you should deal with the &#39;load&#39; thing yourself, and pass the loaded text to <code>MeshBuilder.createFromObjModel</code>.</p>
-<pre><code class="language-javascript">const objStr = `
-    # Alias OBJ Model File
-    # File units = meters
-    mtllib triangle.mtl
-    usemtl FrontColor
-    v 0 0 1
-    vt -27.8388 -16.0728
-    vn -0.57735 -0.57735 0.57735
-    v 1 0 0
-    vt 27.8388 -16.0728
-    v 0 1 0
-    vt 0 32.1455
-    f 1/1/1 2/2/1 3/3/1
-`;
-
-const mtlStr = `
-    # Alias OBJ Material File
-    newmtl FrontColor
-    Ka 0.000000 0.000000 0.000000
-    Kd 0.882353 0.882353 0.784314
-    Ks 0.330000 0.330000 0.330000
-`;
-
-return G3D.MeshBuilder.createFromObjModel(scene, { obj: objStr, mtl: mtlStr });</code></pre>
-<p>An obj-formatted model usually contains a *.obj file and a *.mtl file. You should load it yourself. Here we hard coded a simple model (a triangle just like the one in the previous example).</p>
-<p>For more information about obj format, you can refer to <a href="http://www.martinreddy.net/gfx/3d/OBJ.spec">Obj Spec</a>. And try change the hard coded string to see what happened.</p>
+const normals = [];
+const uvs = [];
+for(let i=0; i&lt;8; i++){
+    if(i&lt;=3){
+        normals.push(0,0,1);      
+    }else{
+        normals.push(1,0,0);
+    }
+    uvs.push(0,0);
+}</code></pre>
+<p>The array <code>vertices</code> container 8 points, which is the similar to when we created line mesh before.</p>
+<p>Normal is the vector perpendicular to the face. For line meshes, normals makes no sense, but for face meshes, normals participates in computing the light and the final render color, it&#39;s essantial. In our example, for the first four vertices, normal is (0, 0, 1), and for the 4 vertices left, normal is (1, 0, 0).</p>
+<p>You may notice that the mesh has only 6 vertices literally, cause point C and point E is the same point, as well as D and F. C and E has the same position, but the normal is different, so we have to split it into two points.</p>
+<blockquote>
+<p>UV is similar to normals, it&#39;s data for each vertices, but UV only need two values for one vertice. UV is related to the texture and material, as we have not involved in these issues, we can just specify (0, 0) for each vertice.</p>
+</blockquote>
+<p>At last we created the vertice index array <code>indices</code>. For line geometry, the rule is &quot;each two indices make up a line segment&quot;, and here for face geometry, the rule is &quot;each three indices make up a triangle&quot;. Face meshes are composited with triangles, so rectangle plane should be split into two triangles. Here in the example, <code>indices</code> demonstrate 4 triangles, they are triangle ABC and BDC (which composite rectangle ABCD), and triangle EFH and HGE (which composite rectangle EFGH).</p>
+<pre><code class="language-javascript">const indices = [
+    0,1,2, // triangle ABC
+    1,3,2, // triangle BDC
+    4,5,7, // triangle EFH
+    7,6,4  // triangle HGE
+]</code></pre>
+<p>At last, create a <code>Mesh</code>. We used <code>LineMeshed</code> and <code>LineGeometry</code> before, here we need <code>Mesh</code> and <code>Geometry</code>. For the same reason, <code>indices</code> is in the <code>default</code> property.</p>
+<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);
+mesh.geometry = new G3D.Geometry({
+    vertices,
+    normals,
+    uvs,
+    indices: {
+        default: indices
+    }
+});</code></pre>
+<p>Please drag your mouse in the right rendering canvas, to rotate the camera to the backside of our mesh (or you can edit code to change the camera, <code>camera.alpha = 200</code>). You find that when camera looks at the mesh from back side, the mesh is gone! (This won&#39;t happen for the mesh you created from <code>MeshBuilder.createPlane()</code>).</p>
+<p>This is because, mostly face mesh is closed, you are not supposed to see the back side of a plane. For better performance, we&#39;ll not render the back side. In G3D, <code>Geometry</code> has a &#39;facing&#39;, when creating <code>Geometry</code>, you can specify a <code>facing</code> property as <code>Geometry.FACING.FRONT</code> (the default value)，<code>Geometry.FACING.BACK</code> or <code>Geometry.FACING.BOTH</code>.</p>
+<p>So if we want the mesh to be seen from both side, then specify <code>BOTH</code> as following code shows:</p>
+<pre><code>mesh.geometry = new G3D.Geometry({
+    ...
+    facing: G3D.Geometry.FACING.BOTH
+})</code></pre><p>How to recognize the front side and back side? Here we use the Right Hand Rule again. Use your right hand, make the four fingers rotate along the triangle vertices in order (A-&gt;B-&gt;C, eg), then the thumb is pointing at the front side.</p>
+<h2 id="summary">Summary</h2>
+<p>In this section we learned: 1) How to create pre-defined shaped meshes using <code>MeshBuilder</code>. 2) How to create custom shaped meshes. Hope the artical is helpful.</p>
 </div>
         </div>
       </div>
