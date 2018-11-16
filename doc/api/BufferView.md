@@ -10,12 +10,12 @@ new BufferView(config);
 
 ### Arguments
 
-| name          | type       | description                                           |
-| ------------- | ---------- | ----------------------------------------------------- |
-| config        | Object     | config object                                         |
-| config.buffer | G3D.Buffer | data source                                           |
-| config.stride | Number     | stride between each part in data source, default is 0 |
-| config.offset | Number     | offset in data source, default is 0                   |
+| name              | type       | description                                           |
+| ----------------- | ---------- | ----------------------------------------------------- |
+| config            | Object     | config object                                         |
+| config.buffer     | G3D.Buffer | data source                                           |
+| config.byteStride | Number     | stride between each part in data source, default is 0 |
+| config.byteOffset | Number     | offset in data source, default is 0                   |
 
 ## Example
 
