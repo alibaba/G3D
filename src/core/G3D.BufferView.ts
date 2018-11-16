@@ -2,22 +2,22 @@ import Buffer from "./G3D.Buffer";
 
 interface IBufferViewConfig {
     buffer: Buffer;
-    stride?: number;
-    offset?: number;
+    byteStride?: number;
+    byteOffset?: number;
 }
 
 
 class BufferView {
 
-    buffer: Buffer;
-    stride: number;
-    offset: number;
+    readonly buffer: Buffer;
+    readonly byteStride: number;
+    readonly byteOffset: number;
 
-    constructor({ buffer, stride = 0, offset = 0 }: IBufferViewConfig) {
+    constructor({ buffer, byteStride = 0, byteOffset = 0 }: IBufferViewConfig) {
 
         this.buffer = buffer;
-        this.stride = stride;
-        this.offset = offset;
+        this.byteStride = byteStride;
+        this.byteOffset = byteOffset;
     }
 
 }

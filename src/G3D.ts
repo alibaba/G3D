@@ -5,6 +5,7 @@ import Engine from './core/G3D.Engine';
 
 import Buffer from './core/G3D.Buffer';
 import BufferView from './core/G3D.BufferView';
+import ElementBuffer from './core/G3D.ElementBuffer';
 import ElementBufferView from './core/G3D.ElementBufferView';
 import Texture from './texture/G3D.Texture';
 import CubeTexture from './texture/G3D.CubeTexture';
@@ -49,6 +50,7 @@ export default {
 
     Buffer,
     BufferView,
+    ElementBuffer,
     ElementBufferView,
     Texture,
     CubeTexture,

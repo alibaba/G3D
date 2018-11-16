@@ -9,11 +9,15 @@ import Quat_2 from '../../../matrix/G3D.Quat';
 import BufferView from '../../../core/G3D.BufferView';
 import ElementBufferView from '../../../core/G3D.ElementBufferView';
 import Geometry from '../../../geometry/G3D.Geometry';
+import GL from '../../../core/G3D.GL';
+import ElementBuffer from '../../../core/G3D.ElementBuffer';
 
 const Mat4: any = Mat4_2;
 const Quat: any = Quat_2;
 
 function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
+
+    const { gl } = GL;
 
     const pbrEnv = new PBREnviroment({ diffuse, specular, brdfLUT: lut });
 
@@ -21,11 +25,15 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
         const { data } = gltf.buffers[bv.buffer];
 
-        return new Buffer({
-            data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
-            target: bv.target
-        });
-
+        if (bv.target === gl.ELEMENT_ARRAY_BUFFER) {
+            return new ElementBuffer({
+                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength)
+            });
+        } else {
+            return new Buffer({
+                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength)
+            });
+        }
     });
 
     const gTextureCache = [];
@@ -86,7 +94,6 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
         } else {
             material.roughness = 1.0;
         }
-
 
         if (emissiveTexture) {
             material.emissiveTexture = gTextureCreators[emissiveTexture.index](true);
@@ -150,8 +157,8 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
                 return new BufferView({
                     buffer: gBuffers[accessor.bufferView],
-                    stride: accessor.byteStride || 0,
-                    offset: accessor.byteOffset || 0,
+                    byteStride: accessor.byteStride || 0,
+                    byteOffset: accessor.byteOffset || 0,
                 });
 
             }
@@ -162,7 +169,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
                 return new ElementBufferView({
                     buffer: gBuffers[accessor.bufferView],
-                    offset: accessor.byteOffset || 0,
+                    byteOffset: accessor.byteOffset || 0,
                     count: accessor.count,
                     mode: 'TRIANGLES',
                     type: 'UNSIGNED_SHORT',

@@ -1,24 +1,23 @@
 import GL from './G3D.GL';
-
-import Buffer from './G3D.Buffer';
+import ElementBuffer from './G3D.ElementBuffer';
 
 interface IElementBufferViewConfig {
-    buffer: Buffer;
+    buffer: ElementBuffer;
     mode?: string | number;
     count?: number;
     type?: string | number;
-    offset?: number;
+    byteOffset?: number;
 }
 
 class ElementBufferView {
 
-    buffer: Buffer;
-    mode: number;
-    count: number;
-    type: number;
-    offset: number;
+    readonly buffer: ElementBuffer;
+    readonly mode: number;
+    readonly count: number;
+    readonly type: number;
+    readonly byteOffset: number;
 
-    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', offset = 0 }: IElementBufferViewConfig) {
+    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', byteOffset = 0 }: IElementBufferViewConfig) {
 
         const { gl } = GL;
 
@@ -35,7 +34,7 @@ class ElementBufferView {
         this.mode = mode;
         this.count = count;
         this.type = type;
-        this.offset = offset;
+        this.byteOffset = byteOffset;
     }
 
 }

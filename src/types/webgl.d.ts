@@ -91,6 +91,8 @@ export interface IWebGLRenderingContext {
     readonly TEXTURE_CUBE_MAP_NEGATIVE_Z: IWebGLEnum;
     readonly LINEAR_MIPMAP_LINEAR: IWebGLEnum;
     readonly STATIC_DRAW: IWebGLEnum;
+    readonly UNSIGNED_INT: IWebGLEnum;
+    readonly UNSIGNED_SHORT: IWebGLEnum;
 
     getExtension(name: string): any;
     getShaderPrecisionFormat(shaderType: IWebGLEnum, precisionType: IWebGLEnum): IWebGLShaderPrecisionFormat;
@@ -145,7 +147,7 @@ export interface IWebGLRenderingContext {
     deleteRenderbuffer(renderbuffer: IWebGLRenderBuffer): void;
     deleteFramebuffer(framebuffer: IWebGlFramebuffer): void;
     createBuffer(): IWebGLBuffer;
-    bufferData(target: IWebGLEnum, data: Float32Array | Uint32Array, usage: IWebGLEnum): void;
+    bufferData(target: IWebGLEnum, data: Float32Array | Uint32Array | Uint16Array | ArrayBuffer, usage: IWebGLEnum): void;
     deleteBuffer(buffer: IWebGLBuffer): void;
 
 }

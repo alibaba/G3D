@@ -44,7 +44,7 @@ class Geometry extends BaseGeometry {
                 vertices: this.createBufferView(vertices) as BufferView,
                 normals: normals ? this.createBufferView(normals) as BufferView : null,
                 uvs: uvs ? this.createBufferView(uvs) : null,
-                indices: this.createELementBufferView(indices)
+                indices: this.createElementBufferView(indices)
             }
         }
     }

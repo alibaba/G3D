@@ -10,11 +10,11 @@ new G3D.Buffer(config);
 
 ### Arguments
 
-| name          | type         | description                                                  |
-| ------------- | ------------ | ------------------------------------------------------------ |
-| config        | Object       | config object                                                |
-| config.data   | Float32Array | data                                                         |
-| config.target | string       | buffer type, can be 'ARRAY_BUFFER' or 'ELEMENT_ARRAY_BUFFER' |
+| name          | type                        | description                                                  |
+| ------------- | --------------------------- | ------------------------------------------------------------ |
+| config        | Object                      | config object                                                |
+| config.data   | Float32Array \| Uint32Array | data                                                         |
+| config.target | string                      | buffer type, can be 'ARRAY_BUFFER' or 'ELEMENT_ARRAY_BUFFER' |
 
 ## Example
 

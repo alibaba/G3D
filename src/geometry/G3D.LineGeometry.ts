@@ -28,7 +28,7 @@ class LineGeometry extends BaseGeometry {
                 vertices: this.createBufferView(vertices) as BufferView,
                 normals: this.createBufferView(normals) as BufferView,
                 uvs: this.createBufferView(uvs),
-                indices: this.createELementBufferView(indices, true),
+                indices: this.createElementBufferView(indices, true),
             }
 
         }

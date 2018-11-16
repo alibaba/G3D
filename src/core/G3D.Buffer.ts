@@ -1,36 +1,38 @@
 import GL from './G3D.GL';
-import { IWebGLEnum } from '../types/webgl';
+import { IWebGLBuffer } from '../types/webgl';
 
 interface IBufferConfig {
-    data: Float32Array | Uint32Array,
-    target: string | number
+    data: Float32Array | ArrayBuffer
 }
 
 class Buffer {
 
-    glBuffer;
+    arrayBuffer: ArrayBuffer;
+    glBuffer: IWebGLBuffer;
 
-    constructor({ data, target }: IBufferConfig) {
+    constructor({ data }: IBufferConfig) {
 
         const { gl, buffers } = GL;
 
-        if (typeof target === 'string') {
-            target = gl[target];
+        // create this.glBuffer
+        this.glBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+        // create this.arrayBuffer
+        if (data instanceof Float32Array) {
+            this.arrayBuffer = data.buffer;
+        } else if (data instanceof ArrayBuffer) {
+            this.arrayBuffer = data;
         }
 
-        const glBuffer = this.glBuffer = gl.createBuffer();
-
-        gl.bindBuffer(target as IWebGLEnum, glBuffer);
-        gl.bufferData(target as IWebGLEnum, data, gl.STATIC_DRAW);
-        gl.bindBuffer(target as IWebGLEnum, null);
-
+        // hook on GL
         buffers.push(this);
     }
 
     destructor(): void {
-
         const { gl } = GL;
-
         gl.deleteBuffer(this.glBuffer);
     }
 }

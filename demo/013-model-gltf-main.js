@@ -16,6 +16,19 @@ function main(
 
     const model = models['damagedHelmet'];
 
+    const engine = new G3D.Engine(canvas);
+
+    const scene = new G3D.Scene(engine);
+
+    const camera = new G3D.RotatePerspectiveCamera(scene);
+    camera.alpha = 80;
+    camera.beta = 0;
+    camera.near = 0.001;
+    camera.far = model.cameraRadius * 3;
+    camera.radius = model.cameraRadius;
+
+    const cube = G3D.MeshBuilder.createCube(scene, 2);
+
     pbrAssets((specular, diffuse, lut) => {
 
         loader.loadText(model.uri, (text) => {
@@ -66,18 +79,7 @@ function main(
 
     function init(gltf, { specular, diffuse, lut }) {
 
-        const engine = new G3D.Engine(canvas);
 
-        const scene = new G3D.Scene(engine);
-
-        const camera = new G3D.RotatePerspectiveCamera(scene);
-        camera.alpha = 80;
-        camera.beta = 0;
-        camera.near = 0.001;
-        camera.far = model.cameraRadius * 3;
-        camera.radius = model.cameraRadius;
-
-    
 
         const light1 = new G3D.DirectionalLight(scene);
         light1.direction = { x: 1, y: -1, z: 0 };
@@ -86,6 +88,10 @@ function main(
         const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
         meshes.forEach(m => m.rotation.y = 225);
+
+        console.log(meshes);
+
+        console.log(meshes[0].geometry.getBoundingBox());
 
         // new G3D.Skybox(scene, {...diffuse}, model.cameraRadius * 1.5);
 

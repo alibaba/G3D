@@ -371,24 +371,25 @@ class RenderManager {
             return;
         }
 
-        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
+        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
 
         if (uvs) {
 
-            if (typeof uvs.stride === 'number') {
+            if (typeof uvs.byteStride === 'number') {
 
-                engine.attribute('aUV', uvs.buffer.glBuffer, uvs.stride, uvs.offset);
+                engine.attribute('aUV', uvs.buffer.glBuffer, uvs.byteStride, uvs.byteOffset);
 
             } else {
 
                 Object.keys(uvs).forEach(key => {
-                    engine.attribute(key, uvs[key].buffer.glBuffer, uvs[key].stride, uvs[key].offset);
+                    engine.attribute(key, uvs[key].buffer.glBuffer, uvs[key].byteStride, uvs[key].byteOffset);
                 })
+
             }
         }
 
         if (normals) {
-            engine.attribute('aNormal', normals.buffer.glBuffer, normals.stride, normals.offset);
+            engine.attribute('aNormal', normals.buffer.glBuffer, normals.byteStride, normals.byteOffset);
         }
 
     }
@@ -514,7 +515,7 @@ class RenderManager {
 
             engine.elements(indices[key].buffer.glBuffer);
 
-            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].byteOffset);
         }
     }
 
@@ -533,7 +534,7 @@ class RenderManager {
 
         const { vertices, indices } = skybox.geometry.bufferViews;
 
-        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.stride, vertices.offset);
+        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
 
         engine.uniform('uVMatrix', camera.getVMatrix());
         engine.uniform('uPMatrix', camera.getPMatrix());
@@ -541,7 +542,7 @@ class RenderManager {
 
         for (let key in indices) {
             engine.elements(indices[key].buffer.glBuffer);
-            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].offset);
+            engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].byteOffset);
         }
     }
 }
