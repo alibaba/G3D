@@ -21,68 +21,163 @@ function main(
 
     G3D.MeshBuilder.createCoordinate(scene, 4);
 
-    const vertices = [
-        1, 1, 1, 99,
-        1, 0, 0, 99,
-        1, 1, 0, 99,
-        0, 0, 1, 99,
-        0, 1, 1, 99
-    ];
-    const indices = [
-        99, 0, 1, 2, 3
-    ];
+    createMeshes();
+    // createMeshesWithBuffers();
+    // createMeshesSharedBuffers();
+    // createMeshesSharedBuffersSO();
 
-    const bufferView = new G3D.BufferView({
-        buffer: new G3D.Buffer({
-            data: new Float32Array(vertices)
-        }),
-        byteStride: 4 * 4,
-        byteOffset: 4 * 4
-    });
+    function createMeshes() {
+        const v1 = [
+            1, 0, 0, // A
+            1, 1, 0  // B
+        ];
+        const i1 = [0, 1];
+        const m1 = new G3D.LineMesh(scene);
+        m1.geometry = new G3D.LineGeometry({
+            vertices: v1,
+            indices: { default: i1 }
+        });
 
-    const eleBuffer = new G3D.ElementBuffer({
-        data: new Uint32Array(indices)
-    });
+        const v2 = [
+            0, 0, 1, // C
+            0, 1, 1  // D
+        ];
+        const i2 = [0, 1];
+        const m2 = new G3D.LineMesh(scene);
+        m2.geometry = new G3D.LineGeometry({
+            vertices: v2,
+            indices: { default: i2 }
+        })
 
-    const ebv1 = new G3D.ElementBufferView({
-        buffer: eleBuffer,
-        mode: 'LINES',
-        count: 4,
-        byteOffset: 4 * 1
-    });
+        return [m1, m2];
+    }
 
-    const lm1 = new G3D.LineMesh(scene);
-    lm1.geometry = new G3D.LineGeometry({
-        vertices: bufferView,
-        indices: {
-            default: ebv1
-        }
-    });
+    function createMeshesBuffers() {
+        const v1 = [
+            1, 0, 0, // A
+            1, 1, 0  // B
+        ];
+        const v1Buffer = new G3D.Buffer({ data: new Float32Array(v1) });
+        const v1BufferView = new G3D.BufferView({ buffer: v1Buffer });
+        const i1 = [0, 1];
+        const i1Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i1) });
+        const i1BufferView = new G3D.ElementBufferView({
+            buffer: i1Buffer,
+            mode: 'LINES',
+            count: 2
+        });
+        const m1 = new G3D.LineMesh(scene);
+        m1.geometry = new G3D.LineGeometry({
+            vertices: v1BufferView,
+            indices: { default: i1BufferView }
+        });
 
-    console.log(lm1.geometry.getBoundingBox());
+        const v2 = [
+            0, 0, 1, // C
+            0, 1, 1  // D
+        ];
+        const v2Buffer = new G3D.Buffer({ data: new Float32Array(v2) });
+        const v2BufferView = new G3D.BufferView({ buffer: v2Buffer });
+        const i2 = [0, 1];
+        const i2Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i2) });
+        const i2BufferView = new G3D.ElementBufferView({ buffer: i2Buffer, mode: 'LINES', count: 2 });
+        const m2 = new G3D.LineMesh(scene);
+        m2.geometry = new G3D.LineGeometry({
+            vertices: v2BufferView,
+            indices: { default: i2BufferView }
+        })
 
-    // const ebv2 = new G3D.ElementBufferView({
-    //     buffer: eleBuffer,
-    //     mode: 'LINES',
-    //     count: 2,
-    //     offset: 8
-    // });
+        return [m1, m2];
+    }
 
-    // const lm2 = new G3D.LineMesh(scene);
-    // lm2.geometry = new G3D.LineGeometry({
-    //     vertices: bufferView,
-    //     indices: {
-    //         default: ebv2
-    //     }
-    // });
+    function createMeshesSharedBuffers() {
+        const v = [
+            1, 0, 0, // A
+            1, 1, 0, // B
+            0, 0, 1, // C
+            0, 1, 1  // D
+        ];
+        const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+        const vBufferView = new G3D.BufferView({ buffer: vBuffer });
+        const i = [0, 1, 2, 3];
+        const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+
+        const iBufferView1 = new G3D.ElementBufferView({
+            buffer: iBuffer,
+            mode: 'LINES',
+            count: 2
+        });
+        const iBufferView2 = new G3D.ElementBufferView({
+            buffer: iBuffer,
+            mode: 'LINES',
+            byteOffset: 4 * 2,
+            count: 2
+        });
+
+        const m1 = new G3D.LineMesh(scene);
+        m1.geometry = new G3D.LineGeometry({
+            vertices: vBufferView,
+            indices: { default: iBufferView1 }
+        });
+
+        const m2 = new G3D.LineMesh(scene);
+        m2.geometry = new G3D.LineGeometry({
+            vertices: vBufferView,
+            indices: { default: iBufferView2 }
+        })
+
+        return [m1, m2];
+    }
+
+    function createMeshesSharedBuffersSO() {
+        const v = [
+            99, 99,
+            1, 0, 0, 99,  // A
+            1, 1, 0, 99,  // B
+            0, 0, 1, 99,  // C
+            0, 1, 1, 99   // D
+        ];
+        const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+        const vBufferView = new G3D.BufferView({
+            buffer: vBuffer,
+            byteOffset: 4 * 2,
+            byteStride: 4 * 4
+        });
+        const i = [0, 1, 2, 3];
+        const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+
+        const iBufferView1 = new G3D.ElementBufferView({
+            buffer: iBuffer,
+            mode: 'LINES',
+            count: 2
+        });
+        const iBufferView2 = new G3D.ElementBufferView({
+            buffer: iBuffer,
+            mode: 'LINES',
+            byteOffset: 4 * 2,
+            count: 2
+        });
+
+        const m1 = new G3D.LineMesh(scene);
+        m1.geometry = new G3D.LineGeometry({
+            vertices: vBufferView,
+            indices: { default: iBufferView1 }
+        });
+
+        const m2 = new G3D.LineMesh(scene);
+        m2.geometry = new G3D.LineGeometry({
+            vertices: vBufferView,
+            indices: { default: iBufferView2 }
+        })
+
+        return [m1, m2];
+    }
 
     function render() {
         scene.render();
         requestAnimationFrame(render);
     }
     render();
-
-
 }
 
 export default main;
