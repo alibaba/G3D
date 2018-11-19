@@ -44,7 +44,8 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
         return (sRGB = false) => {
             if (!gTextureCache[i]) {
                 const image = gltf.images[tex.source].data;
-                const texture = new Texture({ image, sRGB, flipY: false, repeat: true });
+                const repeat = isPowerOf2(image.width) && isPowerOf2(image.height);
+                const texture = new Texture({ image, sRGB, flipY: false, repeat });
                 gTextureCache[i] = texture;
             }
             return gTextureCache[i];
