@@ -15,6 +15,8 @@ import ElementBuffer from '../../../core/G3D.ElementBuffer';
 const Mat4: any = Mat4_2;
 const Quat: any = Quat_2;
 
+const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
+
 function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
     const { gl } = GL;
