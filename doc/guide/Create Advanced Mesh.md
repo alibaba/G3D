@@ -1,22 +1,20 @@
 # Create Mesh (Advanced)
 
-上一节，我们了解了如何手动构造顶点数据，创建自定义形状的网格体。在 G3D 内部，每一个网格体初始化的时候，都会创建一些数据块(Buffer)，其中包含了顶点、法线、顶点索引等数据，然后使用 Buffer 与更底层的 WebGL 系统进行互操作。如果场景中有大量网格体，那么 Buffer 的数量就会很多；绘制场景时，也需要频繁地切换 Buffer；这都造成了不必要的开销。实际上，通过一些高级技巧，可以大幅减少 Buffer 的数量和切换成本。
+In the previous sections, we learned how to create meshes with custom geometry by manually create vertex arrays. Inside G3D, when a geometry is created, some buffers will be created, which contains data of vertices, normals, element index and so on. Then G3D will interactive with WebGL system by these buffers. If the scene contains a large number of meshes, the amount of buffers will alse increase a lot, and during rendering, G3D need to switch these buffers frequently, and cost unecessary performances. Actually, we can cut them down with some advanced tricks.
 
-In the previous sections, we learned how to 
+This section will teach you how to use buffers to create custom shaped mesh.
 
-这一节将介绍如何显式地使用 Buffer 来创建自定义形状的网格体。
+## Line Mesh
 
-## 线状网格体
-
-仍然从最简单的例子开始。假设我们需要创建如下图所示的两个网格体 AB 和 CD，每个网格体都是一根长度为 1 的线段。
+We begin from the simplest example. Suppose we need to create two line meshes AB and CD, each one is a line segment with lenght 1, as showing in the following image:
 
 ![](https://gw.alicdn.com/tfs/TB1Kx18qRLoK1RjSZFuXXXn0XXa-416-389.png)
 
-看看这个示例的实现，示例代码稍微有点长。
+Let's check the code, which is a bit long:
 
 <a class="jsbin-embed" href="https://jsbin.com/befelog/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script>
 
-示例代码的基本结构和之前类似，只不过它将创建网格体的过程封装在了四个独立的函数 `createMeshes()`，`createMeshesWithBuffers()`，`createMeshesSharedBuffers()` 和 `createMeshesSharedBuffersSO()` 中。默认情况下我们调用 `createMeshes()` 函数来创建网格体。可以把这一行注释掉，改为调用另外三个函数中的任意一个，看上去效果是一样的。但是，这四个函数的实现却不完全相同。仔细研究这四个函数的实现，能够帮助你理解网格体内部的数据结构。
+The structure is similar with previous sections, but this example put the mesh-creating thing into four independent functions `createMeshes()`, `createMeshesWithBuffers()`, `createMeshesSharedBuffers()` and `createMeshesSharedBuffersSO()`. By default we call `createMeshes()` to create the meshes. You can comment this line and call any of the other 3 functions. The look will be the same, but implemention of the four functions are totally different. Study the four functions and you'll get a good understanding of data structure behind mesh and geometry.
 
 ```
 // create engine, scene, camera and lights
@@ -27,7 +25,7 @@ createMeshes();
 // createMeshesSharedBuffersSO();
 ```
 
-先看第一个函数，`createMeshes()` 创建网格体的方式，与上一节中创建折线段一致。这是最简单的方式：通过传入顶点数组和顶点索引数组，来创建网格体。
+Let's see the first function `createMeshes()`, its way of creating meshes is the same with previous section. This is the simplest way: passing in vertex array and vertex index array.
 
 ```javascript
 const v1 = [
@@ -44,7 +42,7 @@ m1.geometry = new G3D.LineGeometry({
 // create m2 is similar
 ```
 
-示例中，我们首先创建了两个顶点数组 `v1` 和 `v2`，两个顶点索引数组 `i1` 和 `i2`。然后，分别创建网格体 `m1` 和 `m2`，此时 `LineGeometry` 构造函数会把数组转化为 Buffer 保存起来。其实，我们也可以在构造函数外先创建 Buffer，然后再传入构造函数。`createMeshesWithBuffers()` 函数就是这样做的。
+In the example, we made two vertex arrays `v1` and `v2` respectively, and we alse made two vertex index array `i1` and `i2`. Then we create two meshes `m1` and `m2`. When we were creating geometry, the `LineGeometry` constructor will transform the arrays into buffer. Actually, we are able to create buffer by ourselves, and then pass buffer to `LineGeometry` to create meshes. That is what `createMeshesWithBuffers()` did.
 
 ```javascript
 const v1 = [
@@ -69,25 +67,26 @@ m1.geometry = new G3D.LineGeometry({
 // create m2 is similar
 ```
 
-在 `createMeshesWithBuffers()` 函数中，对顶点数组 `v1` 和 `v2`，我们分别：
 
-1. 基于数组创建 `Float32Array` 类型化数组；
-2. 基于类型化数组创建一个 `G3D.Buffer` 对象；
-3. 基于此 `Buffer` 对象创建一个 `G3D.BufferView` 对象；
-4. 将 `BufferView` 对象作为 `vertices` 字段传入 `LineGeometry` 构造函数。
+Inside `createMeshesWithBuffers()` function, we deal with vertex array `v1` and `v2`:
 
-对顶点索引数组 `i1` 和 `i2`，我们分别：
+1. Create `Float32Array` typed array within vertex array;
+2. Create a `G3D.Buffer` object within the typed array;
+3. Create a `G3D.BufferView` object with the buffer;
+4. Pass the buffer view object as to `LineGeometry` constructor as `vertices`.
 
-1. 基于数组创建 `Uint32Array` 类型化数组；
-2. 基于类型化数组创建一个 `G3D.ElementBuffer` 对象；
-3. 基于此 `ElementBuffer` 对象创建一个 `G3D.ElementBufferView` 对象，此时要指定几何体类型 `LINES`，以及包含顶点的数量 2；
-3. 将 `ElementBufferView` 对象作为 `indices.default` 传入 `LineGeomtry` 构造函数。
+For vertices index array `i1` and `i2`, we do the following:
 
-> 注意，`Buffer` 和 `ElementBuffer` 是真实的数据块，其创建过程中包含了真实的内存分配、数据填充等操作；而 `BufferView` 和 `ElementBufferView` 则是「数据视图」，它包含了对数据块 `Buffer` 或 `ElementBuffer` 的引用，以及用于「定义数据块中哪些数据属于此视图」的信息。
+1. Create a `Uint32Array` typed array within the vertices index array;
+2. Create a `G3D.ElementBuffer` object within the typed array;
+3. Create a `G3D.ElementBufferView` object within the element buffer, specifying the geometry mode `LINES` and vertices count 2;
+4. Pass the element buffer view to `LineGeometry` constructor as `indices.default`.
+
+> Notice that buffer and element buffer is real data buffer, creating these will cause memory allocating and data filling, but buffer view and element buffer view are **views**, which is a ref to buffer or element buffer, with some information about which part of the buffer belongs to the buffer view.
 
 ![](https://gw.alicdn.com/tfs/TB1LU14qPDpK1RjSZFrXXa78VXa-606-290.png)
 
-目前，两个网格体 `m1` 和 `m2` 分别创建各自的顶点数据块和顶点索引数据块，这种方式，与 `createMeshes()` 本质上仍然是一样的。接下来，让我们将两个网格体的数据块合并起来。我们可以只创建一个顶点数据块和一个顶点索引数据块，并使这两个网格体通过不同的数据视图来共享数据块。看看函数 `createMeshesSharedBuffers()` 是怎么做的：
+In this function, `m1` and `m2` has their own vertices buffer and vertice index buffer, so it's technically the same with `createMeshes()`. Now, let's put the two meshes buffer together and merge them into one buffer, using buffer views to allow they share the same buffer. See what `createMeshesSharedBuffers()` did:
 
 ```javascript
 const v = [
@@ -126,15 +125,15 @@ m2.geometry = new G3D.LineGeometry({
 })
 ```
 
-在这个函数中，不再有独立的顶点数组 `v1` 和 `v2`，我们将其合并为数组 `v`，其中包含了 ABCD 四个顶点的坐标信息；基于这个数组单独创建了顶点数据块 `vBuffer`，并进一步创建了顶点数据视图 `vBufferView`。创建网格几何体 `m1` 和 `m2` 时，我们都把 `vBufferView` 作为顶点数据传入。
+In this function, there's no independent `v1` and `v2`, we merge them as `v` which container vertices positions of four points ABCD. We create `vBuffer` based on `v`, and them the `vBufferView`. When creating `m1` and `m2`, we use `vBufferView` instead of `v1` and `v2`.
 
-同时，我们也不再有独立的顶点索引数组 `i1` 和 `i2`，我们将其合并为数组 `i`，数组 `i` 的值是 [0,1,2,3]，同样我们为其创建顶点索引数据块 `iBuffer`；然后，我们分别创建了两个顶点索引数据视图 `iBufferView1` 和 `iBufferView2`，两者唯一的不同是 `byteOffset` 字段，前者为 0 而后者为 8，这说明，`iBufferView1` 表示的是从 0 开始的 2 个顶点，即 [0,1]，而 `iBufferView2` 表示的是索引从 2 （`byteOffset` 是字节偏移量，这里我们使用了 `Uint32Array`，每一项是 32 位整数占据 4 个字节，所以 8 个字节相当于 2 个整数项）开始的 2 个顶点，即 [2,3]。
+And there's no independent `i1` and `i2` any more, instead we have the array `i` which value is [0,1,2,3]. We create a `iBuffer`, and then create two vertices index buffer `iBufferView1` and `iBufferView2`. The different between them is `byteOffset`, one is 0 and one is 8. `iBufferView1` represents the two vertices start from position 0, [0,1] ie, and `iBufferView2` represents the two vertices start from position 2. Because the buffer is created with `Uint32Array`, each item of which is a 32-bit integer (4 bytes), so the `byteOffset` is 4 * 2, 8 ie.
 
 ![](https://gw.alicdn.com/tfs/TB1o9dLqVzqK1RjSZFoXXbfcXXa-751-271.png)
 
-虽然我们创建了 2 个不同的 `ElementBufferView`，但是由于它们引用的 `ElementBuffer` 是同一个，所以实际上只有一次创建 `ElementBuffer` 的开销，而实际进行绘制的时候，也不需要频繁地切换。
+In this example, we create two different `ElementBufferView`, but they ref to the same `ElementBuffer`, so we created `ElementBuffer` for only once. It's a great improvment.
 
-有时候，顶点数据块中并不全是顶点的位置数据，我们在创建 `BufferView` 的时候也可以通过指定一些参数来描述 `Buffer` 中的一个子集。下面，让我们「没事找事」地为顶点数组 `v` 中添加一些无意义的数据（也许在后面的某些时刻，这些数据还会有其他作用），然后在创建 `BufferView` 的时候将这些无意义的数据筛出去。让我们看看最后一个函数 `createMeshesSharedBuffersSO()` 是怎么做的。
+Sometimes, data in vertices buffer are not all useful data, and we can specify which part of `Buffer` belongs to a `BufferView`. Now, let's mix some useless data into array `v` (maybe these data will be useful sometime later), and when we create `BufferView`, we filter for useful data. Let's see what the last function `createMeshesSharedBuffersSO()` did:
 
 ```javascript
 const v = [
@@ -155,23 +154,23 @@ const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
 // below is the same with createMeshesSharedBuffers()
 ```
 
-`v` 的头部添加了 2 个无用的 99，然后在每个顶点的三个数据后面，也增加了 1 个无用的 99。我们在创建 `vBufferView` 时，额外指定了两个参数 `byteOffset` 和 `byteStride`。`byteOffset` 表示初始位置偏移的字节数，由于这里有 2 个无用值，所以跳过 8 个字节（同样，由于我们采用 `Float32Array`，每个数值占 4 个字节）；`byteStride` 表示顶点数据和顶点数据间的间隔，当我们不指定的时候，认为是顶点和顶点之间是「严丝合缝」，没有多余数据的，而我们指定时，需要指定顶点本身和多余数据占用的总字节数，这里即 16 个字节。
+We add two useless value 99 at the head, and insert a useless 99 after each vertex. When we create `vBufferView`, we specify two arguments `byteOffset` and `byteStride`, which means the origin offset in bytes. We have two useless 99 at the head, so the offset is 8 (in `Float32Array` each value is 4 bytes long). `byteStride` is for the stride between two vertices. If it's not specified, it means the vertices is tight packed, no extra data between them, and if it's specified, we need to specify the total bytes for one vertex and one piece of extra data, here it's 16 bytes.
 
 ![](https://gw.alicdn.com/tfs/TB1WAXMq9zqK1RjSZFHXXb3CpXa-827-343.png)
 
-在创建线状网格体时，`BufferView` 的 `byteOffset` 和 `byteStride` 两个参数似乎没有太大用处，但是当我们创建面状网格体时，这两个参数就会发挥重要的作用。
+When creating line meshes, `byteOffset` and `byteStride` seems not that useful, but when we are creating face meshes, these two options will make sense.
 
-## 面状网格体
+## Face Meshes
 
-接下来，我们看看如何创建多个面状几何体，且共享数据块。假设我们需要创建如下两个三角形网格体 ABC 和 DEF：
+Next, let's look at how to create face meshes with shared buffers. Assume that we need to create two triangles ABC and DEF, as the following image shows:
 
 ![](https://gw.alicdn.com/tfs/TB1r1dPqW6qK1RjSZFmXXX0PFXa-468-380.png)
 
-看这个例子是怎么做的：
+See the example:
 
 <a class="jsbin-embed" href="https://jsbin.com/safaxuh/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script>
 
-我们在 `createMeshes()` 函数中完成了数据块、数据视图和网格体的创建。
+We created buffers, buffer views and meshes inside `createMeshes()` function.
 
 ```javascript
 const v = [
@@ -202,11 +201,11 @@ const uvsBufferView = new G3D.BufferView({
 });
 ```
 
-首先，我们把顶点的位置、法线、UV 数据全部打包进一个数组 `v`，数组中每 8 个值为一组，表示一个顶点。这 8 个值中，前 3 个值表示位置，中间 3 个值表示法线，最后 2 个值表示 UV。使用这个数组创建一个 `Buffer` 对象 `vBuffer`。接下来，为顶点位置、法线和 UV 各自创建一个 `BufferView`：`verticesBufferView`，`normalsBufferView` 和 `uvsBufferView`。它们的 `byteStride` 值为 32，因为每个顶点包含 8 个值，每个值占 4 个字节；它们具有不同的 `byteOffset` 值，以指向 `vBuffer` 中各自数值所在的区段。
+First, we pack vertices position, normals, uvs into one array `v`, 8 number for a vertex, the first 3 for position, the following 3 for normal, and the last 2 for UV. Then create a `Buffer` object `vBuffer`, passing in `v`. Then, create 3 `BufferView`s: `verticesBufferView` for vertices position,`normalsBufferView` for normal and `uvsBufferView` for UV. Their byteStride is all 32, cause each vertex occupy 8 numbers which is 4 bytes long. The three buffer views has different `byteOffset`, pointing to the area contains data the buffer view need.
 
 ![](https://gw.alicdn.com/tfs/TB1IwtGq9rqK1RjSZK9XXXyypXa-930-538.png)
 
-接下来的代码和前一个例子（线状几何体）中的 `createMeshSharedBuffers()` 就很类似了：依次创建顶点索引数组 `i`，顶点索引数据块 `iBuffer` 和顶点索引数据视图 `iBufferView1` 和 `iBufferView2`。值得注意的是，构造 `ElementBufferView` 传入的 `mode` 参数是 `TRIANGLES` 而不是 `LINES`，因为我们在创建面状几何体。
+The following code is similar with `createMeshSharedBuffers()`: create vertice index element `i`, and vertice index buffer `iBuffer`, and 2 buffer views `iBufferView1` and `iBufferView2`. Notice that we specify `mode` as `TRIANGLES` instead of `LINES`, cause we are creating face meshes.
 
 ```javascript
 const i = [0, 1, 2, 3, 4, 5];
@@ -224,7 +223,7 @@ const iBufferView2 = new G3D.ElementBufferView({
 });
 ```
 
-最后，创建 `Mesh` 和 `Geometry`，将顶点位置、法线、UV、顶点索引这 4 个数据视图传入 `Geometry` 构造函数中，就完成了。
+At last, create `Mesh` and `Geometry`, passing the buffer views created before, and everything is done! 
 
 ```javascript
 const m1 = new G3D.Mesh(scene);
@@ -244,8 +243,8 @@ m2.geometry = new G3D.Geometry({
 });
 ```
 
-综上，这段示例代码创建了两个面状网格体，只创建了 1 个 `Buffer` 和 1 个 `ElementBuffer`。而如果像上一节那样，把顶点数组直接传入，两个网格体会导致创建 6 个 `Buffer` 和 2 个 `ElementBuffer`。
+The example created two face meshes whthin only one `Buffer` and one `ElementBuffer`. If we pass arrays directly like we did in the previous sections, it'll be 6 `Buffer`s and 2 `ElementBuffer`s.
 
-## 小结
+## Summary
 
-这一节，我们了解了如何通过显式创建数据块和数据视图，来更精细地控制创建网格体的过程，以减少开销，提高性能。在一些简单的场景中，你可以直接传入使用数组来创建网格体，毕竟这样做比较简单；但是在更复杂，对性能要求更高的场景中，G3D 赋予了你手动控制数据块和数据视图的能力。
+In this section, we learned how to mannualy create buffers and buffer views, to control the progress of creating a mesh, thus to reduce cost and improve performance. In some simple scenes, you can pass arrays into geometry directly, as it is simple. But in some complex situations, G3D enable you to access the buffers and buffer views. So have fun!
