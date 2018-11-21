@@ -43,6 +43,16 @@ uniform samplerCube uDiffuseMap;
 uniform sampler2D uBRDFLUT;
 uniform int uSpecularMipLevel;
 
+uniform float uGreyness;
+vec3 greyness(vec3 c){
+    float m = (c[0] + c[1] + c[2])/3.0;
+    return vec3(
+        c[0] + (m - c[0]) * uGreyness,
+        c[1] + (m - c[1]) * uGreyness,
+        c[2] + (m - c[2]) * uGreyness
+    );
+}
+
 varying vec3 vPosition;
 varying vec3 vNormal;
 
@@ -145,6 +155,7 @@ vec3 L_env(PBRInfo info){
     vec3 R = -normalize(reflect(info.V, info.N));
     #ifdef EXT_TEX_LOD
     vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * float(uSpecularMipLevel)).rgb;
+    specularLight = greyness(specularLight);
     #else
     vec3 specularLight = textureCube(uSpecularMap, R).rgb;
     #endif
@@ -157,6 +168,7 @@ vec3 L_env(PBRInfo info){
 
     return diffuse + specular;
 }
+
 
 vec3 L(){
 

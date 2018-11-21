@@ -3,7 +3,18 @@ function main(
     { canvas, requestAnimationFrame, loader, pbrAssets }
 ) {
 
-    pbrAssets('apartment').ready((specular, diffuse, lut) => {
+    const engine = new G3D.Engine(canvas);
+
+    const scene = new G3D.Scene(engine);
+
+    const camera = new G3D.RotatePerspectiveCamera(scene);
+    camera.alpha = 45;
+    camera.beta = 35;
+    camera.radius = 0.04;
+    camera.near = 0.001;
+    camera.far = 100;
+
+    pbrAssets('apartment', (specular, diffuse, lut) => {
 
         loader.loadBlob(
             '/assets/diamond-ring/1.stl',
@@ -41,21 +52,6 @@ function main(
                                         left: leftE, right: rightE, top: topE, bottom: bottomE, front: frontE, back: backE,
                                     };
 
-                                    const engine = new G3D.Engine(canvas);
-
-                                    const scene = new G3D.Scene(engine);
-
-                                    const camera = new G3D.RotatePerspectiveCamera(scene);
-                                    camera.alpha = 45;
-                                    camera.beta = 35;
-                                    camera.radius = 0.04;
-                                    camera.near = 0.001;
-                                    camera.far = 100;
-
-                                
-
-                                    // const mesh = G3D.MeshBuilder.createSphere(scene, 2);
-
                                     const mesh1 = G3D.MeshBuilder.createFromStlModel(scene, m1);
                                     mesh1.geometry.facing = G3D.Geometry.BACK;
                                     const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, m2);
@@ -80,14 +76,19 @@ function main(
 
                                     const mtl = new G3D.PBRMaterial();
                                     mtl.pbrEnviroment = pbrEnv;
-                                    mtl.albedoColor = { r: 256*3, g: 256*3, b: 256*3 };
+                                    mtl.albedoColor = { r: 256 * 3, g: 256 * 3, b: 256 * 3 };
 
                                     mtl.metallic = 0.99;
                                     mtl.roughness = 0.1;
 
                                     mesh3.materials.default = mtl;
 
-                                    window.mesh = mesh3;
+                                    const gui = new dat.GUI();
+                                    gui.add(mesh3.materials.default.pbrEnviroment, 'greyness', 0, 1);
+                                    gui.add(mesh3.materials.default.albedoColor, 'r', 0, 1000);
+                                    gui.add(mesh3.materials.default.albedoColor, 'g', 0, 1000);
+                                    gui.add(mesh3.materials.default.albedoColor, 'b', 0, 1000);
+
 
                                     const mesh = new G3D.Mesh(scene);
                                     mesh1.parent = mesh;
@@ -99,7 +100,7 @@ function main(
                                     G3D.MeshBuilder.createCoordinate(scene, 300);
 
                                     function render() {
-                                        mesh.rotation.y += 0.2;
+                                        // mesh.rotation.y += 0.2;
                                         scene.render();
                                         requestAnimationFrame(render);
                                     }

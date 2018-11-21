@@ -17,6 +17,8 @@ class PBREnviroment {
 
     brdfLUT: Texture;
 
+    greyness: number = 1;
+
     constructor({ diffuse, specular, brdfLUT }: IPBREnviromentConfig) {
 
         this.diffuse = new CubeTexture({ images: diffuse, sRGB: true, flipY: false });

@@ -465,6 +465,7 @@ class RenderManager {
         engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.glTexture);
         engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.glTexture);
 
+        engine.uniform('uGreyness', [material.pbrEnviroment.greyness]);
 
     }
 
