@@ -89,10 +89,6 @@ function main(
 
         meshes.forEach(m => m.rotation.y = 225);
 
-        console.log(meshes);
-
-        console.log(meshes[0].geometry.getBoundingBox());
-
         // new G3D.Skybox(scene, {...diffuse}, model.cameraRadius * 1.5);
 
         function render() {
