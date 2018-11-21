@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/G3D/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">万事开头难</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">平移和旋转</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
+              </li>
+              <li class="item"><a href="./Create-Advanced-Mesh.html">创建网格体（高级用法）</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="-">创建网格体（高级用法）</h1>
+<p>上一节，我们了解了如何手动构造顶点数据，创建自定义形状的网格体。在 G3D 内部，每一个网格体初始化的时候，都会创建一些数据块(Buffer)，其中包含了顶点、法线、顶点索引等数据，然后使用 Buffer 与更底层的 WebGL 系统进行互操作。如果场景中有大量网格体，那么 Buffer 的数量就会很多；绘制场景时，也需要频繁地切换 Buffer；这都造成了不必要的开销。实际上，通过一些高级技巧，可以大幅减少 Buffer 的数量和切换成本。</p>
+<p>这一节将介绍如何显式地使用 Buffer 来创建自定义形状的网格体。</p>
+<h2 id="-">线状网格体</h2>
+<p>仍然从最简单的例子开始。假设我们需要创建如下图所示的两个网格体 AB 和 CD，每个网格体都是一根长度为 1 的线段。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1Kx18qRLoK1RjSZFuXXXn0XXa-416-389.png" alt=""></p>
+<p>看看这个示例的实现，示例代码稍微有点长。</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/befelog/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>示例代码的基本结构和之前类似，只不过它将创建网格体的过程封装在了四个独立的函数 <code>createMeshes()</code>，<code>createMeshesWithBuffers()</code>，<code>createMeshesSharedBuffers()</code> 和 <code>createMeshesSharedBuffersSO()</code> 中。默认情况下我们调用 <code>createMeshes()</code> 函数来创建网格体。可以把这一行注释掉，改为调用另外三个函数中的任意一个，看上去效果是一样的。但是，这四个函数的实现却不完全相同。仔细研究这四个函数的实现，能够帮助你理解网格体内部的数据结构。</p>
+<pre><code>// create engine, scene, camera and lights
+
+createMeshes();
+// createMeshesWithBuffers();
+// createMeshesSharedBuffers();
+// createMeshesSharedBuffersSO();</code></pre><p>先看第一个函数，<code>createMeshes()</code> 创建网格体的方式，与上一节中创建折线段一致。这是最简单的方式：通过传入顶点数组和顶点索引数组，来创建网格体。</p>
+<pre><code class="language-javascript">const v1 = [
+    1, 0, 0, // A
+    1, 1, 0  // B
+];
+const i1 = [0, 1];
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: v1,
+    indices: { default: i1 }
+});
+
+// create m2 is similar</code></pre>
+<p>示例中，我们首先创建了两个顶点数组 <code>v1</code> 和 <code>v2</code>，两个顶点索引数组 <code>i1</code> 和 <code>i2</code>。然后，分别创建网格体 <code>m1</code> 和 <code>m2</code>，此时 <code>LineGeometry</code> 构造函数会把数组转化为 Buffer 保存起来。其实，我们也可以在构造函数外先创建 Buffer，然后再传入构造函数。<code>createMeshesWithBuffers()</code> 函数就是这样做的。</p>
+<pre><code class="language-javascript">const v1 = [
+    1, 0, 0, // A
+    1, 1, 0  // B
+];
+const v1Buffer = new G3D.Buffer({ data: new Float32Array(v1) });
+const v1BufferView = new G3D.BufferView({ buffer: v1Buffer });
+const i1 = [0, 1];
+const i1Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i1) });
+const i1BufferView = new G3D.ElementBufferView({
+    buffer: i1Buffer,
+    mode: &#39;LINES&#39;,
+    count: 2
+});
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: v1BufferView,
+    indices: { default: i1BufferView }
+});
+
+// create m2 is similar</code></pre>
+<p>在 <code>createMeshesWithBuffers()</code> 函数中，对顶点数组 <code>v1</code> 和 <code>v2</code>，我们分别：</p>
+<ol>
+<li>基于数组创建 <code>Float32Array</code> 类型化数组；</li>
+<li>基于类型化数组创建一个 <code>G3D.Buffer</code> 对象；</li>
+<li>基于此 <code>Buffer</code> 对象创建一个 <code>G3D.BufferView</code> 对象；</li>
+<li>将 <code>BufferView</code> 对象作为 <code>vertices</code> 字段传入 <code>LineGeometry</code> 构造函数。</li>
+</ol>
+<p>对顶点索引数组 <code>i1</code> 和 <code>i2</code>，我们分别：</p>
+<ol>
+<li>基于数组创建 <code>Uint32Array</code> 类型化数组；</li>
+<li>基于类型化数组创建一个 <code>G3D.ElementBuffer</code> 对象；</li>
+<li>基于此 <code>ElementBuffer</code> 对象创建一个 <code>G3D.ElementBufferView</code> 对象，此时要指定几何体类型 <code>LINES</code>，以及包含顶点的数量 2；</li>
+<li>将 <code>ElementBufferView</code> 对象作为 <code>indices.default</code> 传入 <code>LineGeomtry</code> 构造函数。</li>
+</ol>
+<blockquote>
+<p>注意，<code>Buffer</code> 和 <code>ElementBuffer</code> 是真实的数据块，其创建过程中包含了真实的内存分配、数据填充等操作；而 <code>BufferView</code> 和 <code>ElementBufferView</code> 则是「数据视图」，它包含了对数据块 <code>Buffer</code> 或 <code>ElementBuffer</code> 的引用，以及用于「定义数据块中哪些数据属于此视图」的信息。</p>
+</blockquote>
+<p><img src="https://gw.alicdn.com/tfs/TB16Rhyq7zoK1RjSZFlXXai4VXa-726-334.png" alt=""></p>
+<p>目前，两个网格体 <code>m1</code> 和 <code>m2</code> 分别创建各自的顶点数据块和顶点索引数据块，这种方式，与 <code>createMeshes()</code> 本质上仍然是一样的。接下来，让我们将两个网格体的数据块合并起来。我们可以只创建一个顶点数据块和一个顶点索引数据块，并使这两个网格体通过不同的数据视图来共享数据块。看看函数 <code>createMeshesSharedBuffers()</code> 是怎么做的：</p>
+<pre><code class="language-javascript">const v = [
+    1, 0, 0, // A
+    1, 1, 0, // B
+    0, 0, 1, // C
+    0, 1, 1  // D
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+const vBufferView = new G3D.BufferView({ buffer: vBuffer });
+const i = [0, 1, 2, 3];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+
+const iBufferView1 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;LINES&#39;,
+    count: 2
+});
+const iBufferView2 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;LINES&#39;,
+    byteOffset: 4 * 2,
+    count: 2
+});
+
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: vBufferView,
+    indices: { default: iBufferView1 }
+});
+
+const m2 = new G3D.LineMesh(scene);
+m2.geometry = new G3D.LineGeometry({
+    vertices: vBufferView,
+    indices: { default: iBufferView2 }
+})</code></pre>
+<p>在这个函数中，不再有独立的顶点数组 <code>v1</code> 和 <code>v2</code>，我们将其合并为 <code>v</code>，其中包含了 ABCD 四个顶点的坐标信息。我们基于这个数组单独创建了顶点数据块 <code>vBuffer</code>，并进一步创建了顶点数据视图 <code>vBufferView</code>。网格体 <code>m1</code> 和 <code>m2</code> 均使用 <code>vBufferView</code> 作为顶点数据。</p>
+<p>同时，这里也不再有独立的顶点索引数组 <code>i1</code> 和 <code>i2</code>，我们将其合并为 <code>i</code>，它的值是 [0,1,2,3]。我们基于这个数组创建了顶点索引数据块 <code>iBuffer</code>；然后，分别创建了两个顶点索引数据视图 <code>iBufferView1</code> 和 <code>iBufferView2</code>，这两个数据视图唯一不同的是 <code>byteOffset</code> 字段，前者为 0 而后者为 8。这是因为，<code>iBufferView1</code> 表示的是从 0 开始的 2 个顶点，即 [0,1]，而 <code>iBufferView2</code> 表示的是索引从 2 （<code>byteOffset</code> 表示字节偏移量，这里数组类型是 <code>Uint32Array</code>，每一项的值是 32 位整数，占据 4 个字节，所以 8 个字节相当于 2 个整数项）开始的 2 个顶点，即 [2,3]。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1o9dLqVzqK1RjSZFoXXbfcXXa-751-271.png" alt=""></p>
+<p>虽然我们创建了 2 个不同的 <code>ElementBufferView</code>，但是由于它们引用的 <code>ElementBuffer</code> 是同一个，所以实际上只有一次创建 <code>ElementBuffer</code> 的开销，而实际进行绘制的时候，也不需要频繁地切换。</p>
+<p>有时候，顶点数据块中并不全是顶点的位置数据，在创建 <code>BufferView</code> 的时候，可以通过指定一些参数来描述 <code>Buffer</code> 中的子集。接下来，我们来「没事找事」地在数组 <code>v</code> 中添加一些无意义的数据（也许在后面的某些时刻，这些数据还会有其他作用），然后在 <code>BufferView</code> 中把无意义的数据剔除出去。看看最后一个函数 <code>createMeshesSharedBuffersSO()</code> 是怎么做的。</p>
+<pre><code class="language-javascript">const v = [
+    99, 99,
+    1, 0, 0, 99,  // A
+    1, 1, 0, 99,  // B
+    0, 0, 1, 99,  // C
+    0, 1, 1, 99   // D
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+const vBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteOffset: 4 * 2,
+    byteStride: 4 * 4
+});
+const i = [0, 1, 2, 3];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+// below is the same with createMeshesSharedBuffers()</code></pre>
+<p>我们在 <code>v</code> 的头部添加了 2 个无用的 99，然后在每个顶点的三个值后面，都插入 1 个无用的 99。然后，创建 <code>vBufferView</code> 时，额外指定两个参数 <code>byteOffset</code> 和 <code>byteStride</code>。<code>byteOffset</code> 表示初始位置偏移的字节数，由于这里有 2 个无用的值，所以跳过 8 个字节（<code>Float32Array</code> 中每个值占 4 个字节）；<code>byteStride</code> 表示相邻两个顶点数据的间隔（头部和头部的间隔）。当不指定的时候，就认为是相邻顶点间是「严丝合缝」，没有多余数据的；当指定时，需要指定顶点本身和多余数据占用的总字节数，这里即 16 个字节。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1WAXMq9zqK1RjSZFHXXb3CpXa-827-343.png" alt=""></p>
+<p>在创建线状网格体时，<code>BufferView</code> 的 <code>byteOffset</code> 和 <code>byteStride</code> 两个参数似乎没有太大用处，但是当我们创建面状网格体时，这两个参数就会发挥重要的作用。</p>
+<h2 id="-">面状网格体</h2>
+<p>接下来，我们看看如何创建多个面状几何体，且共享数据块。假设我们需要创建如下两个三角形网格体 ABC 和 DEF：</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1r1dPqW6qK1RjSZFmXXX0PFXa-468-380.png" alt=""></p>
+<p>看这个例子是怎么做的：</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/safaxuh/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>我们在 <code>createMeshes()</code> 函数中完成了数据块、数据视图和网格体的创建。</p>
+<pre><code class="language-javascript">const v = [
+//  position   normal     uv
+    0, 0, 2,   1, 0, 0,   0, 0,  // A
+    0, 0, 1,   1, 0, 0,   0, 0,  // B
+    0, 1, 1,   1, 0, 0,   0, 0,  // C
+    1, 0, 0,   0, 0, 1,   0, 0,  // D
+    2, 0, 0,   0, 0, 1,   0, 0,  // E
+    1, 1, 0,   0, 0, 1,   0, 0   // F
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+
+const verticesBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 0
+});
+const normalsBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 4 * 3
+});
+const uvsBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 4 * 6
+});</code></pre>
+<p>首先，我们把顶点的位置、法线、UV 数据全部打包进一个数组 <code>v</code>，数组中每 8 个值为一组，表示一个顶点。这 8 个值中，前 3 个值表示位置，中间 3 个值表示法线，最后 2 个值表示 UV。使用这个数组创建一个 <code>Buffer</code> 对象 <code>vBuffer</code>。接下来，为顶点位置、法线和 UV 各自创建一个 <code>BufferView</code>：<code>verticesBufferView</code>，<code>normalsBufferView</code> 和 <code>uvsBufferView</code>。它们的 <code>byteStride</code> 值为 32，因为每个顶点包含 8 个值，每个值占 4 个字节；它们具有不同的 <code>byteOffset</code> 值，以指向 <code>vBuffer</code> 中各自数值所在的区段。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1IwtGq9rqK1RjSZK9XXXyypXa-930-538.png" alt=""></p>
+<p>接下来的代码和前一个例子（线状几何体）中的 <code>createMeshSharedBuffers()</code> 就很类似了：依次创建顶点索引数组 <code>i</code>，顶点索引数据块 <code>iBuffer</code> 和顶点索引数据视图 <code>iBufferView1</code> 和 <code>iBufferView2</code>。值得注意的是，构造 <code>ElementBufferView</code> 传入的 <code>mode</code> 参数是 <code>TRIANGLES</code> 而不是 <code>LINES</code>，因为我们在创建面状几何体。</p>
+<pre><code class="language-javascript">const i = [0, 1, 2, 3, 4, 5];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+const iBufferView1 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;TRIANGLES&#39;,
+    count: 3
+});
+const iBufferView2 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;TRIANGLES&#39;,
+    count: 3,
+    byteOffset: 4 * 3
+});</code></pre>
+<p>最后，创建 <code>Mesh</code> 和 <code>Geometry</code>，将顶点位置、法线、UV、顶点索引这 4 个数据视图传入 <code>Geometry</code> 构造函数中，就完成了。</p>
+<pre><code class="language-javascript">const m1 = new G3D.Mesh(scene);
+m1.geometry = new G3D.Geometry({
+    vertices: verticesBufferView,
+    normals: normalsBufferView,
+    uvs: uvsBufferView,
+    indices: { default: iBufferView1 }
+});
+
+const m2 = new G3D.Mesh(scene);
+m2.geometry = new G3D.Geometry({
+    vertices: verticesBufferView,
+    normals: normalsBufferView,
+    uvs: uvsBufferView,
+    indices: { default: iBufferView2 }
+});</code></pre>
+<p>综上，这段示例代码创建了两个面状网格体，只创建了 1 个 <code>Buffer</code> 和 1 个 <code>ElementBuffer</code>。而如果像上一节那样，把顶点数组直接传入，两个网格体会导致创建 6 个 <code>Buffer</code> 和 2 个 <code>ElementBuffer</code>。</p>
+<h2 id="-">小结</h2>
+<p>这一节，我们了解了如何通过显式创建数据块和数据视图，来更精细地控制创建网格体的过程，以减少开销，提高性能。在一些简单的场景中，你可以直接传入使用数组来创建网格体，毕竟这样做比较简单；但是在更复杂，对性能要求更高的场景中，G3D 赋予了你手动控制数据块和数据视图的能力。</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

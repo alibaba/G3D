@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">First Steps</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">Positions and Rotations</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">Create Mesh</a>
+              </li>
+              <li class="item"><a href="./Create-Advanced-Mesh.html">Create Advanced Mesh</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="create-mesh-advanced-">Create Mesh (Advanced)</h1>
+<p>In the previous sections, we learned how to create meshes with custom geometry by manually create vertex arrays. Inside G3D, when a geometry is created, some buffers will be created, which contains data of vertices, normals, element index and so on. Then G3D will interactive with WebGL system by these buffers. If the scene contains a large number of meshes, the amount of buffers will alse increase a lot, and during rendering, G3D need to switch these buffers frequently, and cost unecessary performances. Actually, we can cut them down with some advanced tricks.</p>
+<p>This section will teach you how to use buffers to create custom shaped mesh.</p>
+<h2 id="line-mesh">Line Mesh</h2>
+<p>We begin from the simplest example. Suppose we need to create two line meshes AB and CD, each one is a line segment with lenght 1, as showing in the following image:</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1Kx18qRLoK1RjSZFuXXXn0XXa-416-389.png" alt=""></p>
+<p>Let&#39;s check the code, which is a bit long:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/befelog/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>The structure is similar with previous sections, but this example put the mesh-creating thing into four independent functions <code>createMeshes()</code>, <code>createMeshesWithBuffers()</code>, <code>createMeshesSharedBuffers()</code> and <code>createMeshesSharedBuffersSO()</code>. By default we call <code>createMeshes()</code> to create the meshes. You can comment this line and call any of the other 3 functions. The look will be the same, but implemention of the four functions are totally different. Study the four functions and you&#39;ll get a good understanding of data structure behind mesh and geometry.</p>
+<pre><code>// create engine, scene, camera and lights
+
+createMeshes();
+// createMeshesWithBuffers();
+// createMeshesSharedBuffers();
+// createMeshesSharedBuffersSO();</code></pre><p>Let&#39;s see the first function <code>createMeshes()</code>, its way of creating meshes is the same with previous section. This is the simplest way: passing in vertex array and vertex index array.</p>
+<pre><code class="language-javascript">const v1 = [
+    1, 0, 0, // A
+    1, 1, 0  // B
+];
+const i1 = [0, 1];
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: v1,
+    indices: { default: i1 }
+});
+
+// create m2 is similar</code></pre>
+<p>In the example, we made two vertex arrays <code>v1</code> and <code>v2</code> respectively, and we alse made two vertex index array <code>i1</code> and <code>i2</code>. Then we create two meshes <code>m1</code> and <code>m2</code>. When we were creating geometry, the <code>LineGeometry</code> constructor will transform the arrays into buffer. Actually, we are able to create buffer by ourselves, and then pass buffer to <code>LineGeometry</code> to create meshes. That is what <code>createMeshesWithBuffers()</code> did.</p>
+<pre><code class="language-javascript">const v1 = [
+    1, 0, 0, // A
+    1, 1, 0  // B
+];
+const v1Buffer = new G3D.Buffer({ data: new Float32Array(v1) });
+const v1BufferView = new G3D.BufferView({ buffer: v1Buffer });
+const i1 = [0, 1];
+const i1Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i1) });
+const i1BufferView = new G3D.ElementBufferView({
+    buffer: i1Buffer,
+    mode: &#39;LINES&#39;,
+    count: 2
+});
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: v1BufferView,
+    indices: { default: i1BufferView }
+});
+
+// create m2 is similar</code></pre>
+<p>Inside <code>createMeshesWithBuffers()</code> function, we deal with vertex array <code>v1</code> and <code>v2</code>:</p>
+<ol>
+<li>Create <code>Float32Array</code> typed array within vertex array;</li>
+<li>Create a <code>G3D.Buffer</code> object within the typed array;</li>
+<li>Create a <code>G3D.BufferView</code> object with the buffer;</li>
+<li>Pass the buffer view object as to <code>LineGeometry</code> constructor as <code>vertices</code>.</li>
+</ol>
+<p>For vertices index array <code>i1</code> and <code>i2</code>, we do the following:</p>
+<ol>
+<li>Create a <code>Uint32Array</code> typed array within the vertices index array;</li>
+<li>Create a <code>G3D.ElementBuffer</code> object within the typed array;</li>
+<li>Create a <code>G3D.ElementBufferView</code> object within the element buffer, specifying the geometry mode <code>LINES</code> and vertices count 2;</li>
+<li>Pass the element buffer view to <code>LineGeometry</code> constructor as <code>indices.default</code>.</li>
+</ol>
+<blockquote>
+<p>Notice that buffer and element buffer is real data buffer, creating these will cause memory allocating and data filling, but buffer view and element buffer view are <strong>views</strong>, which is a ref to buffer or element buffer, with some information about which part of the buffer belongs to the buffer view.</p>
+</blockquote>
+<p><img src="https://gw.alicdn.com/tfs/TB1LU14qPDpK1RjSZFrXXa78VXa-606-290.png" alt=""></p>
+<p>In this function, <code>m1</code> and <code>m2</code> has their own vertices buffer and vertice index buffer, so it&#39;s technically the same with <code>createMeshes()</code>. Now, let&#39;s put the two meshes buffer together and merge them into one buffer, using buffer views to allow they share the same buffer. See what <code>createMeshesSharedBuffers()</code> did:</p>
+<pre><code class="language-javascript">const v = [
+    1, 0, 0, // A
+    1, 1, 0, // B
+    0, 0, 1, // C
+    0, 1, 1  // D
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+const vBufferView = new G3D.BufferView({ buffer: vBuffer });
+const i = [0, 1, 2, 3];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+
+const iBufferView1 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;LINES&#39;,
+    count: 2
+});
+const iBufferView2 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;LINES&#39;,
+    byteOffset: 4 * 2,
+    count: 2
+});
+
+const m1 = new G3D.LineMesh(scene);
+m1.geometry = new G3D.LineGeometry({
+    vertices: vBufferView,
+    indices: { default: iBufferView1 }
+});
+
+const m2 = new G3D.LineMesh(scene);
+m2.geometry = new G3D.LineGeometry({
+    vertices: vBufferView,
+    indices: { default: iBufferView2 }
+})</code></pre>
+<p>In this function, there&#39;s no independent <code>v1</code> and <code>v2</code>, we merge them as <code>v</code> which container vertices positions of four points ABCD. We create <code>vBuffer</code> based on <code>v</code>, and them the <code>vBufferView</code>. When creating <code>m1</code> and <code>m2</code>, we use <code>vBufferView</code> instead of <code>v1</code> and <code>v2</code>.</p>
+<p>And there&#39;s no independent <code>i1</code> and <code>i2</code> any more, instead we have the array <code>i</code> which value is [0,1,2,3]. We create a <code>iBuffer</code>, and then create two vertices index buffer <code>iBufferView1</code> and <code>iBufferView2</code>. The different between them is <code>byteOffset</code>, one is 0 and one is 8. <code>iBufferView1</code> represents the two vertices start from position 0, [0,1] ie, and <code>iBufferView2</code> represents the two vertices start from position 2. Because the buffer is created with <code>Uint32Array</code>, each item of which is a 32-bit integer (4 bytes), so the <code>byteOffset</code> is 4 * 2, 8 ie.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1o9dLqVzqK1RjSZFoXXbfcXXa-751-271.png" alt=""></p>
+<p>In this example, we create two different <code>ElementBufferView</code>, but they ref to the same <code>ElementBuffer</code>, so we created <code>ElementBuffer</code> for only once. It&#39;s a great improvment.</p>
+<p>Sometimes, data in vertices buffer are not all useful data, and we can specify which part of <code>Buffer</code> belongs to a <code>BufferView</code>. Now, let&#39;s mix some useless data into array <code>v</code> (maybe these data will be useful sometime later), and when we create <code>BufferView</code>, we filter for useful data. Let&#39;s see what the last function <code>createMeshesSharedBuffersSO()</code> did:</p>
+<pre><code class="language-javascript">const v = [
+    99, 99,
+    1, 0, 0, 99,  // A
+    1, 1, 0, 99,  // B
+    0, 0, 1, 99,  // C
+    0, 1, 1, 99   // D
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+const vBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteOffset: 4 * 2,
+    byteStride: 4 * 4
+});
+const i = [0, 1, 2, 3];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+// below is the same with createMeshesSharedBuffers()</code></pre>
+<p>We add two useless value 99 at the head, and insert a useless 99 after each vertex. When we create <code>vBufferView</code>, we specify two arguments <code>byteOffset</code> and <code>byteStride</code>, which means the origin offset in bytes. We have two useless 99 at the head, so the offset is 8 (in <code>Float32Array</code> each value is 4 bytes long). <code>byteStride</code> is for the stride between two vertices. If it&#39;s not specified, it means the vertices is tight packed, no extra data between them, and if it&#39;s specified, we need to specify the total bytes for one vertex and one piece of extra data, here it&#39;s 16 bytes.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1WAXMq9zqK1RjSZFHXXb3CpXa-827-343.png" alt=""></p>
+<p>When creating line meshes, <code>byteOffset</code> and <code>byteStride</code> seems not that useful, but when we are creating face meshes, these two options will make sense.</p>
+<h2 id="face-meshes">Face Meshes</h2>
+<p>Next, let&#39;s look at how to create face meshes with shared buffers. Assume that we need to create two triangles ABC and DEF, as the following image shows:</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1r1dPqW6qK1RjSZFmXXX0PFXa-468-380.png" alt=""></p>
+<p>See the example:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/safaxuh/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></p>
+<p>We created buffers, buffer views and meshes inside <code>createMeshes()</code> function.</p>
+<pre><code class="language-javascript">const v = [
+//  position   normal     uv
+    0, 0, 2,   1, 0, 0,   0, 0,  // A
+    0, 0, 1,   1, 0, 0,   0, 0,  // B
+    0, 1, 1,   1, 0, 0,   0, 0,  // C
+    1, 0, 0,   0, 0, 1,   0, 0,  // D
+    2, 0, 0,   0, 0, 1,   0, 0,  // E
+    1, 1, 0,   0, 0, 1,   0, 0   // F
+];
+const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
+
+const verticesBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 0
+});
+const normalsBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 4 * 3
+});
+const uvsBufferView = new G3D.BufferView({
+    buffer: vBuffer,
+    byteStride: 4 * 8,
+    byteOffset: 4 * 6
+});</code></pre>
+<p>First, we pack vertices position, normals, uvs into one array <code>v</code>, 8 number for a vertex, the first 3 for position, the following 3 for normal, and the last 2 for UV. Then create a <code>Buffer</code> object <code>vBuffer</code>, passing in <code>v</code>. Then, create 3 <code>BufferView</code>s: <code>verticesBufferView</code> for vertices position,<code>normalsBufferView</code> for normal and <code>uvsBufferView</code> for UV. Their byteStride is all 32, cause each vertex occupy 8 numbers which is 4 bytes long. The three buffer views has different <code>byteOffset</code>, pointing to the area contains data the buffer view need.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1IwtGq9rqK1RjSZK9XXXyypXa-930-538.png" alt=""></p>
+<p>The following code is similar with <code>createMeshSharedBuffers()</code>: create vertice index element <code>i</code>, and vertice index buffer <code>iBuffer</code>, and 2 buffer views <code>iBufferView1</code> and <code>iBufferView2</code>. Notice that we specify <code>mode</code> as <code>TRIANGLES</code> instead of <code>LINES</code>, cause we are creating face meshes.</p>
+<pre><code class="language-javascript">const i = [0, 1, 2, 3, 4, 5];
+const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+const iBufferView1 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;TRIANGLES&#39;,
+    count: 3
+});
+const iBufferView2 = new G3D.ElementBufferView({
+    buffer: iBuffer,
+    mode: &#39;TRIANGLES&#39;,
+    count: 3,
+    byteOffset: 4 * 3
+});</code></pre>
+<p>At last, create <code>Mesh</code> and <code>Geometry</code>, passing the buffer views created before, and everything is done! </p>
+<pre><code class="language-javascript">const m1 = new G3D.Mesh(scene);
+m1.geometry = new G3D.Geometry({
+    vertices: verticesBufferView,
+    normals: normalsBufferView,
+    uvs: uvsBufferView,
+    indices: { default: iBufferView1 }
+});
+
+const m2 = new G3D.Mesh(scene);
+m2.geometry = new G3D.Geometry({
+    vertices: verticesBufferView,
+    normals: normalsBufferView,
+    uvs: uvsBufferView,
+    indices: { default: iBufferView2 }
+});</code></pre>
+<p>The example created two face meshes whthin only one <code>Buffer</code> and one <code>ElementBuffer</code>. If we pass arrays directly like we did in the previous sections, it&#39;ll be 6 <code>Buffer</code>s and 2 <code>ElementBuffer</code>s.</p>
+<h2 id="summary">Summary</h2>
+<p>In this section, we learned how to mannualy create buffers and buffer views, to control the progress of creating a mesh, thus to reduce cost and improve performance. In some simple scenes, you can pass arrays into geometry directly, as it is simple. But in some complex situations, G3D enable you to access the buffers and buffer views. So have fun!</p>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

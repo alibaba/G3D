@@ -122,13 +122,8 @@
 </tr>
 <tr>
 <td>config.data</td>
-<td>Float32Array</td>
+<td>Float32Array | ArrayBuffer</td>
 <td>数据</td>
-</tr>
-<tr>
-<td>config.target</td>
-<td>string</td>
-<td>数据块类型，可以是 &#39;ARRAY_BUFFER&#39; 或 &#39;ELEMENT_ARRAY_BUFFER&#39;</td>
 </tr>
 </tbody></table>
 <h2 id="-">示例</h2>
@@ -136,8 +131,7 @@
     data: new Float32Array([
         1, 0, 0, 
         0, 1, 0
-    ]),
-    target: &#39;ARRAY_BUFFER&#39;
+    ])
 });</code></pre>
 </div>
         </div>
