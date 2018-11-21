@@ -128,7 +128,7 @@ m2.geometry = new G3D.LineGeometry({
 
 同时，我们也不再有独立的顶点索引数组 `i1` 和 `i2`，我们将其合并为数组 `i`，数组 `i` 的值是 [0,1,2,3]，同样我们为其创建顶点索引数据块 `iBuffer`；然后，我们分别创建了两个顶点索引数据视图 `iBufferView1` 和 `iBufferView2`，两者唯一的不同是 `byteOffset` 字段，前者为 0 而后者为 8，这说明，`iBufferView1` 表示的是从 0 开始的 2 个顶点，即 [0,1]，而 `iBufferView2` 表示的是索引从 2 （`byteOffset` 是字节偏移量，这里我们使用了 `Uint32Array`，每一项是 32 位整数占据 4 个字节，所以 8 个字节相当于 2 个整数项）开始的 2 个顶点，即 [2,3]。
 
-![](https://gw.alicdn.com/tfs/TB1IQK.qFzqK1RjSZFoXXbfcXXa-751-275.png)
+![](https://gw.alicdn.com/tfs/TB1o9dLqVzqK1RjSZFoXXbfcXXa-751-271.png)
 
 虽然我们创建了 2 个不同的 `ElementBufferView`，但是由于它们引用的 `ElementBuffer` 是同一个，所以实际上只有一次创建 `ElementBuffer` 的开销，而实际进行绘制的时候，也不需要频繁地切换。
 
@@ -155,7 +155,7 @@ const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
 
 `v` 的头部添加了 2 个无用的 99，然后在每个顶点的三个数据后面，也增加了 1 个无用的 99。我们在创建 `vBufferView` 时，额外指定了两个参数 `byteOffset` 和 `byteStride`。`byteOffset` 表示初始位置偏移的字节数，由于这里有 2 个无用值，所以跳过 8 个字节（同样，由于我们采用 `Float32Array`，每个数值占 4 个字节）；`byteStride` 表示顶点数据和顶点数据间的间隔，当我们不指定的时候，认为是顶点和顶点之间是「严丝合缝」，没有多余数据的，而我们指定时，需要指定顶点本身和多余数据占用的总字节数，这里即 16 个字节。
 
-图
+![](https://gw.alicdn.com/tfs/TB1WAXMq9zqK1RjSZFHXXb3CpXa-827-343.png)
 
 在创建线状网格体时，`BufferView` 的 `byteOffset` 和 `byteStride` 两个参数似乎没有太大用处，但是当我们创建面状网格体时，这两个参数就会发挥重要的作用。
 
@@ -163,7 +163,7 @@ const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
 
 接下来，我们看看如何创建多个面状几何体，且共享数据块。假设我们需要创建如下两个三角形网格体 ABC 和 DEF：
 
-图
+![](https://gw.alicdn.com/tfs/TB1r1dPqW6qK1RjSZFmXXX0PFXa-468-380.png)
 
 看这个例子是怎么做的：
 
@@ -200,11 +200,11 @@ const uvsBufferView = new G3D.BufferView({
 });
 ```
 
-首先，我们把顶点的位置、法线、UV 数据全部打包进一个数组 `v`，数组中每 8 个值为一组，表示一个顶点。这 8 个值中，前 3 个值表示位置，中间 3 个值表示法线，最后 2 个值表示 UV。使用这个数组创建一个 `Buffer` 对象 `vBuffer`。接下来，我们为顶点位置、法线和 UV 各自创建一个 `BufferView`：`verticesBufferView`，`normalsBufferView` 和 `uvsBufferView`。它们的 `byteStride` 值为 32，因为每个顶点包含 8 个值，每个值占 4 个字节；它们具有不同的 `byteOffset` 值，以指向 `vBuffer` 中各自数值所在的区段。
+首先，我们把顶点的位置、法线、UV 数据全部打包进一个数组 `v`，数组中每 8 个值为一组，表示一个顶点。这 8 个值中，前 3 个值表示位置，中间 3 个值表示法线，最后 2 个值表示 UV。使用这个数组创建一个 `Buffer` 对象 `vBuffer`。接下来，为顶点位置、法线和 UV 各自创建一个 `BufferView`：`verticesBufferView`，`normalsBufferView` 和 `uvsBufferView`。它们的 `byteStride` 值为 32，因为每个顶点包含 8 个值，每个值占 4 个字节；它们具有不同的 `byteOffset` 值，以指向 `vBuffer` 中各自数值所在的区段。
 
-图
+![](https://gw.alicdn.com/tfs/TB1IwtGq9rqK1RjSZK9XXXyypXa-930-538.png)
 
-接下来，和前一个例子（线状几何体）中的 `createMesh()` 就很类似了，一次创建顶点索引数组 `i`，顶点索引数据块 `iBuffer` 和顶点索引数据视图 `iBufferView1` 和 `iBufferView2`，需要注意的是，这是我们在构造 `ElementBufferView` 传入的 `mode` 参数是 `TRIANGLES` 而不是 `LINES`。
+接下来的代码和前一个例子（线状几何体）中的 `createMeshSharedBuffers()` 就很类似了：依次创建顶点索引数组 `i`，顶点索引数据块 `iBuffer` 和顶点索引数据视图 `iBufferView1` 和 `iBufferView2`。值得注意的是，构造 `ElementBufferView` 传入的 `mode` 参数是 `TRIANGLES` 而不是 `LINES`，因为我们在创建面状几何体。
 
 ```javascript
 const i = [0, 1, 2, 3, 4, 5];
@@ -242,8 +242,8 @@ m2.geometry = new G3D.Geometry({
 });
 ```
 
-这里我们创建了两个面状网格体，只创建了 1 个 `Buffer` 和 1 个 `ElementBuffer`，而如果像上一节那样，把顶点数组直接传入，则会创建 6 个 `Buffer` 和 2 个 `ElementBuffer`。
+综上，这段示例代码创建了两个面状网格体，只创建了 1 个 `Buffer` 和 1 个 `ElementBuffer`。而如果像上一节那样，把顶点数组直接传入，两个网格体会导致创建 6 个 `Buffer` 和 2 个 `ElementBuffer`。
 
 ## 小结
 
-这一节，我们了解了如何使用通过显式创建数据块和数据视图，来更精细地控制创建网格体的过程，减少开销，提高性能。在一些简单的场景中，你可以直接传入使用数组来创建网格体，毕竟这样做比较简单；但是在更复杂，对性能要求更高的场景中，G3D 赋予了你手动控制数据块和数据视图的能力。
+这一节，我们了解了如何通过显式创建数据块和数据视图，来更精细地控制创建网格体的过程，以减少开销，提高性能。在一些简单的场景中，你可以直接传入使用数组来创建网格体，毕竟这样做比较简单；但是在更复杂，对性能要求更高的场景中，G3D 赋予了你手动控制数据块和数据视图的能力。
