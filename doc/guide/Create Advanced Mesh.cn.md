@@ -83,7 +83,7 @@ m1.geometry = new G3D.LineGeometry({
 
 > 注意，`Buffer` 和 `ElementBuffer` 是真实的数据块，其创建过程中包含了真实的内存分配、数据填充等操作；而 `BufferView` 和 `ElementBufferView` 则是「数据视图」，它包含了对数据块 `Buffer` 或 `ElementBuffer` 的引用，以及用于「定义数据块中哪些数据属于此视图」的信息。
 
-![](https://gw.alicdn.com/tfs/TB1LU14qPDpK1RjSZFrXXa78VXa-606-290.png)
+![](https://gw.alicdn.com/tfs/TB16Rhyq7zoK1RjSZFlXXai4VXa-726-334.png)
 
 目前，两个网格体 `m1` 和 `m2` 分别创建各自的顶点数据块和顶点索引数据块，这种方式，与 `createMeshes()` 本质上仍然是一样的。接下来，让我们将两个网格体的数据块合并起来。我们可以只创建一个顶点数据块和一个顶点索引数据块，并使这两个网格体通过不同的数据视图来共享数据块。看看函数 `createMeshesSharedBuffers()` 是怎么做的：
 
@@ -124,15 +124,15 @@ m2.geometry = new G3D.LineGeometry({
 })
 ```
 
-在这个函数中，不再有独立的顶点数组 `v1` 和 `v2`，我们将其合并为数组 `v`，其中包含了 ABCD 四个顶点的坐标信息；基于这个数组单独创建了顶点数据块 `vBuffer`，并进一步创建了顶点数据视图 `vBufferView`。创建网格几何体 `m1` 和 `m2` 时，我们都把 `vBufferView` 作为顶点数据传入。
+在这个函数中，不再有独立的顶点数组 `v1` 和 `v2`，我们将其合并为 `v`，其中包含了 ABCD 四个顶点的坐标信息。我们基于这个数组单独创建了顶点数据块 `vBuffer`，并进一步创建了顶点数据视图 `vBufferView`。网格体 `m1` 和 `m2` 均使用 `vBufferView` 作为顶点数据。
 
-同时，我们也不再有独立的顶点索引数组 `i1` 和 `i2`，我们将其合并为数组 `i`，数组 `i` 的值是 [0,1,2,3]，同样我们为其创建顶点索引数据块 `iBuffer`；然后，我们分别创建了两个顶点索引数据视图 `iBufferView1` 和 `iBufferView2`，两者唯一的不同是 `byteOffset` 字段，前者为 0 而后者为 8，这说明，`iBufferView1` 表示的是从 0 开始的 2 个顶点，即 [0,1]，而 `iBufferView2` 表示的是索引从 2 （`byteOffset` 是字节偏移量，这里我们使用了 `Uint32Array`，每一项是 32 位整数占据 4 个字节，所以 8 个字节相当于 2 个整数项）开始的 2 个顶点，即 [2,3]。
+同时，这里也不再有独立的顶点索引数组 `i1` 和 `i2`，我们将其合并为 `i`，它的值是 [0,1,2,3]。我们基于这个数组创建了顶点索引数据块 `iBuffer`；然后，分别创建了两个顶点索引数据视图 `iBufferView1` 和 `iBufferView2`，这两个数据视图唯一不同的是 `byteOffset` 字段，前者为 0 而后者为 8。这是因为，`iBufferView1` 表示的是从 0 开始的 2 个顶点，即 [0,1]，而 `iBufferView2` 表示的是索引从 2 （`byteOffset` 表示字节偏移量，这里数组类型是 `Uint32Array`，每一项的值是 32 位整数，占据 4 个字节，所以 8 个字节相当于 2 个整数项）开始的 2 个顶点，即 [2,3]。
 
 ![](https://gw.alicdn.com/tfs/TB1o9dLqVzqK1RjSZFoXXbfcXXa-751-271.png)
 
 虽然我们创建了 2 个不同的 `ElementBufferView`，但是由于它们引用的 `ElementBuffer` 是同一个，所以实际上只有一次创建 `ElementBuffer` 的开销，而实际进行绘制的时候，也不需要频繁地切换。
 
-有时候，顶点数据块中并不全是顶点的位置数据，我们在创建 `BufferView` 的时候也可以通过指定一些参数来描述 `Buffer` 中的一个子集。下面，让我们「没事找事」地为顶点数组 `v` 中添加一些无意义的数据（也许在后面的某些时刻，这些数据还会有其他作用），然后在创建 `BufferView` 的时候将这些无意义的数据筛出去。让我们看看最后一个函数 `createMeshesSharedBuffersSO()` 是怎么做的。
+有时候，顶点数据块中并不全是顶点的位置数据，在创建 `BufferView` 的时候，可以通过指定一些参数来描述 `Buffer` 中的子集。接下来，我们来「没事找事」地在数组 `v` 中添加一些无意义的数据（也许在后面的某些时刻，这些数据还会有其他作用），然后在 `BufferView` 中把无意义的数据剔除出去。看看最后一个函数 `createMeshesSharedBuffersSO()` 是怎么做的。
 
 ```javascript
 const v = [
@@ -153,7 +153,7 @@ const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
 // below is the same with createMeshesSharedBuffers()
 ```
 
-`v` 的头部添加了 2 个无用的 99，然后在每个顶点的三个数据后面，也增加了 1 个无用的 99。我们在创建 `vBufferView` 时，额外指定了两个参数 `byteOffset` 和 `byteStride`。`byteOffset` 表示初始位置偏移的字节数，由于这里有 2 个无用值，所以跳过 8 个字节（同样，由于我们采用 `Float32Array`，每个数值占 4 个字节）；`byteStride` 表示顶点数据和顶点数据间的间隔，当我们不指定的时候，认为是顶点和顶点之间是「严丝合缝」，没有多余数据的，而我们指定时，需要指定顶点本身和多余数据占用的总字节数，这里即 16 个字节。
+我们在 `v` 的头部添加了 2 个无用的 99，然后在每个顶点的三个值后面，都插入 1 个无用的 99。然后，创建 `vBufferView` 时，额外指定两个参数 `byteOffset` 和 `byteStride`。`byteOffset` 表示初始位置偏移的字节数，由于这里有 2 个无用的值，所以跳过 8 个字节（`Float32Array` 中每个值占 4 个字节）；`byteStride` 表示相邻两个顶点数据的间隔（头部和头部的间隔）。当不指定的时候，就认为是相邻顶点间是「严丝合缝」，没有多余数据的；当指定时，需要指定顶点本身和多余数据占用的总字节数，这里即 16 个字节。
 
 ![](https://gw.alicdn.com/tfs/TB1WAXMq9zqK1RjSZFHXXb3CpXa-827-343.png)
 
