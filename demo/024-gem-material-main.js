@@ -53,9 +53,9 @@ function main(
                                     };
 
                                     const mesh1 = G3D.MeshBuilder.createFromStlModel(scene, m1);
-                                    mesh1.geometry.facing = G3D.Geometry.BACK;
+                                    mesh1.geometry.facing = G3D.Geometry.FACING.BACK;
                                     const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, m2);
-                                    mesh2.geometry.facing = G3D.Geometry.BACK;
+                                    mesh2.geometry.facing = G3D.Geometry.FACING.BACK;
                                     const mesh3 = G3D.MeshBuilder.createFromStlModel(scene, m3, { geometry: { mergeNormals: true } });
 
                                     mesh1.materials.default = new G3D.GemMaterial({
@@ -88,7 +88,6 @@ function main(
                                     gui.add(mesh3.materials.default.albedoColor, 'r', 0, 1000);
                                     gui.add(mesh3.materials.default.albedoColor, 'g', 0, 1000);
                                     gui.add(mesh3.materials.default.albedoColor, 'b', 0, 1000);
-
 
                                     const mesh = new G3D.Mesh(scene);
                                     mesh1.parent = mesh;
