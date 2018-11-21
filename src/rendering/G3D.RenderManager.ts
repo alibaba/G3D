@@ -2,8 +2,6 @@ import Env from '../core/G3D.Env';
 import Engine from '../core/G3D.Engine';
 import GL from '../core/G3D.GL';
 
-import Mat3 from '../matrix/G3D.Mat3';
-
 import RawMaterial from '../material/G3D.RawMaterial';
 import PhongMaterial from '../material/G3D.PhongMaterial';
 import PBRMaterial from '../material/G3D.PBRMaterial';
