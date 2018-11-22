@@ -26,7 +26,7 @@ const OBJParser = {
             uvs: [],
             normals: [],
             indices: {},
-            mtls: data.mtl ? this.parseMtl(data.mtl) : {}
+            mtls: data.mtl ? this.parseMtl(data.mtl, data.images) : {}
         };
         let curPos = 0;
         let curMtl = null;
@@ -158,7 +158,7 @@ const OBJParser = {
         }
     },
 
-    parseMtl: function (mtl) {
+    parseMtl: function (mtl, images) {
 
         const lines = mtl.split('\n');
         const target = {};
@@ -186,11 +186,11 @@ const OBJParser = {
             } else if (key === 'ks') {
                 target[curMtl].specularColor = value.split(' ').map(Number);
             } else if (key === 'map_kd') {
-                target[curMtl].diffuseTexture = value;
+                target[curMtl].diffuseTexture = images[value];
             } else if (key === 'map_ka') {
-                target[curMtl].ambientTexture = value;
+                target[curMtl].ambientTexture = images[value];
             } else if (key === 'map_ks') {
-                target[curMtl].specularTexture = value;
+                target[curMtl].specularTexture = images[value];
             } else if (key === 'ns') {
                 target[curMtl].glossiness = Number(value);
             } else {

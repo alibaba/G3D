@@ -48,13 +48,7 @@ function createFromObjModel(scene, model) {
                 }
             }
             if (mtl.ambientTexture) {
-                const image = new Env.Image();
-                image.crossOrigin = true;
-                image.onload = function () {
-                    const texture = new Texture({ image });
-                    materials[key].ambientTexture = texture;
-                }
-                image.src = mtl.ambientTexture;
+                materials[key].ambientTexture = new Texture({ image: mtl.ambientTexture });
             }
 
             if (mtl.diffuseColor) {
@@ -65,13 +59,7 @@ function createFromObjModel(scene, model) {
                 }
             }
             if (mtl.diffuseTexture) {
-                const image = new Env.Image();
-                image.crossOrigin = true;
-                image.onload = function () {
-                    const texture = new Texture({ image, flipY: true });
-                    materials[key].diffuseTexture = texture;
-                }
-                image.src = mtl.diffuseTexture;
+                materials[key].diffuseTexture = new Texture({ image: mtl.diffuseTexture, flipY: true });
             }
 
             if (mtl.specularColor) {
@@ -82,13 +70,7 @@ function createFromObjModel(scene, model) {
                 }
             }
             if (mtl.specularTexture) {
-                const image = new Env.Image();
-                image.crossOrigin = true;
-                image.onload = function () {
-                    const texture = new Texture({ image });
-                    materials[key].specularTexture = texture;
-                }
-                image.src = mtl.specularTexture;
+                materials[key].specularTexture = new Texture({ image: mtl.specularTexture });
             }
         }
     }
