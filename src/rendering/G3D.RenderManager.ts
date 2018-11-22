@@ -26,6 +26,18 @@ class RenderManager {
 
     scene: Scene = null;
 
+    private lights: {
+        type: Uint32Array,
+        color: Float32Array,
+        intensity: Float32Array,
+        position: Float32Array
+    } = {
+            type: new Uint32Array(LIGHT_MAX_COUNT),
+            color: new Float32Array(LIGHT_MAX_COUNT * 3),
+            intensity: new Float32Array(LIGHT_MAX_COUNT),
+            position: new Float32Array(LIGHT_MAX_COUNT * 3)
+        };
+
     constructor(scene: Scene) {
         this.scene = scene;
     }
@@ -219,7 +231,7 @@ class RenderManager {
 
     }
 
-    renderToPickerRenderBuffer(groups) {
+    private renderToPickerRenderBuffer(groups) {
 
         const engine = Engine.instance;
 
@@ -314,49 +326,57 @@ class RenderManager {
 
         const { lights } = scene;
 
-        const type = [];
-        const color = [];
-        const intensity = [];
-        const position = [];
+        // const type = [];
+        // const color = [];
+        // const intensity = [];
+        // const position = [];
+
+        const { lights: { type, color, intensity, position } } = this;
 
         if (lights.length > 16) {
             throw new Error('[G3D] Scene could not have more than 16 lights.');
         }
         for (let i = 0; i < LIGHT_MAX_COUNT; i++) {
             const light = lights[i];
-            if (light instanceof DirectionalLight) {
-                type.push(LIGHT_TYPE_DIRECTIONAL);
-                color.push(...light.getColor());
-                intensity.push(light.getIntensity());
-                position.push(...light.getDirection());
-            } else if (light instanceof AmbientLight) {
-                type.push(LIGHT_TYPE_AMBIENT);
-                color.push(...light.getColor());
-                intensity.push(light.getIntensity());
-                position.push(0, 0, 0);
-            } else if (light instanceof PointLight) {
-                type.push(LIGHT_TYPE_POINT);
-                color.push(...light.getColor());
-                intensity.push(light.getIntensity());
-                position.push(...light.getPosition());
-            } else {
-                type.push(LIGHT_TYPE_NULL);
-                color.push(0, 0, 0);
-                intensity.push(0);
-                position.push(0, 0, 0);
-            }
-        }
-        const lightsData = {
-            type: new Int32Array(type),
-            color: new Float32Array(color.map(c => c / 255)),
-            intensity: new Float32Array(intensity),
-            position: new Float32Array(position)
-        }
 
-        engine.uniform('uLightType', lightsData.type);
-        engine.uniform('uLightColor', lightsData.color);
-        engine.uniform('uLightIntensity', lightsData.intensity);
-        engine.uniform('uLightPosition', lightsData.position);
+            const lColor = light ? light.getColor().map(c => c / 255) : [0, 0, 0];
+            const lIntensity = light ? light.getIntensity() : 0;
+            let lPosition;
+
+            if (light instanceof DirectionalLight) {
+                type[i] = LIGHT_TYPE_DIRECTIONAL;
+                lPosition = light.getDirection();
+            } else if (light instanceof AmbientLight) {
+                type[i] = LIGHT_TYPE_AMBIENT;
+                lPosition = [0, 0, 0];
+            } else if (light instanceof PointLight) {
+                type[i] = LIGHT_TYPE_POINT;
+                lPosition = light.getPosition();
+            } else {
+                type[i] = LIGHT_TYPE_NULL;
+                lPosition = [0, 0, 0];
+            }
+
+            color[i * 3] = lColor[0];
+            color[i * 3 + 1] = lColor[1];
+            color[i * 3 + 2] = lColor[2];
+            intensity[i] = lIntensity;
+            position[i * 3] = lPosition[0];
+            position[i * 3 + 1] = lPosition[1];
+            position[i * 3 + 2] = lPosition[2];
+
+        }
+        // const lightsData = {
+        //     type: new Int32Array(type),
+        //     color: new Float32Array(color.map(c => c / 255)),
+        //     intensity: new Float32Array(intensity),
+        //     position: new Float32Array(position)
+        // }
+
+        engine.uniform('uLightType', type);
+        engine.uniform('uLightColor', color);
+        engine.uniform('uLightIntensity', intensity);
+        engine.uniform('uLightPosition', position);
     }
 
     private prepareGeometry = (geometry) => {

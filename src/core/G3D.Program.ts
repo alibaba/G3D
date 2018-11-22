@@ -142,7 +142,7 @@ class DefinedProgram {
                 case 'VEC':
                     {
                         const uniformMethodName = ['uniform', vecSize, baseType === 'FLOAT' ? 'f' : 'i', 'v'].join('');
-                        gl[uniformMethodName](position, value);
+                        gl[uniformMethodName](position, [...value]);
                         break;
                     }
                 case 'MAT':

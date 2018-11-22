@@ -22,15 +22,12 @@ function main(
     const m1 = G3D.MeshBuilder.createPlane(scene, 6, 4);
     m1.position.z = -1;
 
-    m1.materials.default = new G3D.RawMaterial();
-    m1.materials.default.color = {r: 255, g: 0, b: 0};
-
-    // const m2 = G3D.MeshBuilder.createSphere(scene, 1);
-    // m2.position.z = 1;
+    const m2 = G3D.MeshBuilder.createSphere(scene, 1);
+    m2.position.z = 1;
 
     function render() {
         scene.render();
-        // requestAnimationFrame(render);
+        requestAnimationFrame(render);
     }
     render();
 
