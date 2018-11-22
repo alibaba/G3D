@@ -17,7 +17,7 @@ class PBREnviroment {
 
     brdfLUT: Texture;
 
-    greyness: number = 1;
+    greyness: number = 0;
 
     constructor({ diffuse, specular, brdfLUT }: IPBREnviromentConfig) {
 

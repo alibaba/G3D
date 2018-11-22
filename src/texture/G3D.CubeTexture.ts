@@ -62,7 +62,7 @@ class CubeTexture {
 
                 gl.texImage2D(targets[k], 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, images[k]);
 
-            } else if (image instanceof Env.Image) {
+            } else {
 
                 gl.texImage2D(targets[k], 0, format, format, gl.UNSIGNED_BYTE, images[k]);
 
@@ -77,14 +77,7 @@ class CubeTexture {
             images.mip.forEach((images, i) => {
 
                 Object.keys(images).forEach(k => {
-
-                    const image = images[k];
-
-                    if (image instanceof Env.Image) {
-
-                        gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, images[k]);
-
-                    }
+                    gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, images[k]);
                 })
             });
 
