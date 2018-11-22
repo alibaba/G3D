@@ -13,8 +13,6 @@ function main(
     camera.beta = 0;
     camera.radius = 20;
 
-
-
     const l1 = new G3D.DirectionalLight(scene);
 
     const m1 = new G3D.MeshBuilder.createSphere(scene, 0.2);
@@ -33,7 +31,6 @@ function main(
         requestAnimationFrame(render);
     }
     render();
-
 
 }
 

@@ -27,12 +27,14 @@ class RenderManager {
     scene: Scene = null;
 
     private lights: {
-        type: Uint32Array,
-        color: Float32Array,
-        intensity: Float32Array,
-        position: Float32Array
+        // type: Uint32Array,
+        type: number[];
+        color: Float32Array;
+        intensity: Float32Array;
+        position: Float32Array;
     } = {
-            type: new Uint32Array(LIGHT_MAX_COUNT),
+            // type: new Uint32Array(LIGHT_MAX_COUNT),
+            type: [],
             color: new Float32Array(LIGHT_MAX_COUNT * 3),
             intensity: new Float32Array(LIGHT_MAX_COUNT),
             position: new Float32Array(LIGHT_MAX_COUNT * 3)
@@ -326,11 +328,6 @@ class RenderManager {
 
         const { lights } = scene;
 
-        // const type = [];
-        // const color = [];
-        // const intensity = [];
-        // const position = [];
-
         const { lights: { type, color, intensity, position } } = this;
 
         if (lights.length > 16) {
@@ -364,14 +361,7 @@ class RenderManager {
             position[i * 3] = lPosition[0];
             position[i * 3 + 1] = lPosition[1];
             position[i * 3 + 2] = lPosition[2];
-
         }
-        // const lightsData = {
-        //     type: new Int32Array(type),
-        //     color: new Float32Array(color.map(c => c / 255)),
-        //     intensity: new Float32Array(intensity),
-        //     position: new Float32Array(position)
-        // }
 
         engine.uniform('uLightType', type);
         engine.uniform('uLightColor', color);

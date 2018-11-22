@@ -57,7 +57,7 @@ class Texture {
 
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
 
-        } else if (image instanceof Env.Image) {
+        } else {
 
             const { extensions } = GL;
 

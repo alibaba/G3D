@@ -13,6 +13,9 @@ function controlRotateCamera(canvas, camera) {
     canvas.addEventListener('mouseup', end);
     canvas.addEventListener('mousemove', function (e) { move(e.offsetX, e.offsetY); });
     canvas.addEventListener('mousewheel', function (e) { wheel(e.deltaY); });
+    canvas.addEventListener('touchstart', start);
+    canvas.addEventListener('touchend', end);
+    canvas.addEventListener('touchmove', function (e) { move(e.touches[0].screenX, e.touches[0].screenY) });
 }
 
 export default controlRotateCamera;

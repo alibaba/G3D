@@ -1,7 +1,7 @@
 import loader from './loader';
 
-// const faces =   ['left', 'right', 'top',  'bottom', 'front', 'back'];
-// const faceDes = ['negx', 'posx',  'posy', 'negy',   'posz',  'negz'];
+// faces    :  'left', 'right', 'top',  'bottom', 'front', 'back'
+// faceDes  :  'negx', 'posx',  'posy', 'negy',   'posz',  'negz'
 
 var pbrAssets = (function () {
     var assetsDefault = {
