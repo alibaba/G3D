@@ -2,8 +2,7 @@ import Env from '../core/G3D.Env';
 import Engine from '../core/G3D.Engine';
 import GL from '../core/G3D.GL';
 
-import RawMaterial from '../material/G3D.RawMaterial';
-import PhongMaterial from '../material/G3D.PhongMaterial';
+import PhongMaterial from '../material/G3D.PhongMaterial2';
 import PBRMaterial from '../material/G3D.PBRMaterial';
 import GemMaterial from '../material/G3D.GemMaterial';
 
@@ -135,39 +134,24 @@ class RenderManager {
 
                         const material = mesh.materials[key];
 
-                        if (material instanceof RawMaterial) {
+                        if (false) {
 
-                            engine.useProgram(
-                                'raw',
-                                [...material.getDefines(), ...globalDefines]
-                            );
+                            // engine.useProgram(
+                            //     'phong',
+                            //     [...material.getDefines(), ...globalDefines]
+                            // );
 
-                            this.prepareMVPMatrix(mesh);
+                            // this.prepareMVPMatrix(mesh);
 
-                            this.prepareGeometry(mesh.geometry);
+                            // this.prepareLights();
 
-                            this.prepareRawMaterial(material);
+                            // this.prepareGeometry(mesh.geometry);
 
-                            this.drawMesh(mesh, key);
+                            // this.preparePhongMaterial(material);
 
-                        } else if (material instanceof PhongMaterial) {
+                            // this.prepareShadow();
 
-                            engine.useProgram(
-                                'phong',
-                                [...material.getDefines(), ...globalDefines]
-                            );
-
-                            this.prepareMVPMatrix(mesh);
-
-                            this.prepareLights();
-
-                            this.prepareGeometry(mesh.geometry);
-
-                            this.preparePhongMaterial(material);
-
-                            this.prepareShadow();
-
-                            this.drawMesh(mesh, key);
+                            // this.drawMesh(mesh, key);
 
                         } else if (material instanceof PBRMaterial) {
 
@@ -226,12 +210,38 @@ class RenderManager {
                             this.drawMesh(mesh, key);
 
                             engine.disableBlend();
+
+                        } else {
+
+                            engine.useProgram(
+                                material.program.define(
+                                    [...material.getDefines(), ...globalDefines]
+                                )
+                            );
+
+                            this.prepareMVPMatrix(mesh);
+
+                            this.prepareGeometry(mesh.geometry);
+
+
+                            this.prepareMaterial(material);
+
+                            if (material.lighting) {
+                                this.prepareLights();
+                            }
+
+                            if (material.shadow) {
+                                this.prepareShadow();
+                            }
+
+                            this.drawMesh(mesh, key);
                         }
                     })
             })
         });
 
     }
+
 
     private renderToPickerRenderBuffer(groups) {
 
@@ -398,6 +408,22 @@ class RenderManager {
 
         if (normals) {
             engine.attribute('aNormal', normals.buffer.glBuffer, normals.byteStride, normals.byteOffset);
+        }
+
+    }
+
+    private prepareMaterial(material) {
+
+        const engine = Engine.instance;
+
+        const { uniforms } = material;
+
+        for (let i = 0; i < uniforms.length; i++) {
+            const name = uniforms[i];
+            const value = material.uniform(name);
+            if (value !== null) {
+                engine.uniform(name, value);
+            }
         }
 
     }

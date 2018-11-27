@@ -33,7 +33,7 @@ class Engine {
     width: number = 0;
     height: number = 0;
 
-    currentProgram: any = {};
+    currentProgram: any;
     currentScene: Scene;
 
     programs: { [prop: string]: Program } = {};
@@ -170,26 +170,31 @@ class Engine {
 
     useProgram(key, defines: string[] = []) {
 
-        this.currentProgram = { key, defines };
-
-        const program = this.programs[key].define(defines);
-
-        this.gl.useProgram(program.program);
+        if (typeof key !== 'string') {
+            const program = key;
+            this.gl.useProgram(program.program);
+            this.currentProgram = program;
+        } else {
+            // this.currentProgram = { key, defines };
+            const program = this.programs[key].define(defines);
+            this.gl.useProgram(program.program);
+            this.currentProgram = program;
+        }
     }
+
 
     uniform(name, value) {
 
-        const { key, defines } = this.currentProgram;
-
-        const program = this.programs[key].define(defines);
-        program.uniform(name, value);
+        // const { key, defines } = this.currentProgram;
+        // const program = this.programs[key].define(defines);
+        this.currentProgram.uniform(name, value);
     }
 
     attribute(name, buffer, stride, offset) {
 
-        const { key, defines } = this.currentProgram;
-        const program = this.programs[key].define(defines);
-        program.attribute(name, buffer, stride, offset);
+        // const { key, defines } = this.currentProgram;
+        // const program = this.programs[key].define(defines);
+        this.currentProgram.attribute(name, buffer, stride, offset);
     }
 
     enableDepthTest() {

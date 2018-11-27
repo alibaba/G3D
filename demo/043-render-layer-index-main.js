@@ -12,19 +12,14 @@ function main(
     camera.beta = 20;
     camera.radius = 10;
 
-
-
     const light1 = new G3D.DirectionalLight(scene);
     light1.direction.x = -1;
     light1.direction.y = 0;
     light1.direction.z = 1;
     light1.intensity = 0.5;
 
-    const light2 = new G3D.HemisphereLight(scene);
-    light2.intensity = 0.5;
-
-    const light3 = new G3D.AmbientLight(scene);
-    light3.intensity = 0.2;
+    const light2 = new G3D.AmbientLight(scene);
+    light2.intensity = 0.2;
 
     const m1 = G3D.MeshBuilder.createPlane(scene, 6, 4);
     m1.position.z = -1;

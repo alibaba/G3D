@@ -1,34 +1,70 @@
-import Material from './G3D.Material';
+import ShaderMaterial from './G3D.ShaderMaterial';
 
 import Texture from '../texture/G3D.Texture';
 import { IColorRGB } from '../types/raw';
 import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
 
-class RawMaterial extends Material {
+import * as vShaderSource from '../shaders/material-raw.vert.glsl';
+import * as fShaderSource from '../shaders/material-raw.frag.glsl';
+
+class RawMaterial extends ShaderMaterial {
 
     color: IColorRGB = { r: 255, g: 255, b: 255 };
-    texture: Texture = null;
+    texture: Texture;
 
     private colorValues: IVec3 = Vec3.create();
 
     constructor() {
-        super();
+
+        super({
+            name: 'G3D_RAW',
+            vertexShaderSource: vShaderSource,
+            fragmentShaderSource: fShaderSource,
+            macros: ['RAW_TEXTURE'],
+            uniforms: ['uColor', 'uTexture'],
+            lighting: false,
+            shadow: false
+        });
+
     }
 
-    getDefines(): string[] {
+    condition(macro: string): boolean {
 
-        const defines = [];
-        if (this.texture) {
-            defines.push('RAW_TEXTURE');
+        switch (macro) {
+            case 'RAW_TEXTURE':
+                return !!this.texture;
+            default:
+                return super.condition(macro);
         }
 
-        return defines;
+    }
+
+    uniform(name: string): Float32Array | WebGLTexture {
+
+        switch (name) {
+            case 'uColor':
+                return this.getColor();
+            case 'uTexture':
+                return this.getTexture();
+            default:
+                return null;
+        }
+
     }
 
     getColor(): IVec3 {
 
         Vec3.set(this.colorValues, this.color.r / 255, this.color.g / 255, this.color.b / 255);
         return this.colorValues;
+    }
+
+    getTexture(): WebGLTexture {
+
+        if (this.texture) {
+            return this.texture.glTexture;
+        } else {
+            return null;
+        }
     }
 }
 

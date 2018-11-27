@@ -14,19 +14,7 @@ function main(
 
     loader.loadImage('https://img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png', (image) => {
 
-        console.log('load image success');
-
-        console.log(typeof image);
-
-        let texture;
-        try {
-            texture = new G3D.Texture({ image });
-        } catch (e) {
-            console.log(e);
-        }
-
-
-        console.log(33);
+        const texture = new G3D.Texture({ image });
 
         const m1 = G3D.MeshBuilder.createPlane(scene, 6, 6);
         m1.materials.default = new G3D.RawMaterial(m1);
