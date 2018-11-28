@@ -1,5 +1,5 @@
 import GL from './G3D.GL';
-import Program from './G3D.Program';
+import Shader from './G3D.Shader';
 import Framebuffer from './G3D.Framebuffer';
 import Env from './G3D.Env';
 
@@ -36,7 +36,7 @@ class Engine {
     currentProgram: any;
     currentScene: Scene;
 
-    programs: { [prop: string]: Program } = {};
+    shaders: { [prop: string]: Shader } = {};
 
     framebuffers: { [prop: string]: Framebuffer } = {};
 
@@ -93,30 +93,24 @@ class Engine {
         }
 
         // programs
-        this.programs = {
-            phong: new Program({
-                fShaderSource: fShaderMaterialPhong, vShaderSource: vShaderMaterialPhong,
-            }),
-            raw: new Program({
-                fShaderSource: fShaderMaterialRaw, vShaderSource: vShaderMaterialRaw,
-            }),
-            pbr: Env.pbrNotReady ? null :
-                new Program({
-                    fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR,
-                }),
-            gem: new Program({
-                fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem,
-            }),
+        this.shaders = {
+            // pbr: Env.pbrNotReady ? null :
+            //     new Shader({
+            //         fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR,
+            //     }),
+            // gem: new Shader({
+            //     fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem,
+            // }),
             picker: Env.framebufferNotReady ? null :
-                new Program({
+                new Shader({
                     fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
                 }),
             shadow: Env.framebufferNotReady ? null :
-                new Program({
+                new Shader({
                     fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
                 }),
             skybox: Env.framebufferNotReady ? null :
-                new Program({
+                new Shader({
                     fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
                 })
         }
@@ -140,8 +134,8 @@ class Engine {
 
     destroy() {
 
-        Object.keys(this.programs).forEach(key => {
-            this.programs[key].destructor();
+        Object.keys(this.shaders).forEach(key => {
+            this.shaders[key].destructor();
         });
 
         Object.keys(this.framebuffers).forEach(key => {
@@ -168,20 +162,15 @@ class Engine {
         gl.clear(gl.DEPTH_BUFFER_BIT);
     }
 
-    useProgram(key, defines: string[] = []) {
-
-        if (typeof key !== 'string') {
-            const program = key;
-            this.gl.useProgram(program.program);
-            this.currentProgram = program;
-        } else {
-            // this.currentProgram = { key, defines };
-            const program = this.programs[key].define(defines);
-            this.gl.useProgram(program.program);
-            this.currentProgram = program;
-        }
+    useBuiltinProgram(key: string, defines: string[] = []) {
+        this.currentProgram = this.shaders[key].program(defines);
+        this.gl.useProgram(this.currentProgram.glProgram);
     }
 
+    useProgram(program) {
+        this.currentProgram = program;
+        this.gl.useProgram(this.currentProgram.glProgram);
+    }
 
     uniform(name, value) {
 

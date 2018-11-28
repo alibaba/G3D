@@ -1,6 +1,6 @@
 # PBRMaterial
 
-PBR 材质，继承自 [Material](./Material)。
+PBR 材质。
 
 ## 构造函数
 

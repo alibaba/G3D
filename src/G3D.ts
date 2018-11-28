@@ -27,7 +27,7 @@ import LineMesh from './mesh/G3D.LineMesh';
 import Geometry from './geometry/G3D.Geometry';
 import LineGeometry from './geometry/G3D.LineGeometry';
 
-import Material from './material/G3D.Material';
+import ShaderMaterial from './material/G3D.ShaderMaterial';
 import RawMaterial from './material/G3D.RawMaterial';
 import PhongMaterial from './material/G3D.PhongMaterial';
 import PBRMaterial from './material/G3D.PBRMaterial';
@@ -73,7 +73,7 @@ export default {
     Geometry,
     LineGeometry,
 
-    Material,
+    ShaderMaterial,
     RawMaterial,
     PhongMaterial,
     PBRMaterial,

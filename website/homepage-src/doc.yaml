@@ -21,7 +21,6 @@ docs:
     MeshUtils:
       MeshBuilder: MeshBuilder.md
     Materials:
-      Material: Material.md
       RawMaterial: RawMaterial.md
       PhongMaterial: PhongMaterial.md
       PBRMaterial: PBRMaterial.md

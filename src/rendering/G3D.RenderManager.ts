@@ -2,8 +2,6 @@ import Env from '../core/G3D.Env';
 import Engine from '../core/G3D.Engine';
 import GL from '../core/G3D.GL';
 
-import PhongMaterial from '../material/G3D.PhongMaterial2';
-import PBRMaterial from '../material/G3D.PBRMaterial';
 import GemMaterial from '../material/G3D.GemMaterial';
 
 import AmbientLight from '../light/G3D.AmbientLight';
@@ -96,7 +94,6 @@ class RenderManager {
             }
 
             this.renderToScreen(groups);
-
         }
     }
 
@@ -127,121 +124,71 @@ class RenderManager {
 
             meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
 
-                this.setFaceCull(mesh.geometry.facing);
-
                 mesh.geometry.bufferViews.indices &&
                     Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
 
                         const material = mesh.materials[key];
 
-                        if (false) {
+                        engine.useProgram(
+                            material.getProgram(globalDefines)
+                        );
 
-                            // engine.useProgram(
-                            //     'phong',
-                            //     [...material.getDefines(), ...globalDefines]
-                            // );
+                        this.prepareMVPMatrix(mesh);
 
-                            // this.prepareMVPMatrix(mesh);
+                        this.prepareGeometry(mesh.geometry);
 
-                            // this.prepareLights();
+                        this.prepareMaterial(material);
 
-                            // this.prepareGeometry(mesh.geometry);
-
-                            // this.preparePhongMaterial(material);
-
-                            // this.prepareShadow();
-
-                            // this.drawMesh(mesh, key);
-
-                        } else if (material instanceof PBRMaterial) {
-
-                            engine.useProgram(
-                                'pbr',
-                                [...material.getDefines(), ...globalDefines]
-                            );
-
-                            this.prepareMVPMatrix(mesh);
-
+                        if (material.lighting) {
                             this.prepareLights();
+                        }
 
-                            this.prepareGeometry(mesh.geometry);
+                        if (material.shadow) {
+                            this.prepareShadow();
+                        }
 
-                            this.preparePBRMaterial(material);
+                        if (material.camera) {
+                            this.prepareCameraPosition();
+                        }
 
-                            this.drawMesh(mesh, key);
+                        const { passes } = material;
 
-                        } else if (material instanceof GemMaterial) {
+                        for (let i in passes) {
 
-                            engine.useProgram(
-                                'gem',
-                                [...material.getDefines(), ...globalDefines]
-                            );
-
-                            this.prepareMVPMatrix(mesh);
-
-                            this.prepareGeometry(mesh.geometry);
-
-                            this.prepareGemMaterial(material);
-
-                            // the first draw (back)
-
-                            this.setFaceCull(mesh.geometry.facing === Geometry.FACING.FRONT ? Geometry.FACING.BACK : Geometry.FACING.FRONT);
-
-                            engine.uniform('uCullBack', [true]);
-
-                            engine.disableDepthTest();
-
-                            engine.disableBlend();
-
-                            this.drawMesh(mesh, key);
-
-                            // the second draw (front)
-
-                            this.setFaceCull(mesh.geometry.facing);
-
-                            engine.uniform('uCullBack', [false]);
-
-                            engine.enableDepthTest();
-
-                            engine.enableBlend();
-
-                            GL.gl.blendFunc(GL.gl.ONE, GL.gl.ONE);
-
-                            this.drawMesh(mesh, key);
-
-                            engine.disableBlend();
-
-                        } else {
-
-                            engine.useProgram(
-                                material.program.define(
-                                    [...material.getDefines(), ...globalDefines]
-                                )
-                            );
-
-                            this.prepareMVPMatrix(mesh);
-
-                            this.prepareGeometry(mesh.geometry);
-
-
-                            this.prepareMaterial(material);
-
-                            if (material.lighting) {
-                                this.prepareLights();
+                            const { uniforms, depthTest, cullFace, blend } = passes[i];
+                            for (let j in uniforms) {
+                                const { name, value } = uniforms[j];
+                                engine.uniform(name, value);
                             }
 
-                            if (material.shadow) {
-                                this.prepareShadow();
+                            if (depthTest) {
+                                engine.enableDepthTest();
+                            } else {
+                                engine.disableDepthTest();
+                            }
+
+                            if (blend) {
+                                engine.enableBlend();
+                                // TODO: set blend func in engine
+                                GL.gl.blendFunc(GL.gl.ONE, GL.gl.ONE);
+                            } else {
+                                engine.disableBlend();
+                            }
+
+                            if (cullFace) {
+                                this.setFaceCull(mesh.geometry.facing);
+                            } else {
+                                this.setFaceCull(mesh.geometry.facing === Geometry.FACING.FRONT ? Geometry.FACING.BACK : Geometry.FACING.FRONT);
                             }
 
                             this.drawMesh(mesh, key);
                         }
+
                     })
             })
         });
 
     }
-
 
     private renderToPickerRenderBuffer(groups) {
 
@@ -261,7 +208,7 @@ class RenderManager {
                     const material = mesh.materials[key];
 
                     if (material) {
-                        engine.useProgram('picker');
+                        engine.useBuiltinProgram('picker');
 
                         this.prepareMVPMatrix(mesh);
 
@@ -302,7 +249,7 @@ class RenderManager {
 
                     if (material) {
 
-                        engine.useProgram('shadow');
+                        engine.useBuiltinProgram('shadow');
 
                         this.prepareMVPMatrix(mesh, camera);
 
@@ -316,7 +263,6 @@ class RenderManager {
     }
 
     private setFaceCull = (facing) => {
-
         Engine.instance.cullFace(
             facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : false
         );
@@ -428,79 +374,10 @@ class RenderManager {
 
     }
 
-    private prepareRawMaterial(material) {
-
-        const engine = Engine.instance;
-
-        engine.uniform('uColor', material.getColor());
-        if (material.texture) {
-            engine.uniform('uTexture', material.texture.glTexture);
-        }
-
-    }
-
-    private preparePhongMaterial(material) {
-
-        const engine = Engine.instance;
-
-        engine.uniform('uAmbientColor', material.getAmbientColor());
-        if (material.ambientTexture) {
-            engine.uniform('uAmbientTexture', material.ambientTexture.glTexture);
-        }
-
-        engine.uniform('uDiffuseColor', material.getDiffuseColor());
-        if (material.diffuseTexture) {
-            engine.uniform('uDiffuseTexture', material.diffuseTexture.glTexture);
-        }
-
-        engine.uniform('uSpecularColor', material.getSpecularColor());
-        if (material.specularTexture) {
-            engine.uniform('uSpecularTexture', material.specularTexture.glTexture);
-        }
-
-        if (material.specularEnvMapTexture) {
-            engine.uniform('uSpecularEnvMapTexture', material.specularEnvMapTexture.glTexture);
-        }
-
-        engine.uniform('uGlossiness', [material.getGlossiness()]);
-    }
-
-    private preparePBRMaterial(material) {
-
+    private prepareCameraPosition() {
         const engine = Engine.instance;
         const { activeCamera } = this.scene;
-
         engine.uniform('uCameraPosition', activeCamera.getPosition());
-
-        engine.uniform('uMaterialAlbedoColor', material.getAlbedoColor());
-
-        engine.uniform('uMaterialRoughness', [material.getRoughness()]);
-
-        engine.uniform('uMaterialMetallic', [material.getMetallic()]);
-
-        if (material.albedoTexture) {
-            engine.uniform('uMaterialAlbedoTexture', material.albedoTexture.glTexture);
-        }
-
-        if (material.metallicRoughnessTexture) {
-            engine.uniform('uMaterialMetallicRoughnessTexture', material.metallicRoughnessTexture.glTexture);
-        }
-
-        if (material.emissiveTexture) {
-            engine.uniform('uMaterialEmissiveTexture', material.emissiveTexture.glTexture);
-        }
-
-        if (material.normalTexture) {
-            engine.uniform('uMaterialNormalTexture', material.normalTexture.glTexture);
-        }
-
-        engine.uniform('uSpecularMap', material.pbrEnviroment.specular.glTexture);
-        engine.uniform('uSpecularMipLevel', [material.pbrEnviroment.specular.mipLevel]);
-        engine.uniform('uDiffuseMap', material.pbrEnviroment.diffuse.glTexture);
-        engine.uniform('uBRDFLUT', material.pbrEnviroment.brdfLUT.glTexture);
-
-        engine.uniform('uGreyness', [material.pbrEnviroment.greyness]);
-
     }
 
     private prepareGemMaterial(material) {

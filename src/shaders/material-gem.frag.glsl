@@ -8,7 +8,7 @@ varying vec3 vNormal;
 uniform samplerCube uRefractionMap;
 uniform samplerCube uEnvMap;
 
-uniform vec3 uCameraPos;
+uniform vec3 uCameraPosition;
 
 uniform bool uCullBack;
 
@@ -19,7 +19,7 @@ vec3 lighten(vec3 color, float f){
 
 vec3 frag1(){
     vec3 normal = normalize(vNormal);
-    vec3 view = normalize(uCameraPos - vPosition);
+    vec3 view = normalize(uCameraPosition - vPosition);
 
     vec3 refractVector = refract(-view, normal, 1.0/2.4);
     vec3 reflectVector = reflect(-view, normal);
@@ -39,7 +39,7 @@ vec3 frag1(){
 vec3 frag2(){
 
     vec3 normal = normalize(vNormal);
-    vec3 view = normalize(uCameraPos - vPosition);
+    vec3 view = normalize(uCameraPosition - vPosition);
 
     vec3 refractVector = refract(-view, normal, 1.0/2.4);
     vec3 reflectVector = reflect(-view, normal);

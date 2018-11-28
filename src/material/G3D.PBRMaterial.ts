@@ -1,12 +1,16 @@
-import Material from './G3D.Material';
+import ShaderMaterial from './G3D.ShaderMaterial';
+
 import { IColorRGB } from '../types/raw';
 import Texture from '../texture/G3D.Texture';
 
 import PBREnviroment from './G3D.PBREnviroment';
 import Vec3, { IVec3 } from '../matrix/G3D.Vec3';
 
+import * as vertexShaderSource from '../shaders/material-pbr.vert.glsl';
+import * as fragmentShaderSource from '../shaders/material-pbr.frag.glsl';
 
-class PBRMaterial extends Material {
+
+class PBRMaterial extends ShaderMaterial {
 
     albedoColor: IColorRGB = { r: 0, g: 0, b: 0 };
 
@@ -25,48 +29,157 @@ class PBRMaterial extends Material {
     pbrEnviroment: PBREnviroment;
 
     private albedoColorValues: IVec3 = Vec3.create();
+    private metallicValue: Float32Array = new Float32Array([0]);
+    private roughnessValue: Float32Array = new Float32Array([0]);
 
     constructor() {
-        super();
+        super({
+            name: 'G3D_SHADER',
+            vertexShaderSource,
+            fragmentShaderSource,
+            macros: [
+                'PBR_NORMAL_TEXTURE',
+                'PBR_ALBEDO_TEXTURE',
+                'PBR_METALLIC_ROUGHNESS_TEXTURE',
+                'PBR_EMISSIVE_TEXTURE',
+            ],
+            uniforms: [
+                'uMaterialAlbedoColor',
+                'uMaterialAlbedoTexture',
+                'uMaterialRoughness',
+                'uMaterialMetallic',
+                'uMaterialMetallicRoughnessTexture',
+                'uMaterialEmissiveTexture',
+                'uMaterialNormalTexture',
+                'uSpecularMap',
+                'uSpecularMipLevel',
+                'uDiffuseMap',
+                'uBRDFLUT',
+                'uGreyness',
+            ],
+            lighting: true,
+            shadow: false,
+            camera: true
+        });
     }
 
-    getDefines(): string[] {
-        const defines = [];
 
-        if (this.albedoTexture) {
-            defines.push('PBR_ALBEDO_TEXTURE');
+    condition(name: string): boolean {
+
+        switch (name) {
+            case 'PBR_NORMAL_TEXTURE':
+                return !!this.normalTexture;
+            case 'PBR_ALBEDO_TEXTURE':
+                return !!this.albedoTexture;
+            case 'PBR_METALLIC_ROUGHNESS_TEXTURE':
+                return !!this.metallicRoughnessTexture;
+            case 'PBR_EMISSIVE_TEXTURE':
+                return !!this.emissiveTexture;
+            default:
+                return super.condition(name);
         }
-
-        if (this.metallicRoughnessTexture) {
-            defines.push('PBR_METALLIC_ROUGHNESS_TEXTURE');
-        }
-
-        if (this.emissiveTexture) {
-            defines.push('PBR_EMISSIVE_TEXTURE');
-        }
-
-        if (this.normalTexture) {
-            defines.push('PBR_NORMAL_TEXTURE');
-        }
-
-        return defines;
     }
 
-    getAlbedoColor(): IVec3 {
+    uniform(name: string): Float32Array | WebGLTexture {
 
+        switch (name) {
+            case 'uMaterialAlbedoColor':
+                return this.getAlbedoColor();
+            case 'uMaterialAlbedoTexture':
+                return this.getAlbedoTexture();
+            case 'uMaterialRoughness':
+                return this.getRoughness();
+            case 'uMaterialMetallic':
+                return this.getMetallic();
+            case 'uMaterialMetallicRoughnessTexture':
+                return this.getMetallicRoughnessTexture();
+            case 'uMaterialEmissiveTexture':
+                return this.getEmissiveTexture();
+            case 'uMaterialNormalTexture':
+                return this.getNormalTexture();
+            case 'uSpecularMap':
+                return this.getSpecularMap();
+            case 'uDiffuseMap':
+                return this.getDiffuseMap();
+            case 'uBRDFLUT':
+                return this.getBRDFLUT();
+            case 'uSpecularMipLevel':
+                return this.getSpecularMipLevel();
+            case 'uGreyness':
+                return this.getGreyness();
+            default:
+                return super.uniform(name);
+        }
+    }
+
+
+    private getAlbedoColor(): IVec3 {
         Vec3.set(this.albedoColorValues, this.albedoColor.r / 255, this.albedoColor.g / 255, this.albedoColor.b / 255);
-
         return this.albedoColorValues;
     }
 
-    getMetallic(): number {
-        return this.metallic;
+
+    private getAlbedoTexture(): WebGLTexture {
+        if (this.albedoTexture) {
+            return this.albedoTexture.glTexture;
+        } else {
+            return null;
+        }
     }
 
-    getRoughness(): number {
-        return this.roughness;
+    private getMetallic(): Float32Array {
+        this.metallicValue[0] = this.metallic;
+        return this.metallicValue;
     }
 
+    private getRoughness(): Float32Array {
+        this.roughnessValue[0] = this.roughness;
+        return this.roughnessValue;
+    }
+
+    private getMetallicRoughnessTexture(): WebGLTexture {
+        if (this.metallicRoughnessTexture) {
+            return this.metallicRoughnessTexture.glTexture;
+        } else {
+            return null;
+        }
+    }
+
+    private getEmissiveTexture(): WebGLTexture {
+        if (this.emissiveTexture) {
+            return this.emissiveTexture.glTexture;
+        } else {
+            return null;
+        }
+    }
+
+    private getNormalTexture(): WebGLTexture {
+        if (this.normalTexture) {
+            return this.normalTexture.glTexture;
+        } else {
+            return null;
+        }
+    }
+
+    private getSpecularMap(): WebGLTexture {
+        return this.pbrEnviroment.specular.glTexture;
+    }
+
+    private getSpecularMipLevel(): any {
+        return [this.pbrEnviroment.specular.mipLevel];
+    }
+
+    private getDiffuseMap(): WebGLTexture {
+        return this.pbrEnviroment.diffuse.glTexture;
+    }
+
+    private getBRDFLUT(): WebGLTexture {
+        return this.pbrEnviroment.brdfLUT.glTexture;
+    }
+
+    private getGreyness(): Float32Array {
+        return new Float32Array([this.pbrEnviroment.greyness]);
+    }
 }
 
 export default PBRMaterial;

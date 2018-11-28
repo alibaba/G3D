@@ -1,6 +1,6 @@
 # RawMaterial
 
-原始材质，颜色与光源无关，继承自 [Material](./Material)。
+原始材质，颜色与光源无关。
 
 ## 构造函数
 

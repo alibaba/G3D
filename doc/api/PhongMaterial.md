@@ -1,6 +1,6 @@
 # PhongMaterial
 
-Phong material, representing phong reflection face, extends from [Material](./Material).
+Phong material, representing phong reflection face.
 
 ## Constructor
 

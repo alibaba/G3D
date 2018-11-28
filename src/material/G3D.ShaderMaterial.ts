@@ -1,3 +1,4 @@
+import Shader from '../core/G3D.Shader';
 import Program from '../core/G3D.Program';
 
 
@@ -9,19 +10,39 @@ interface IShaderMaterialConfig {
     uniforms?: string[];
     lighting?: boolean;
     shadow?: boolean;
+    camera?: boolean;
+    passes?: {
+        depthTest: boolean;
+        blend: boolean;
+        cullFace: boolean;
+        uniforms: {
+            name: string;
+            value: any;
+        }[];
+    }[];
 }
 
 
 class ShaderMaterial {
 
-    static programs = {};
-    program: Program;
+    static shaders = {};
+    private shader: Shader;
 
     macros: string[];
     uniforms: string[];
 
     lighting: boolean;
     shadow: boolean;
+    camera: boolean;
+    passes: {
+        depthTest: boolean;
+        blend: boolean;
+        cullFace: boolean;
+        uniforms: {
+            name: string;
+            value: any;
+        }[]
+    }[];
 
     constructor(config: IShaderMaterialConfig) {
 
@@ -33,25 +54,36 @@ class ShaderMaterial {
             uniforms = [],
             lighting = false,
             shadow = false,
+            camera = false,
+            passes = [{
+                depthTest: true,
+                blend: false,
+                cullFace: true,
+                uniforms: []
+            }]
         } = config;
 
-        if (!ShaderMaterial.programs[name]) {
-            ShaderMaterial.programs[name] = new Program({
+        if (!ShaderMaterial.shaders[name]) {
+            ShaderMaterial.shaders[name] = new Shader({
                 vShaderSource, fShaderSource
             });
         }
 
-        this.program = ShaderMaterial.programs[name];
+        this.shader = ShaderMaterial.shaders[name];
 
         this.macros = macros;
         this.uniforms = uniforms;
 
         this.lighting = lighting;
         this.shadow = shadow;
+        this.camera = camera;
+
+        this.passes = passes;
     }
 
-    getDefines(): string[] {
-        return this.macros.filter(macro => this.condition(macro));
+    getProgram(globalDefines: string[]): Program {
+        const localDefines = this.macros.filter(macro => this.condition(macro));
+        return this.shader.program([...localDefines, ...globalDefines]);
     }
 
     condition(macro: string): boolean {
@@ -61,7 +93,6 @@ class ShaderMaterial {
     uniform(name: string): Float32Array | WebGLTexture {
         return null;
     }
-
 }
 
 export default ShaderMaterial;
