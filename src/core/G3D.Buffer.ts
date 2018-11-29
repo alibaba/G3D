@@ -7,8 +7,8 @@ interface IBufferConfig {
 
 class Buffer {
 
-    arrayBuffer: ArrayBuffer;
-    glBuffer: IWebGLBuffer;
+    readonly arrayBuffer: ArrayBuffer;
+    readonly glBuffer: IWebGLBuffer;
 
     constructor({ data }: IBufferConfig) {
 

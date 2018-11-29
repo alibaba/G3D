@@ -2,8 +2,6 @@ import Env from '../core/G3D.Env';
 import Engine from '../core/G3D.Engine';
 import GL from '../core/G3D.GL';
 
-import GemMaterial from '../material/G3D.GemMaterial';
-
 import AmbientLight from '../light/G3D.AmbientLight';
 import PointLight from '../light/G3D.PointLight';
 import DirectionalLight from '../light/G3D.DirectionalLight';
@@ -63,6 +61,19 @@ class RenderManager {
         return groups.filter(Boolean);
     }
 
+    private getShadowLight(): DirectionalLight | PointLight {
+        const { scene: { lights } } = this;
+        for (let i = 0; i < lights.length; i++) {
+            const light = lights[i];
+            if (light instanceof DirectionalLight || light instanceof PointLight) {
+                if (light.castShadow) {
+                    return light;
+                }
+            }
+        }
+        return null;
+    }
+
     render() {
 
         const { scene } = this;
@@ -114,7 +125,7 @@ class RenderManager {
 
         const globalDefines = [];
 
-        if (scene.lights.filter(lt => lt.castShadow).length > 0) {
+        if (this.getShadowLight()) {
             globalDefines.push('CAST_SHADOW');
         }
 
@@ -194,7 +205,7 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
+        engine.clearColorBuffer({ r: 0, g: 0, b: 0 });
 
         groups.forEach(meshes => {
 
@@ -236,7 +247,7 @@ class RenderManager {
 
             const group = groups[0];
 
-            engine.clearColorBuffer({ r: 0, g: 0, b: 0, a: 1 });
+            engine.clearColorBuffer({ r: 0, g: 0, b: 0 });
             engine.clearDepthBuffer();
 
             const camera = shadowLight.getShadowCamera();
@@ -264,7 +275,7 @@ class RenderManager {
 
     private setFaceCull = (facing) => {
         Engine.instance.cullFace(
-            facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : false
+            facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : null
         );
     }
 
@@ -380,41 +391,21 @@ class RenderManager {
         engine.uniform('uCameraPosition', activeCamera.getPosition());
     }
 
-    private prepareGemMaterial(material) {
-
-        const engine = Engine.instance;
-
-        const { activeCamera } = this.scene;
-
-        engine.uniform('uCameraPos', activeCamera.getPosition());
-
-        engine.uniform('uRefractionMap', material.refractionCubeMap.glTexture);
-
-        engine.uniform('uEnvMap', material.envCubeMap.glTexture);
-
-    }
-
     private prepareShadow() {
 
         const engine = Engine.instance;
 
-        const { scene } = this;
+        const shadowLight = this.getShadowLight();
 
-        const shadowLights = scene.lights.filter(lt => lt.castShadow);
-
-        if (shadowLights.length > 0) {
-
-            const shadowLight = shadowLights[0];
+        if (shadowLight) {
 
             const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
-            engine.uniform('uShadowMapTexture', shadowMapTexture);
 
+            engine.uniform('uShadowMapTexture', shadowMapTexture);
             const shadowCamera = shadowLight.getShadowCamera();
             engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
             engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
-
         }
-
     }
 
     private drawMesh = (mesh, key) => {
@@ -440,7 +431,7 @@ class RenderManager {
         const skybox = scene.skybox;
         const camera = scene.activeCamera;
 
-        engine.useProgram('skybox');
+        engine.useBuiltinProgram('skybox');
 
         this.setFaceCull(skybox.geometry.facing);
 

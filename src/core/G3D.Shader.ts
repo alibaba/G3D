@@ -8,13 +8,13 @@ interface IShader {
 
 class Shader {
 
-    fShaderSource: string;
-    vShaderSource: string;
+    private fShaderSource: string;
+    private vShaderSource: string;
 
-    extensions: string[] = [];
-    precisions: string[] = [];
+    private extensions: string[] = [];
+    private precisions: string[] = [];
 
-    definedPrograms: { [prop: string]: Program } = {};
+    programs: { [prop: string]: Program } = {};
 
     constructor({ fShaderSource, vShaderSource }: IShader) {
 
@@ -36,22 +36,22 @@ class Shader {
 
         const definesKey = defines.join(';');
 
-        if (!this.definedPrograms[definesKey]) {
+        if (!this.programs[definesKey]) {
 
             const definesString = [...this.precisions, ...this.extensions, ...defines].map(name => `#define ${name} 1`).join('\n') + '\n';
 
-            this.definedPrograms[definesKey] = new Program({
+            this.programs[definesKey] = new Program({
                 vShaderSource: definesString + this.vShaderSource,
                 fShaderSource: definesString + this.fShaderSource
             });
         }
 
-        return this.definedPrograms[definesKey];
+        return this.programs[definesKey];
     }
 
     destructor(): void {
-        for (let key in this.definedPrograms) {
-            this.definedPrograms[key].destructor();
+        for (let key in this.programs) {
+            this.programs[key].destructor();
         }
     }
 }

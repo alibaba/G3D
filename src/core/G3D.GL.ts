@@ -27,8 +27,10 @@ const GL: IGL = {
 
     gl: null,
 
-    extensions: null,
-    precisions: null,
+    extensions: {},
+    precisions: {
+        float: ''
+    },
 
     buffers: [],
     textures: [],

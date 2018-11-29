@@ -3,6 +3,7 @@ import { IMat4 } from '../matrix/G3D.Mat4';
 import Scene from '../scene/G3D.Scene';
 
 import { deg2rad } from '../utils/math';
+import GL from '../core/G3D.GL';
 
 
 
@@ -16,7 +17,7 @@ class RotateOrthographicCamera extends BaseOrthographicCamera {
 
         super();
 
-        const { width, height } = scene.engine;
+        const { width, height } = GL;
         this.viewRatio = width / height;
 
         scene.activeCamera = this;

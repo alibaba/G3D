@@ -1,5 +1,10 @@
 import GL from './G3D.GL';
-import { IWebGlFramebuffer, IWebGLRenderBuffer } from '../types/webgl';
+import { IWebGlFramebuffer, IWebGLRenderBuffer, IWebGLTexture } from '../types/webgl';
+
+interface IFramebufferConfig {
+    width: number,
+    height: number
+}
 
 class Framebuffer {
 
@@ -7,12 +12,10 @@ class Framebuffer {
     height: number;
 
     framebuffer: IWebGlFramebuffer;
-
-    colorTarget: IWebGLRenderBuffer;
-
+    colorTarget: IWebGLTexture;
     depthTarget: IWebGLRenderBuffer;
 
-    constructor({ width, height }: { width: number, height: number }) {
+    constructor({ width, height }: IFramebufferConfig) {
 
         const { gl } = GL;
 

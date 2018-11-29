@@ -1,19 +1,28 @@
+import { IColorRGB } from "../types/raw";
+import Scene from "../scene/G3D.Scene";
+
+
 class BaseLight {
 
-    scene = null;
-    color = { r: 255, g: 255, b: 255 };
-    intensity = 1;
+    scene: Scene;
+    color: IColorRGB = { r: 255, g: 255, b: 255 };
+    intensity: number = 1;
 
-    constructor(scene) {
+    private colorValues: number[] = [255, 255, 255];
+
+    constructor(scene: Scene) {
         this.scene = scene;
         scene.lights.push(this);
     }
 
-    getColor() {
-        return [this.color.r, this.color.g, this.color.b];
+    getColor(): number[] {
+        this.colorValues[0] = this.color.r;
+        this.colorValues[1] = this.color.g;
+        this.colorValues[2] = this.color.b;
+        return this.colorValues;
     }
 
-    getIntensity() {
+    getIntensity(): number {
         return this.intensity;
     }
 }

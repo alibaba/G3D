@@ -24,19 +24,20 @@ class ElementBufferView {
         this.buffer = buffer;
 
         if (typeof mode === 'string') {
-            mode = gl[mode] as number;
+            this.mode = gl[mode];
+        } else {
+            this.mode = mode;
         }
 
         if (typeof type === 'string') {
-            type = gl[type] as number;
+            this.type = gl[type];
+        } else {
+            this.type = type;
         }
 
-        this.mode = mode;
         this.count = count;
-        this.type = type;
         this.byteOffset = byteOffset;
     }
-
 }
 
 export default ElementBufferView;

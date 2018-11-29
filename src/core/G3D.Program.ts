@@ -1,6 +1,6 @@
 import GL from './G3D.GL';
 import Buffer from './G3D.Buffer';
-import { IWebGLRenderingContext } from '../types/webgl';
+import { IWebGLRenderingContext, IWebGLBuffer, IWebGLProgram, IWebGLActiveInfo } from '../types/webgl';
 
 interface IProgram {
     fShaderSource: string;
@@ -9,14 +9,28 @@ interface IProgram {
 
 class Program {
 
-    glProgram;
-    uniforms;
-    attributes;
+    glProgram: IWebGLProgram;
 
-    textureCount: number = 0;
+    private uniforms: {
+        [prop: string]: {
+            type: string,
+            position: number,
+            info: IWebGLActiveInfo,
+            unit: number
+        }
+    };
+    private attributes: {
+        [prop: string]: {
+            type: string,
+            position: number,
+            info: IWebGLActiveInfo
+        }
+    };
 
-    fShaderSource: string;
-    vShaderSource: string;
+    private textureCount: number = 0;
+
+    private fShaderSource: string;
+    private vShaderSource: string;
 
     constructor({ fShaderSource, vShaderSource }: IProgram) {
 
@@ -33,7 +47,7 @@ class Program {
         gl.deleteProgram(this.glProgram);
     }
 
-    uniform(name: string, value): void {
+    uniform(name: string, value: WebGLTexture | Float32Array | Uint32Array | Uint16Array): void {
 
         if (this.uniforms[name]) {
 
@@ -46,7 +60,7 @@ class Program {
                 case 'VEC':
                     {
                         const uniformMethodName = ['uniform', vecSize, baseType === 'FLOAT' ? 'f' : 'i', 'v'].join('');
-                        gl[uniformMethodName](position, [...value]);
+                        gl[uniformMethodName](position, value);
                         break;
                     }
                 case 'MAT':
@@ -79,7 +93,7 @@ class Program {
         }
     }
 
-    attribute(name: string, buffer: Buffer, stride: number, offset: number): void {
+    attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
         if (this.attributes[name]) {
             const { gl } = GL;
             const { type, info, position } = this.attributes[name];
@@ -182,7 +196,7 @@ class Program {
         this.uniforms = uniforms;
     }
 
-    private parseType(type) {
+    private parseType(type: string) {
         const baseType = type.split('_')[0];
         const vecType = type.split('_').length > 1 ? type.split('_')[1] : 'VEC1';
         const baseVecType = vecType.substr(0, 3);

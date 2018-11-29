@@ -8,8 +8,8 @@ interface IElementBufferConfig {
 
 class ElementBuffer {
 
-    arrayBuffer: ArrayBuffer;
-    glBuffer: IWebGLBuffer;
+    readonly arrayBuffer: ArrayBuffer;
+    readonly glBuffer: IWebGLBuffer;
 
     constructor({ data }: IElementBufferConfig) {
 
@@ -30,7 +30,6 @@ class ElementBuffer {
 
         // hook on GL
         buffers.push(this);
-
     }
 
     destructor(): void {

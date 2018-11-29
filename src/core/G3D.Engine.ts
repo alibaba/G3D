@@ -1,19 +1,8 @@
 import GL from './G3D.GL';
 import Shader from './G3D.Shader';
 import Framebuffer from './G3D.Framebuffer';
-import Env from './G3D.Env';
-
-import * as fShaderMaterialPhong from '../shaders/material-phong.frag.glsl';
-import * as vShaderMaterialPhong from '../shaders/material-phong.vert.glsl';
-
-import * as fShaderMaterialRaw from '../shaders/material-raw.frag.glsl';
-import * as vShaderMaterialRaw from '../shaders/material-raw.vert.glsl';
-
-import * as fShaderMaterialPBR from '../shaders/material-pbr.frag.glsl';
-import * as vShaderMaterialPBR from '../shaders/material-pbr.vert.glsl';
-
-import * as fShaderMaterialGem from '../shaders/material-gem.frag.glsl';
-import * as vShaderMaterialGem from '../shaders/material-gem.vert.glsl';
+import { ICanvas, IWebGLEnum, IWebGLTexture, IWebGLBuffer } from '../types/webgl';
+import Scene from '../scene/G3D.Scene';
 
 import * as fShaderPicker from '../shaders/picker.frag.glsl';
 import * as vShaderPicker from '../shaders/picker.vert.glsl';
@@ -24,51 +13,40 @@ import * as vShaderShadow from '../shaders/shadow.vert.glsl';
 import * as fShaderSkybox from '../shaders/skybox.frag.glsl';
 import * as vShaderSkybox from '../shaders/skybox.vert.glsl';
 
-import { ICanvas, IWebGLRenderingContext } from '../types/webgl';
-import Scene from '../scene/G3D.Scene';
-
+import Program from './G3D.Program';
+import { IColorRGB } from '../types/raw';
 
 class Engine {
 
-    width: number = 0;
-    height: number = 0;
-
-    currentProgram: any;
+    currentProgram: Program;
     currentScene: Scene;
 
-    shaders: { [prop: string]: Shader } = {};
+    private shaders: { [prop: string]: Shader } = {};
+    private framebuffers: { [prop: string]: Framebuffer } = {};
 
-    framebuffers: { [prop: string]: Framebuffer } = {};
-
-    extensions: any = {};
-
-    precisions: any = {};
-
-    gl: IWebGLRenderingContext;
-
-    static instance = null;
+    // TODO: remove it
+    static instance: Engine = null;
 
     constructor(canvas: ICanvas) {
 
-        // TODO : remove this.gl and Engine.instance
         if (Engine.instance) {
             throw new Error('Only 1 Engine instance is allowed.');
         }
         Engine.instance = this;
 
-        const gl = GL.gl = canvas.getContext('webgl', {
+        GL.gl = canvas.getContext('webgl', {
             antialias: true,
             preserveDrawingBuffer: true
         });
 
-        this.gl = gl;
+        const { gl } = GL;
 
-        GL.width = this.width = canvas.width as number;
-        GL.height = this.height = canvas.height as number;
+        GL.width = canvas.width as number;
+        GL.height = canvas.height as number;
 
         // extensions
         {
-            const extensions = GL.extensions = this.extensions;
+            const { extensions } = GL;
 
             extensions.TEX_LOD = gl.getExtension('EXT_shader_texture_lod');
 
@@ -84,55 +62,46 @@ class Engine {
 
         // precisions
         {
+            const { precisions } = GL;
+
             const high = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision !== 0;
             const medium = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT).precision !== 0;
 
-            GL.precisions = {
-                float: high ? 'mediump' : medium ? 'mediump' : 'lowp'
-            };
+            precisions.float = high ? 'mediump' : medium ? 'mediump' : 'lowp';
         }
 
-        // programs
+        // shaders
         this.shaders = {
-            // pbr: Env.pbrNotReady ? null :
-            //     new Shader({
-            //         fShaderSource: fShaderMaterialPBR, vShaderSource: vShaderMaterialPBR,
-            //     }),
-            // gem: new Shader({
-            //     fShaderSource: fShaderMaterialGem, vShaderSource: vShaderMaterialGem,
-            // }),
-            picker: Env.framebufferNotReady ? null :
-                new Shader({
-                    fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
-                }),
-            shadow: Env.framebufferNotReady ? null :
-                new Shader({
-                    fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
-                }),
-            skybox: Env.framebufferNotReady ? null :
-                new Shader({
-                    fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
-                })
+            picker: new Shader({
+                fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
+            }),
+            shadow: new Shader({
+                fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
+            }),
+            skybox: new Shader({
+                fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
+            })
         }
 
         // framebuffers
         this.framebuffers = {
-            picker: Env.framebufferNotReady ? null :
-                new Framebuffer({ width: this.width, height: this.height }),
-            shadow: Env.framebufferNotReady ? null :
-                new Framebuffer({ width: 1024, height: 1024 })
+            picker: new Framebuffer({
+                width: GL.width, height: GL.height
+            }),
+            shadow: new Framebuffer({
+                width: 1024, height: 1024
+            })
         }
 
         // initialize
         {
-            gl.viewport(0, 0, this.width, this.height);
-            gl.enable(gl.DEPTH_TEST);
+            gl.viewport(0, 0, GL.width, GL.height);
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         }
 
     }
 
-    destroy() {
+    destroy(): void {
 
         Object.keys(this.shaders).forEach(key => {
             this.shaders[key].destructor();
@@ -151,66 +120,58 @@ class Engine {
         cubeTextures.forEach(cubeTexture => cubeTexture.destructor());
     }
 
-    clearColorBuffer(color) {
-        const gl = this.gl;
-        gl.clearColor(color.r / 255, color.g / 255, color.b / 255, color.a !== undefined ? color.a / 255 : 1.0);
+    clearColorBuffer(color: IColorRGB): void {
+        const { gl } = GL;
+        gl.clearColor(color.r / 255, color.g / 255, color.b / 255, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    clearDepthBuffer() {
-        const gl = this.gl;
+    clearDepthBuffer(): void {
+        const { gl } = GL;
         gl.clear(gl.DEPTH_BUFFER_BIT);
     }
 
-    useBuiltinProgram(key: string, defines: string[] = []) {
+    useBuiltinProgram(key: string, defines: string[] = []): void {
         this.currentProgram = this.shaders[key].program(defines);
-        this.gl.useProgram(this.currentProgram.glProgram);
+        GL.gl.useProgram(this.currentProgram.glProgram);
     }
 
-    useProgram(program) {
+    useProgram(program: Program): void {
         this.currentProgram = program;
-        this.gl.useProgram(this.currentProgram.glProgram);
+        GL.gl.useProgram(this.currentProgram.glProgram);
     }
 
-    uniform(name, value) {
-
-        // const { key, defines } = this.currentProgram;
-        // const program = this.programs[key].define(defines);
+    uniform(name: string, value: Float32Array | IWebGLTexture): void {
         this.currentProgram.uniform(name, value);
     }
 
-    attribute(name, buffer, stride, offset) {
-
-        // const { key, defines } = this.currentProgram;
-        // const program = this.programs[key].define(defines);
+    attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
         this.currentProgram.attribute(name, buffer, stride, offset);
     }
 
-    enableDepthTest() {
-        const gl = this.gl;
+    enableDepthTest(): void {
+        const { gl } = GL;
         gl.depthMask(true);
     }
 
-    disableDepthTest() {
-        const gl = this.gl;
+    disableDepthTest(): void {
+        const { gl } = GL;
         gl.depthMask(false);
     }
 
-    enableBlend() {
-        const gl = this.gl;
+    enableBlend(): void {
+        const { gl } = GL;
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     }
 
-    disableBlend() {
-        const gl = this.gl;
+    disableBlend(): void {
+        const { gl } = GL;
         gl.disable(gl.BLEND);
     }
 
-    cullFace(culled) {
-
-        const gl = this.gl;
-
+    cullFace(culled: string): void {
+        const { gl } = GL;
         if (!culled) {
             gl.disable(gl.CULL_FACE);
         } else {
@@ -221,48 +182,40 @@ class Engine {
         }
     }
 
-    bindFramebuffer(key) {
-        const gl = this.gl;
+    bindFramebuffer(key: string): void {
+        const { gl } = GL;
         const framebuffer = this.framebuffers[key];
         if (framebuffer) {
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
             gl.viewport(0, 0, framebuffer.width, framebuffer.height);
         } else {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, this.width, this.height);
+            gl.viewport(0, 0, GL.width, GL.height);
         }
     }
 
-    getFramebuffer(key) {
+    getFramebuffer(key: string): Framebuffer {
         const framebuffer = this.framebuffers[key];
         return framebuffer;
     }
 
-    lineWidth(value: number) {
-        const gl = this.gl;
+    lineWidth(value: number): void {
+        const { gl } = GL;
         gl.lineWidth(value);
     }
 
-    elements(buffer) {
-        const gl = this.gl;
+    elements(buffer: IWebGLBuffer): void {
+        const { gl } = GL;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     }
 
-    draw(mode, count, type, offset) {
-        const gl = this.gl;
-        if (typeof mode === 'string') {
-            mode = gl[mode];
-        }
-
-        if (typeof type === 'string') {
-            type = gl[type];
-        }
-
+    draw(mode: IWebGLEnum, count: number, type: IWebGLEnum, offset: number): void {
+        const { gl } = GL;
         gl.drawElements(mode, count, type, offset);
     }
 
-    readFramebufferPixel(key, x, y) {
-        const gl = this.gl;
+    readFramebufferPixel(key: string, x: number, y: number): Uint8Array {
+        const { gl } = GL;
 
         if (this.framebuffers[key]) {
             this.bindFramebuffer(key);
