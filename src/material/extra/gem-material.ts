@@ -1,7 +1,5 @@
 import ShaderMaterial from "../shader-material";
 
-import { IWebGLTexture } from "../../types/webgl";
-
 import * as fragmentShaderSource from "../../shaders/extra/material-gem.frag.glsl";
 import * as vertexShaderSource from "../../shaders/extra/material-gem.vert.glsl";
 
@@ -50,7 +48,7 @@ class GemMaterial extends ShaderMaterial {
         this.envCubeMap = env;
     }
 
-    public uniform(name: string): Float32Array | IWebGLTexture {
+    public uniform(name: string): Float32Array | WebGLTexture {
         switch (name) {
             case "uRefractionMap":
                 return this.getRefractionMap();
@@ -61,11 +59,11 @@ class GemMaterial extends ShaderMaterial {
         }
     }
 
-    private getRefractionMap(): IWebGLTexture {
+    private getRefractionMap(): WebGLTexture {
         return this.refractionCubeMap.glTexture;
     }
 
-    private getEnvMap(): IWebGLTexture {
+    private getEnvMap(): WebGLTexture {
         return this.envCubeMap.glTexture;
     }
 

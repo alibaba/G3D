@@ -1,6 +1,5 @@
 import CubeTexture from "../texture/cube-texture";
 import Texture from "../texture/texture";
-import { IWebGLRenderingContext } from "../types/webgl";
 import Buffer from "../buffer/buffer";
 
 interface IGL {
@@ -8,7 +7,7 @@ interface IGL {
     width: number;
     height: number;
 
-    gl: IWebGLRenderingContext;
+    gl: WebGLRenderingContext;
 
     extensions: { [prop: string]: any };
     precisions: { float: string };

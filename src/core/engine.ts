@@ -1,5 +1,4 @@
 import Scene from "../scene/scene";
-import { ICanvas, IWebGLBuffer, IWebGLEnum, IWebGLTexture } from "../types/webgl";
 import Framebuffer from "./framebuffer";
 import GL from "./gl";
 import Shader from "./shader";
@@ -27,7 +26,7 @@ class Engine {
     private shaders: { [prop: string]: Shader } = {};
     private framebuffers: { [prop: string]: Framebuffer } = {};
 
-    constructor(canvas: ICanvas) {
+    constructor(canvas: HTMLCanvasElement) {
 
         if (Engine.instance) {
             throw new Error("Only 1 Engine instance is allowed.");
@@ -98,7 +97,7 @@ class Engine {
         {
             gl.viewport(0, 0, GL.width, GL.height);
             gl.enable(gl.DEPTH_TEST);
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
         }
 
     }
@@ -143,11 +142,11 @@ class Engine {
         GL.gl.useProgram(this.currentProgram.glProgram);
     }
 
-    public uniform(name: string, value: Float32Array | IWebGLTexture): void {
+    public uniform(name: string, value: Float32Array | WebGLTexture): void {
         this.currentProgram.uniform(name, value);
     }
 
-    public attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
+    public attribute(name: string, buffer: WebGLBuffer, stride: number, offset: number): void {
         this.currentProgram.attribute(name, buffer, stride, offset);
     }
 
@@ -206,12 +205,12 @@ class Engine {
         gl.lineWidth(value);
     }
 
-    public elements(buffer: IWebGLBuffer): void {
+    public elements(buffer: WebGLBuffer): void {
         const { gl } = GL;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     }
 
-    public draw(mode: IWebGLEnum, count: number, type: IWebGLEnum, offset: number): void {
+    public draw(mode: number, count: number, type: number, offset: number): void {
         const { gl } = GL;
         gl.drawElements(mode, count, type, offset);
     }

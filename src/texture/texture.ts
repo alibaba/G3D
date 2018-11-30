@@ -1,10 +1,9 @@
 import GL from "../core/gl";
-import { IWebGLTexture } from "../types/webgl";
 
 const isPowerOf2 = (n) => Math.log(n) / Math.log(2) % 1 === 0;
 
 interface ITextureConfig {
-    image: any;
+    image: HTMLImageElement;
     width?: number;
     height?: number;
     sRGB?: boolean;
@@ -14,7 +13,7 @@ interface ITextureConfig {
 
 class Texture {
 
-    public glTexture: IWebGLTexture;
+    public glTexture: WebGLTexture;
 
     constructor({
         image, width = image.width, height = image.height, sRGB = false,
@@ -46,7 +45,7 @@ class Texture {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
         // store
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
 
         // fill data
         if (image instanceof Uint8Array) {

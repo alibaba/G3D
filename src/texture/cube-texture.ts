@@ -1,6 +1,5 @@
 import Env from "../core/env";
 import GL from "../core/gl";
-import { IWebGLTexture } from "../types/webgl";
 
 interface ICubeTextureConfig {
     images: any;
@@ -12,7 +11,7 @@ interface ICubeTextureConfig {
 
 class CubeTexture {
 
-    public glTexture: IWebGLTexture = null;
+    public glTexture: WebGLTexture;
 
     public mipLevel: number = 0;
 
@@ -44,7 +43,7 @@ class CubeTexture {
 
         const { extensions } = GL;
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
 
         const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
 

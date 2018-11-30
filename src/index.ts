@@ -2,6 +2,7 @@ import Engine from "./core/engine";
 import Env from "./core/env";
 import Node from "./core/node";
 import Scene from "./scene/scene";
+import GL from "./core/gl";
 
 import Buffer from "./buffer/buffer";
 import BufferView from "./buffer/buffer-view";
@@ -43,6 +44,7 @@ import Vec4 from "./matrix/vec4";
 const G3D = {
 
     Engine,
+    GL,
     Env,
 
     Scene,

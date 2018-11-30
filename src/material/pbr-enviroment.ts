@@ -4,9 +4,7 @@ import Texture from "../texture/texture";
 interface IPBREnviromentConfig {
     diffuse: any;
     specular: any;
-    brdfLUT: {
-        [propName: string]: any,
-    };
+    brdfLUT: HTMLImageElement;
 }
 
 class PBREnviroment {

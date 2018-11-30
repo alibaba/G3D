@@ -1,4 +1,3 @@
-import { IWebGLActiveInfo, IWebGLBuffer, IWebGLProgram, IWebGLRenderingContext } from "../types/webgl";
 import Buffer from "../buffer/buffer";
 import GL from "./gl";
 
@@ -9,13 +8,13 @@ interface IProgram {
 
 class Program {
 
-    public glProgram: IWebGLProgram;
+    public glProgram: WebGLProgram;
 
     private uniforms: {
         [prop: string]: {
             type: string,
             position: number,
-            info: IWebGLActiveInfo,
+            info: WebGLActiveInfo,
             unit: number,
         },
     };
@@ -23,7 +22,7 @@ class Program {
         [prop: string]: {
             type: string,
             position: number,
-            info: IWebGLActiveInfo,
+            info: WebGLActiveInfo,
         },
     };
 
@@ -91,7 +90,7 @@ class Program {
         }
     }
 
-    public attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
+    public attribute(name: string, buffer: WebGLBuffer, stride: number, offset: number): void {
         if (this.attributes[name]) {
             const { gl } = GL;
             const { type, info, position } = this.attributes[name];

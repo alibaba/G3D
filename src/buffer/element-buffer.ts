@@ -1,4 +1,4 @@
-import { IWebGLBuffer } from "../types/webgl";
+
 import GL from "../core/gl";
 
 interface IElementBufferConfig {
@@ -8,7 +8,7 @@ interface IElementBufferConfig {
 class ElementBuffer {
 
     public readonly arrayBuffer: ArrayBuffer;
-    public readonly glBuffer: IWebGLBuffer;
+    public readonly glBuffer: WebGLBuffer;
 
     constructor({ data }: IElementBufferConfig) {
 

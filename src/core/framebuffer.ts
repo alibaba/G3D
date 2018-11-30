@@ -1,4 +1,3 @@
-import { IWebGlFramebuffer, IWebGLRenderBuffer, IWebGLTexture } from "../types/webgl";
 import GL from "./gl";
 
 interface IFramebufferConfig {
@@ -11,9 +10,9 @@ class Framebuffer {
     public width: number;
     public height: number;
 
-    public framebuffer: IWebGlFramebuffer;
-    public colorTarget: IWebGLTexture;
-    public depthTarget: IWebGLRenderBuffer;
+    public framebuffer: WebGLFramebuffer;
+    public colorTarget: WebGLTexture;
+    public depthTarget: WebGLRenderbuffer;
 
     constructor({ width, height }: IFramebufferConfig) {
 

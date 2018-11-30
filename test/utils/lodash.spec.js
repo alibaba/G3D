@@ -1,10 +1,10 @@
-import expect from 'expect';
+import expect from '../_helpers/expect';
 
 import { findIndex, find } from '../../src/utils/lodash';
 
-describe('lodash', function () {
+describe('utils/lodash', function () {
 
-    it('findIndex', function () {
+    it('findIndex should work', function () {
 
         expect(
             findIndex([{ id: 1, foo: 'foo' }, { id: 2, bar: 'bar' }], { id: 1 })
@@ -20,7 +20,7 @@ describe('lodash', function () {
 
     })
 
-    it('find', function(){
+    it('find should work', function(){
 
         expect(
             find([{ id: 1, foo: 'foo' }, { id: 2, bar: 'bar' }], { id: 1 })
