@@ -97,6 +97,7 @@ class Engine {
         // initialize
         {
             gl.viewport(0, 0, GL.width, GL.height);
+            gl.enable(gl.DEPTH_TEST);
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         }
 
@@ -150,12 +151,12 @@ class Engine {
         this.currentProgram.attribute(name, buffer, stride, offset);
     }
 
-    public enableDepthTest(): void {
+    public enableDepthMask(): void {
         const { gl } = GL;
         gl.depthMask(true);
     }
 
-    public disableDepthTest(): void {
+    public disableDepthMask(): void {
         const { gl } = GL;
         gl.depthMask(false);
     }

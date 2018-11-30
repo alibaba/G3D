@@ -1,6 +1,6 @@
 {
   "name": "g3d",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "webgl render engine compatible with both browser and gcanvas",
   "main": "dist/g3d.min.js",
   "repository": {
@@ -21,10 +21,11 @@
   },
   "scripts": {
     "new": "node ./devtools/index.js new",
+    "build": "node ./devtools/index.js build",
     "dev": "node ./devtools/index.js dev",
     "test": "node ./devtools/index.js test",
     "website": "node ./devtools/website.js",
-    "prepublishOnly": "node ./devtools/index.js build",
+    "prepublishOnly": "npm run build",
     "format": "node ./devtools/format-demo.js"
   },
   "keywords": [],
