@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import { findIndex, find } from '../src/utils/lodash';
+import { findIndex, find } from '../../src/utils/lodash';
 
 describe('lodash', function () {
 

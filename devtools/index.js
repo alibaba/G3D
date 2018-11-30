@@ -14,6 +14,7 @@ const tasks = dalaran.libraryTasks({
         ]
     }],
     lint: true,
+    lintrcDir: path.join(__dirname, './lint-config/'),
     devCors: true,
     testEntryPattern: 'test/**/*.spec.js',
     liveReload: true,
