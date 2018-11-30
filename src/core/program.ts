@@ -1,5 +1,5 @@
 import { IWebGLActiveInfo, IWebGLBuffer, IWebGLProgram, IWebGLRenderingContext } from "../types/webgl";
-import Buffer from "./buffer";
+import Buffer from "../buffer/buffer";
 import GL from "./gl";
 
 interface IProgram {

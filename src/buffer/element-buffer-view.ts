@@ -1,5 +1,5 @@
 import ElementBuffer from "./element-buffer";
-import GL from "./gl";
+import GL from "../core/gl";
 
 interface IElementBufferViewConfig {
     buffer: ElementBuffer;

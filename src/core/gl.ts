@@ -1,7 +1,7 @@
 import CubeTexture from "../texture/cube-texture";
 import Texture from "../texture/texture";
 import { IWebGLRenderingContext } from "../types/webgl";
-import Buffer from "./buffer";
+import Buffer from "../buffer/buffer";
 
 interface IGL {
 

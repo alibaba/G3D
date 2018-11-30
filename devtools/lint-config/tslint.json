@@ -2,6 +2,7 @@
     "extends": "tslint:recommended",
     "rules": {
         "object-literal-sort-keys": false,
+        "ordered-imports": false,
         "one-variable-per-declaration": false,
         "forin": false,
         "prefer-for-of": false,

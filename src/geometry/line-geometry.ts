@@ -1,4 +1,4 @@
-import BufferView from "../core/buffer-view";
+import BufferView from "../buffer/buffer-view";
 import BaseGeometry from "./base-geometry";
 
 interface ILineGeometryConfig {

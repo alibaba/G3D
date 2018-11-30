@@ -3,10 +3,10 @@ import Env from "./core/env";
 import Node from "./core/node";
 import Scene from "./scene/scene";
 
-import Buffer from "./core/buffer";
-import BufferView from "./core/buffer-view";
-import ElementBuffer from "./core/element-buffer";
-import ElementBufferView from "./core/element-buffer-view";
+import Buffer from "./buffer/buffer";
+import BufferView from "./buffer/buffer-view";
+import ElementBuffer from "./buffer/element-buffer";
+import ElementBufferView from "./buffer/element-buffer-view";
 import CubeTexture from "./texture/cube-texture";
 import Texture from "./texture/texture";
 
@@ -26,7 +26,7 @@ import Mesh from "./mesh/mesh";
 import Geometry from "./geometry/geometry";
 import LineGeometry from "./geometry/line-geometry";
 
-import GemMaterial from "./material/gem-material";
+import GemMaterial from "./material/extra/gem-material";
 import PBREnviroment from "./material/pbr-enviroment";
 import PBRMaterial from "./material/pbr-material";
 import PhongMaterial from "./material/phong-material";

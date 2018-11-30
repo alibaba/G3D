@@ -1,7 +1,7 @@
-import Buffer from "../core/buffer";
-import BufferView from "../core/buffer-view";
-import ElementBuffer from "../core/element-buffer";
-import ElementBufferView from "../core/element-buffer-view";
+import Buffer from "../buffer/buffer";
+import BufferView from "../buffer/buffer-view";
+import ElementBuffer from "../buffer/element-buffer";
+import ElementBufferView from "../buffer/element-buffer-view";
 import GL from "../core/gl";
 
 interface IGeometryBufferViews {

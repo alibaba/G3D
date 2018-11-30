@@ -1,6 +1,5 @@
-import Buffer from "../core/buffer";
-import BufferView from "../core/buffer-view";
-import ElementBufferView from "../core/element-buffer-view";
+import BufferView from "../buffer/buffer-view";
+import ElementBufferView from "../buffer/element-buffer-view";
 import BaseGeometry from "./base-geometry";
 
 interface IGeometryConfig {

@@ -1,27 +1,27 @@
 import { IWebGLBuffer } from "../types/webgl";
-import GL from "./gl";
+import GL from "../core/gl";
 
-interface IElementBufferConfig {
-    data: Uint32Array | Uint16Array | ArrayBuffer;
+interface IBufferConfig {
+    data: Float32Array | ArrayBuffer;
 }
 
-class ElementBuffer {
+class Buffer {
 
     public readonly arrayBuffer: ArrayBuffer;
     public readonly glBuffer: IWebGLBuffer;
 
-    constructor({ data }: IElementBufferConfig) {
+    constructor({ data }: IBufferConfig) {
 
         const { gl, buffers } = GL;
 
         // create this.glBuffer
         this.glBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.glBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
         // create this.arrayBuffer
-        if (data instanceof Uint32Array || data instanceof Uint16Array) {
+        if (data instanceof Float32Array) {
             this.arrayBuffer = data.buffer;
         } else if (data instanceof ArrayBuffer) {
             this.arrayBuffer = data;
@@ -32,11 +32,9 @@ class ElementBuffer {
     }
 
     public destructor(): void {
-
         const { gl } = GL;
         gl.deleteBuffer(this.glBuffer);
     }
-
 }
 
-export default ElementBuffer;
+export default Buffer;

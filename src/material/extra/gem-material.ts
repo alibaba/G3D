@@ -1,9 +1,9 @@
-import ShaderMaterial from "./shader-material";
+import ShaderMaterial from "../shader-material";
 
-import { IWebGLTexture } from "../types/webgl";
+import { IWebGLTexture } from "../../types/webgl";
 
-import * as fragmentShaderSource from "../shaders/material-gem.frag.glsl";
-import * as vertexShaderSource from "../shaders/material-gem.vert.glsl";
+import * as fragmentShaderSource from "../../shaders/extra/material-gem.frag.glsl";
+import * as vertexShaderSource from "../../shaders/extra/material-gem.vert.glsl";
 
 class GemMaterial extends ShaderMaterial {
 
