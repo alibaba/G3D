@@ -48,13 +48,13 @@ class RenderManager {
 
             const groups = this.groupMeshLayers();
 
-            // engine.bindFramebuffer("picker");
-            // this.renderToPickerRenderBuffer(groups);
-            // engine.bindFramebuffer(null);
+            engine.bindFramebuffer("picker");
+            this.renderToPickerRenderBuffer(groups);
+            engine.bindFramebuffer(null);
 
-            // engine.bindFramebuffer("shadow");
-            // this.renderToShadowRenderBuffer(groups);
-            // engine.bindFramebuffer(null);
+            engine.bindFramebuffer("shadow");
+            this.renderToShadowRenderBuffer(groups);
+            engine.bindFramebuffer(null);
 
             this.renderToScreen(groups);
         }
@@ -103,12 +103,12 @@ class RenderManager {
 
         engine.clearColorBuffer(scene.clearColor);
 
-        // if (scene.skybox) {
+        if (scene.skybox) {
 
-        //     engine.clearDepthBuffer();
+            engine.clearDepthBuffer();
 
-        //     this.drawSkybox();
-        // }
+            this.drawSkybox();
+        }
 
         const globalDefines = [];
 
