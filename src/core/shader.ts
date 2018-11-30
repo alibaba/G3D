@@ -38,7 +38,10 @@ class Shader {
 
         if (!this.programs[definesKey]) {
 
-            const definesString = [...this.precisions, ...this.extensions, ...defines].map((name) => `#define ${name} 1`).join("\n") + "\n";
+            const definesString =
+                [...this.precisions, ...this.extensions, ...defines].map(
+                    (name) => `#define ${name} 1`,
+                ).join("\n") + "\n";
 
             this.programs[definesKey] = new Program({
                 vShaderSource: definesString + this.vShaderSource,

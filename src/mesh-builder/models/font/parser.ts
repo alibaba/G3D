@@ -44,29 +44,6 @@ function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
 function Line(x0, y0, x1, y1, resolution) {
 
     return [x1, y1];
-
-    const dx = x1 - x0;
-    const dy = y1 - y0;
-
-    const d = Math.sqrt(dx * dx + dy * dy);
-
-    if (d === 0) {
-        return [x1, y1];
-    }
-
-    const segs = Math.ceil(d / resolution);
-    const segLen = d / segs;
-
-    const points = [];
-    for (let i = 1; i <= segs; i++) {
-
-        const x = x0 + (i / segs) * (dx / d) * d;
-        const y = y0 + (i / segs) * (dy / d) * d;
-
-        points.push(x, y);
-    }
-
-    return points;
 }
 
 const PathParser = {
@@ -114,8 +91,8 @@ const PathParser = {
                         const x1 = Number(list[i++]);
                         const y1 = Number(list[i++]);
                         const points = Quadratic(x0, y0, x1, y1, x2, y2, resolution);
-                        for (let i = 0; i < points.length; i += 2) {
-                            vertices.push(points[i], points[i + 1]);
+                        for (let j = 0; j < points.length; j += 2) {
+                            vertices.push(points[j], points[j + 1]);
                             line.push(vertices.length / 2 - 1);
                         }
 
@@ -130,13 +107,10 @@ const PathParser = {
 
                         const [x0, y0] = current;
                         const points = Line(x0, y0, x, y, resolution);
-                        for (let i = 0; i < points.length; i += 2) {
-                            vertices.push(points[i], points[i + 1]);
+                        for (let j = 0; j < points.length; j += 2) {
+                            vertices.push(points[j], points[j + 1]);
                             line.push(vertices.length / 2 - 1);
                         }
-
-                        // vertices.push(x, y);
-                        // line.push(vertices.length / 2 - 1);
 
                         current = [x, y];
                         break;
@@ -155,19 +129,19 @@ const PathParser = {
         lines.push(line);
         line = [];
 
-        function checkLineRing(line) {
-            const len = line.length;
-            const i = line[0];
-            const j = line[len - 1];
+        function checkLineRing(theLine) {
+            const len = theLine.length;
+            const k = theLine[0];
+            const j = theLine[len - 1];
 
             if (
-                vertices[i * 2] === vertices[j * 2] &&
-                vertices[i * 2 + 1] === vertices[j * 2 + 1] &&
+                vertices[k * 2] === vertices[j * 2] &&
+                vertices[k * 2 + 1] === vertices[j * 2 + 1] &&
                 j * 2 + 1 === vertices.length - 1
             ) {
                 vertices.pop();
                 vertices.pop();
-                line[len - 1] = i;
+                theLine[len - 1] = k;
             }
         }
 
@@ -201,8 +175,6 @@ const PathParser = {
 
         const { vertices, lines } = this.parse(data, resolution);
 
-        // console.log(vertices.join(','));
-
         const clonedLines = cloneLines(lines);
 
         const { polygons, holes } = distinguish(lines);
@@ -226,15 +198,15 @@ const PathParser = {
             lines: clonedLines,
         };
 
-        function earcut(polygons, holes, triangles) {
+        function earcut(plgs, hles, triangles) {
 
-            if (holes.length > 0) {
-                const res = removeHoles(polygons, holes);
-                polygons = res.polygons;
-                holes = res.holes;
+            if (hles.length > 0) {
+                const res = removeHoles(plgs, hles);
+                plgs = res.polygons;
+                hles = res.holes;
             }
 
-            polygons.forEach((polygon) => {
+            plgs.forEach((polygon) => {
                 triangles.push(...earcutPolygon(polygon));
             });
 
@@ -282,12 +254,12 @@ const PathParser = {
 
         let clockwiseFactor = 1;
 
-        function distinguish(indices) {
+        function distinguish(idcs) {
 
-            const polygons = [];
-            const holes = [];
+            const plgs = [];
+            const hles = [];
 
-            indices.forEach((list) => {
+            idcs.forEach((list) => {
 
                 let sum = 0;
 
@@ -297,20 +269,20 @@ const PathParser = {
                     sum += (x1 - x0) * (y1 + y0);
                 }
 
-                if (polygons.length === 0) {
+                if (plgs.length === 0) {
                     clockwiseFactor = sum / Math.abs(sum);
                 }
 
                 if (sum * clockwiseFactor >= 0) {
-                    polygons.push(list);
+                    plgs.push(list);
                 } else {
-                    holes.push(list);
+                    hles.push(list);
                 }
             });
 
             return {
-                polygons,
-                holes,
+                polygons: plgs,
+                holes: hles,
             };
         }
 
@@ -409,24 +381,24 @@ const PathParser = {
             return true;
         }
 
-        function removeHoles(polygons, holes) {
+        function removeHoles(plgs, hles) {
 
-            if (holes.length === 0) {
+            if (hles.length === 0) {
                 return {
-                    polygons, holes,
+                    polygons: plgs, holes,
                 };
             }
 
-            for (let hi = 0; hi < holes.length; hi++) {
+            for (let hi = 0; hi < hles.length; hi++) {
 
-                let hole = holes[hi];
+                let hole = hles[hi];
 
                 for (let hvi = 0; hvi < hole.length; hvi++) {
                     const hv = hole[hvi];
                     const [hvx, hvy] = pt(hv);
 
-                    for (let pi = 0; pi < polygons.length; pi++) {
-                        const polygon = polygons[pi];
+                    for (let pi = 0; pi < plgs.length; pi++) {
+                        const polygon = plgs[pi];
 
                         for (let pvi = 0; pvi < polygon.length; pvi++) {
                             const pv = polygon[pvi];
@@ -435,8 +407,8 @@ const PathParser = {
 
                             if (visible(hvx, hvy, pvx, pvy)) {
 
-                                polygons.splice(pi, 1);
-                                holes.splice(hi, 1);
+                                plgs.splice(pi, 1);
+                                hles.splice(hi, 1);
 
                                 hole.pop();
                                 hole = hole.splice(hvi).concat(hole);
@@ -444,9 +416,9 @@ const PathParser = {
 
                                 polygon.splice(pvi + 1, 0, ...hole, pv);
 
-                                polygons.push(polygon);
+                                plgs.push(polygon);
 
-                                return removeHoles(polygons, holes);
+                                return removeHoles(plgs, hles);
                             }
                         }
                     }
@@ -458,10 +430,10 @@ const PathParser = {
 
             function visible(x0, y0, x1, y1) {
 
-                const lines = [...polygons, ...holes];
+                const lns = [...polygons, ...holes];
 
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
+                for (let i = 0; i < lns.length; i++) {
+                    const line = lns[i];
 
                     for (let j = 0; j < line.length - 1; j++) {
                         const [v2, v3] = [line[j], line[j + 1]];
@@ -501,8 +473,8 @@ const PathParser = {
             };
         }
 
-        function cloneLines(lines) {
-            return lines.map((line) => [...line]);
+        function cloneLines(lns) {
+            return lns.map((line) => [...line]);
         }
     },
 

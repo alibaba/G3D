@@ -113,7 +113,7 @@ class Program {
         const vShaderSource = this.vShaderSource;
 
         function loadShader(type, source) {
-            let shader = gl.createShader(type);
+            const shader = gl.createShader(type);
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
@@ -170,7 +170,7 @@ class Program {
 
             attributes[attribute.name] = res;
         }
-        
+
         const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
 
         for (let i = 0; i < uniformCount; i++) {

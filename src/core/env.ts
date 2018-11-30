@@ -1,16 +1,16 @@
-let _Image = null;
+let THE_IMAGE = null;
 
 export default {
     get Image() {
-        if (_Image) {
-            return _Image;
+        if (THE_IMAGE) {
+            return THE_IMAGE;
         } else {
             return Image;
         }
     },
 
     set Image(image) {
-        _Image = image;
+        THE_IMAGE = image;
     },
 
     manuallyFlipY: false,

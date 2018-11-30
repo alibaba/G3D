@@ -98,7 +98,12 @@ class PhongMaterial extends ShaderMaterial {
     }
 
     private getAmbientColor(): IVec3 {
-        Vec3.set(this.ambientColorValues, this.ambientColor.r / 255, this.ambientColor.g / 255, this.ambientColor.b / 255);
+        Vec3.set(
+            this.ambientColorValues,
+            this.ambientColor.r / 255,
+            this.ambientColor.g / 255,
+            this.ambientColor.b / 255,
+        );
         return this.ambientColorValues;
     }
 
@@ -112,7 +117,12 @@ class PhongMaterial extends ShaderMaterial {
 
     private getDiffuseColor(): IVec3 {
 
-        Vec3.set(this.diffuseColorValues, this.diffuseColor.r / 255, this.diffuseColor.g / 255, this.diffuseColor.b / 255);
+        Vec3.set(
+            this.diffuseColorValues,
+            this.diffuseColor.r / 255,
+            this.diffuseColor.g / 255,
+            this.diffuseColor.b / 255,
+        );
 
         return this.diffuseColorValues;
     }
@@ -127,7 +137,12 @@ class PhongMaterial extends ShaderMaterial {
 
     private getSpecularColor(): IVec3 {
 
-        Vec3.set(this.specularColorValues, this.specularColor.r / 255, this.specularColor.g / 255, this.specularColor.b / 255);
+        Vec3.set(
+            this.specularColorValues,
+            this.specularColor.r / 255,
+            this.specularColor.g / 255,
+            this.specularColor.b / 255,
+        );
 
         return this.specularColorValues;
     }

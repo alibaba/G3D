@@ -134,7 +134,8 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                     uvs.aAlbedoUV = getBufferView(attributes[`TEXCOORD_${material.gltfAlbedoTexCoord}`]);
                 }
                 if (material.metallicRoughnessTexture) {
-                    uvs.aMetallicRoughnessUV = getBufferView(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
+                    uvs.aMetallicRoughnessUV =
+                        getBufferView(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
                 }
                 if (material.normalTexture) {
                     uvs.aNormalUV = getBufferView(attributes[`TEXCOORD_${material.gltfNormalTexCoord}`]);

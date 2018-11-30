@@ -11,12 +11,15 @@ class Ray {
             return null;
         } else {
             const origin = Vec3.fromValues(this.origin.x, this.origin.y, this.origin.z);
-            const direction = Vec3.normalize(Vec3.create(), Vec3.fromValues(this.direction.x, this.direction.y, this.direction.z));
-            const offset = Vec3.scale(Vec3.create(), direction, dist);
+            const direction = Vec3.normalize(
+                Vec3.create(),
+                Vec3.fromValues(this.direction.x, this.direction.y, this.direction.z),
+            );
+            const theOffset = Vec3.scale(Vec3.create(), direction, dist);
             const point = Vec3.add(
                 Vec3.create(),
                 origin,
-                offset,
+                theOffset,
             );
             return {
                 x: point[0],
@@ -30,7 +33,10 @@ class Ray {
 
         normal = Vec3.normalize(Vec3.create(), Vec3.fromValues(normal.x, normal.y, normal.z));
         const origin = Vec3.fromValues(this.origin.x, this.origin.y, this.origin.z);
-        const direction = Vec3.normalize(Vec3.create(), Vec3.fromValues(this.direction.x, this.direction.y, this.direction.z));
+        const direction = Vec3.normalize(
+            Vec3.create(),
+            Vec3.fromValues(this.direction.x, this.direction.y, this.direction.z),
+        );
 
         const denominator = Vec3.dot(normal, direction);
 

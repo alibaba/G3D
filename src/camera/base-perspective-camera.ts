@@ -38,7 +38,10 @@ class PerspectiveCamera extends BaseCamera {
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), pMatrix));
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), this.getVMatrix()));
 
-        const direction = Vec3.sub(Vec3.create(), p2, Vec3.fromValues(this.position.x, this.position.y, this.position.z));
+        const direction = Vec3.sub(
+            Vec3.create(), p2,
+            Vec3.fromValues(this.position.x, this.position.y, this.position.z),
+        );
 
         const ray = new ViewRay();
         ray.origin.x = this.position.x;

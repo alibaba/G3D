@@ -11,7 +11,7 @@ function createCone(scene, radius, height, segs = 16) {
     const halfHeight = height / 2;
     const dTheta = Math.PI * 2 / segs;
 
-    const body = function() {
+    const body = () => {
         const iStart = vertices.length / 3;
 
         const center = [0, halfHeight, 0];
@@ -41,7 +41,7 @@ function createCone(scene, radius, height, segs = 16) {
 
     };
 
-    const cop = function(y) {
+    const cop = (y) => {
 
         const iStart = vertices.length / 3;
 

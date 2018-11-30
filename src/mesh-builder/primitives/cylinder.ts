@@ -11,7 +11,7 @@ function createCylinder(scene, radius, height, segs = 16) {
     const dTheta = Math.PI * 2 / segs;
     const halfHeight = height / 2;
 
-    const body = function() {
+    const body = () => {
 
         const iStart = vertices.length / 3;
 
@@ -37,7 +37,7 @@ function createCylinder(scene, radius, height, segs = 16) {
         }
     };
 
-    const cop = function(y, top = true) {
+    const cop = (y, top = true) => {
 
         const iStart = vertices.length / 3;
 

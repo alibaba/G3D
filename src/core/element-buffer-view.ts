@@ -17,7 +17,13 @@ class ElementBufferView {
     public readonly type: number;
     public readonly byteOffset: number;
 
-    constructor({ buffer, mode = "TRIANGLES", count = 0, type = "UNSIGNED_INT", byteOffset = 0 }: IElementBufferViewConfig) {
+    constructor({
+        buffer,
+        mode = "TRIANGLES",
+        count = 0,
+        type = "UNSIGNED_INT",
+        byteOffset = 0,
+    }: IElementBufferViewConfig) {
 
         const { gl } = GL;
 

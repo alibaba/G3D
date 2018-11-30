@@ -220,13 +220,13 @@ class Engine {
 
         if (this.framebuffers[key]) {
             this.bindFramebuffer(key);
-            let pixels = new Uint8Array(1 * 1 * 4);
+            const pixels = new Uint8Array(1 * 1 * 4);
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             this.bindFramebuffer(null);
             return pixels;
         } else {
             this.bindFramebuffer(key);
-            let pixels = new Uint8Array(1 * 1 * 4);
+            const pixels = new Uint8Array(1 * 1 * 4);
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             return pixels;
         }

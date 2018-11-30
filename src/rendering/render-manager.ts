@@ -67,7 +67,7 @@ class RenderManager {
 
         const groups = [];
 
-        meshes.forEach(function(mesh) {
+        meshes.forEach((mesh) => {
 
             const i = mesh.getRenderLayerIndex();
 
@@ -122,7 +122,8 @@ class RenderManager {
 
             meshes.filter((m) => m.getGlobalVisibility()).forEach((mesh) => {
 
-                mesh.geometry.bufferViews.indices &&
+                if (mesh.geometry.bufferViews.indices) {
+
                     Object.keys(mesh.geometry.bufferViews.indices).forEach((key) => {
 
                         const material = mesh.materials[key];
@@ -176,13 +177,17 @@ class RenderManager {
                             if (cullFace) {
                                 this.setFaceCull(mesh.geometry.facing);
                             } else {
-                                this.setFaceCull(mesh.geometry.facing === Geometry.FACING.FRONT ? Geometry.FACING.BACK : Geometry.FACING.FRONT);
+                                this.setFaceCull(
+                                    mesh.geometry.facing === Geometry.FACING.FRONT ?
+                                        Geometry.FACING.BACK : Geometry.FACING.FRONT,
+                                );
                             }
 
                             this.drawMesh(mesh, key);
                         }
 
                     });
+                }
             });
         });
 

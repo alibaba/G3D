@@ -16,7 +16,10 @@ class Texture {
 
     public glTexture: IWebGLTexture;
 
-    constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = true, repeat = true /*or clamp*/ }: ITextureConfig) {
+    constructor({
+        image, width = image.width, height = image.height, sRGB = false,
+        flipY = true, repeat = true, /*or clamp*/
+    }: ITextureConfig) {
 
         const { gl, textures } = GL;
 
