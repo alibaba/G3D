@@ -138,10 +138,10 @@ export function scale(out: IVec3, a: IVec3, b: number): IVec3 {
 }
 
 // Adds two vec3's after scaling the second operand by a scalar value
-export function scaleAndAdd(out: IVec3, a: IVec3, b: IVec3, v: number): IVec3 {
-  out[0] = a[0] + (b[0] * v);
-  out[1] = a[1] + (b[1] * v);
-  out[2] = a[2] + (b[2] * v);
+export function scaleAndAdd(out: IVec3, a: IVec3, b: IVec3, scale: number): IVec3 {
+  out[0] = a[0] + (b[0] * scale);
+  out[1] = a[1] + (b[1] * scale);
+  out[2] = a[2] + (b[2] * scale);
   return out;
 }
 
@@ -190,13 +190,13 @@ export function normalize(out: IVec3, a: IVec3): IVec3 {
   const x = a[0];
   const y = a[1];
   const z = a[2];
-  let l = x * x + y * y + z * z;
-  if (l > 0) {
+  let len = x * x + y * y + z * z;
+  if (len > 0) {
     // TODO: evaluate use of glm_invsqrt here?
-    l = 1 / Math.sqrt(l);
-    out[0] = a[0] * l;
-    out[1] = a[1] * l;
-    out[2] = a[2] * l;
+    len = 1 / Math.sqrt(len);
+    out[0] = a[0] * len;
+    out[1] = a[1] * len;
+    out[2] = a[2] * len;
   }
   return out;
 }
@@ -261,16 +261,16 @@ export function bezier(out: IVec3, a: IVec3, b: IVec3, c: IVec3, d: IVec3, t: nu
 }
 
 // Generates a random vector with the given scale
-export function random(out: IVec3, v: number): IVec3 {
-  v = v || 1.0;
+export function random(out: IVec3, scale: number): IVec3 {
+  scale = scale || 1.0;
 
   const r = Math.random() * 2.0 * Math.PI;
   const z = (Math.random() * 2.0) - 1.0;
-  const zScale = Math.sqrt(1.0 - z * z) * v;
+  const zScale = Math.sqrt(1.0 - z * z) * scale;
 
   out[0] = Math.cos(r) * zScale;
   out[1] = Math.sin(r) * zScale;
-  out[2] = z * v;
+  out[2] = z * scale;
   return out;
 }
 

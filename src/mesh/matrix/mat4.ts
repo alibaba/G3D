@@ -811,14 +811,14 @@ export function getScaling(out: IVec3, mat: IMat4): IVec3 {
     return out;
 }
 
-/**
+/*
  * Returns a quaternion representing the rotational component
  *  of a transformation matrix. If a matrix is built with
  *  fromRotationTranslation, the returned quaternion will be the
  *  same as the quaternion originally supplied.
  */
 export function getRotation(out: IQuat, mat: IMat4): IQuat {
-    // Algorithm taken from
+    // Algorithm taken from 
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
     const trace = mat[0] + mat[5] + mat[10];
     let S = 0;
@@ -852,7 +852,17 @@ export function getRotation(out: IQuat, mat: IMat4): IQuat {
     return out;
 }
 
-// Creates a matrix from a quaternion rotation, vector translation and vector scale
+/**
+ * Creates a matrix from a quaternion rotation, vector translation and vector scale
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, vec);
+ *     let quatMat = mat4.create();
+ *     quat4.toMat4(quat, quatMat);
+ *     mat4.multiply(dest, quatMat);
+ *     mat4.scale(dest, scale)
+ */
 export function fromRotationTranslationScale(out: IMat4, q: IQuat, v: IVec3, s: IVec3): IMat4 {
     // Quaternion math
     const x = q[0], y = q[1], z = q[2], w = q[3];
@@ -893,8 +903,9 @@ export function fromRotationTranslationScale(out: IMat4, q: IQuat, v: IVec3, s: 
     return out;
 }
 
-// Creates a matrix from a quaternion rotation,
-// vector translation and vector scale, rotating and scaling around the given origin
+
+// Creates a matrix from a quaternion rotation, vector translation and vector scale,
+// rotating and scaling around the given origin
 export function fromRotationTranslationScaleOrigin(out: IMat4, q: IQuat, v: IVec3, s: IVec3, o: IVec3): IMat4 {
     // Quaternion math
     const x = q[0], y = q[1], z = q[2], w = q[3];
@@ -983,7 +994,7 @@ export function fromQuat(out: IMat4, q: IQuat): IMat4 {
 // Generates a frustum matrix with the given bounds
 export function frustum(
     out: IMat4, left: number, right: number, bottom: number, top: number,
-    near: number, far: number,
+    near: number, far: number
 ): IMat4 {
     const rl = 1 / (right - left);
     const tb = 1 / (top - bottom);
@@ -1037,7 +1048,9 @@ export function perspective(out: IMat4, fovy: number, aspect: number, near: numb
  */
 export function perspectiveFromFieldOfView(
     out: IMat4,
-    fov: { upDegrees: number, downDegrees: number, leftDegrees: number, rightDegrees: number },
+    fov: { 
+        upDegrees: number, downDegrees: number, leftDegrees: number, rightDegrees: number 
+    },
     near: number, far: number,
 ): IMat4 {
     const upTan = Math.tan(fov.upDegrees * Math.PI / 180.0);
@@ -1068,7 +1081,7 @@ export function perspectiveFromFieldOfView(
 
 // Generates a orthogonal projection matrix with the given bounds
 export function ortho(
-    out: IMat4, left: number, right: number, bottom: number, top: number, near: number, far: number,
+    out: IMat4, left: number, right: number, bottom: number, top: number, near: number, far: number
 ): IMat4 {
     const lr = 1 / (left - right);
     const bt = 1 / (bottom - top);
@@ -1225,12 +1238,7 @@ export function str(a: IMat4): string {
 
 // Returns Frobenius norm of a mat4
 export function frob(a: IMat4): number {
-    return (
-        Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) +
-            Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) +
-            Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) +
-            Math.pow(a[14], 2) + Math.pow(a[15], 2))
-    );
+    return (Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) + Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) + Math.pow(a[14], 2) + Math.pow(a[15], 2)));
 }
 
 // Adds two mat4's
@@ -1297,23 +1305,23 @@ export function multiplyScalar(out: IMat4, a: IMat4, b: number): IMat4 {
 }
 
 // Adds two mat4's after multiplying each element of the second operand by a scalar value.
-export function multiplyScalarAndAdd(out: IMat4, a: IMat4, b: IMat4, v: number): IMat4 {
-    out[0] = a[0] + (b[0] * v);
-    out[1] = a[1] + (b[1] * v);
-    out[2] = a[2] + (b[2] * v);
-    out[3] = a[3] + (b[3] * v);
-    out[4] = a[4] + (b[4] * v);
-    out[5] = a[5] + (b[5] * v);
-    out[6] = a[6] + (b[6] * v);
-    out[7] = a[7] + (b[7] * v);
-    out[8] = a[8] + (b[8] * v);
-    out[9] = a[9] + (b[9] * v);
-    out[10] = a[10] + (b[10] * v);
-    out[11] = a[11] + (b[11] * v);
-    out[12] = a[12] + (b[12] * v);
-    out[13] = a[13] + (b[13] * v);
-    out[14] = a[14] + (b[14] * v);
-    out[15] = a[15] + (b[15] * v);
+export function multiplyScalarAndAdd(out: IMat4, a: IMat4, b: IMat4, scale: number): IMat4 {
+    out[0] = a[0] + (b[0] * scale);
+    out[1] = a[1] + (b[1] * scale);
+    out[2] = a[2] + (b[2] * scale);
+    out[3] = a[3] + (b[3] * scale);
+    out[4] = a[4] + (b[4] * scale);
+    out[5] = a[5] + (b[5] * scale);
+    out[6] = a[6] + (b[6] * scale);
+    out[7] = a[7] + (b[7] * scale);
+    out[8] = a[8] + (b[8] * scale);
+    out[9] = a[9] + (b[9] * scale);
+    out[10] = a[10] + (b[10] * scale);
+    out[11] = a[11] + (b[11] * scale);
+    out[12] = a[12] + (b[12] * scale);
+    out[13] = a[13] + (b[13] * scale);
+    out[14] = a[14] + (b[14] * scale);
+    out[15] = a[15] + (b[15] * scale);
     return out;
 }
 

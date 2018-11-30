@@ -1,7 +1,5 @@
-import Mesh from '../../mesh/mesh';
-import Geometry from '../../geometry/geometry';
-
-
+import Geometry from "../../geometry/geometry";
+import Mesh from "../../mesh/mesh";
 
 function createPlane(scene, width, height = width) {
 
@@ -19,7 +17,7 @@ function createPlane(scene, width, height = width) {
     const uvs = [0, 0, 1, 0, 1, 1, 0, 1];
     const normals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
     const indices = {
-        default: [0, 1, 2, 0, 2, 3]
+        default: [0, 1, 2, 0, 2, 3],
     };
 
     mesh.geometry = new Geometry({
@@ -27,7 +25,7 @@ function createPlane(scene, width, height = width) {
         uvs,
         normals,
         indices,
-        facing: Geometry.FACING.BOTH
+        facing: Geometry.FACING.BOTH,
     });
 
     return mesh;

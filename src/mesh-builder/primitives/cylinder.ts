@@ -1,5 +1,5 @@
-import Mesh from '../../mesh/mesh';
-import Geometry from '../../geometry/geometry';
+import Geometry from "../../geometry/geometry";
+import Mesh from "../../mesh/mesh";
 
 function createCylinder(scene, radius, height, segs = 16) {
 
@@ -11,7 +11,7 @@ function createCylinder(scene, radius, height, segs = 16) {
     const dTheta = Math.PI * 2 / segs;
     const halfHeight = height / 2;
 
-    const body = function () {
+    const body = function() {
 
         const iStart = vertices.length / 3;
 
@@ -35,9 +35,9 @@ function createCylinder(scene, radius, height, segs = 16) {
                 indices.push(base, base + 1, base + 3, base, base + 3, base + 2);
             }
         }
-    }
+    };
 
-    const cop = function (y, top = true) {
+    const cop = function(y, top = true) {
 
         const iStart = vertices.length / 3;
 
@@ -53,7 +53,7 @@ function createCylinder(scene, radius, height, segs = 16) {
             const theta = i * dTheta;
 
             const p = [Math.cos(theta) * radius, halfHeight * y, Math.sin(theta) * radius];
-            
+
             vertices.push(...p);
             normals.push(...normal);
             uvs.push(...uv);
@@ -72,7 +72,7 @@ function createCylinder(scene, radius, height, segs = 16) {
                 }
             }
         }
-    }
+    };
 
     body();
     cop(1, false);
@@ -84,9 +84,9 @@ function createCylinder(scene, radius, height, segs = 16) {
         normals,
         uvs,
         indices: {
-            default: indices
-        }
-    })
+            default: indices,
+        },
+    });
 
     return mesh;
 }

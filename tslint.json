@@ -1,0 +1,10 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "object-literal-sort-keys": false,
+        "one-variable-per-declaration": false,
+        "forin": false,
+        "prefer-for-of": false,
+        "no-conditional-assignment": false
+    }
+}

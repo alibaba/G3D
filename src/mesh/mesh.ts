@@ -1,14 +1,14 @@
 
-import Geometry from '../geometry/geometry';
-import PhongMaterial from '../material/phong-material';
+import Geometry from "../geometry/geometry";
+import PhongMaterial from "../material/phong-material";
 
-import BaseMesh from './base-mesh';
+import BaseMesh from "./base-mesh";
 
 class Mesh extends BaseMesh {
 
-    geometry = new Geometry();
-    materials = {
-        default: new PhongMaterial()
+    public geometry = new Geometry();
+    public materials = {
+        default: new PhongMaterial(),
     };
 
     constructor(scene) {

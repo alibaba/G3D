@@ -44,18 +44,18 @@ export function setAxisAngle(out: IQuat, axis: IVec3, rad: number): IQuat {
  *  angle -90 is the same as the quaternion formed by
  *  [0, 0, 1] and 270. This method favors the latter.
  */
-export function getAxisAngle(outAxis: IVec3, q: IQuat): number {
+export function getAxisAngle(out_axis: IVec3, q: IQuat): number {
     const rad = Math.acos(q[3]) * 2.0;
     const s = Math.sin(rad / 2.0);
-    if (s !== 0.0) {
-        outAxis[0] = q[0] / s;
-        outAxis[1] = q[1] / s;
-        outAxis[2] = q[2] / s;
+    if (s != 0.0) {
+        out_axis[0] = q[0] / s;
+        out_axis[1] = q[1] / s;
+        out_axis[2] = q[2] / s;
     } else {
         // If s is zero, return any axis (no rotation - axis does not matter)
-        outAxis[0] = 1;
-        outAxis[1] = 0;
-        outAxis[2] = 0;
+        out_axis[0] = 1;
+        out_axis[1] = 0;
+        out_axis[2] = 0;
     }
     return rad;
 }
@@ -173,10 +173,10 @@ export function slerp(out: IQuat, a: IQuat, b: IQuat, t: number): IQuat {
 // Calculates the inverse of a quat
 export function invert(out: IQuat, a: IQuat): IQuat {
     const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
-    const d = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
-    const invDot = d ? 1.0 / d : 0;
+    const dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+    const invDot = dot ? 1.0 / dot : 0;
 
-    // TODO: Would be faster to return [0,0,0,0] immediately if d === 0
+    // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
 
     out[0] = -a0 * invDot;
     out[1] = -a1 * invDot;
@@ -329,14 +329,14 @@ export const equals = Vec4.equals;
  *
  * Both vectors are assumed to be unit length.
  */
-export const rotationTo = (() => {
+export const rotationTo = (function() {
     const tmpvec3 = Vec3.create();
     const xUnitVec3 = Vec3.fromValues(1, 0, 0);
     const yUnitVec3 = Vec3.fromValues(0, 1, 0);
 
-    return (out: IQuat, a: IVec3, b: IVec3): IQuat => {
-        const d = Vec3.dot(a, b);
-        if (d < -0.999999) {
+    return function(out: IQuat, a: IVec3, b: IVec3): IQuat {
+        const dot = Vec3.dot(a, b);
+        if (dot < -0.999999) {
             Vec3.cross(tmpvec3, xUnitVec3, a);
             if (Vec3.len(tmpvec3) < 0.000001) {
                 Vec3.cross(tmpvec3, yUnitVec3, a);
@@ -344,7 +344,7 @@ export const rotationTo = (() => {
             Vec3.normalize(tmpvec3, tmpvec3);
             setAxisAngle(out, tmpvec3, Math.PI);
             return out;
-        } else if (d > 0.999999) {
+        } else if (dot > 0.999999) {
             out[0] = 0;
             out[1] = 0;
             out[2] = 0;
@@ -355,35 +355,35 @@ export const rotationTo = (() => {
             out[0] = tmpvec3[0];
             out[1] = tmpvec3[1];
             out[2] = tmpvec3[2];
-            out[3] = 1 + d;
+            out[3] = 1 + dot;
             return normalize(out, out);
         }
     };
 })();
 
 // Performs a spherical linear interpolation with two control points
-export const sqlerp = (() => {
+export const sqlerp = (function() {
     const temp1 = create();
     const temp2 = create();
 
-    return (out: IQuat, a: IQuat, b: IQuat, c: IQuat, d: IQuat, t: number): IQuat => {
+    return function(out: IQuat, a: IQuat, b: IQuat, c: IQuat, d: IQuat, t: number): IQuat {
         slerp(temp1, a, d, t);
         slerp(temp2, b, c, t);
         slerp(out, temp1, temp2, 2 * t * (1 - t));
 
         return out;
     };
-})();
+}());
 
 /**
  * Sets the specified quaternion with values corresponding to the given
  * axes. Each axis is a vec3 and is expected to be unit length and
  * perpendicular to all other specified axes.
  */
-export const setAxes = (() => {
+export const setAxes = (function() {
     const matr = Mat3.create();
 
-    return (out: IVec3, view: IVec3, right: IVec3, up: IVec3): IQuat => {
+    return function(out: IVec3, view: IVec3, right: IVec3, up: IVec3): IQuat {
         matr[0] = right[0];
         matr[3] = right[1];
         matr[6] = right[2];
@@ -401,7 +401,7 @@ export const setAxes = (() => {
 })();
 
 // get euler angle x, y, z from given
-export function getEuler(out: IVec3, q: IQuat): IVec3 {
+export const getEuler = function(out: IVec3, q: IQuat): IVec3 {
 
     // TODO: make it clearer
     // const [q3, q2, q1, q0] = q;
@@ -416,7 +416,7 @@ export function getEuler(out: IVec3, q: IQuat): IVec3 {
     out[2] = Math.atan2(2 * (q0 * q1 + q2 * q3), 1 - 2 * (q1 * q1 + q2 * q2)) * 180 / Math.PI;
 
     return out;
-}
+};
 
 const Quat = {
     create,

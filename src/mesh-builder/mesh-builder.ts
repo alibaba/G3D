@@ -1,14 +1,14 @@
-import createSphere from './primitives/sphere';
-import createPlane from './primitives/plane';
-import createBox from './primitives/box';
-import createCylinder from './primitives/cylinder';
-import createCone from './primitives/cone';
-import createCoordinate from './primitives/coordinate';
+import createBox from "./primitives/box";
+import createCone from "./primitives/cone";
+import createCoordinate from "./primitives/coordinate";
+import createCylinder from "./primitives/cylinder";
+import createPlane from "./primitives/plane";
+import createSphere from "./primitives/sphere";
 
-import createFromObjModel from './models/obj';
-import createFromStlModel from './models/stl';
-import { createLineFromPath, createMeshFromPath } from './models/font';
-import createMeshFromGLTF from './models/gltf';
+import { createLineFromPath, createMeshFromPath } from "./models/font";
+import createMeshFromGLTF from "./models/gltf";
+import createFromObjModel from "./models/obj";
+import createFromStlModel from "./models/stl";
 
 export default {
 
@@ -29,5 +29,5 @@ export default {
     createMeshFromGLTF,
 
     createLineFromPath,
-    createMeshFromPath
-}
+    createMeshFromPath,
+};

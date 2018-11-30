@@ -1,8 +1,7 @@
-import GL from '../core/gl';
-import { IWebGLTexture } from '../types/webgl';
+import GL from "../core/gl";
+import { IWebGLTexture } from "../types/webgl";
 
-const isPowerOf2 = n => Math.log(n) / Math.log(2) % 1 === 0;
-
+const isPowerOf2 = (n) => Math.log(n) / Math.log(2) % 1 === 0;
 
 interface ITextureConfig {
     image: any;
@@ -13,10 +12,9 @@ interface ITextureConfig {
     repeat?: boolean;
 }
 
-
 class Texture {
 
-    glTexture: IWebGLTexture;
+    public glTexture: IWebGLTexture;
 
     constructor({ image, width = image.width, height = image.height, sRGB = false, flipY = true, repeat = true /*or clamp*/ }: ITextureConfig) {
 
@@ -31,10 +29,10 @@ class Texture {
         // REPEAT works only when image size is power of 2
         if (repeat) {
             if (!isPowerOf2(width)) {
-                throw new Error('image width should be power of 2, or you need to set repeat option to false.');
+                throw new Error("image width should be power of 2, or you need to set repeat option to false.");
             }
             if (!isPowerOf2(height)) {
-                throw new Error('image height should be power of 2, or you need to set repeat option to false.');
+                throw new Error("image height should be power of 2, or you need to set repeat option to false.");
             }
         }
 
@@ -74,7 +72,7 @@ class Texture {
         textures.push(this);
     }
 
-    destructor() {
+    public destructor() {
 
         const { gl } = GL;
 

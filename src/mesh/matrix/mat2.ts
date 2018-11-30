@@ -223,11 +223,11 @@ export function multiplyScalar(out: IMat2, a: IMat2, b: number): IMat2 {
 }
 
 // Adds two mat2's after multiplying each element of the second operand by a scalar value.
-export function multiplyScalarAndAdd(out: IMat2, a: IMat2, b: IMat2, v: number): IMat2 {
-    out[0] = a[0] + (b[0] * v);
-    out[1] = a[1] + (b[1] * v);
-    out[2] = a[2] + (b[2] * v);
-    out[3] = a[3] + (b[3] * v);
+export function multiplyScalarAndAdd(out: IMat2, a: IMat2, b: IMat2, scale: number): IMat2 {
+    out[0] = a[0] + (b[0] * scale);
+    out[1] = a[1] + (b[1] * scale);
+    out[2] = a[2] + (b[2] * scale);
+    out[3] = a[3] + (b[3] * scale);
     return out;
 }
 

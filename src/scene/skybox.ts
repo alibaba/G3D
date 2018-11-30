@@ -1,11 +1,11 @@
-import Geometry from '../geometry/geometry';
-import CubeTexture from '../texture/cube-texture';
+import Geometry from "../geometry/geometry";
+import CubeTexture from "../texture/cube-texture";
 
 class Skybox {
 
-    geometry: Geometry;
+    public geometry: Geometry;
 
-    cubeTexture: CubeTexture;
+    public cubeTexture: CubeTexture;
 
     constructor(scene, images, size = 100) {
 
@@ -55,15 +55,15 @@ class Skybox {
             8, 9, 10, 8, 10, 11,
             12, 13, 14, 12, 14, 15,
             16, 17, 18, 16, 18, 19,
-            20, 21, 22, 20, 22, 23
+            20, 21, 22, 20, 22, 23,
         ];
 
         this.geometry = new Geometry({
             vertices,
             indices: {
-                default: indices
+                default: indices,
             },
-            facing: Geometry.FACING.BACK
+            facing: Geometry.FACING.BACK,
         });
 
         this.cubeTexture = new CubeTexture({
@@ -73,8 +73,8 @@ class Skybox {
                 left: images.left,
                 right: images.right,
                 top: images.top,
-                bottom: images.bottom
-            }
+                bottom: images.bottom,
+            },
         });
     }
 }

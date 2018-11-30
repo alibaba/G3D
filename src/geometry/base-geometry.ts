@@ -1,25 +1,25 @@
-import Buffer from '../core/buffer';
+import Buffer from "../core/buffer";
 import BufferView from "../core/buffer-view";
+import ElementBuffer from "../core/element-buffer";
 import ElementBufferView from "../core/element-buffer-view";
-import ElementBuffer from '../core/element-buffer';
-import GL from '../core/gl';
+import GL from "../core/gl";
 
 interface IGeometryBufferViews {
     vertices?: BufferView;
     normals?: BufferView;
     uvs?: BufferView | {
-        [propName: string]: BufferView
-    },
+        [propName: string]: BufferView,
+    };
     indices?: {
-        [propName: string]: ElementBufferView
-    }
+        [propName: string]: ElementBufferView,
+    };
 }
 
 class BaseGeometry {
 
-    bufferViews: IGeometryBufferViews = {};
+    public bufferViews: IGeometryBufferViews = {};
 
-    getBoundingBox() {
+    public getBoundingBox() {
 
         let [minX, maxX, minY, maxY, minZ, maxZ] = [undefined, undefined, undefined, undefined, undefined, undefined];
         const compare = (x, y, z) => {
@@ -30,7 +30,7 @@ class BaseGeometry {
             if (y > maxY) { maxY = y; }
             if (z < minZ) { minZ = z; }
             if (z > maxZ) { maxZ = z; }
-        }
+        };
 
         const { gl } = GL;
 
@@ -38,7 +38,7 @@ class BaseGeometry {
         const verticesOffset = vertices.byteOffset / 4;
         const verticesStride = vertices.byteStride === 0 ? 3 : vertices.byteStride / 4;
 
-        for (let key in indices) {
+        for (const key in indices) {
 
             const eleBufferView = indices[key];
             const { count } = eleBufferView;
@@ -61,14 +61,16 @@ class BaseGeometry {
 
     }
 
-    protected createBufferView(data: number[] | BufferView | { [propName: string]: number[] | BufferView }): BufferView | { [propName: string]: BufferView } {
+    protected createBufferView(
+        data: number[] | BufferView | { [propName: string]: number[] | BufferView },
+    ): BufferView | { [propName: string]: BufferView } {
 
         if (Array.isArray(data)) {
 
             return new BufferView({
                 buffer: new Buffer({
-                    data: new Float32Array(data)
-                })
+                    data: new Float32Array(data),
+                }),
             });
 
         } else if (data instanceof BufferView) {
@@ -78,7 +80,7 @@ class BaseGeometry {
         } else {
 
             const bufferViews = {};
-            for (let key in data) {
+            for (const key in data) {
                 bufferViews[key] = this.createBufferView(data[key]) as BufferView;
             }
             return bufferViews;
@@ -86,20 +88,23 @@ class BaseGeometry {
         }
     }
 
-    protected createElementBufferView(data: { [propName: string]: number[] | ElementBufferView }, line: boolean = false): { [propName: string]: ElementBufferView } {
+    protected createElementBufferView(
+        data: { [propName: string]: number[] | ElementBufferView },
+        line: boolean = false,
+    ): { [propName: string]: ElementBufferView } {
 
         const elementBufferViews = {};
 
-        for (let key in data) {
+        for (const key in data) {
 
             elementBufferViews[key] = Array.isArray(data[key]) ? new ElementBufferView({
                 buffer: new ElementBuffer({
-                    data: new Uint32Array(data[key] as number[])
+                    data: new Uint32Array(data[key] as number[]),
                 }),
-                mode: line ? 'LINES' : 'TRIANGLES',
+                mode: line ? "LINES" : "TRIANGLES",
                 count: (data[key] as number[]).length,
-                type: 'UNSIGNED_INT',
-                byteOffset: 0
+                type: "UNSIGNED_INT",
+                byteOffset: 0,
             }) : data[key];
 
         }

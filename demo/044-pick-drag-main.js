@@ -12,8 +12,6 @@ function main(
     camera.beta = 55;
     camera.radius = 10;
 
-    // controlRotateCamera(canvas, camera);
-
     const light1 = new G3D.DirectionalLight(scene);
     light1.direction.x = -1;
     light1.direction.y = 0;
@@ -26,7 +24,7 @@ function main(
     const mesh = G3D.MeshBuilder.createCube(scene, 1);
     decMaterial(mesh);
 
-    const coord = G3D.MeshBuilder.createCoordinate(scene, 20);
+    G3D.MeshBuilder.createCoordinate(scene, 20);
 
     function decMaterial(mesh) {
         mesh.materials.default.ambientColor = { r: 200, g: 100, b: 100 };

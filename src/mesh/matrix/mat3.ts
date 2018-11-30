@@ -84,10 +84,11 @@ export function fromValues(
 }
 
 // Set the components of a mat3 to the given values
-export function set(out: IMat3,
-                    m00: number, m01: number, m02: number,
-                    m10: number, m11: number, m12: number,
-                    m20: number, m21: number, m22: number,
+export function set(
+    out: IMat3,
+    m00: number, m01: number, m02: number,
+    m10: number, m11: number, m12: number,
+    m20: number, m21: number, m22: number,
 ): IMat3 {
     out[0] = m00;
     out[1] = m01;
@@ -219,6 +220,7 @@ export function multiply(out: IMat3, a: IMat3, b: IMat3): IMat3 {
     out[6] = b20 * a00 + b21 * a10 + b22 * a20;
     out[7] = b20 * a01 + b21 * a11 + b22 * a21;
     out[8] = b20 * a02 + b21 * a12 + b22 * a22;
+
     return out;
 }
 
@@ -345,7 +347,6 @@ export function fromScaling(out: IMat3, v: IVec2): IMat3 {
 }
 
 // Calculates a 3x3 matrix from the given quaternion
-
 export function fromQuat(out: IMat3, q: IQuat): IMat3 {
     const x = q[0], y = q[1], z = q[2], w = q[3];
     const x2 = x + x;

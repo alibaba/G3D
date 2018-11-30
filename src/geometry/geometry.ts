@@ -1,34 +1,33 @@
-import Buffer from '../core/buffer';
-import BufferView from '../core/buffer-view';
-import ElementBufferView from '../core/element-buffer-view';
-import BaseGeometry from './base-geometry';
+import Buffer from "../core/buffer";
+import BufferView from "../core/buffer-view";
+import ElementBufferView from "../core/element-buffer-view";
+import BaseGeometry from "./base-geometry";
 
 interface IGeometryConfig {
     vertices?: BufferView | number[];
     normals?: BufferView | number[];
     uvs?: BufferView | number[] | {
-        [propName: string]: BufferView | number[]
+        [propName: string]: BufferView | number[],
     };
     indices?: {
-        [propName: string]: ElementBufferView | number[]
+        [propName: string]: ElementBufferView | number[],
     };
     mergeNormals?: boolean;
     facing?: FACING;
 }
 
-
 enum FACING {
-    FRONT, BACK, BOTH
+    FRONT, BACK, BOTH,
 }
 
 class Geometry extends BaseGeometry {
 
-    static FACING = FACING;
+    public static FACING = FACING;
 
-    facing: FACING;
+    public facing: FACING;
 
     constructor(
-        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FACING.FRONT }: IGeometryConfig = {}
+        { vertices, normals, uvs, indices, mergeNormals = false, facing = Geometry.FACING.FRONT }: IGeometryConfig = {},
     ) {
 
         super();
@@ -44,23 +43,22 @@ class Geometry extends BaseGeometry {
                 vertices: this.createBufferView(vertices) as BufferView,
                 normals: normals ? this.createBufferView(normals) as BufferView : null,
                 uvs: uvs ? this.createBufferView(uvs) : null,
-                indices: this.createElementBufferView(indices)
-            }
+                indices: this.createElementBufferView(indices),
+            };
         }
     }
-
 
     private mergeNormals(vertices: number[], normals: number[]): number[] {
 
         const hash = {};
 
         for (let i = 0; i < vertices.length; i += 3) {
-            const key = [vertices[i], vertices[i + 1], vertices[i + 2]].join(',');
+            const key = [vertices[i], vertices[i + 1], vertices[i + 2]].join(",");
             if (!hash[key]) {
                 hash[key] = {
                     indices: [],
-                    normal: [0, 0, 0]
-                }
+                    normal: [0, 0, 0],
+                };
             }
 
             const hashItem = hash[key];
@@ -70,10 +68,10 @@ class Geometry extends BaseGeometry {
             hashItem.normal[2] += normals[i + 2];
         }
 
-        for (let key in hash) {
+        for (const key in hash) {
             const { indices, normal } = hash[key];
             for (let i = 0; i < indices.length; i++) {
-                let idx = indices[i];
+                const idx = indices[i];
                 normals[idx * 3] = normal[0] / indices.length;
                 normals[idx * 3 + 1] = normal[1] / indices.length;
                 normals[idx * 3 + 2] = normal[2] / indices.length;

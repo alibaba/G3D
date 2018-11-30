@@ -1,37 +1,37 @@
-import ShaderMaterial from './shader-material';
+import ShaderMaterial from "./shader-material";
 
-import Texture from '../texture/texture';
-import { IColorRGB } from '../types/raw';
-import Vec3, { IVec3 } from '../matrix/vec3';
+import Vec3, { IVec3 } from "../matrix/vec3";
+import Texture from "../texture/texture";
+import { IColorRGB } from "../types/raw";
 
-import * as vShaderSource from '../shaders/material-raw.vert.glsl';
-import * as fShaderSource from '../shaders/material-raw.frag.glsl';
+import * as fShaderSource from "../shaders/material-raw.frag.glsl";
+import * as vShaderSource from "../shaders/material-raw.vert.glsl";
 
 class RawMaterial extends ShaderMaterial {
 
-    color: IColorRGB = { r: 255, g: 255, b: 255 };
-    texture: Texture;
+    public color: IColorRGB = { r: 255, g: 255, b: 255 };
+    public texture: Texture;
 
     private colorValues: IVec3 = Vec3.create();
 
     constructor() {
 
         super({
-            name: 'G3D_RAW',
+            name: "G3D_RAW",
             vertexShaderSource: vShaderSource,
             fragmentShaderSource: fShaderSource,
-            macros: ['RAW_TEXTURE'],
-            uniforms: ['uColor', 'uTexture'],
+            macros: ["RAW_TEXTURE"],
+            uniforms: ["uColor", "uTexture"],
             lighting: false,
-            shadow: false
+            shadow: false,
         });
 
     }
 
-    condition(macro: string): boolean {
+    public condition(macro: string): boolean {
 
         switch (macro) {
-            case 'RAW_TEXTURE':
+            case "RAW_TEXTURE":
                 return !!this.texture;
             default:
                 return super.condition(macro);
@@ -39,12 +39,12 @@ class RawMaterial extends ShaderMaterial {
 
     }
 
-    uniform(name: string): Float32Array | WebGLTexture {
+    public uniform(name: string): Float32Array | WebGLTexture {
 
         switch (name) {
-            case 'uColor':
+            case "uColor":
                 return this.getColor();
-            case 'uTexture':
+            case "uTexture":
                 return this.getTexture();
             default:
                 return null;
@@ -52,13 +52,13 @@ class RawMaterial extends ShaderMaterial {
 
     }
 
-    getColor(): IVec3 {
+    public getColor(): IVec3 {
 
         Vec3.set(this.colorValues, this.color.r / 255, this.color.g / 255, this.color.b / 255);
         return this.colorValues;
     }
 
-    getTexture(): WebGLTexture {
+    public getTexture(): WebGLTexture {
 
         if (this.texture) {
             return this.texture.glTexture;

@@ -1,10 +1,10 @@
-const isFunction = f => typeof f === 'function';
+const isFunction = (f) => typeof f === "function";
 
 function match(target, identifyer) {
     if (isFunction(identifyer)) {
         return !!identifyer(target);
     } else {
-        for (let k in identifyer) {
+        for (const k in identifyer) {
             if (identifyer[k] !== target[k]) {
                 return false;
             }

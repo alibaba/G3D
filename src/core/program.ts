@@ -1,6 +1,6 @@
-import GL from './gl';
-import Buffer from './buffer';
-import { IWebGLRenderingContext, IWebGLBuffer, IWebGLProgram, IWebGLActiveInfo } from '../types/webgl';
+import { IWebGLActiveInfo, IWebGLBuffer, IWebGLProgram, IWebGLRenderingContext } from "../types/webgl";
+import Buffer from "./buffer";
+import GL from "./gl";
 
 interface IProgram {
     fShaderSource: string;
@@ -9,22 +9,22 @@ interface IProgram {
 
 class Program {
 
-    glProgram: IWebGLProgram;
+    public glProgram: IWebGLProgram;
 
     private uniforms: {
         [prop: string]: {
             type: string,
             position: number,
             info: IWebGLActiveInfo,
-            unit: number
-        }
+            unit: number,
+        },
     };
     private attributes: {
         [prop: string]: {
             type: string,
             position: number,
-            info: IWebGLActiveInfo
-        }
+            info: IWebGLActiveInfo,
+        },
     };
 
     private textureCount: number = 0;
@@ -40,14 +40,14 @@ class Program {
         this.initProgram();
     }
 
-    destructor(): void {
+    public destructor(): void {
 
         const { gl } = GL;
 
         gl.deleteProgram(this.glProgram);
     }
 
-    uniform(name: string, value: WebGLTexture | Float32Array | Uint32Array | Uint16Array): void {
+    public uniform(name: string, value: WebGLTexture | Float32Array | Uint32Array | Uint16Array): void {
 
         if (this.uniforms[name]) {
 
@@ -57,26 +57,26 @@ class Program {
             const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
 
             switch (baseVecType) {
-                case 'VEC':
+                case "VEC":
                     {
-                        const uniformMethodName = ['uniform', vecSize, baseType === 'FLOAT' ? 'f' : 'i', 'v'].join('');
+                        const uniformMethodName = ["uniform", vecSize, baseType === "FLOAT" ? "f" : "i", "v"].join("");
                         gl[uniformMethodName](position, value);
                         break;
                     }
-                case 'MAT':
+                case "MAT":
                     {
-                        const uniformMethodName = ['uniform', 'Matrix', vecSize, 'fv'].join('');
+                        const uniformMethodName = ["uniform", "Matrix", vecSize, "fv"].join("");
                         gl[uniformMethodName](position, false, value);
                         break;
                     }
-                case '2D':
+                case "2D":
                     {
                         gl.activeTexture(gl[`TEXTURE${unit}`]);
                         gl.bindTexture(gl.TEXTURE_2D, value);
                         gl.uniform1i(position, unit);
                         break;
                     }
-                case 'CUB':
+                case "CUB":
                     {
                         gl.activeTexture(gl[`TEXTURE${unit}`]);
 
@@ -85,15 +85,13 @@ class Program {
                         break;
                     }
                 default:
-                    throw new Error('baseVecType invalid ' + baseVecType);
+                    throw new Error("baseVecType invalid " + baseVecType);
             }
 
-        } else {
-            console.log(`[Warning] Uniform ${name} not exits.`, this);
         }
     }
 
-    attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
+    public attribute(name: string, buffer: IWebGLBuffer, stride: number, offset: number): void {
         if (this.attributes[name]) {
             const { gl } = GL;
             const { type, info, position } = this.attributes[name];
@@ -114,22 +112,22 @@ class Program {
         const fShaderSource = this.fShaderSource;
         const vShaderSource = this.vShaderSource;
 
-        function loadShader(gl: IWebGLRenderingContext, type, source) {
-            var shader = gl.createShader(type);
+        function loadShader(type, source) {
+            let shader = gl.createShader(type);
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                throw 'An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader);
+                throw new Error("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
             }
             return shader;
         }
 
-        function getVariableType(gl, value) {
+        function getVariableType(value) {
             const types = [
-                'FLOAT', 'FLOAT_VEC2', 'FLOAT_VEC3', 'FLOAT_VEC4', 'FLOAT_MAT2', 'FLOAT_MAT3', 'FLOAT_MAT4',
-                'INT', 'INT_VEC2', 'INT_VEC3', 'INT_VEC4',
-                'BOOL', 'BOOL_VEC2', 'BOOL_VEC3', 'BOOL_VEC4',
-                'SAMPLER_2D', 'SAMPLER_CUBE'
+                "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4", "FLOAT_MAT2", "FLOAT_MAT3", "FLOAT_MAT4",
+                "INT", "INT_VEC2", "INT_VEC3", "INT_VEC4",
+                "BOOL", "BOOL_VEC2", "BOOL_VEC3", "BOOL_VEC4",
+                "SAMPLER_2D", "SAMPLER_CUBE",
             ];
 
             for (let i = 0; i < types.length; i++) {
@@ -141,8 +139,8 @@ class Program {
             throw new Error(`get type failed ' + value`);
         }
 
-        const fShader = loadShader(gl, gl.FRAGMENT_SHADER, fShaderSource);
-        const vShader = loadShader(gl, gl.VERTEX_SHADER, vShaderSource);
+        const fShader = loadShader(gl.FRAGMENT_SHADER, fShaderSource);
+        const vShader = loadShader(gl.VERTEX_SHADER, vShaderSource);
 
         const program = gl.createProgram();
         gl.attachShader(program, vShader);
@@ -150,7 +148,7 @@ class Program {
         gl.linkProgram(program);
 
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-            throw 'Unable to initialize the shader program: ' + gl.getProgramInfoLog(program);
+            throw new Error("Unable to initialize the shader program: " + gl.getProgramInfoLog(program));
         }
 
         const uniforms = {};
@@ -158,35 +156,47 @@ class Program {
 
         const attributeCount = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
         for (let i = 0; i < attributeCount; i++) {
+
             const attribute = gl.getActiveAttrib(program, i);
+
             const res = {
-                type: getVariableType(gl, attribute.type),
+
+                type: getVariableType(attribute.type),
+
+                info: attribute,
                 position: gl.getAttribLocation(program, attribute.name),
-                info: attribute
+
             };
+
             attributes[attribute.name] = res;
         }
+        
         const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+
         for (let i = 0; i < uniformCount; i++) {
+
             const uniform = gl.getActiveUniform(program, i);
+
             const res = {
-                type: getVariableType(gl, uniform.type),
-                position: gl.getUniformLocation(program, uniform.name),
+                type: getVariableType(uniform.type),
+
                 info: uniform,
-                unit: undefined
+                position: gl.getUniformLocation(program, uniform.name),
+                unit: undefined,
             };
+
             const { baseVecType } = this.parseType(res.type);
-            if (baseVecType === '2D') {
+            if (baseVecType === "2D") {
                 const unit = ++this.textureCount;
                 res.unit = unit;
             }
-            if (baseVecType === 'CUB') {
+            if (baseVecType === "CUB") {
                 const unit = ++this.textureCount;
                 res.unit = unit;
             }
             let name = uniform.name;
-            if (name.indexOf('[0]') !== -1) {
-                name = name.replace('[0]', '');
+            if (name.indexOf("[0]") !== -1) {
+                name = name.replace("[0]", "");
             }
             uniforms[name] = res;
         }
@@ -197,8 +207,8 @@ class Program {
     }
 
     private parseType(type: string) {
-        const baseType = type.split('_')[0];
-        const vecType = type.split('_').length > 1 ? type.split('_')[1] : 'VEC1';
+        const baseType = type.split("_")[0];
+        const vecType = type.split("_").length > 1 ? type.split("_")[1] : "VEC1";
         const baseVecType = vecType.substr(0, 3);
         const vecSize = Number(vecType[3]);
         return { baseType, vecType, baseVecType, vecSize };

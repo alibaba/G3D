@@ -1,6 +1,6 @@
 const STLParser = {
 
-    parse: function (data) {
+    parse(data) {
         let res = null;
         if (data instanceof ArrayBuffer) {
             res = this.parseBinary(data);
@@ -10,7 +10,7 @@ const STLParser = {
         return res;
     },
 
-    parseBinary: function (data) {
+    parseBinary(data) {
 
         const reader = new DataView(data);
         const faces = reader.getUint32(80, true);
@@ -45,18 +45,18 @@ const STLParser = {
             positions,
             normals,
             uvs,
-            indices
-        }
+            indices,
+        };
 
     },
 
-    parseASCII: function (data) {
+    parseASCII(data) {
 
         const patternFace = /facet([\s\S]*?)endfacet/g;
 
         const patternFloat = /[\s]+([+-]?(?:\d+.\d+|\d+.|\d+|.\d+)(?:[eE][+-]?\d+)?)/.source;
-        const patternVertex = new RegExp('vertex' + patternFloat + patternFloat + patternFloat, 'g');
-        const patternNormal = new RegExp('normal' + patternFloat + patternFloat + patternFloat, 'g');
+        const patternVertex = new RegExp("vertex" + patternFloat + patternFloat + patternFloat, "g");
+        const patternNormal = new RegExp("normal" + patternFloat + patternFloat + patternFloat, "g");
 
         let faceCounter = 0;
         const positions = [];
@@ -68,9 +68,9 @@ const STLParser = {
         let result;
 
         while ((result = patternFace.exec(data)) !== null) {
-            var vertexCountPerFace = 0;
-            var normalCountPerFace = 0;
-            var text = result[0];
+            let vertexCountPerFace = 0;
+            let normalCountPerFace = 0;
+            const text = result[0];
             while ((result = patternNormal.exec(text)) !== null) {
                 normal.x = parseFloat(result[1]);
                 normal.y = parseFloat(result[2]);
@@ -85,10 +85,10 @@ const STLParser = {
                 vertexCountPerFace++;
             }
             if (normalCountPerFace !== 1) {
-                console.log('normalCountPerFace is not 1');
+                throw new Error("normalCountPerFace is not 1");
             }
             if (vertexCountPerFace !== 3) {
-                console.log('vertexCountPerFace is not 3');
+                throw new Error("vertexCountPerFace is not 3");
             }
             faceCounter++;
         }
@@ -97,9 +97,9 @@ const STLParser = {
             positions,
             normals,
             uvs,
-            indices
-        }
-    }
-}
+            indices,
+        };
+    },
+};
 
 export default STLParser;

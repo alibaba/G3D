@@ -1,7 +1,7 @@
-import Mesh from '../../../mesh/mesh';
-import Geometry from '../../../geometry/geometry';
+import Geometry from "../../../geometry/geometry";
+import Mesh from "../../../mesh/mesh";
 
-import STLParser from './parser';
+import STLParser from "./parser";
 
 function createFromStlModel(scene, model, { geometry = {} } = {}) {
 
@@ -14,9 +14,9 @@ function createFromStlModel(scene, model, { geometry = {} } = {}) {
         uvs: model.uvs,
         normals: model.normals,
         indices: {
-            default: model.indices
+            default: model.indices,
         },
-        ...geometry
+        ...geometry,
     });
 
     return mesh;

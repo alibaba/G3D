@@ -1,13 +1,12 @@
-import BufferView from '../core/buffer-view';
-import BaseGeometry from './base-geometry';
+import BufferView from "../core/buffer-view";
+import BaseGeometry from "./base-geometry";
 
 interface ILineGeometryConfig {
     vertices?: number[];
     indices?: {
-        [propName: string]: number[]
+        [propName: string]: number[],
     };
 }
-
 
 class LineGeometry extends BaseGeometry {
 
@@ -29,7 +28,7 @@ class LineGeometry extends BaseGeometry {
                 normals: this.createBufferView(normals) as BufferView,
                 uvs: this.createBufferView(uvs),
                 indices: this.createElementBufferView(indices, true),
-            }
+            };
 
         }
     }

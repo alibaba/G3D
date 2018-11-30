@@ -1,14 +1,14 @@
-import BaseLight from './base-light';
+import BaseLight from "./base-light";
 
-import BaseOrthographicCamera from '../camera/base-orthographic-camera';
-import { IDirection } from '../types/raw';
-import Scene from '../scene/scene';
+import BaseOrthographicCamera from "../camera/base-orthographic-camera";
+import Scene from "../scene/scene";
+import { IDirection } from "../types/raw";
 
 class DirectionalLight extends BaseLight {
 
-    direction: IDirection = { x: 0, y: 0, z: -1 };
+    public direction: IDirection = { x: 0, y: 0, z: -1 };
 
-    castShadow: boolean = false;
+    public castShadow: boolean = false;
 
     private shadowCamera: BaseOrthographicCamera = new BaseOrthographicCamera();
     private directionValues: number[] = [0, 0, -1];
@@ -17,14 +17,14 @@ class DirectionalLight extends BaseLight {
         super(scene);
     }
 
-    getDirection(): number[] {
+    public getDirection(): number[] {
         this.directionValues[0] = this.direction.x;
         this.directionValues[1] = this.direction.y;
         this.directionValues[2] = this.direction.z;
         return this.directionValues;
     }
 
-    getShadowCamera(): BaseOrthographicCamera {
+    public getShadowCamera(): BaseOrthographicCamera {
 
         const camera = this.shadowCamera;
 

@@ -6,12 +6,11 @@ interface IBufferViewConfig {
     byteOffset?: number;
 }
 
-
 class BufferView {
 
-    readonly buffer: Buffer;
-    readonly byteStride: number;
-    readonly byteOffset: number;
+    public readonly buffer: Buffer;
+    public readonly byteStride: number;
+    public readonly byteOffset: number;
 
     constructor({ buffer, byteStride = 0, byteOffset = 0 }: IBufferViewConfig) {
 

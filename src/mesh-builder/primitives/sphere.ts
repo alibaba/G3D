@@ -1,8 +1,7 @@
-import Mesh from '../../mesh/mesh';
-import Geometry from '../../geometry/geometry';
+import Geometry from "../../geometry/geometry";
+import Mesh from "../../mesh/mesh";
 
-import Vec3 from '../../matrix/vec3';
-
+import Vec3 from "../../matrix/vec3";
 
 function createSphere(scene, radius, widthSeg = 16, heightSeg = 12) {
 
@@ -51,19 +50,19 @@ function createSphere(scene, radius, widthSeg = 16, heightSeg = 12) {
             const c = grid[iy + 1][ix];
             const d = grid[iy + 1][ix + 1];
             if (iy !== 0 || thetaStart > 0) {
-                indices.push(a, b, d)
-            };
+                indices.push(a, b, d);
+            }
             if (iy !== heightSeg - 1 || thetaLength < Math.PI) {
-                indices.push(b, c, d)
-            };
+                indices.push(b, c, d);
+            }
         }
     }
 
     const mesh = new Mesh(scene);
     mesh.geometry = new Geometry({
         vertices, uvs, normals, indices: {
-            default: indices
-        }
+            default: indices,
+        },
     });
 
     return mesh;

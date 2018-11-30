@@ -1,16 +1,16 @@
-import BaseCamera from './base-camera';
-import Mat4, { IMat4 } from '../matrix/mat4';
+import Mat4, { IMat4 } from "../matrix/mat4";
+import BaseCamera from "./base-camera";
 
 class BaseOrthographicCamera extends BaseCamera {
 
-    width: number = 10;
-    viewRatio: number = 1;
-    near: number = 1;
-    far: number = 1000;
+    public width: number = 10;
+    public viewRatio: number = 1;
+    public near: number = 1;
+    public far: number = 1000;
 
     private projectMatrixValues: IMat4 = Mat4.create();
 
-    getPMatrix(): IMat4 {
+    public getPMatrix(): IMat4 {
         const { width } = this;
         const height = width / this.viewRatio;
 

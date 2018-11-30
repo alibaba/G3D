@@ -1,31 +1,31 @@
-import BaseLight from './base-light';
-import BasePerspectiveCamera from '../camera/base-perspective-camera';
-import { IPosition } from '../types/raw';
+import BasePerspectiveCamera from "../camera/base-perspective-camera";
+import { IPosition } from "../types/raw";
+import BaseLight from "./base-light";
 
 class PointLight extends BaseLight {
 
-    position: IPosition = { x: 0, y: 0, z: 0 };
-    radius: number = 1;
+    public position: IPosition = { x: 0, y: 0, z: 0 };
+    public radius: number = 1;
 
-    castShadow: boolean = false;
-    castShadowFov: number = 10;
+    public castShadow: boolean = false;
+    public castShadowFov: number = 10;
 
     private shadowCamera: BasePerspectiveCamera = new BasePerspectiveCamera();
     private positionValues: number[] = [0, 0, 0];
 
-    getPosition(): number[] {
+    public getPosition(): number[] {
         this.positionValues[0] = this.position.x;
         this.positionValues[1] = this.position.y;
         this.positionValues[2] = this.position.z;
         return this.positionValues;
     }
 
-    getIntensity(): number {
+    public getIntensity(): number {
         const intensity = super.getIntensity();
         return intensity * this.radius * this.radius;
     }
 
-    getShadowCamera(): BasePerspectiveCamera {
+    public getShadowCamera(): BasePerspectiveCamera {
 
         const camera = this.shadowCamera;
 

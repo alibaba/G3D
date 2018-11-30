@@ -1,6 +1,5 @@
-import Shader from '../core/shader';
-import Program from '../core/program';
-
+import Program from "../core/program";
+import Shader from "../core/shader";
 
 interface IShaderMaterialConfig {
     name: string;
@@ -11,38 +10,37 @@ interface IShaderMaterialConfig {
     lighting?: boolean;
     shadow?: boolean;
     camera?: boolean;
-    passes?: {
+    passes?: Array<{
         depthTest: boolean;
         blend: boolean;
         cullFace: boolean;
-        uniforms: {
+        uniforms: Array<{
             name: string;
             value: any;
-        }[];
-    }[];
+        }>;
+    }>;
 }
-
 
 class ShaderMaterial {
 
-    static shaders = {};
-    private shader: Shader;
+    public static shaders = {};
 
-    macros: string[];
-    uniforms: string[];
+    public macros: string[];
+    public uniforms: string[];
 
-    lighting: boolean;
-    shadow: boolean;
-    camera: boolean;
-    passes: {
+    public lighting: boolean;
+    public shadow: boolean;
+    public camera: boolean;
+    public passes: Array<{
         depthTest: boolean;
         blend: boolean;
         cullFace: boolean;
-        uniforms: {
+        uniforms: Array<{
             name: string;
             value: any;
-        }[]
-    }[];
+        }>
+    }>;
+    private shader: Shader;
 
     constructor(config: IShaderMaterialConfig) {
 
@@ -59,13 +57,13 @@ class ShaderMaterial {
                 depthTest: true,
                 blend: false,
                 cullFace: true,
-                uniforms: []
-            }]
+                uniforms: [],
+            }],
         } = config;
 
         if (!ShaderMaterial.shaders[name]) {
             ShaderMaterial.shaders[name] = new Shader({
-                vShaderSource, fShaderSource
+                vShaderSource, fShaderSource,
             });
         }
 
@@ -81,16 +79,16 @@ class ShaderMaterial {
         this.passes = passes;
     }
 
-    getProgram(globalDefines: string[]): Program {
-        const localDefines = this.macros.filter(macro => this.condition(macro));
+    public getProgram(globalDefines: string[]): Program {
+        const localDefines = this.macros.filter((macro) => this.condition(macro));
         return this.shader.program([...localDefines, ...globalDefines]);
     }
 
-    condition(macro: string): boolean {
+    public condition(macro: string): boolean {
         return false;
     }
 
-    uniform(name: string): Float32Array | WebGLTexture {
+    public uniform(name: string): Float32Array | WebGLTexture {
         return null;
     }
 }

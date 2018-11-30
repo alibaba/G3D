@@ -1,14 +1,14 @@
-import Engine from '../core/engine';
-import GL from '../core/gl';
+import Engine from "../core/engine";
+import GL from "../core/gl";
 
-import AmbientLight from '../light/ambient-light';
-import PointLight from '../light/point-light';
-import DirectionalLight from '../light/directional-light';
+import AmbientLight from "../light/ambient-light";
+import DirectionalLight from "../light/directional-light";
+import PointLight from "../light/point-light";
 
-import Geometry from '../geometry/geometry';
-import Scene from '../scene/scene';
+import Geometry from "../geometry/geometry";
+import Scene from "../scene/scene";
 
-import { find } from '../utils/lodash';
+import { find } from "../utils/lodash";
 
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
@@ -18,7 +18,7 @@ const LIGHT_TYPE_POINT = 4;
 
 class RenderManager {
 
-    scene: Scene = null;
+    public scene: Scene = null;
 
     private lights: {
         // type: Uint32Array,
@@ -31,11 +31,33 @@ class RenderManager {
             type: [],
             color: new Float32Array(LIGHT_MAX_COUNT * 3),
             intensity: new Float32Array(LIGHT_MAX_COUNT),
-            position: new Float32Array(LIGHT_MAX_COUNT * 3)
+            position: new Float32Array(LIGHT_MAX_COUNT * 3),
         };
 
     constructor(scene: Scene) {
         this.scene = scene;
+    }
+
+    public render() {
+
+        const { scene } = this;
+
+        const engine = Engine.instance;
+
+        if (scene.activeCamera) {
+
+            const groups = this.groupMeshLayers();
+
+            engine.bindFramebuffer("picker");
+            this.renderToPickerRenderBuffer(groups);
+            engine.bindFramebuffer(null);
+
+            engine.bindFramebuffer("shadow");
+            this.renderToShadowRenderBuffer(groups);
+            engine.bindFramebuffer(null);
+
+            this.renderToScreen(groups);
+        }
     }
 
     private groupMeshLayers() {
@@ -45,7 +67,7 @@ class RenderManager {
 
         const groups = [];
 
-        meshes.forEach(function (mesh) {
+        meshes.forEach(function(mesh) {
 
             const i = mesh.getRenderLayerIndex();
 
@@ -55,7 +77,7 @@ class RenderManager {
 
             groups[i].push(mesh);
 
-        })
+        });
 
         return groups.filter(Boolean);
     }
@@ -71,28 +93,6 @@ class RenderManager {
             }
         }
         return null;
-    }
-
-    render() {
-
-        const { scene } = this;
-
-        const engine = Engine.instance;
-
-        if (scene.activeCamera) {
-
-            const groups = this.groupMeshLayers();
-
-            engine.bindFramebuffer('picker');
-            this.renderToPickerRenderBuffer(groups);
-            engine.bindFramebuffer(null);
-
-            engine.bindFramebuffer('shadow');
-            this.renderToShadowRenderBuffer(groups);
-            engine.bindFramebuffer(null);
-
-            this.renderToScreen(groups);
-        }
     }
 
     private renderToScreen(groups) {
@@ -113,22 +113,22 @@ class RenderManager {
         const globalDefines = [];
 
         if (this.getShadowLight()) {
-            globalDefines.push('CAST_SHADOW');
+            globalDefines.push("CAST_SHADOW");
         }
 
-        groups.forEach(meshes => {
+        groups.forEach((meshes) => {
 
             engine.clearDepthBuffer();
 
-            meshes.filter(m => m.getGlobalVisibility()).forEach((mesh) => {
+            meshes.filter((m) => m.getGlobalVisibility()).forEach((mesh) => {
 
                 mesh.geometry.bufferViews.indices &&
-                    Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
+                    Object.keys(mesh.geometry.bufferViews.indices).forEach((key) => {
 
                         const material = mesh.materials[key];
 
                         engine.useProgram(
-                            material.getProgram(globalDefines)
+                            material.getProgram(globalDefines),
                         );
 
                         this.prepareMVPMatrix(mesh);
@@ -151,10 +151,10 @@ class RenderManager {
 
                         const { passes } = material;
 
-                        for (let i in passes) {
+                        for (const i in passes) {
 
                             const { uniforms, depthTest, cullFace, blend } = passes[i];
-                            for (let j in uniforms) {
+                            for (const j in uniforms) {
                                 const { name, value } = uniforms[j];
                                 engine.uniform(name, value);
                             }
@@ -182,8 +182,8 @@ class RenderManager {
                             this.drawMesh(mesh, key);
                         }
 
-                    })
-            })
+                    });
+            });
         });
 
     }
@@ -194,31 +194,30 @@ class RenderManager {
 
         engine.clearColorBuffer({ r: 0, g: 0, b: 0 });
 
-        groups.forEach(meshes => {
+        groups.forEach((meshes) => {
 
             engine.clearDepthBuffer();
 
-            meshes.filter(m => m.getPickable() && m.getGlobalVisibility()).forEach((mesh) => {
+            meshes.filter((m) => m.getPickable() && m.getGlobalVisibility()).forEach((mesh) => {
 
-
-                Object.keys(mesh.materials).forEach(key => {
+                Object.keys(mesh.materials).forEach((key) => {
 
                     const material = mesh.materials[key];
 
                     if (material) {
-                        engine.useBuiltinProgram('picker');
+                        engine.useBuiltinProgram("picker");
 
                         this.prepareMVPMatrix(mesh);
 
                         this.prepareGeometry(mesh.geometry);
 
-                        engine.uniform('meshId', [mesh.id]);
+                        engine.uniform("meshId", [mesh.id]);
 
                         this.drawMesh(mesh, key);
                     }
-                })
+                });
             });
-        })
+        });
     }
 
     private renderToShadowRenderBuffer(groups) {
@@ -228,7 +227,7 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        const shadowLight = find(lights, light => light.castShadow);
+        const shadowLight = find(lights, (light) => light.castShadow);
 
         if (shadowLight) {
 
@@ -239,15 +238,15 @@ class RenderManager {
 
             const camera = shadowLight.getShadowCamera();
 
-            group.forEach(mesh => {
+            group.forEach((mesh) => {
 
-                Object.keys(mesh.geometry.bufferViews.indices).forEach(key => {
+                Object.keys(mesh.geometry.bufferViews.indices).forEach((key) => {
 
                     const material = mesh.materials[key];
 
                     if (material) {
 
-                        engine.useBuiltinProgram('shadow');
+                        engine.useBuiltinProgram("shadow");
 
                         this.prepareMVPMatrix(mesh, camera);
 
@@ -256,13 +255,13 @@ class RenderManager {
                         this.drawMesh(mesh, key);
                     }
                 });
-            })
+            });
         }
     }
 
     private setFaceCull = (facing) => {
         Engine.instance.cullFace(
-            facing === Geometry.FACING.FRONT ? 'BACK' : facing === Geometry.FACING.BACK ? 'FRONT' : null
+            facing === Geometry.FACING.FRONT ? "BACK" : facing === Geometry.FACING.BACK ? "FRONT" : null,
         );
     }
 
@@ -270,9 +269,9 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        engine.uniform('uVMatrix', camera.getVMatrix());
-        engine.uniform('uPMatrix', camera.getPMatrix());
-        engine.uniform('uMMatrix', mesh.getWorldMatrix());
+        engine.uniform("uVMatrix", camera.getVMatrix());
+        engine.uniform("uPMatrix", camera.getPMatrix());
+        engine.uniform("uMMatrix", mesh.getWorldMatrix());
     }
 
     private prepareLights() {
@@ -285,12 +284,12 @@ class RenderManager {
         const { lights: { type, color, intensity, position } } = this;
 
         if (lights.length > 16) {
-            throw new Error('[G3D] Scene could not have more than 16 lights.');
+            throw new Error("[G3D] Scene could not have more than 16 lights.");
         }
         for (let i = 0; i < LIGHT_MAX_COUNT; i++) {
             const light = lights[i];
 
-            const lColor = light ? light.getColor().map(c => c / 255) : [0, 0, 0];
+            const lColor = light ? light.getColor().map((c) => c / 255) : [0, 0, 0];
             const lIntensity = light ? light.getIntensity() : 0;
             let lPosition;
 
@@ -317,10 +316,10 @@ class RenderManager {
             position[i * 3 + 2] = lPosition[2];
         }
 
-        engine.uniform('uLightType', type);
-        engine.uniform('uLightColor', color);
-        engine.uniform('uLightIntensity', intensity);
-        engine.uniform('uLightPosition', position);
+        engine.uniform("uLightType", type);
+        engine.uniform("uLightColor", color);
+        engine.uniform("uLightIntensity", intensity);
+        engine.uniform("uLightPosition", position);
     }
 
     private prepareGeometry = (geometry) => {
@@ -333,25 +332,25 @@ class RenderManager {
             return;
         }
 
-        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
+        engine.attribute("aPosition", vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
 
         if (uvs) {
 
-            if (typeof uvs.byteStride === 'number') {
+            if (typeof uvs.byteStride === "number") {
 
-                engine.attribute('aUV', uvs.buffer.glBuffer, uvs.byteStride, uvs.byteOffset);
+                engine.attribute("aUV", uvs.buffer.glBuffer, uvs.byteStride, uvs.byteOffset);
 
             } else {
 
-                Object.keys(uvs).forEach(key => {
+                Object.keys(uvs).forEach((key) => {
                     engine.attribute(key, uvs[key].buffer.glBuffer, uvs[key].byteStride, uvs[key].byteOffset);
-                })
+                });
 
             }
         }
 
         if (normals) {
-            engine.attribute('aNormal', normals.buffer.glBuffer, normals.byteStride, normals.byteOffset);
+            engine.attribute("aNormal", normals.buffer.glBuffer, normals.byteStride, normals.byteOffset);
         }
 
     }
@@ -375,7 +374,7 @@ class RenderManager {
     private prepareCameraPosition() {
         const engine = Engine.instance;
         const { activeCamera } = this.scene;
-        engine.uniform('uCameraPosition', activeCamera.getPosition());
+        engine.uniform("uCameraPosition", activeCamera.getPosition());
     }
 
     private prepareShadow() {
@@ -386,12 +385,12 @@ class RenderManager {
 
         if (shadowLight) {
 
-            const { colorTarget: shadowMapTexture } = engine.getFramebuffer('shadow');
+            const { colorTarget: shadowMapTexture } = engine.getFramebuffer("shadow");
 
-            engine.uniform('uShadowMapTexture', shadowMapTexture);
+            engine.uniform("uShadowMapTexture", shadowMapTexture);
             const shadowCamera = shadowLight.getShadowCamera();
-            engine.uniform('uShadowVMatrix', shadowCamera.getVMatrix());
-            engine.uniform('uShadowPMatrix', shadowCamera.getPMatrix());
+            engine.uniform("uShadowVMatrix", shadowCamera.getVMatrix());
+            engine.uniform("uShadowPMatrix", shadowCamera.getPMatrix());
         }
     }
 
@@ -418,19 +417,19 @@ class RenderManager {
         const skybox = scene.skybox;
         const camera = scene.activeCamera;
 
-        engine.useBuiltinProgram('skybox');
+        engine.useBuiltinProgram("skybox");
 
         this.setFaceCull(skybox.geometry.facing);
 
         const { vertices, indices } = skybox.geometry.bufferViews;
 
-        engine.attribute('aPosition', vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
+        engine.attribute("aPosition", vertices.buffer.glBuffer, vertices.byteStride, vertices.byteOffset);
 
-        engine.uniform('uVMatrix', camera.getVMatrix());
-        engine.uniform('uPMatrix', camera.getPMatrix());
-        engine.uniform('uCubeTexture', skybox.cubeTexture.glTexture);
+        engine.uniform("uVMatrix", camera.getVMatrix());
+        engine.uniform("uPMatrix", camera.getPMatrix());
+        engine.uniform("uCubeTexture", skybox.cubeTexture.glTexture);
 
-        for (let key in indices) {
+        for (const key in indices) {
             engine.elements(indices[key].buffer.glBuffer);
             engine.draw(indices[key].mode, indices[key].count, indices[key].type, indices[key].byteOffset);
         }

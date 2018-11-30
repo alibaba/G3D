@@ -1,17 +1,15 @@
-import BaseOrthographicCamera from './base-orthographic-camera';
-import { IMat4 } from '../matrix/mat4';
-import Scene from '../scene/scene';
+import { IMat4 } from "../matrix/mat4";
+import Scene from "../scene/scene";
+import BaseOrthographicCamera from "./base-orthographic-camera";
 
-import { deg2rad } from '../utils/math';
-import GL from '../core/gl';
-
-
+import GL from "../core/gl";
+import { deg2rad } from "../utils/math";
 
 class RotateOrthographicCamera extends BaseOrthographicCamera {
 
-    radius: number = 100;
-    alpha: number = 45;
-    beta: number = 45;
+    public radius: number = 100;
+    public alpha: number = 45;
+    public beta: number = 45;
 
     constructor(scene: Scene) {
 
@@ -23,7 +21,7 @@ class RotateOrthographicCamera extends BaseOrthographicCamera {
         scene.activeCamera = this;
     }
 
-    getVMatrix(): IMat4 {
+    public getVMatrix(): IMat4 {
 
         const r2 = Math.cos(deg2rad(this.beta)) * this.radius;
         const y = Math.sin(deg2rad(this.beta)) * this.radius;
@@ -39,7 +37,7 @@ class RotateOrthographicCamera extends BaseOrthographicCamera {
     }
 
     // TODO: add view ray for ortho camera
-    getViewRay(x, y, flip) {
+    public getViewRay(x, y, flip) {
         // const { width, height } = Engine.instance;
         // return super.getViewRay(x / width, y / height, flip);
     }

@@ -1,19 +1,19 @@
-import GL from './gl';
-import { IWebGlFramebuffer, IWebGLRenderBuffer, IWebGLTexture } from '../types/webgl';
+import { IWebGlFramebuffer, IWebGLRenderBuffer, IWebGLTexture } from "../types/webgl";
+import GL from "./gl";
 
 interface IFramebufferConfig {
-    width: number,
-    height: number
+    width: number;
+    height: number;
 }
 
 class Framebuffer {
 
-    width: number;
-    height: number;
+    public width: number;
+    public height: number;
 
-    framebuffer: IWebGlFramebuffer;
-    colorTarget: IWebGLTexture;
-    depthTarget: IWebGLRenderBuffer;
+    public framebuffer: IWebGlFramebuffer;
+    public colorTarget: IWebGLTexture;
+    public depthTarget: IWebGLRenderBuffer;
 
     constructor({ width, height }: IFramebufferConfig) {
 
@@ -51,7 +51,7 @@ class Framebuffer {
         this.depthTarget = depthTarget;
     }
 
-    destructor(): void {
+    public destructor(): void {
 
         const { gl } = GL;
         const { framebuffer, colorTarget, depthTarget } = this;

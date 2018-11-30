@@ -1,15 +1,15 @@
-import BasePerspectiveCamera from './base-perspective-camera';
+import BasePerspectiveCamera from "./base-perspective-camera";
 
-import GL from '../core/gl';
-import Scene from '../scene/scene';
-import { deg2rad } from '../utils/math';
-import { IMat4 } from '../matrix/mat4';
+import GL from "../core/gl";
+import { IMat4 } from "../matrix/mat4";
+import Scene from "../scene/scene";
+import { deg2rad } from "../utils/math";
 
 class RotatePerspectiveCamera extends BasePerspectiveCamera {
 
-    radius: number = 100;
-    alpha: number = 45;
-    beta: number = 45;
+    public radius: number = 100;
+    public alpha: number = 45;
+    public beta: number = 45;
 
     constructor(scene: Scene) {
 
@@ -21,7 +21,7 @@ class RotatePerspectiveCamera extends BasePerspectiveCamera {
         scene.activeCamera = this;
     }
 
-    getVMatrix(): IMat4 {
+    public getVMatrix(): IMat4 {
 
         const r2 = Math.cos(deg2rad(this.beta)) * this.radius;
         const y = Math.sin(deg2rad(this.beta)) * this.radius;
@@ -36,8 +36,7 @@ class RotatePerspectiveCamera extends BasePerspectiveCamera {
         return super.getVMatrix();
     }
 
-
-    getViewRay(x, y, flip) {
+    public getViewRay(x, y, flip) {
 
         const { width, height } = GL;
 

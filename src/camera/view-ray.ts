@@ -1,14 +1,14 @@
-import Vec3 from '../matrix/vec3';
+import Vec3 from "../matrix/vec3";
 
 class Ray {
 
-    origin = { x: 0, y: 0, z: 0 };
-    direction = { x: 0, y: 0, z: 1 };
+    public origin = { x: 0, y: 0, z: 0 };
+    public direction = { x: 0, y: 0, z: 1 };
 
-    intersectPlane({ normal, offset }) {
+    public intersectPlane({ normal, offset }) {
         const dist = this.distanceToPlane({ normal, offset });
         if (dist === null) {
-            return null
+            return null;
         } else {
             const origin = Vec3.fromValues(this.origin.x, this.origin.y, this.origin.z);
             const direction = Vec3.normalize(Vec3.create(), Vec3.fromValues(this.direction.x, this.direction.y, this.direction.z));
@@ -16,17 +16,17 @@ class Ray {
             const point = Vec3.add(
                 Vec3.create(),
                 origin,
-                offset
+                offset,
             );
             return {
                 x: point[0],
                 y: point[1],
-                z: point[2]
-            }
+                z: point[2],
+            };
         }
     }
 
-    distanceToPlane({ normal, offset }) {
+    public distanceToPlane({ normal, offset }) {
 
         normal = Vec3.normalize(Vec3.create(), Vec3.fromValues(normal.x, normal.y, normal.z));
         const origin = Vec3.fromValues(this.origin.x, this.origin.y, this.origin.z);

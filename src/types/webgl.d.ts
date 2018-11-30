@@ -1,7 +1,7 @@
 export interface ICanvas {
     width: number;
     height: number;
-    getContext: (type: '2d' | 'webgl', options: any) => IWebGLRenderingContext;
+    getContext: (type: "2d" | "webgl", options: any) => IWebGLRenderingContext;
 }
 
 export interface IImage {

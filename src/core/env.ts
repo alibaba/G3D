@@ -17,5 +17,5 @@ export default {
 
     framebufferNotReady: false,
 
-    pbrNotReady: false
-}
+    pbrNotReady: false,
+};

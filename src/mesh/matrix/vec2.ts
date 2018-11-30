@@ -117,9 +117,9 @@ export function scale(out: IVec2, a: IVec2, b: number): IVec2 {
 }
 
 // Adds two vec2's after scaling the second operand by a scalar value
-export function scaleAndAdd(out: IVec2, a: IVec2, b: IVec2, v: number): IVec2 {
-    out[0] = a[0] + (b[0] * v);
-    out[1] = a[1] + (b[1] * v);
+export function scaleAndAdd(out: IVec2, a: IVec2, b: IVec2, scale: number): IVec2 {
+    out[0] = a[0] + (b[0] * scale);
+    out[1] = a[1] + (b[1] * scale);
     return out;
 }
 
@@ -169,12 +169,12 @@ export function inverse(out: IVec2, a: IVec2): IVec2 {
 export function normalize(out: IVec2, a: IVec2): IVec2 {
     const x = a[0],
         y = a[1];
-    let l = x * x + y * y;
-    if (l > 0) {
+    let len = x * x + y * y;
+    if (len > 0) {
         // TODO: evaluate use of glm_invsqrt here?
-        l = 1 / Math.sqrt(l);
-        out[0] = a[0] * l;
-        out[1] = a[1] * l;
+        len = 1 / Math.sqrt(len);
+        out[0] = a[0] * len;
+        out[1] = a[1] * len;
     }
     return out;
 }
@@ -205,11 +205,11 @@ export function lerp(out: IVec2, a: IVec2, b: IVec2, t: number): IVec2 {
 }
 
 // Generates a random vector with the given scale
-export function random(out: IVec2, v: number): IVec2 {
-    v = v || 1.0;
+export function random(out: IVec2, scale: number): IVec2 {
+    scale = scale || 1.0;
     const r = Math.random() * 2.0 * Math.PI;
-    out[0] = Math.cos(r) * v;
-    out[1] = Math.sin(r) * v;
+    out[0] = Math.cos(r) * scale;
+    out[1] = Math.sin(r) * scale;
     return out;
 }
 

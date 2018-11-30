@@ -1,28 +1,28 @@
-import BaseCamera from './base-camera';
+import BaseCamera from "./base-camera";
 
-import Mat4, { IMat4 } from '../matrix/mat4';
-import Vec3 from '../matrix/vec3';
+import Mat4, { IMat4 } from "../matrix/mat4";
+import Vec3 from "../matrix/vec3";
 
-import { deg2rad } from '../utils/math';
+import { deg2rad } from "../utils/math";
 
-import ViewRay from './view-ray';
+import ViewRay from "./view-ray";
 
 class PerspectiveCamera extends BaseCamera {
 
-    fov: number = 60;           // in degrees
-    viewRatio: number = 1;
-    near: number = 1;
-    far: number = 1000;
+    public fov: number = 60;           // in degrees
+    public viewRatio: number = 1;
+    public near: number = 1;
+    public far: number = 1000;
 
     private projectMatrixValues: IMat4 = Mat4.create();
 
-    getPMatrix(): IMat4 {
+    public getPMatrix(): IMat4 {
         Mat4.perspective(this.projectMatrixValues, deg2rad(this.fov), this.viewRatio, this.near, this.far);
         return this.projectMatrixValues;
     }
 
     // TODO: make it better
-    getViewRay(x, y, flip = true) {
+    public getViewRay(x, y, flip = true) {
 
         if (flip) {
             y = 1 - y;
@@ -33,7 +33,7 @@ class PerspectiveCamera extends BaseCamera {
 
         const pMatrix = this.getPMatrix();
 
-        let p2 = Vec3.fromValues(tx, ty, 1);
+        const p2 = Vec3.fromValues(tx, ty, 1);
 
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), pMatrix));
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), this.getVMatrix()));

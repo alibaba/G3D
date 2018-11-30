@@ -88,13 +88,6 @@ function main(
 
                                     mesh3.materials.default = mtl;
 
-                                    const gui = new dat.GUI();
-                                    gui.add(mesh3.materials.default.pbrEnviroment, 'greyness', 0, 1);
-                                    gui.add(mesh3.materials.default.albedoColor, 'r', 0, 3000);
-                                    gui.add(mesh3.materials.default.albedoColor, 'g', 0, 3000);
-                                    gui.add(mesh3.materials.default.albedoColor, 'b', 0, 3000);
-                                    gui.add(mesh3.materials.default, 'roughness', 0, 1);
-
                                     const mesh = new G3D.Mesh(scene);
                                     mesh1.parent = mesh;
                                     mesh2.parent = mesh;

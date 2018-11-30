@@ -1,89 +1,93 @@
-import Scene from './scene/scene';
-import Node from './core/node';
-import Env from './core/env';
-import Engine from './core/engine';
+import Engine from "./core/engine";
+import Env from "./core/env";
+import Node from "./core/node";
+import Scene from "./scene/scene";
 
-import Buffer from './core/buffer';
-import BufferView from './core/buffer-view';
-import ElementBuffer from './core/element-buffer';
-import ElementBufferView from './core/element-buffer-view';
-import Texture from './texture/texture';
-import CubeTexture from './texture/cube-texture';
+import Buffer from "./core/buffer";
+import BufferView from "./core/buffer-view";
+import ElementBuffer from "./core/element-buffer";
+import ElementBufferView from "./core/element-buffer-view";
+import CubeTexture from "./texture/cube-texture";
+import Texture from "./texture/texture";
 
-import Skybox from './scene/skybox';
-import BaseOrthographicCamera from './camera/base-orthographic-camera';
-import BasePerspectiveCamera from './camera/base-perspective-camera';
-import RotatePerspectiveCamera from './camera/rotate-perspective-camera';
-import RotateOrthographicCamera from './camera/rotate-orthographic-camera';
+import BaseOrthographicCamera from "./camera/base-orthographic-camera";
+import BasePerspectiveCamera from "./camera/base-perspective-camera";
+import RotateOrthographicCamera from "./camera/rotate-orthographic-camera";
+import RotatePerspectiveCamera from "./camera/rotate-perspective-camera";
+import Skybox from "./scene/skybox";
 
-import AmbientLight from './light/ambient-light';
-import DirectionalLight from './light/directional-light';
-import PointLight from './light/point-light';
+import AmbientLight from "./light/ambient-light";
+import DirectionalLight from "./light/directional-light";
+import PointLight from "./light/point-light";
 
-import Mesh from './mesh/mesh';
-import LineMesh from './mesh/line-mesh';
+import LineMesh from "./mesh/line-mesh";
+import Mesh from "./mesh/mesh";
 
-import Geometry from './geometry/geometry';
-import LineGeometry from './geometry/line-geometry';
+import Geometry from "./geometry/geometry";
+import LineGeometry from "./geometry/line-geometry";
 
-import ShaderMaterial from './material/shader-material';
-import RawMaterial from './material/raw-material';
-import PhongMaterial from './material/phong-material';
-import PBRMaterial from './material/pbr-material';
-import PBREnviroment from './material/pbr-enviroment';
-import GemMaterial from './material/gem-material';
-import MeshBuilder from './mesh-builder/mesh-builder';
+import GemMaterial from "./material/gem-material";
+import PBREnviroment from "./material/pbr-enviroment";
+import PBRMaterial from "./material/pbr-material";
+import PhongMaterial from "./material/phong-material";
+import RawMaterial from "./material/raw-material";
+import ShaderMaterial from "./material/shader-material";
+import MeshBuilder from "./mesh-builder/mesh-builder";
 
-import Mat4 from './matrix/mat4';
-import Mat3 from './matrix/mat3';
-import Vec4 from './matrix/vec4';
-import Vec3 from './matrix/vec3';
-import Quat from './matrix/quat';
+import Mat3 from "./matrix/mat3";
+import Mat4 from "./matrix/mat4";
+import Quat from "./matrix/quat";
+import Vec3 from "./matrix/vec3";
+import Vec4 from "./matrix/vec4";
 
-export default {
+const G3D = {
+
+    Engine,
+    Env,
 
     Scene,
-    Node,
-    Env,
-    Engine,
+    Skybox,
 
     Buffer,
     BufferView,
     ElementBuffer,
     ElementBufferView,
-    Texture,
+
     CubeTexture,
+    Texture,
 
-    Skybox,
+    Node,
 
-    BasePerspectiveCamera,
     BaseOrthographicCamera,
+    BasePerspectiveCamera,
     RotateOrthographicCamera,
     RotatePerspectiveCamera,
 
-
-    DirectionalLight,
     AmbientLight,
+    DirectionalLight,
     PointLight,
 
-    Mesh,
     LineMesh,
+    Mesh,
 
     Geometry,
     LineGeometry,
 
     ShaderMaterial,
-    RawMaterial,
-    PhongMaterial,
-    PBRMaterial,
+
     GemMaterial,
     PBREnviroment,
+    PBRMaterial,
+    PhongMaterial,
+    RawMaterial,
 
     MeshBuilder,
 
-    Mat4,
     Mat3,
-    Vec4,
-    Vec3,
+    Mat4,
     Quat,
+    Vec3,
+    Vec4,
 };
+
+export default G3D;

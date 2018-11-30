@@ -1,22 +1,21 @@
-import Buffer from './buffer';
-import Texture from '../texture/texture';
-import CubeTexture from '../texture/cube-texture';
-import { IWebGLRenderingContext } from '../types/webgl';
-
+import CubeTexture from "../texture/cube-texture";
+import Texture from "../texture/texture";
+import { IWebGLRenderingContext } from "../types/webgl";
+import Buffer from "./buffer";
 
 interface IGL {
 
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 
-    gl: IWebGLRenderingContext,
+    gl: IWebGLRenderingContext;
 
-    extensions: { [prop: string]: any },
-    precisions: { float: string },
+    extensions: { [prop: string]: any };
+    precisions: { float: string };
 
-    buffers: Buffer[],
-    textures: Texture[],
-    cubeTextures: CubeTexture[],
+    buffers: Buffer[];
+    textures: Texture[];
+    cubeTextures: CubeTexture[];
 
 }
 
@@ -29,12 +28,12 @@ const GL: IGL = {
 
     extensions: {},
     precisions: {
-        float: ''
+        float: "",
     },
 
     buffers: [],
     textures: [],
     cubeTextures: [],
-}
+};
 
 export default GL;

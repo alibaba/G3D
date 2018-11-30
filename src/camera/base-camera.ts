@@ -1,23 +1,21 @@
-import Node from '../core/node';
+import Node from "../core/node";
 
-import Mat4, { IMat4 } from '../matrix/mat4';
-import Vec3, { IVec3 } from '../matrix/vec3';
-import { IPosition, IDirection } from '../types/raw';
-
-
+import Mat4, { IMat4 } from "../matrix/mat4";
+import Vec3, { IVec3 } from "../matrix/vec3";
+import { IDirection, IPosition } from "../types/raw";
 
 class BaseCamera extends Node {
 
-    center: IPosition = { x: 0, y: 0, z: 0 };
+    public center: IPosition = { x: 0, y: 0, z: 0 };
 
-    up: IDirection = { x: 0, y: 1, z: 0 };
+    public up: IDirection = { x: 0, y: 1, z: 0 };
 
     private cameraPositionValues: IVec3 = Vec3.create();
     private centerValues: IVec3 = Vec3.create();
     private upValues: IVec3 = Vec3.create();
     private viewMatrixValues: IMat4 = Mat4.create();
 
-    getVMatrix(): IMat4 {
+    public getVMatrix(): IMat4 {
         Vec3.set(this.cameraPositionValues, this.position.x, this.position.y, this.position.z);
         Vec3.set(this.centerValues, this.center.x, this.center.y, this.center.z);
         Vec3.set(this.upValues, this.up.x, this.up.y, this.up.z);
@@ -27,7 +25,7 @@ class BaseCamera extends Node {
     }
 
     // TODO: calc position in shader
-    getPosition() {
+    public getPosition() {
         return [this.position.x, this.position.y, this.position.z];
     }
 }

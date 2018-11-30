@@ -1,6 +1,6 @@
-import GL from '../core/gl';
-import Env from '../core/env';
-import { IWebGLTexture } from '../types/webgl';
+import Env from "../core/env";
+import GL from "../core/gl";
+import { IWebGLTexture } from "../types/webgl";
 
 interface ICubeTextureConfig {
     images: any;
@@ -10,12 +10,11 @@ interface ICubeTextureConfig {
     sRGB?: boolean;
 }
 
-
 class CubeTexture {
 
-    glTexture: IWebGLTexture = null;
+    public glTexture: IWebGLTexture = null;
 
-    mipLevel: number = 0;
+    public mipLevel: number = 0;
 
     constructor({ images, width, height, flipY = false, sRGB = true }: ICubeTextureConfig) {
 
@@ -40,8 +39,8 @@ class CubeTexture {
             top: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
             bottom: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
             front: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-            back: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
-        }
+            back: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        };
 
         const { extensions } = GL;
 
@@ -49,8 +48,7 @@ class CubeTexture {
 
         const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
 
-
-        Object.keys(targets).forEach(k => {
+        Object.keys(targets).forEach((k) => {
 
             const image = images[k];
 
@@ -68,17 +66,17 @@ class CubeTexture {
 
             }
 
-        })
+        });
 
         if (images.mip) {
 
             gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
-            images.mip.forEach((images, i) => {
+            images.mip.forEach((mipImages, i) => {
 
-                Object.keys(images).forEach(k => {
-                    gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, images[k]);
-                })
+                Object.keys(mipImages).forEach((k) => {
+                    gl.texImage2D(targets[k], i + 1, format, format, gl.UNSIGNED_BYTE, mipImages[k]);
+                });
             });
 
             this.mipLevel = images.mip.length;
@@ -88,7 +86,7 @@ class CubeTexture {
         cubeTextures.push(this);
     }
 
-    destructor() {
+    public destructor() {
 
         const { gl } = GL;
 

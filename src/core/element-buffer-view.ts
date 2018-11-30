@@ -1,5 +1,5 @@
-import GL from './gl';
-import ElementBuffer from './element-buffer';
+import ElementBuffer from "./element-buffer";
+import GL from "./gl";
 
 interface IElementBufferViewConfig {
     buffer: ElementBuffer;
@@ -11,25 +11,25 @@ interface IElementBufferViewConfig {
 
 class ElementBufferView {
 
-    readonly buffer: ElementBuffer;
-    readonly mode: number;
-    readonly count: number;
-    readonly type: number;
-    readonly byteOffset: number;
+    public readonly buffer: ElementBuffer;
+    public readonly mode: number;
+    public readonly count: number;
+    public readonly type: number;
+    public readonly byteOffset: number;
 
-    constructor({ buffer, mode = 'TRIANGLES', count = 0, type = 'UNSIGNED_INT', byteOffset = 0 }: IElementBufferViewConfig) {
+    constructor({ buffer, mode = "TRIANGLES", count = 0, type = "UNSIGNED_INT", byteOffset = 0 }: IElementBufferViewConfig) {
 
         const { gl } = GL;
 
         this.buffer = buffer;
 
-        if (typeof mode === 'string') {
+        if (typeof mode === "string") {
             this.mode = gl[mode];
         } else {
             this.mode = mode;
         }
 
-        if (typeof type === 'string') {
+        if (typeof type === "string") {
             this.type = gl[type];
         } else {
             this.type = type;

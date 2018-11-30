@@ -1,32 +1,31 @@
-import ShaderMaterial from './shader-material';
+import ShaderMaterial from "./shader-material";
 
-import { IColorRGB } from '../types/raw';
-import Texture from '../texture/texture';
+import Texture from "../texture/texture";
+import { IColorRGB } from "../types/raw";
 
-import PBREnviroment from './pbr-enviroment';
-import Vec3, { IVec3 } from '../matrix/vec3';
+import Vec3, { IVec3 } from "../matrix/vec3";
+import PBREnviroment from "./pbr-enviroment";
 
-import * as vertexShaderSource from '../shaders/material-pbr.vert.glsl';
-import * as fragmentShaderSource from '../shaders/material-pbr.frag.glsl';
-
+import * as fragmentShaderSource from "../shaders/material-pbr.frag.glsl";
+import * as vertexShaderSource from "../shaders/material-pbr.vert.glsl";
 
 class PBRMaterial extends ShaderMaterial {
 
-    albedoColor: IColorRGB = { r: 0, g: 0, b: 0 };
+    public albedoColor: IColorRGB = { r: 0, g: 0, b: 0 };
 
-    albedoTexture: Texture;
+    public albedoTexture: Texture;
 
-    metallic: number = 0.0;
+    public metallic: number = 0.0;
 
-    roughness: number = 0.1;
+    public roughness: number = 0.1;
 
-    metallicRoughnessTexture: Texture;
+    public metallicRoughnessTexture: Texture;
 
-    emissiveTexture: Texture;
+    public emissiveTexture: Texture;
 
-    normalTexture: Texture;
+    public normalTexture: Texture;
 
-    pbrEnviroment: PBREnviroment;
+    public pbrEnviroment: PBREnviroment;
 
     private albedoColorValues: IVec3 = Vec3.create();
     private metallicValue: Float32Array = new Float32Array([0]);
@@ -34,90 +33,87 @@ class PBRMaterial extends ShaderMaterial {
 
     constructor() {
         super({
-            name: 'G3D_SHADER',
+            name: "G3D_SHADER",
             vertexShaderSource,
             fragmentShaderSource,
             macros: [
-                'PBR_NORMAL_TEXTURE',
-                'PBR_ALBEDO_TEXTURE',
-                'PBR_METALLIC_ROUGHNESS_TEXTURE',
-                'PBR_EMISSIVE_TEXTURE',
+                "PBR_NORMAL_TEXTURE",
+                "PBR_ALBEDO_TEXTURE",
+                "PBR_METALLIC_ROUGHNESS_TEXTURE",
+                "PBR_EMISSIVE_TEXTURE",
             ],
             uniforms: [
-                'uMaterialAlbedoColor',
-                'uMaterialAlbedoTexture',
-                'uMaterialRoughness',
-                'uMaterialMetallic',
-                'uMaterialMetallicRoughnessTexture',
-                'uMaterialEmissiveTexture',
-                'uMaterialNormalTexture',
-                'uSpecularMap',
-                'uSpecularMipLevel',
-                'uDiffuseMap',
-                'uBRDFLUT',
-                'uGreyness',
+                "uMaterialAlbedoColor",
+                "uMaterialAlbedoTexture",
+                "uMaterialRoughness",
+                "uMaterialMetallic",
+                "uMaterialMetallicRoughnessTexture",
+                "uMaterialEmissiveTexture",
+                "uMaterialNormalTexture",
+                "uSpecularMap",
+                "uSpecularMipLevel",
+                "uDiffuseMap",
+                "uBRDFLUT",
+                "uGreyness",
             ],
             lighting: true,
             shadow: false,
-            camera: true
+            camera: true,
         });
     }
 
-
-    condition(name: string): boolean {
+    public condition(name: string): boolean {
 
         switch (name) {
-            case 'PBR_NORMAL_TEXTURE':
+            case "PBR_NORMAL_TEXTURE":
                 return !!this.normalTexture;
-            case 'PBR_ALBEDO_TEXTURE':
+            case "PBR_ALBEDO_TEXTURE":
                 return !!this.albedoTexture;
-            case 'PBR_METALLIC_ROUGHNESS_TEXTURE':
+            case "PBR_METALLIC_ROUGHNESS_TEXTURE":
                 return !!this.metallicRoughnessTexture;
-            case 'PBR_EMISSIVE_TEXTURE':
+            case "PBR_EMISSIVE_TEXTURE":
                 return !!this.emissiveTexture;
             default:
                 return super.condition(name);
         }
     }
 
-    uniform(name: string): Float32Array | WebGLTexture {
+    public uniform(name: string): Float32Array | WebGLTexture {
 
         switch (name) {
-            case 'uMaterialAlbedoColor':
+            case "uMaterialAlbedoColor":
                 return this.getAlbedoColor();
-            case 'uMaterialAlbedoTexture':
+            case "uMaterialAlbedoTexture":
                 return this.getAlbedoTexture();
-            case 'uMaterialRoughness':
+            case "uMaterialRoughness":
                 return this.getRoughness();
-            case 'uMaterialMetallic':
+            case "uMaterialMetallic":
                 return this.getMetallic();
-            case 'uMaterialMetallicRoughnessTexture':
+            case "uMaterialMetallicRoughnessTexture":
                 return this.getMetallicRoughnessTexture();
-            case 'uMaterialEmissiveTexture':
+            case "uMaterialEmissiveTexture":
                 return this.getEmissiveTexture();
-            case 'uMaterialNormalTexture':
+            case "uMaterialNormalTexture":
                 return this.getNormalTexture();
-            case 'uSpecularMap':
+            case "uSpecularMap":
                 return this.getSpecularMap();
-            case 'uDiffuseMap':
+            case "uDiffuseMap":
                 return this.getDiffuseMap();
-            case 'uBRDFLUT':
+            case "uBRDFLUT":
                 return this.getBRDFLUT();
-            case 'uSpecularMipLevel':
+            case "uSpecularMipLevel":
                 return this.getSpecularMipLevel();
-            case 'uGreyness':
+            case "uGreyness":
                 return this.getGreyness();
             default:
                 return super.uniform(name);
         }
     }
 
-
     private getAlbedoColor(): IVec3 {
         Vec3.set(this.albedoColorValues, this.albedoColor.r / 255, this.albedoColor.g / 255, this.albedoColor.b / 255);
         return this.albedoColorValues;
     }
-
 
     private getAlbedoTexture(): WebGLTexture {
         if (this.albedoTexture) {

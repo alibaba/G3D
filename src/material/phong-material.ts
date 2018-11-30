@@ -1,25 +1,25 @@
-import ShaderMaterial from './shader-material';
+import ShaderMaterial from "./shader-material";
 
-import Vec3, { IVec3 } from '../matrix/vec3';
-import { IColorRGB } from '../types/raw';
-import Texture from '../texture/texture';
+import Vec3, { IVec3 } from "../matrix/vec3";
+import Texture from "../texture/texture";
+import { IColorRGB } from "../types/raw";
 
-import * as vertexShaderSource from '../shaders/material-phong.vert.glsl';
-import * as fragmentShaderSource from '../shaders/material-phong.frag.glsl';
+import * as fragmentShaderSource from "../shaders/material-phong.frag.glsl";
+import * as vertexShaderSource from "../shaders/material-phong.vert.glsl";
 
 class PhongMaterial extends ShaderMaterial {
 
-    ambientColor: IColorRGB = { r: 255, g: 255, b: 255 };
-    ambientTexture: Texture;
+    public ambientColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    public ambientTexture: Texture;
 
-    diffuseColor: IColorRGB = { r: 255, g: 255, b: 255 };
-    diffuseTexture: Texture;
+    public diffuseColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    public diffuseTexture: Texture;
 
-    specularColor: IColorRGB = { r: 255, g: 255, b: 255 };
-    specularTexture: Texture;
-    glossiness: number = 1.0;
+    public specularColor: IColorRGB = { r: 255, g: 255, b: 255 };
+    public specularTexture: Texture;
+    public glossiness: number = 1.0;
 
-    specularEnvMapTexture: Texture;
+    public specularEnvMapTexture: Texture;
 
     private ambientColorValues: IVec3 = Vec3.create();
     private diffuseColorValues: IVec3 = Vec3.create();
@@ -29,67 +29,67 @@ class PhongMaterial extends ShaderMaterial {
     constructor() {
 
         super({
-            name: 'G3D_PHONG',
+            name: "G3D_PHONG",
             vertexShaderSource, fragmentShaderSource,
             macros: [
-                'PHONG_TEXTURE',
-                'PHONG_AMBIENT_TEXTURE',
-                'PHONG_DIFFUSE_TEXTURE',
-                'PHONG_SPECULAR_TEXTURE',
-                'PHONG_SPECULAR_ENV_MAP_TEXTURE'
+                "PHONG_TEXTURE",
+                "PHONG_AMBIENT_TEXTURE",
+                "PHONG_DIFFUSE_TEXTURE",
+                "PHONG_SPECULAR_TEXTURE",
+                "PHONG_SPECULAR_ENV_MAP_TEXTURE",
             ],
             uniforms: [
-                'uAmbientColor',
-                'uAmbientTexture',
-                'uDiffuseColor',
-                'uDiffuseTexture',
-                'uSpecularColor',
-                'uSpecularTexture',
-                'uGlossiness',
-                'uSpecularEnvMapTexture'
+                "uAmbientColor",
+                "uAmbientTexture",
+                "uDiffuseColor",
+                "uDiffuseTexture",
+                "uSpecularColor",
+                "uSpecularTexture",
+                "uGlossiness",
+                "uSpecularEnvMapTexture",
             ],
             lighting: true,
-            shadow: true
+            shadow: true,
         });
 
     }
 
-    condition(name: string): boolean {
+    public condition(name: string): boolean {
 
         switch (name) {
-            case 'PHONG_AMBIENT_TEXTURE':
+            case "PHONG_AMBIENT_TEXTURE":
                 return !!this.ambientTexture;
-            case 'PHONG_DIFFUSE_TEXTURE':
+            case "PHONG_DIFFUSE_TEXTURE":
                 return !!this.diffuseTexture;
-            case 'PHONG_SPECULAR_TEXTURE':
-                return !!this.specularTexture
-            case 'PHONG_TEXTURE':
+            case "PHONG_SPECULAR_TEXTURE":
+                return !!this.specularTexture;
+            case "PHONG_TEXTURE":
                 return !!this.ambientTexture || !!this.diffuseTexture || !!this.specularTexture;
-            case 'PHONG_SPECULAR_ENV_MAP_TEXTURE':
+            case "PHONG_SPECULAR_ENV_MAP_TEXTURE":
                 return !!this.specularEnvMapTexture;
             default:
                 return super.condition(name);
         }
     }
 
-    uniform(name: string): Float32Array | WebGLTexture {
+    public uniform(name: string): Float32Array | WebGLTexture {
 
         switch (name) {
-            case 'uAmbientColor':
+            case "uAmbientColor":
                 return this.getAmbientColor();
-            case 'uAmbientTexture':
+            case "uAmbientTexture":
                 return this.getAmbientTexture();
-            case 'uDiffuseColor':
+            case "uDiffuseColor":
                 return this.getDiffuseColor();
-            case 'uDiffuseTexture':
+            case "uDiffuseTexture":
                 return this.getDiffuseTexture();
-            case 'uSpecularColor':
+            case "uSpecularColor":
                 return this.getSpecularColor();
-            case 'uSpecularTexture':
+            case "uSpecularTexture":
                 return this.getSpecularTexture();
-            case 'uGlossiness':
+            case "uGlossiness":
                 return this.getGlossiness();
-            case 'uSpecularEnvMapTexture':
+            case "uSpecularEnvMapTexture":
                 return this.getSpecularEnvMapTexture();
             default:
                 return super.uniform(name);

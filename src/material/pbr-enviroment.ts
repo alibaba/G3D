@@ -1,23 +1,23 @@
-import CubeTexture from '../texture/cube-texture';
-import Texture from '../texture/texture';
+import CubeTexture from "../texture/cube-texture";
+import Texture from "../texture/texture";
 
 interface IPBREnviromentConfig {
-    diffuse: any,
-    specular: any,
+    diffuse: any;
+    specular: any;
     brdfLUT: {
-        [propName: string]: any
-    }
+        [propName: string]: any,
+    };
 }
 
 class PBREnviroment {
 
-    diffuse: CubeTexture;
+    public diffuse: CubeTexture;
 
-    specular: CubeTexture;
+    public specular: CubeTexture;
 
-    brdfLUT: Texture;
+    public brdfLUT: Texture;
 
-    greyness: number = 0;
+    public greyness: number = 0;
 
     constructor({ diffuse, specular, brdfLUT }: IPBREnviromentConfig) {
 

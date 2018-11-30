@@ -1,15 +1,14 @@
-import GL from "./gl";
 import { IWebGLBuffer } from "../types/webgl";
-
+import GL from "./gl";
 
 interface IElementBufferConfig {
-    data: Uint32Array | Uint16Array | ArrayBuffer
+    data: Uint32Array | Uint16Array | ArrayBuffer;
 }
 
 class ElementBuffer {
 
-    readonly arrayBuffer: ArrayBuffer;
-    readonly glBuffer: IWebGLBuffer;
+    public readonly arrayBuffer: ArrayBuffer;
+    public readonly glBuffer: IWebGLBuffer;
 
     constructor({ data }: IElementBufferConfig) {
 
@@ -32,7 +31,7 @@ class ElementBuffer {
         buffers.push(this);
     }
 
-    destructor(): void {
+    public destructor(): void {
 
         const { gl } = GL;
         gl.deleteBuffer(this.glBuffer);

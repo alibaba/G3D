@@ -144,11 +144,11 @@ export function scale(out: IVec4, a: IVec4, b: number): IVec4 {
 }
 
 // Adds two vec4's after scaling the second operand by a scalar value
-export function scaleAndAdd(out: IVec4, a: IVec4, b: IVec4, v: number): IVec4 {
-    out[0] = a[0] + (b[0] * v);
-    out[1] = a[1] + (b[1] * v);
-    out[2] = a[2] + (b[2] * v);
-    out[3] = a[3] + (b[3] * v);
+export function scaleAndAdd(out: IVec4, a: IVec4, b: IVec4, scale: number): IVec4 {
+    out[0] = a[0] + (b[0] * scale);
+    out[1] = a[1] + (b[1] * scale);
+    out[2] = a[2] + (b[2] * scale);
+    out[3] = a[3] + (b[3] * scale);
     return out;
 }
 
@@ -212,13 +212,13 @@ export function normalize(out: IVec4, a: IVec4): IVec4 {
     const y = a[1];
     const z = a[2];
     const w = a[3];
-    let l = x * x + y * y + z * z + w * w;
-    if (l > 0) {
-        l = 1 / Math.sqrt(l);
-        out[0] = x * l;
-        out[1] = y * l;
-        out[2] = z * l;
-        out[3] = w * l;
+    let len = x * x + y * y + z * z + w * w;
+    if (len > 0) {
+        len = 1 / Math.sqrt(len);
+        out[0] = x * len;
+        out[1] = y * len;
+        out[2] = z * len;
+        out[3] = w * len;
     }
     return out;
 }

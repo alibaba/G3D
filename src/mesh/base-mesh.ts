@@ -1,13 +1,13 @@
-import Node from '../core/node';
-import { findIndex } from '../utils/lodash';
-import Scene from '../scene/scene';
+import Node from "../core/node";
+import Scene from "../scene/scene";
+import { findIndex } from "../utils/lodash";
 
 class BaseMesh extends Node {
 
-    scene: Scene;
-    visibility: boolean = true;
-    pickable: boolean = true;
-    renderLayerIndex: number = 0;
+    public scene: Scene;
+    public visibility: boolean = true;
+    public pickable: boolean = true;
+    public renderLayerIndex: number = 0;
 
     constructor(scene: Scene) {
         super();
@@ -17,7 +17,7 @@ class BaseMesh extends Node {
         }
     }
 
-    getGlobalVisibility(): boolean {
+    public getGlobalVisibility(): boolean {
         let mesh = this as Node;
         while (!!mesh) {
             if (mesh instanceof BaseMesh) {
@@ -30,11 +30,11 @@ class BaseMesh extends Node {
         return true;
     }
 
-    getPickable(): boolean {
+    public getPickable(): boolean {
         return this.pickable;
     }
 
-    getRenderLayerIndex(): number {
+    public getRenderLayerIndex(): number {
         let mesh = this as Node;
         while (!!mesh) {
             if (mesh instanceof BaseMesh) {
@@ -47,7 +47,7 @@ class BaseMesh extends Node {
         return 0;
     }
 
-    dispose(): void {
+    public dispose(): void {
         if (this.scene) {
             const i = findIndex(this.scene.meshes, { id: this.id });
             if (i !== -1) {
