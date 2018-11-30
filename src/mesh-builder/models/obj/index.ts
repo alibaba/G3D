@@ -1,9 +1,9 @@
-import Mesh from '../../../mesh/G3D.Mesh';
-import Geometry from '../../../geometry/G3D.Geometry';
+import Mesh from '../../../mesh/mesh';
+import Geometry from '../../../geometry/geometry';
 
-import PhongMaterial from '../../../material/G3D.PhongMaterial';
-import Texture from '../../../texture/G3D.Texture';
-import Env from '../../../core/G3D.Env';
+import PhongMaterial from '../../../material/phong-material';
+import Texture from '../../../texture/texture';
+import Env from '../../../core/env';
 
 import OBJParser from './parser';
 

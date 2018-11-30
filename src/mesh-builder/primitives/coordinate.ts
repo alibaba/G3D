@@ -1,7 +1,7 @@
-import Mesh from '../../mesh/G3D.Mesh';
+import Mesh from '../../mesh/mesh';
 
-import LineMesh from '../../mesh/G3D.LineMesh';
-import LineGeometry from '../../geometry/G3D.LineGeometry';
+import LineMesh from '../../mesh/line-mesh';
+import LineGeometry from '../../geometry/line-geometry';
 
 function createCoordinate(scene, size) {
 

@@ -1,5 +1,5 @@
 // G3D_TEMPLATE_GENERATED
-import G3D from '../src/G3D';
+import G3D from '../src/index';
 
 import main from './044-pick-drag-main';
 import loader from './lib/loader';

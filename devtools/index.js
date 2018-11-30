@@ -4,7 +4,7 @@ const dalaran = require('dalaran');
 const tasks = dalaran.libraryTasks({
     umdName: 'G3D',
     demo: './demo',
-    entry: './src/G3D.ts',
+    entry: './src/index.ts',
     port: 3000,
     loaders: [{
         test: /\.glsl$/,
@@ -39,4 +39,3 @@ switch (taskName) {
         tasks.dev();
         break;
 }
-

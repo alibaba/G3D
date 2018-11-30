@@ -1,4 +1,4 @@
-import Vec3 from '../../../matrix/G3D.Vec3';
+import Vec3 from '../../../matrix/vec3';
 
 
 const vertexPattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;

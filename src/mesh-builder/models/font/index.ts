@@ -1,7 +1,7 @@
-import Mesh from '../../../mesh/G3D.Mesh';
-import LineMesh from '../../../mesh/G3D.LineMesh';
-import LineGeometry from '../../../geometry/G3D.LineGeometry';
-import Geometry from '../../../geometry/G3D.Geometry';
+import Mesh from '../../../mesh/mesh';
+import LineMesh from '../../../mesh/line-mesh';
+import LineGeometry from '../../../geometry/line-geometry';
+import Geometry from '../../../geometry/geometry';
 
 import PathParser from './parser';
 

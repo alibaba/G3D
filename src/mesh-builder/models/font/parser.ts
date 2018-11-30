@@ -1,5 +1,5 @@
-import Vec2 from '../../../matrix/G3D.Vec2';
-import Vec3 from '../../../matrix/G3D.Vec3';
+import Vec2 from '../../../matrix/vec2';
+import Vec3 from '../../../matrix/vec3';
 
 
 function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {

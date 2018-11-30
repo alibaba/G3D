@@ -1,5 +1,5 @@
-import Mesh from '../../../mesh/G3D.Mesh';
-import Geometry from '../../../geometry/G3D.Geometry';
+import Mesh from '../../../mesh/mesh';
+import Geometry from '../../../geometry/geometry';
 
 import STLParser from './parser';
 
