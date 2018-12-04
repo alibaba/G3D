@@ -1,6 +1,7 @@
 import CubeTexture from "../texture/cube-texture";
 import Texture from "../texture/texture";
 import Buffer from "../buffer/buffer";
+import ElementBuffer from "../buffer/element-buffer";
 
 interface IGL {
 
@@ -12,7 +13,7 @@ interface IGL {
     extensions: { [prop: string]: any };
     precisions: { float: string };
 
-    buffers: Buffer[];
+    buffers: Set<Buffer | ElementBuffer>;
     textures: Texture[];
     cubeTextures: CubeTexture[];
 
@@ -30,7 +31,7 @@ const GL: IGL = {
         float: "",
     },
 
-    buffers: [],
+    buffers: new Set(),
     textures: [],
     cubeTextures: [],
 };

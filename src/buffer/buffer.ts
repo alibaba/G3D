@@ -27,11 +27,15 @@ class Buffer {
         }
 
         // hook on GL
-        buffers.push(this);
+        buffers.add(this);
     }
 
     public destructor(): void {
-        const { gl } = GL;
+
+        const { gl, buffers } = GL;
+
+        buffers.delete(this);
+
         gl.deleteBuffer(this.glBuffer);
     }
 }

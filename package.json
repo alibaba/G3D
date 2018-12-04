@@ -8,7 +8,7 @@
     "url": "https://github.com/alibaba/G3D"
   },
   "devDependencies": {
-    "dalaran": "^0.2.1",
+    "dalaran": "^0.2.2",
     "expect": "^23.6.0",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.3",
