@@ -38,6 +38,7 @@ uniform vec3 uMaterialAlbedoColor;
 uniform float uMaterialRoughness;
 uniform float uMaterialMetallic;
 
+#ifdef PBR_ENVIROMENT
 uniform samplerCube uSpecularMap;
 uniform samplerCube uDiffuseMap;
 uniform sampler2D uBRDFLUT;
@@ -52,6 +53,7 @@ vec3 greyness(vec3 c){
         c[2] + (m - c[2]) * uGreyness
     );
 }
+#endif
 
 varying vec3 vPosition;
 varying vec3 vNormal;
@@ -144,6 +146,7 @@ vec3 L_direct(PBRInfo info, PBRLightInfo light){
     return (diffuse + specular) * NDotL * Li;
 }
 
+#ifdef PBR_ENVIROMENT
 vec3 L_env(PBRInfo info){
 
     float NdotV = clamp(dot(info.N, info.V), 0.0, 1.0);
@@ -168,6 +171,7 @@ vec3 L_env(PBRInfo info){
 
     return diffuse + specular;
 }
+#endif
 
 
 vec3 L(){
@@ -178,6 +182,7 @@ vec3 L(){
 
         #ifdef PBR_NORMAL_TEXTURE
         getNormal(),
+        // vNormal,
         #else
         vNormal,
         #endif
@@ -232,7 +237,9 @@ vec3 L(){
         }
     }
 
+    #ifdef PBR_ENVIROMENT
     fragColor += L_env(pbrInputs);
+    #endif
 
     #ifdef PBR_EMISSIVE_TEXTURE
     fragColor += texture2D(uMaterialEmissiveTexture, vEmissiveUV).rgb;

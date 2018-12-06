@@ -1,7 +1,6 @@
 import Geometry from "../../../geometry/geometry";
 import Mesh from "../../../mesh/mesh";
 
-import Env from "../../../core/env";
 import PhongMaterial from "../../../material/phong-material";
 import Texture from "../../../texture/texture";
 

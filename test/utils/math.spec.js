@@ -1,6 +1,6 @@
 import expect from '../_helpers/expect';
 
-import { rad2deg, deg2rad } from '../../src/utils/math';
+import { rad2deg, deg2rad, isPowerOf2 } from '../../src/utils/math';
 
 describe('utils/math', function () {
 
@@ -25,6 +25,27 @@ describe('utils/math', function () {
         expect(deg2rad(-60)).toEqualFloat(-Math.PI / 3);
 
         expect(deg2rad(0)).toEqualFloat(0);
+
+    })
+
+    it('isPowerOf2 should work', function () {
+
+        expect(isPowerOf2(1)).toEqual(true);
+
+        expect(isPowerOf2(0)).toEqual(false);
+
+        expect(isPowerOf2(0.5)).toEqual(false);
+
+        expect(isPowerOf2(-4)).toEqual(false);
+
+        expect(isPowerOf2(16)).toEqual(true);
+
+        expect(isPowerOf2(1024)).toEqual(true);
+
+        expect(isPowerOf2(576)).toEqual(false);
+
+        expect(isPowerOf2(331)).toEqual(false);
+
 
     })
 

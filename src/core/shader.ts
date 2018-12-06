@@ -21,13 +21,13 @@ class Shader {
         this.fShaderSource = fShaderSource;
         this.vShaderSource = vShaderSource;
 
-        for (const key in GL.extensions) {
-            if (GL.extensions[key] !== null) {
+        for (const key of GL.extensions.keys()) {
+            if (GL.extensions.get(key) !== undefined) {
                 this.extensions.push(`EXT_${key}`);
             }
         }
 
-        this.precisions.push(`PRECISION_FLOAT_${GL.precisions.float.toUpperCase()}`);
+        this.precisions.push(`PRECISION_FLOAT_${GL.precisions.get("float").toUpperCase()}`);
     }
 
     public program(defines: string[]): Program {

@@ -41,6 +41,7 @@ class PBRMaterial extends ShaderMaterial {
                 "PBR_ALBEDO_TEXTURE",
                 "PBR_METALLIC_ROUGHNESS_TEXTURE",
                 "PBR_EMISSIVE_TEXTURE",
+                "PBR_ENVIROMENT",
             ],
             uniforms: [
                 "uMaterialAlbedoColor",
@@ -73,6 +74,8 @@ class PBRMaterial extends ShaderMaterial {
                 return !!this.metallicRoughnessTexture;
             case "PBR_EMISSIVE_TEXTURE":
                 return !!this.emissiveTexture;
+            case "PBR_ENVIROMENT":
+                return !!this.pbrEnviroment;
             default:
                 return super.condition(name);
         }
@@ -158,23 +161,43 @@ class PBRMaterial extends ShaderMaterial {
     }
 
     private getSpecularMap(): WebGLTexture {
-        return this.pbrEnviroment.specular.glTexture;
+        if (this.pbrEnviroment) {
+            return this.pbrEnviroment.specular.glTexture;
+        } else {
+            return null;
+        }
     }
 
     private getSpecularMipLevel(): any {
-        return [this.pbrEnviroment.specular.mipLevel];
+        if (this.pbrEnviroment) {
+            return [this.pbrEnviroment.specular.mipLevel];
+        } else {
+            return null;
+        }
     }
 
     private getDiffuseMap(): WebGLTexture {
-        return this.pbrEnviroment.diffuse.glTexture;
+        if (this.pbrEnviroment) {
+            return this.pbrEnviroment.diffuse.glTexture;
+        } else {
+            return null;
+        }
     }
 
     private getBRDFLUT(): WebGLTexture {
-        return this.pbrEnviroment.brdfLUT.glTexture;
+        if (this.pbrEnviroment) {
+            return this.pbrEnviroment.brdfLUT.glTexture;
+        } else {
+            return null;
+        }
     }
 
     private getGreyness(): Float32Array {
-        return new Float32Array([this.pbrEnviroment.greyness]);
+        if (this.pbrEnviroment) {
+            return new Float32Array([this.pbrEnviroment.greyness]);
+        } else {
+            return null;
+        }
     }
 }
 

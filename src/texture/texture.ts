@@ -1,6 +1,6 @@
 import GL from "../core/gl";
 
-const isPowerOf2 = (n) => Math.log(n) / Math.log(2) % 1 === 0;
+import { isPowerOf2 } from "../utils/math";
 
 interface ITextureConfig {
     image: HTMLImageElement;
@@ -9,6 +9,7 @@ interface ITextureConfig {
     sRGB?: boolean;
     flipY?: boolean;
     repeat?: boolean;
+    mipmap?: boolean;
 }
 
 class Texture {
@@ -16,62 +17,63 @@ class Texture {
     public glTexture: WebGLTexture;
 
     constructor({
-        image, width = image.width, height = image.height, sRGB = false,
-        flipY = true, repeat = true, /*or clamp*/
+        image,
+        width = image.width,
+        height = image.height,
+        sRGB = false,
+        flipY = true,
+        repeat = true, /*or clamp*/
+        mipmap = true,
     }: ITextureConfig) {
 
-        const { gl, textures } = GL;
+        const { gl, textures, extensions } = GL;
 
         const texture = this.glTexture = gl.createTexture();
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
-        // wrap
-        // REPEAT works only when image size is power of 2
-        if (repeat) {
-            if (!isPowerOf2(width)) {
-                throw new Error("image width should be power of 2, or you need to set repeat option to false.");
-            }
-            if (!isPowerOf2(height)) {
-                throw new Error("image height should be power of 2, or you need to set repeat option to false.");
-            }
-        }
+        const isP2 = (width === height) && isPowerOf2(width) && isPowerOf2(height);
 
+        const extensionSRGB = extensions.get("SRGB");
+
+        repeat = repeat && isP2;
+        sRGB = sRGB && extensionSRGB && isP2;
+        mipmap = mipmap && isP2 && !sRGB;
+
+        // wrap
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE);
 
         // filter
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mipmap ? gl.NEAREST_MIPMAP_LINEAR : gl.LINEAR);
 
         // store
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
 
         // fill data
+        const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
+
         if (image instanceof Uint8Array) {
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, image);
 
         } else if (image instanceof Float32Array) {
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, image);
+            gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.FLOAT, image);
 
         } else {
 
-            const { extensions } = GL;
-
-            const format = sRGB && extensions.SRGB ? extensions.SRGB.SRGB_ALPHA_EXT : gl.RGBA;
-
             gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
-            if (isPowerOf2(width) && isPowerOf2(height)) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                // gl.generateMipmap(gl.TEXTURE_2D);
-            }
         }
 
-        textures.push(this);
+        if (mipmap) {
+            gl.generateMipmap(gl.TEXTURE_2D);
+        }
+
+        textures.add(this);
     }
 
     public destructor() {
@@ -79,7 +81,6 @@ class Texture {
         const { gl } = GL;
 
         gl.deleteTexture(this.glTexture);
-
     }
 }
 

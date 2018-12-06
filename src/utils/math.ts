@@ -5,3 +5,7 @@ export function rad2deg(v: number): number {
 export function deg2rad(v: number): number {
     return v * Math.PI / 180;
 }
+
+export function isPowerOf2(v: number): boolean {
+    return (v >= 1) && (Math.log(v) / Math.log(2) % 1 === 0);
+}

@@ -5,6 +5,7 @@ interface IPBREnviromentConfig {
     diffuse: any;
     specular: any;
     brdfLUT: HTMLImageElement;
+    sRGB?: boolean;
 }
 
 class PBREnviroment {
@@ -17,13 +18,18 @@ class PBREnviroment {
 
     public greyness: number = 0;
 
-    constructor({ diffuse, specular, brdfLUT }: IPBREnviromentConfig) {
+    constructor({
+        diffuse,
+        specular,
+        brdfLUT,
+        sRGB = false,
+    }: IPBREnviromentConfig) {
 
-        this.diffuse = new CubeTexture({ images: diffuse, sRGB: true, flipY: false });
+        this.diffuse = new CubeTexture({ images: diffuse, sRGB: false, flipY: false });
 
-        this.specular = new CubeTexture({ images: specular, sRGB: true, flipY: false });
+        this.specular = new CubeTexture({ images: specular, sRGB: false, flipY: false });
 
-        this.brdfLUT = new Texture({ image: brdfLUT, flipY: false, sRGB: false, repeat: false });
+        this.brdfLUT = new Texture({ image: brdfLUT, sRGB: false, flipY: false, repeat: false });
 
     }
 

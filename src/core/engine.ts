@@ -47,7 +47,7 @@ class Engine {
         {
             const { extensions } = GL;
 
-            extensions.TEX_LOD = gl.getExtension("EXT_shader_texture_lod");
+            extensions.set("TEX_LOD", gl.getExtension("EXT_shader_texture_lod"));
 
             // TODO : check support
             gl.getExtension("OES_standard_derivatives");
@@ -56,7 +56,7 @@ class Engine {
             gl.getExtension("OES_texture_float");
             gl.getExtension("OES_texture_float_linear");
 
-            extensions.SRGB = gl.getExtension("EXT_SRGB");
+            extensions.set("SRGB", gl.getExtension("EXT_SRGB"));
         }
 
         // precisions
@@ -66,7 +66,7 @@ class Engine {
             const high = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision !== 0;
             const medium = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT).precision !== 0;
 
-            precisions.float = high ? "mediump" : medium ? "mediump" : "lowp";
+            precisions.set("float", high ? "mediump" : medium ? "mediump" : "lowp");
         }
 
         // shaders
@@ -104,21 +104,17 @@ class Engine {
 
     public destroy(): void {
 
-        Object.keys(this.shaders).forEach((key) => {
-            this.shaders[key].destructor();
-        });
+        const { buffers, textures } = GL;
 
-        Object.keys(this.framebuffers).forEach((key) => {
-            this.framebuffers[key].destructor();
-        });
+        for (const bf of buffers) {
+            bf.destructor();
+        }
+        buffers.clear();
 
-        const { buffers, textures, cubeTextures } = GL;
-
-        buffers.forEach((buffer) => buffer.destructor());
-
-        textures.forEach((texture) => texture.destructor());
-
-        cubeTextures.forEach((cubeTexture) => cubeTexture.destructor());
+        for (const tx of textures) {
+            tx.destructor();
+        }
+        textures.clear();
     }
 
     public clearColorBuffer(color: IColorRGB): void {

@@ -10,12 +10,13 @@ interface IGL {
 
     gl: WebGLRenderingContext;
 
-    extensions: { [prop: string]: any };
-    precisions: { float: string };
+    // extensions: { [prop: string]: any };
+    extensions: Map<string, any>;
+    // precisions: { float: string };
+    precisions: Map<string, string>;
 
     buffers: Set<Buffer | ElementBuffer>;
-    textures: Texture[];
-    cubeTextures: CubeTexture[];
+    textures: Set<Texture | CubeTexture>;
 
 }
 
@@ -26,14 +27,11 @@ const GL: IGL = {
 
     gl: null,
 
-    extensions: {},
-    precisions: {
-        float: "",
-    },
+    extensions: new Map(),
+    precisions: new Map(),
 
     buffers: new Set(),
-    textures: [],
-    cubeTextures: [],
+    textures: new Set(),
 };
 
 export default GL;

@@ -1,5 +1,4 @@
 import Engine from "./core/engine";
-import Env from "./core/env";
 import Node from "./core/node";
 import Scene from "./scene/scene";
 import GL from "./core/gl";
@@ -45,7 +44,7 @@ const G3D = {
 
     Engine,
     GL,
-    Env,
+    Env: {},
 
     Scene,
     Skybox,
