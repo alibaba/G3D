@@ -23,7 +23,7 @@ class Engine {
     public currentProgram: Program;
     public currentScene: Scene;
 
-    private shaders: { [prop: string]: Shader } = {};
+    private shaders: Map<string, Shader> = new Map();
     private framebuffers: { [prop: string]: Framebuffer } = {};
 
     constructor(canvas: HTMLCanvasElement) {
@@ -67,17 +67,26 @@ class Engine {
         }
 
         // shaders
-        this.shaders = {
-            picker: new Shader({
-                fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
-            }),
-            shadow: new Shader({
-                fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
-            }),
-            skybox: new Shader({
-                fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
-            }),
-        };
+        // this.shaders = {
+        //     picker: new Shader({
+        //         fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
+        //     }),
+        //     shadow: new Shader({
+        //         fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
+        //     }),
+        //     skybox: new Shader({
+        //         fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
+        //     }),
+        // };
+        this.shaders.set("picker", new Shader({
+            fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
+        }));
+        this.shaders.set("shadow", new Shader({
+            fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
+        }));
+        this.shaders.set("skybox", new Shader({
+            fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
+        }));
 
         // framebuffers
         this.framebuffers = {
@@ -126,7 +135,7 @@ class Engine {
     }
 
     public useBuiltinProgram(key: string, defines: string[] = []): void {
-        this.currentProgram = this.shaders[key].program(defines);
+        this.currentProgram = this.shaders.get(key).program(defines);
         GL.gl.useProgram(this.currentProgram.glProgram);
     }
 

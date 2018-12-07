@@ -9,6 +9,8 @@ import Geometry from "../geometry/geometry";
 import Scene from "../scene/scene";
 
 import { find } from "../utils/lodash";
+import Mesh from "../mesh/mesh";
+import LineMesh from "../mesh/line-mesh";
 
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
@@ -34,11 +36,13 @@ class RenderManager {
             position: new Float32Array(LIGHT_MAX_COUNT * 3),
         };
 
+    private groups: Array<Array<Mesh | LineMesh>> = [];
+
     constructor(scene: Scene) {
         this.scene = scene;
     }
 
-    public render() {
+    public render(): void {
 
         const { scene } = this;
 
@@ -95,7 +99,7 @@ class RenderManager {
         return null;
     }
 
-    private renderToScreen(groups) {
+    private renderToScreen(groups): void {
 
         const { scene } = this;
 
@@ -193,7 +197,7 @@ class RenderManager {
 
     }
 
-    private renderToPickerRenderBuffer(groups) {
+    private renderToPickerRenderBuffer(groups): void {
 
         const engine = Engine.instance;
 
@@ -225,7 +229,7 @@ class RenderManager {
         });
     }
 
-    private renderToShadowRenderBuffer(groups) {
+    private renderToShadowRenderBuffer(groups): void {
 
         const { scene } = this;
         const { lights } = scene;
@@ -264,13 +268,13 @@ class RenderManager {
         }
     }
 
-    private setFaceCull = (facing) => {
+    private setFaceCull(facing) {
         Engine.instance.cullFace(
             facing === Geometry.FACING.FRONT ? "BACK" : facing === Geometry.FACING.BACK ? "FRONT" : null,
         );
     }
 
-    private prepareMVPMatrix = (mesh, camera = this.scene.activeCamera) => {
+    private prepareMVPMatrix(mesh, camera = this.scene.activeCamera) {
 
         const engine = Engine.instance;
 

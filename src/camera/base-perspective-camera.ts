@@ -7,7 +7,7 @@ import { deg2rad } from "../utils/math";
 
 import ViewRay from "./view-ray";
 
-class PerspectiveCamera extends BaseCamera {
+class BasePerspectiveCamera extends BaseCamera {
 
     public fov: number = 60;           // in degrees
     public viewRatio: number = 1;
@@ -56,4 +56,4 @@ class PerspectiveCamera extends BaseCamera {
     }
 }
 
-export default PerspectiveCamera;
+export default BasePerspectiveCamera;
