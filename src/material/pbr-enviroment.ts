@@ -25,9 +25,9 @@ class PBREnviroment {
         sRGB = false,
     }: IPBREnviromentConfig) {
 
-        this.diffuse = new CubeTexture({ images: diffuse, sRGB: false, flipY: false });
+        this.diffuse = new CubeTexture({ images: diffuse, sRGB: false });
 
-        this.specular = new CubeTexture({ images: specular, sRGB: false, flipY: false });
+        this.specular = new CubeTexture({ images: specular, sRGB: false });
 
         this.brdfLUT = new Texture({ image: brdfLUT, sRGB: false, flipY: false, repeat: false });
 

@@ -56,17 +56,9 @@ class Texture {
         const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
 
         if (image instanceof Uint8Array) {
-
             gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, image);
-
-        } else if (image instanceof Float32Array) {
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.FLOAT, image);
-
         } else {
-
             gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
-
         }
 
         if (mipmap) {

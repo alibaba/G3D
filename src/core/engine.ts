@@ -40,8 +40,8 @@ class Engine {
 
         const { gl } = GL;
 
-        GL.width = canvas.width as number;
-        GL.height = canvas.height as number;
+        GL.width = canvas.width;
+        GL.height = canvas.height;
 
         // extensions
         {
@@ -49,12 +49,9 @@ class Engine {
 
             extensions.set("TEX_LOD", gl.getExtension("EXT_shader_texture_lod"));
 
-            // TODO : check support
-            gl.getExtension("OES_standard_derivatives");
-            gl.getExtension("OES_element_index_uint");
+            extensions.set("DER", gl.getExtension("OES_standard_derivatives"));
 
-            gl.getExtension("OES_texture_float");
-            gl.getExtension("OES_texture_float_linear");
+            extensions.set("ELE_UNIT", gl.getExtension("OES_element_index_uint"));
 
             extensions.set("SRGB", gl.getExtension("EXT_SRGB"));
         }

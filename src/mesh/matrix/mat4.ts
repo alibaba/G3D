@@ -818,7 +818,7 @@ export function getScaling(out: IVec3, mat: IMat4): IVec3 {
  *  same as the quaternion originally supplied.
  */
 export function getRotation(out: IQuat, mat: IMat4): IQuat {
-    // Algorithm taken from 
+    // Algorithm taken from
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
     const trace = mat[0] + mat[5] + mat[10];
     let S = 0;
@@ -902,7 +902,6 @@ export function fromRotationTranslationScale(out: IMat4, q: IQuat, v: IVec3, s: 
 
     return out;
 }
-
 
 // Creates a matrix from a quaternion rotation, vector translation and vector scale,
 // rotating and scaling around the given origin
@@ -994,7 +993,7 @@ export function fromQuat(out: IMat4, q: IQuat): IMat4 {
 // Generates a frustum matrix with the given bounds
 export function frustum(
     out: IMat4, left: number, right: number, bottom: number, top: number,
-    near: number, far: number
+    near: number, far: number,
 ): IMat4 {
     const rl = 1 / (right - left);
     const tb = 1 / (top - bottom);
@@ -1048,8 +1047,8 @@ export function perspective(out: IMat4, fovy: number, aspect: number, near: numb
  */
 export function perspectiveFromFieldOfView(
     out: IMat4,
-    fov: { 
-        upDegrees: number, downDegrees: number, leftDegrees: number, rightDegrees: number 
+    fov: {
+        upDegrees: number, downDegrees: number, leftDegrees: number, rightDegrees: number,
     },
     near: number, far: number,
 ): IMat4 {
@@ -1081,7 +1080,7 @@ export function perspectiveFromFieldOfView(
 
 // Generates a orthogonal projection matrix with the given bounds
 export function ortho(
-    out: IMat4, left: number, right: number, bottom: number, top: number, near: number, far: number
+    out: IMat4, left: number, right: number, bottom: number, top: number, near: number, far: number,
 ): IMat4 {
     const lr = 1 / (left - right);
     const bt = 1 / (bottom - top);

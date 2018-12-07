@@ -26,7 +26,8 @@
     "test": "node ./devtools/index.js test",
     "website": "node ./devtools/website.js",
     "prepublishOnly": "npm run build",
-    "format": "node ./devtools/format-demo.js"
+    "format": "node ./devtools/format-demo.js",
+    "lint": "tslint -c ./devtools/lint-config/tslint.json ./src/**/*.ts --fix"
   },
   "keywords": [],
   "author": "xieguanglei@hotmail.com"

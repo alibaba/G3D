@@ -22,7 +22,7 @@ class Shader {
         this.vShaderSource = vShaderSource;
 
         for (const key of GL.extensions.keys()) {
-            if (GL.extensions.get(key) !== undefined) {
+            if (!!GL.extensions.get(key)) {
                 this.extensions.push(`EXT_${key}`);
             }
         }

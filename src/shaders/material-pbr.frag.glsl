@@ -2,7 +2,9 @@
 #extension GL_EXT_shader_texture_lod: enable
 #endif
 
+#ifdef EXT_DER
 #extension GL_OES_standard_derivatives : enable
+#endif
 
 #ifdef PRECISION_FLOAT_HIGHP
 precision highp float;
@@ -15,7 +17,6 @@ precision mediump float;
 #ifdef PRECISION_FLOAT_LOWP
 precision lowp float;
 #endif
-
 
 #define PI 3.1415926
 
@@ -98,7 +99,9 @@ struct PBRLightInfo
     float intensity;
 };
 
+
 #ifdef PBR_NORMAL_TEXTURE
+#ifdef EXT_DER
 vec3 getNormal(){
     vec3 pos_dx = dFdx(vPosition);
     vec3 pos_dy = dFdy(vPosition);
@@ -114,6 +117,8 @@ vec3 getNormal(){
     return n;
 }
 #endif
+#endif
+
 
 vec3 L_direct(PBRInfo info, PBRLightInfo light){
     
@@ -180,9 +185,12 @@ vec3 L(){
 
     PBRInfo pbrInputs = PBRInfo(
 
+        #ifdef EXT_DER
         #ifdef PBR_NORMAL_TEXTURE
         getNormal(),
-        // vNormal,
+        #else
+        vNormal,
+        #endif
         #else
         vNormal,
         #endif

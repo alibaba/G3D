@@ -7,5 +7,5 @@ export function deg2rad(v: number): number {
 }
 
 export function isPowerOf2(v: number): boolean {
-    return (v >= 1) && (Math.log(v) / Math.log(2) % 1 === 0);
+    return (v >= 1) && (Math.log2(v) % 1 === 0);
 }
