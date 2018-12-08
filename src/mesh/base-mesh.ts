@@ -1,6 +1,8 @@
 import Node from "../core/node";
 import Scene from "../scene/scene";
 import { findIndex } from "../utils/lodash";
+import BaseGeometry from "../geometry/base-geometry";
+import ShaderMaterial from "../material/shader-material";
 
 class BaseMesh extends Node {
 
@@ -8,6 +10,11 @@ class BaseMesh extends Node {
     public visibility: boolean = true;
     public pickable: boolean = true;
     public renderLayerIndex: number = 0;
+
+    public geometry: BaseGeometry;
+    public materials: {
+        [prop: string]: ShaderMaterial;
+    };
 
     constructor(scene: Scene) {
         super();

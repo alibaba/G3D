@@ -96,6 +96,8 @@ class CubeTexture {
             this.setMipmaps(images.mip);
         }
 
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
+
         textures.add(this);
     }
 

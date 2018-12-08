@@ -11,6 +11,11 @@ import Scene from "../scene/scene";
 import { find } from "../utils/lodash";
 import Mesh from "../mesh/mesh";
 import LineMesh from "../mesh/line-mesh";
+import BaseMesh from "../mesh/base-mesh";
+import BaseCamera from "../camera/base-camera";
+import BaseGeometry from "../geometry/base-geometry";
+import BufferView from "../buffer/buffer-view";
+import ShaderMaterial from "../material/shader-material";
 
 const LIGHT_MAX_COUNT = 16;
 const LIGHT_TYPE_NULL = 1;
@@ -36,7 +41,7 @@ class RenderManager {
             position: new Float32Array(LIGHT_MAX_COUNT * 3),
         };
 
-    private groups: Array<Array<Mesh | LineMesh>> = [];
+    private groups: BaseMesh[][] = [];
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -50,40 +55,38 @@ class RenderManager {
 
         if (scene.activeCamera) {
 
-            const groups = this.groupMeshLayers();
+            this.groupMeshLayers();
 
             engine.bindFramebuffer("picker");
-            this.renderToPickerRenderBuffer(groups);
+            this.renderToPickerRenderBuffer();
             engine.bindFramebuffer(null);
 
             engine.bindFramebuffer("shadow");
-            this.renderToShadowRenderBuffer(groups);
+            this.renderToShadowRenderBuffer();
             engine.bindFramebuffer(null);
 
-            this.renderToScreen(groups);
+            this.renderToScreen();
         }
     }
 
-    private groupMeshLayers() {
+    private groupMeshLayers(): void {
 
         const { scene } = this;
         const { meshes } = scene;
 
-        const groups = [];
+        this.groups = [];
 
-        meshes.forEach((mesh) => {
+        for (const mesh of meshes) {
 
             const i = mesh.getRenderLayerIndex();
 
-            if (!groups[i]) {
-                groups[i] = [];
+            if (!this.groups[i]) {
+                this.groups[i] = [];
             }
 
-            groups[i].push(mesh);
+            this.groups[i].push(mesh);
+        }
 
-        });
-
-        return groups.filter(Boolean);
     }
 
     private getShadowLight(): DirectionalLight | PointLight {
@@ -99,9 +102,9 @@ class RenderManager {
         return null;
     }
 
-    private renderToScreen(groups): void {
+    private renderToScreen(): void {
 
-        const { scene } = this;
+        const { scene, groups } = this;
 
         const engine = Engine.instance;
 
@@ -178,13 +181,15 @@ class RenderManager {
                                 engine.disableBlend();
                             }
 
-                            if (cullFace) {
-                                this.setFaceCull(mesh.geometry.facing);
-                            } else {
-                                this.setFaceCull(
-                                    mesh.geometry.facing === Geometry.FACING.FRONT ?
-                                        Geometry.FACING.BACK : Geometry.FACING.FRONT,
-                                );
+                            if (mesh instanceof Mesh) {
+                                if (cullFace) {
+                                    this.setFaceCull(mesh.geometry.facing);
+                                } else {
+                                    this.setFaceCull(
+                                        mesh.geometry.facing === Geometry.FACING.FRONT ?
+                                            Geometry.FACING.BACK : Geometry.FACING.FRONT,
+                                    );
+                                }
                             }
 
                             this.drawMesh(mesh, key);
@@ -197,7 +202,9 @@ class RenderManager {
 
     }
 
-    private renderToPickerRenderBuffer(groups): void {
+    private renderToPickerRenderBuffer(): void {
+
+        const { groups } = this;
 
         const engine = Engine.instance;
 
@@ -229,9 +236,9 @@ class RenderManager {
         });
     }
 
-    private renderToShadowRenderBuffer(groups): void {
+    private renderToShadowRenderBuffer(): void {
 
-        const { scene } = this;
+        const { scene, groups } = this;
         const { lights } = scene;
 
         const engine = Engine.instance;
@@ -268,13 +275,13 @@ class RenderManager {
         }
     }
 
-    private setFaceCull(facing) {
+    private setFaceCull(facing: any): void {
         Engine.instance.cullFace(
             facing === Geometry.FACING.FRONT ? "BACK" : facing === Geometry.FACING.BACK ? "FRONT" : null,
         );
     }
 
-    private prepareMVPMatrix(mesh, camera = this.scene.activeCamera) {
+    private prepareMVPMatrix(mesh: BaseMesh, camera: BaseCamera = this.scene.activeCamera): void {
 
         const engine = Engine.instance;
 
@@ -283,7 +290,7 @@ class RenderManager {
         engine.uniform("uMMatrix", mesh.getWorldMatrix());
     }
 
-    private prepareLights() {
+    private prepareLights(): void {
 
         const { scene } = this;
         const engine = Engine.instance;
@@ -331,7 +338,7 @@ class RenderManager {
         engine.uniform("uLightPosition", position);
     }
 
-    private prepareGeometry = (geometry) => {
+    private prepareGeometry(geometry: BaseGeometry): void {
 
         const engine = Engine.instance;
 
@@ -345,7 +352,7 @@ class RenderManager {
 
         if (uvs) {
 
-            if (typeof uvs.byteStride === "number") {
+            if (uvs instanceof BufferView) {
 
                 engine.attribute("aUV", uvs.buffer.glBuffer, uvs.byteStride, uvs.byteOffset);
 
@@ -364,29 +371,27 @@ class RenderManager {
 
     }
 
-    private prepareMaterial(material) {
+    private prepareMaterial(material: ShaderMaterial): void {
 
         const engine = Engine.instance;
 
         const { uniforms } = material;
 
-        for (let i = 0; i < uniforms.length; i++) {
-            const name = uniforms[i];
+        for (const name of uniforms) {
             const value = material.uniform(name);
             if (value !== null) {
                 engine.uniform(name, value);
             }
         }
-
     }
 
-    private prepareCameraPosition() {
+    private prepareCameraPosition(): void {
         const engine = Engine.instance;
         const { activeCamera } = this.scene;
         engine.uniform("uCameraPosition", activeCamera.getPosition());
     }
 
-    private prepareShadow() {
+    private prepareShadow(): void {
 
         const engine = Engine.instance;
 
@@ -403,7 +408,7 @@ class RenderManager {
         }
     }
 
-    private drawMesh = (mesh, key) => {
+    private drawMesh(mesh: BaseMesh, key: string): void {
 
         const engine = Engine.instance;
 
@@ -417,7 +422,7 @@ class RenderManager {
         }
     }
 
-    private drawSkybox() {
+    private drawSkybox(): void {
 
         const engine = Engine.instance;
 

@@ -18,7 +18,13 @@ main(G3D, {
     pbrAssets,
     loader,
     onClickCanvas: function (callback) {
-        canvas.addEventListener('click', callback)
+        canvas.addEventListener('click', function(e){
+            const dpr = window.devicePixelRatio;
+            callback({
+                offsetX: e.offsetX * dpr,
+                offsetY: e.offsetY * dpr
+            })
+        })
     },
 });
 

@@ -26,6 +26,8 @@ class Engine {
     private shaders: Map<string, Shader> = new Map();
     private framebuffers: { [prop: string]: Framebuffer } = {};
 
+    private pixelDataReaded: Uint8Array = new Uint8Array(4);
+
     constructor(canvas: HTMLCanvasElement) {
 
         if (Engine.instance) {
@@ -217,20 +219,25 @@ class Engine {
         gl.drawElements(mode, count, type, offset);
     }
 
-    public readFramebufferPixel(key: string, x: number, y: number): Uint8Array {
+    public readFramebufferPixel(key: string, x: number, y: number): number[] {
+
+        const { pixelDataReaded: pixels } = this;
         const { gl } = GL;
 
         if (this.framebuffers[key]) {
+
+            y = GL.height - y;
+
             this.bindFramebuffer(key);
-            const pixels = new Uint8Array(1 * 1 * 4);
+
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
             this.bindFramebuffer(null);
-            return pixels;
-        } else {
-            this.bindFramebuffer(key);
-            const pixels = new Uint8Array(1 * 1 * 4);
-            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-            return pixels;
+
+            return [
+                pixels[0], pixels[1], pixels[2], pixels[3],
+            ];
+
         }
     }
 }

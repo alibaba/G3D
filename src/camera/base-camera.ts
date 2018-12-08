@@ -15,6 +15,10 @@ class BaseCamera extends Node {
     private upValues: IVec3 = Vec3.create();
     private viewMatrixValues: IMat4 = Mat4.create();
 
+    public getPMatrix(): IMat4 {
+        return Mat4.create();
+    }
+
     public getVMatrix(): IMat4 {
         Vec3.set(this.cameraPositionValues, this.position.x, this.position.y, this.position.z);
         Vec3.set(this.centerValues, this.center.x, this.center.y, this.center.z);

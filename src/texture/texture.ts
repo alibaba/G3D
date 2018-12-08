@@ -65,6 +65,8 @@ class Texture {
             gl.generateMipmap(gl.TEXTURE_2D);
         }
 
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
+
         textures.add(this);
     }
 
