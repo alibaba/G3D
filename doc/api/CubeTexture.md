@@ -16,7 +16,7 @@ new G3D.CubeTexture(config)
 | config.images       | Object  | image collection of cube textures                                                                       |
 | config.images[face] | Image   | single texture image of a specified face, face can be `front`，`back`，`top`，`bottom`，`left`，`right` |
 | config.sRGB         | Boolean | use SRGB mode, default is false                                                                         |
-| config.flipY        | Boolean | use flipY mode, default is true                                                                         |
+| config.flipY        | Boolean | use flipY mode, default is false                                                                         |
 
 ## Example
 
