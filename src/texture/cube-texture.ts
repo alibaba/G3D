@@ -17,7 +17,6 @@ interface ICubeTextureConfigImages extends ICubeImages {
 
 interface ICubeTextureConfig {
     images: ICubeTextureConfigImages;
-    size?: number;
     flipY?: boolean;
     sRGB?: boolean;
 }
@@ -43,16 +42,13 @@ class CubeTexture {
 
     constructor({
         images,
-        size = images.left.width,
         sRGB = false,
+        flipY = false,
     }: ICubeTextureConfig) {
 
         const { gl, textures, extensions } = GL;
 
         this.checkImages(images);
-
-        this.size = size;
-        this.sRGB = sRGB;
 
         const texture = this.glTexture = gl.createTexture();
 
@@ -63,6 +59,9 @@ class CubeTexture {
 
         sRGB = this.sRGB && extensionSRGB;
 
+        this.size = images.left.width;
+        this.sRGB = sRGB;
+
         // wrap
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -72,25 +71,16 @@ class CubeTexture {
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
         // fill
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
         const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
 
         for (const [key, value] of this.targets) {
-
-            if (images[key] instanceof Uint8Array) {
-
-                gl.texImage2D(value, 0, format, size, size, 0, format, gl.UNSIGNED_BYTE, images[key]);
-
-            } else {
-
-                gl.texImage2D(value, 0, format, format, gl.UNSIGNED_BYTE, images[key]);
-
-            }
+            gl.texImage2D(value, 0, format, format, gl.UNSIGNED_BYTE, images[key]);
         }
 
         gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 
-        this.mipLevel = Math.log2(size);
+        this.mipLevel = Math.log2(this.size);
 
         if (images.mip) {
             this.setMipmaps(images.mip);
@@ -108,12 +98,7 @@ class CubeTexture {
         }
 
         const { gl, extensions } = GL;
-
-        const extensionSRGB = extensions.get("SRGB");
-
-        const sRGB = this.sRGB && extensionSRGB;
-
-        const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
+        const format = this.sRGB ? extensions.get("SRGB").SRGB_ALPHA_EXT : gl.RGBA;
 
         // fill
         for (let i = 0; i < mips.length; i++) {
@@ -129,10 +114,11 @@ class CubeTexture {
 
     public destructor() {
 
-        const { gl } = GL;
+        const { gl, textures } = GL;
 
         gl.deleteTexture(this.glTexture);
 
+        textures.delete(this);
     }
 
     private checkImages(images: ICubeImages, size = images.left.width): void {

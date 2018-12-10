@@ -1,5 +1,5 @@
-import expect from '../_helpers/expect';
-import { initWebGL } from '../_helpers/init';
+import expect from '../helpers/expect';
+import { initWebGL } from '../helpers/init';
 
 import Buffer from '../../src/buffer/buffer';
 import GL from '../../src/core/gl';
@@ -8,12 +8,11 @@ describe('buffer', function () {
 
     before(function () {
         const gl = initWebGL();
-        console.log(gl);
         GL.gl = gl;
     });
 
     afterEach(function () {
-        for (let buffer of GL.buffers) {
+        for (const buffer of GL.buffers) {
             buffer.destructor();
         }
     });

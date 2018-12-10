@@ -1,5 +1,5 @@
-import expect from '../_helpers/expect';
-import { initWebGL } from '../_helpers/init';
+import expect from '../helpers/expect';
+import { initWebGL } from '../helpers/init';
 
 import ElementBuffer from '../../src/buffer/element-buffer';
 import GL from '../../src/core/gl';
