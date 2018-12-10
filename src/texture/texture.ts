@@ -15,6 +15,8 @@ class Texture {
 
     public glTexture: WebGLTexture;
 
+    public mipLevel: number = 0;
+
     private mipmap: boolean;
 
     private sRGB: boolean;
@@ -68,6 +70,8 @@ class Texture {
 
         if (mipmap) {
             gl.generateMipmap(gl.TEXTURE_2D);
+
+            this.mipLevel = Math.log2(this.width);
         }
 
         if (mipmap && mip) {

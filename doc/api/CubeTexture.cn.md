@@ -16,7 +16,7 @@ new G3D.CubeTexture(config)
 | config.images       | Object  | 立方体纹理集合                                                                              |
 | config.images[face] | Image   | 立方体纹理指定方向的纹理图片，face 可以是 `front`，`back`，`top`，`bottom`，`left`，`right` |
 | config.sRGB         | Boolean | 使用 SRGB 模式解析，默认为 false                                                            |
-| config.flipY        | Boolean | 转置 Y 坐标存储纹理数据，默认为 true                                                        |
+| config.flipY        | Boolean | 转置 Y 坐标存储纹理数据，默认为 false                                                       |
 
 ## 示例
 
