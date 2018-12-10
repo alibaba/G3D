@@ -3,7 +3,23 @@ function main(
     { canvas, requestAnimationFrame, loader, pbrAssets }
 ) {
 
-    pbrAssets('apartment').ready((specular, diffuse, lut) => {
+    const engine = new G3D.Engine(canvas);
+
+    const scene = new G3D.Scene(engine);
+    scene.clearColor = {r: 255, g:255, b:255};
+
+    const camera = new G3D.RotatePerspectiveCamera(scene);
+    camera.alpha = 45;
+    camera.beta = 35;
+    camera.radius = 0.04;
+    camera.near = 0.001;
+    camera.far = 100;
+
+    const light = new G3D.DirectionalLight(scene);
+    light.direction = {x: 0, y: 0, z: 1};
+    light.intensity = 0.1;
+
+    pbrAssets('apartment', (specular, diffuse, lut) => {
 
         loader.loadBlob(
             '/assets/diamond-ring/1.stl',
@@ -41,25 +57,10 @@ function main(
                                         left: leftE, right: rightE, top: topE, bottom: bottomE, front: frontE, back: backE,
                                     };
 
-                                    const engine = new G3D.Engine(canvas);
-
-                                    const scene = new G3D.Scene(engine);
-
-                                    const camera = new G3D.RotatePerspectiveCamera(scene);
-                                    camera.alpha = 45;
-                                    camera.beta = 35;
-                                    camera.radius = 0.04;
-                                    camera.near = 0.001;
-                                    camera.far = 100;
-
-                                
-
-                                    // const mesh = G3D.MeshBuilder.createSphere(scene, 2);
-
                                     const mesh1 = G3D.MeshBuilder.createFromStlModel(scene, m1);
-                                    mesh1.geometry.facing = G3D.Geometry.BACK;
+                                    mesh1.geometry.facing = G3D.Geometry.FACING.BACK;
                                     const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, m2);
-                                    mesh2.geometry.facing = G3D.Geometry.BACK;
+                                    mesh2.geometry.facing = G3D.Geometry.FACING.BACK;
                                     const mesh3 = G3D.MeshBuilder.createFromStlModel(scene, m3, { geometry: { mergeNormals: true } });
 
                                     mesh1.materials.default = new G3D.GemMaterial({
@@ -80,14 +81,12 @@ function main(
 
                                     const mtl = new G3D.PBRMaterial();
                                     mtl.pbrEnviroment = pbrEnv;
-                                    mtl.albedoColor = { r: 256*3, g: 256*3, b: 256*3 };
+                                    mtl.albedoColor = { r: 256 * 4.7, g: 256 * 4.7, b: 1300 };
 
                                     mtl.metallic = 0.99;
                                     mtl.roughness = 0.1;
 
                                     mesh3.materials.default = mtl;
-
-                                    window.mesh = mesh3;
 
                                     const mesh = new G3D.Mesh(scene);
                                     mesh1.parent = mesh;
@@ -96,10 +95,10 @@ function main(
 
                                     mesh.rotation.x = 270;
 
-                                    G3D.MeshBuilder.createCoordinate(scene, 300);
+                                    // G3D.MeshBuilder.createCoordinate(scene, 300);
 
                                     function render() {
-                                        mesh.rotation.y += 0.2;
+                                        // mesh.rotation.y += 0.2;
                                         scene.render();
                                         requestAnimationFrame(render);
                                     }

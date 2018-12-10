@@ -12,8 +12,6 @@ function main(
     camera.beta = 30;
     camera.radius = 8;
 
-
-
     const light1 = new G3D.DirectionalLight(scene);
     light1.direction = { x: 1, y: 1, z: 1 };
     light1.intensity = 1.5;
@@ -22,11 +20,25 @@ function main(
     light3.intensity = 0.2;
 
     let mesh = null;
-    loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj', function (obj) {
-        loader.loadText('https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.mtl', function (mtl) {
-            mesh = G3D.MeshBuilder.createFromObjModel(scene, { obj, mtl });
-        })
-    })
+    loader.loadTextQueue(
+        [
+            'https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.obj',
+            'https://g.alicdn.com/gama/assets/0.0.3/assets/models/cola/cola.mtl'
+        ],
+        function ([obj, mtl]) {
+
+            const k1 = '//img.alicdn.com/tfs/TB1AquIiC_I8KJjy0FoXXaFnVXa-512-512.jpg';
+            const k2 = '//img.alicdn.com/tfs/TB1AquIiC_I8KJjy0FoXXaFnVXa-512-512.jpg';
+
+            loader.loadImageQueue(['https:' + k1, 'https:' + k2], function ([image1, image2]) {
+                const images = {
+                    [k1]: image1,
+                    [k2]: image2
+                };
+                mesh = G3D.MeshBuilder.createFromObjModel(scene, { obj, mtl, images });
+            })
+        }
+    );
 
     function render() {
         if (mesh) {

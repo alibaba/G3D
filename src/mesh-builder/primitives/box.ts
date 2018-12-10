@@ -1,5 +1,5 @@
-import Mesh from '../../mesh/G3D.Mesh';
-import Geometry from '../../geometry/G3D.Geometry';
+import Geometry from "../../geometry/geometry";
+import Mesh from "../../mesh/mesh";
 
 function createBox(scene, left, right, top, bottom, front, back) {
 
@@ -22,7 +22,7 @@ function createBox(scene, left, right, top, bottom, front, back) {
         [0, 0, -1],
         [-1, 0, 0],
         [0, 1, 0],
-        [0, -1, 0]
+        [0, -1, 0],
     ];
 
     mesh.geometry = new Geometry({
@@ -33,13 +33,13 @@ function createBox(scene, left, right, top, bottom, front, back) {
             5, 4, 7, 6,
             4, 0, 3, 7,
             3, 2, 6, 7,
-            4, 5, 1, 0
+            4, 5, 1, 0,
         ].reduce(
             (acc, i) => {
                 acc.push(...verticeSources[i]);
                 return acc;
             },
-            []
+            [],
         ),
 
         normals: [0, 1, 2, 3, 4, 5].reduce(
@@ -51,7 +51,7 @@ function createBox(scene, left, right, top, bottom, front, back) {
                 }
                 return acc;
             },
-            []
+            [],
         ),
 
         uvs: [0, 1, 2, 3, 4, 5].reduce(
@@ -59,19 +59,19 @@ function createBox(scene, left, right, top, bottom, front, back) {
                 acc.push(0, 0, 1, 0, 1, 1, 0, 1);
                 return acc;
             },
-            []
+            [],
         ),
 
         indices: {
             default: [0, 1, 2, 3, 4, 5].reduce(
                 (acc, i) => {
-                    acc.push(...[0, 1, 2, 0, 2, 3].map(n => n + i * 4));
+                    acc.push(...[0, 1, 2, 0, 2, 3].map((n) => n + i * 4));
                     return acc;
                 },
-                []
-            )
-        }
-    })
+                [],
+            ),
+        },
+    });
 
     return mesh;
 }

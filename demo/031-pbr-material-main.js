@@ -1,6 +1,6 @@
 function main(
     G3D,
-    { canvas, requestAnimationFrame, loader, pbrAssets }
+    { canvas, requestAnimationFrame, pbrAssets }
 ) {
 
     const engine = new G3D.Engine(canvas);

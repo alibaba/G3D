@@ -27,8 +27,6 @@ function main(
     camera.far = model.cameraRadius * 3;
     camera.radius = model.cameraRadius;
 
-    const cube = G3D.MeshBuilder.createCube(scene, 2);
-
     pbrAssets((specular, diffuse, lut) => {
 
         loader.loadText(model.uri, (text) => {
@@ -79,8 +77,6 @@ function main(
 
     function init(gltf, { specular, diffuse, lut }) {
 
-
-
         const light1 = new G3D.DirectionalLight(scene);
         light1.direction = { x: 1, y: -1, z: 0 };
         light1.intensity = 0.2;
@@ -88,12 +84,6 @@ function main(
         const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
 
         meshes.forEach(m => m.rotation.y = 225);
-
-        console.log(meshes);
-
-        console.log(meshes[0].geometry.getBoundingBox());
-
-        // new G3D.Skybox(scene, {...diffuse}, model.cameraRadius * 1.5);
 
         function render() {
 

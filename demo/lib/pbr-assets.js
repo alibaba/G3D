@@ -1,7 +1,7 @@
 import loader from './loader';
 
-// const faces =   ['left', 'right', 'top',  'bottom', 'front', 'back'];
-// const faceDes = ['negx', 'posx',  'posy', 'negy',   'posz',  'negz'];
+// faces    :  'left', 'right', 'top',  'bottom', 'front', 'back'
+// faceDes  :  'negx', 'posx',  'posy', 'negy',   'posz',  'negz'
 
 var pbrAssets = (function () {
     var assetsDefault = {
@@ -192,8 +192,8 @@ var pbrAssets = (function () {
         ]
     }
     var assets = assetsDefault;
-    function loadlut(callback) { loader.loadImage(assets.lut, callback) };
-    function loadDf(callback) { loader.loadImageQueue(assets.df, callback) };
+    function loadlut(callback) { loader.loadImage(assets.lut, callback) }
+    function loadDf(callback) { loader.loadImageQueue(assets.df, callback) }
     function loadSp(callback) {
         var res = null; loadSpMip(0);
         function loadSpMip(i) {
@@ -206,8 +206,8 @@ var pbrAssets = (function () {
         }
     }
     return function (name, callback) {
-        if (name === 'apartment') { assets = assetsApartment };
-        if (typeof name === 'function') { callback = name };
+        if (name === 'apartment') { assets = assetsApartment }
+        if (typeof name === 'function') { callback = name }
         loadlut(function (lut) { loadDf(function (df) { loadSp(function (sp) { callback(sp, df, lut); }) }) });
     }
 })();

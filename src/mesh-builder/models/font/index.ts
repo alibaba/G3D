@@ -1,9 +1,9 @@
-import Mesh from '../../../mesh/G3D.Mesh';
-import LineMesh from '../../../mesh/G3D.LineMesh';
-import LineGeometry from '../../../geometry/G3D.LineGeometry';
-import Geometry from '../../../geometry/G3D.Geometry';
+import Geometry from "../../../geometry/geometry";
+import LineGeometry from "../../../geometry/line-geometry";
+import LineMesh from "../../../mesh/line-mesh";
+import Mesh from "../../../mesh/mesh";
 
-import PathParser from './parser';
+import PathParser from "./parser";
 
 function createLineFromPath(scene, path, resolution) {
 
@@ -14,8 +14,8 @@ function createLineFromPath(scene, path, resolution) {
     line.geometry = new LineGeometry({
         vertices: [...vertices],
         indices: {
-            default: [...indices]
-        }
+            default: [...indices],
+        },
     });
 
     return line;
@@ -32,11 +32,11 @@ function createMeshFromPath(scene, path, thickness, resolution) {
         normals,
         uvs,
         indices: {
-            default: indices
+            default: indices,
         },
-        facing: Geometry.FACING.BOTH
+        facing: Geometry.FACING.BOTH,
     });
-    
+
     return mesh;
 }
 

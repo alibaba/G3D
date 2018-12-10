@@ -1,11 +1,10 @@
-import Vec2 from '../../../matrix/G3D.Vec2';
-import Vec3 from '../../../matrix/G3D.Vec3';
-
+import Vec2 from "../../../matrix/vec2";
+import Vec3 from "../../../matrix/vec3";
 
 function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
 
     function QuadraticBezierP0(t, p) {
-        var k = 1 - t;
+        const k = 1 - t;
         return k * k * p;
     }
 
@@ -45,38 +44,15 @@ function Quadratic(x0, y0, x1, y1, x2, y2, resolution) {
 function Line(x0, y0, x1, y1, resolution) {
 
     return [x1, y1];
-
-    const dx = x1 - x0;
-    const dy = y1 - y0;
-
-    const d = Math.sqrt(dx * dx + dy * dy);
-
-    if (d === 0) {
-        return [x1, y1];
-    }
-
-    const segs = Math.ceil(d / resolution);
-    const segLen = d / segs;
-
-    const points = [];
-    for (let i = 1; i <= segs; i++) {
-
-        const x = x0 + (i / segs) * (dx / d) * d;
-        const y = y0 + (i / segs) * (dy / d) * d;
-
-        points.push(x, y);
-    }
-
-    return points;
 }
 
 const PathParser = {
 
-    parse: function (data, resolution) {
+    parse(data, resolution) {
 
-        data = data.split('\n').join('');
+        data = data.split("\n").join("");
 
-        const list = data.split(' ').filter(Boolean);
+        const list = data.split(" ").filter(Boolean);
 
         const vertices = [];
         const lines = [];
@@ -89,7 +65,7 @@ const PathParser = {
         while (i < list.length) {
 
             switch (list[i++]) {
-                case 'm':
+                case "m":
                     {
                         const x = Number(list[i++]);
                         const y = Number(list[i++]);
@@ -107,7 +83,7 @@ const PathParser = {
 
                         break;
                     }
-                case 'q':
+                case "q":
                     {
                         const [x0, y0] = current;
                         const x2 = Number(list[i++]);
@@ -115,8 +91,8 @@ const PathParser = {
                         const x1 = Number(list[i++]);
                         const y1 = Number(list[i++]);
                         const points = Quadratic(x0, y0, x1, y1, x2, y2, resolution);
-                        for (let i = 0; i < points.length; i += 2) {
-                            vertices.push(points[i], points[i + 1]);
+                        for (let j = 0; j < points.length; j += 2) {
+                            vertices.push(points[j], points[j + 1]);
                             line.push(vertices.length / 2 - 1);
                         }
 
@@ -124,31 +100,28 @@ const PathParser = {
 
                         break;
                     }
-                case 'l':
+                case "l":
                     {
                         const x = Number(list[i++]);
                         const y = Number(list[i++]);
 
                         const [x0, y0] = current;
                         const points = Line(x0, y0, x, y, resolution);
-                        for (let i = 0; i < points.length; i += 2) {
-                            vertices.push(points[i], points[i + 1]);
+                        for (let j = 0; j < points.length; j += 2) {
+                            vertices.push(points[j], points[j + 1]);
                             line.push(vertices.length / 2 - 1);
                         }
-
-                        // vertices.push(x, y);
-                        // line.push(vertices.length / 2 - 1);
 
                         current = [x, y];
                         break;
                     }
-                case 'z':
+                case "z":
                     {
                         // line.push(line[0]);
                         break;
                     }
                 default:
-                    throw new Error('parse path failed, unhandled item ' + list[i]);
+                    throw new Error("parse path failed, unhandled item " + list[i]);
             }
         }
 
@@ -156,26 +129,26 @@ const PathParser = {
         lines.push(line);
         line = [];
 
-        function checkLineRing(line) {
-            const len = line.length;
-            const i = line[0];
-            const j = line[len - 1];
+        function checkLineRing(theLine) {
+            const len = theLine.length;
+            const k = theLine[0];
+            const j = theLine[len - 1];
 
             if (
-                vertices[i * 2] === vertices[j * 2] &&
-                vertices[i * 2 + 1] === vertices[j * 2 + 1] &&
+                vertices[k * 2] === vertices[j * 2] &&
+                vertices[k * 2 + 1] === vertices[j * 2 + 1] &&
                 j * 2 + 1 === vertices.length - 1
             ) {
                 vertices.pop();
                 vertices.pop();
-                line[len - 1] = i;
+                theLine[len - 1] = k;
             }
         }
 
         return { vertices, lines };
     },
 
-    parseToLine: function (data, resolution) {
+    parseToLine(data, resolution) {
 
         const { vertices, lines } = this.parse(data, resolution);
 
@@ -198,11 +171,9 @@ const PathParser = {
 
     },
 
-    parseToTriangles: function (data, resolution) {
+    parseToTriangles(data, resolution) {
 
         const { vertices, lines } = this.parse(data, resolution);
-
-        // console.log(vertices.join(','));
 
         const clonedLines = cloneLines(lines);
 
@@ -224,18 +195,18 @@ const PathParser = {
             indices,
             normals,
             uvs,
-            lines: clonedLines
+            lines: clonedLines,
         };
 
-        function earcut(polygons, holes, triangles) {
+        function earcut(plgs, hles, triangles) {
 
-            if (holes.length > 0) {
-                const res = removeHoles(polygons, holes);
-                polygons = res.polygons;
-                holes = res.holes;
+            if (hles.length > 0) {
+                const res = removeHoles(plgs, hles);
+                plgs = res.polygons;
+                hles = res.holes;
             }
 
-            polygons.forEach(polygon => {
+            plgs.forEach((polygon) => {
                 triangles.push(...earcutPolygon(polygon));
             });
 
@@ -248,14 +219,14 @@ const PathParser = {
 
             if (polygon.length < 3) {
 
-                throw 'not valid polygon'
+                throw new Error("not valid polygon");
 
             } else if (polygon.length === 3) {
 
                 if (polygon[0] === polygon[2]) {
                     return [];
                 } else {
-                    throw new Error('invalid polygon');
+                    throw new Error("invalid polygon");
                 }
 
             } else {
@@ -265,30 +236,30 @@ const PathParser = {
                     const [j0, j1, j2] = [
                         i === 0 ? polygon.length - 1 : i - 1,
                         i,
-                        i === polygon.length - 1 ? 0 : i + 1
-                    ]
+                        i === polygon.length - 1 ? 0 : i + 1,
+                    ];
                     const [i0, i1, i2] = [polygon[j0], polygon[j1], polygon[j2]];
 
                     if (isEar(j0, j1, j2, polygon)) {
                         polygon.splice(i, 1);
                         return [
-                            i0, i1, i2, ...earcutPolygon(polygon)
-                        ]
+                            i0, i1, i2, ...earcutPolygon(polygon),
+                        ];
                     }
                 }
 
-                throw new Error('hole not cleaned');
+                throw new Error("hole not cleaned");
             }
         }
 
         let clockwiseFactor = 1;
 
-        function distinguish(indices) {
+        function distinguish(idcs) {
 
-            let polygons = [];
-            let holes = [];
+            const plgs = [];
+            const hles = [];
 
-            indices.forEach((list) => {
+            idcs.forEach((list) => {
 
                 let sum = 0;
 
@@ -298,21 +269,21 @@ const PathParser = {
                     sum += (x1 - x0) * (y1 + y0);
                 }
 
-                if (polygons.length === 0) {
+                if (plgs.length === 0) {
                     clockwiseFactor = sum / Math.abs(sum);
                 }
 
                 if (sum * clockwiseFactor >= 0) {
-                    polygons.push(list);
+                    plgs.push(list);
                 } else {
-                    holes.push(list);
+                    hles.push(list);
                 }
-            })
+            });
 
             return {
-                polygons,
-                holes
-            }
+                polygons: plgs,
+                holes: hles,
+            };
         }
 
         function pt(i) {
@@ -410,24 +381,24 @@ const PathParser = {
             return true;
         }
 
-        function removeHoles(polygons, holes) {
+        function removeHoles(plgs, hles) {
 
-            if (holes.length === 0) {
+            if (hles.length === 0) {
                 return {
-                    polygons, holes
-                }
+                    polygons: plgs, holes,
+                };
             }
 
-            for (let hi = 0; hi < holes.length; hi++) {
+            for (let hi = 0; hi < hles.length; hi++) {
 
-                let hole = holes[hi];
+                let hole = hles[hi];
 
                 for (let hvi = 0; hvi < hole.length; hvi++) {
                     const hv = hole[hvi];
                     const [hvx, hvy] = pt(hv);
 
-                    for (let pi = 0; pi < polygons.length; pi++) {
-                        let polygon = polygons[pi];
+                    for (let pi = 0; pi < plgs.length; pi++) {
+                        const polygon = plgs[pi];
 
                         for (let pvi = 0; pvi < polygon.length; pvi++) {
                             const pv = polygon[pvi];
@@ -436,8 +407,8 @@ const PathParser = {
 
                             if (visible(hvx, hvy, pvx, pvy)) {
 
-                                polygons.splice(pi, 1);
-                                holes.splice(hi, 1);
+                                plgs.splice(pi, 1);
+                                hles.splice(hi, 1);
 
                                 hole.pop();
                                 hole = hole.splice(hvi).concat(hole);
@@ -445,25 +416,24 @@ const PathParser = {
 
                                 polygon.splice(pvi + 1, 0, ...hole, pv);
 
-                                polygons.push(polygon);
+                                plgs.push(polygon);
 
-                                return removeHoles(polygons, holes);
+                                return removeHoles(plgs, hles);
                             }
                         }
                     }
 
-                    throw new Error('can not find visible point pair');
+                    throw new Error("can not find visible point pair");
                 }
 
             }
 
-
             function visible(x0, y0, x1, y1) {
 
-                const lines = [...polygons, ...holes];
+                const lns = [...polygons, ...holes];
 
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
+                for (let i = 0; i < lns.length; i++) {
+                    const line = lns[i];
 
                     for (let j = 0; j < line.length - 1; j++) {
                         const [v2, v3] = [line[j], line[j + 1]];
@@ -499,16 +469,16 @@ const PathParser = {
 
             return {
                 polygons,
-                holes: []
-            }
+                holes: [],
+            };
         }
 
-        function cloneLines(lines) {
-            return lines.map(line => [...line]);
+        function cloneLines(lns) {
+            return lns.map((line) => [...line]);
         }
     },
 
-    parseToGeometry: function (data, thickness = 100, resolution = 10) {
+    parseToGeometry(data, thickness = 100, resolution = 10) {
 
         const { vertices: f1Vertices, indices: f1Indices, lines } = this.parseToTriangles(data, resolution);
 
@@ -524,7 +494,7 @@ const PathParser = {
                 f2Normals.push(0, 0, -1);
                 f2UVs.push(0, 0);
             }
-        })
+        });
 
         const f2Vertices = f1Vertices.map((v, i) => {
             if (i % 3 === 2) {
@@ -532,7 +502,7 @@ const PathParser = {
             } else {
                 return v;
             }
-        })
+        });
 
         const f2Indices = [...f1Indices];
 
@@ -541,14 +511,14 @@ const PathParser = {
         const f3Normals = [];
         const f3UVs = [];
 
-        lines.forEach(line => {
+        lines.forEach((line) => {
             for (let i = 0; i < line.length - 1; i++) {
                 const j = i + 1;
                 const [v1, v2, v3, v4] = [
                     pt(f1Vertices, line[i]),
                     pt(f1Vertices, line[j]),
                     pt(f2Vertices, line[i]),
-                    pt(f2Vertices, line[j])
+                    pt(f2Vertices, line[j]),
                 ];
                 const norm2 = normal(v1, v2, v4);
                 const norm = [norm2[0], norm2[1], norm2[2]];
@@ -565,13 +535,13 @@ const PathParser = {
             [f1Vertices, f2Vertices, f3Vertices],
             [f1Indices, f2Indices, f3Indices],
             [f1Normals, f2Normals, f3Normals],
-            [f1UVs, f2UVs, f3UVs]
+            [f1UVs, f2UVs, f3UVs],
         );
 
         function merge(vList, iList, nList, uList) {
 
             if (vList.length !== iList.length) {
-                throw new Error('merge vertices not valid');
+                throw new Error("merge vertices not valid");
             }
 
             let vertices = [];
@@ -582,21 +552,21 @@ const PathParser = {
             for (let i = 0; i < vList.length; i++) {
                 const len = vertices.length / 3;
                 vertices = vertices.concat(vList[i]);
-                indices = indices.concat(iList[i].map(v => v + len));
+                indices = indices.concat(iList[i].map((v) => v + len));
                 normals = normals.concat(...nList[i]);
                 uvs = normals.concat(...uList[i]);
             }
 
             return {
-                vertices, indices, normals, uvs
-            }
+                vertices, indices, normals, uvs,
+            };
         }
 
         function pt(vertices, i) {
             return [
                 vertices[i * 3],
                 vertices[i * 3 + 1],
-                vertices[i * 3 + 2]
+                vertices[i * 3 + 2],
             ];
         }
 
@@ -605,7 +575,7 @@ const PathParser = {
             const a2 = Vec3.sub(Vec3.create(), v2, v3);
             return Vec3.cross(Vec3.create(), a1, a2);
         }
-    }
-}
+    },
+};
 
 export default PathParser;

@@ -1,5 +1,5 @@
 // G3D_TEMPLATE_GENERATED
-import G3D from '../src/G3D';
+import G3D from '../src/index';
 
 import main from './004-point-light-main';
 import loader from './lib/loader';

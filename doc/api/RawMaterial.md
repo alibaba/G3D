@@ -1,6 +1,6 @@
 # RawMaterial
 
-Raw material, the rendered color is independent from lights, extends from [Material](./Material).
+Raw material, the rendered color is independent from lights.
 
 ## Constructor
 

@@ -4,16 +4,18 @@ docs:
   api:
     Core:
       Engine: Engine.md
-      Node: Node.md
+    Assets:
+      Buffer: Buffer.md
+      BufferView: BufferView.md
+      ElementBuffer: ElementBuffer.md
+      ElementBufferView: ElementBufferView.md
+      Texture: Texture.md
+      CubeTexture: CubeTexture.md
     Scene:
       Scene: Scene.md
       Skybox: Skybox.md
-    Cameras:
-      BaseCamera: BaseCamera.md
-      BasePerspectiveCamera: BasePerspectiveCamera.md
-      BaseOrthographicCamera: BaseOrthographicCamera.md
-      RotatePerspectiveCamera: RotatePerspectiveCamera.md
-      RotateOrthographicCamera: RotateOrthographicCamera.md
+    Node:
+      Node: Node.md
     Mesh:
       BaseMesh: BaseMesh.md
       Mesh: Mesh.md
@@ -21,21 +23,20 @@ docs:
     MeshUtils:
       MeshBuilder: MeshBuilder.md
     Materials:
-      Material: Material.md
       RawMaterial: RawMaterial.md
       PhongMaterial: PhongMaterial.md
       PBRMaterial: PBRMaterial.md
       PBREnviroment: PBREnviroment.md
-    Texture:
-      Texture: Texture.md
-      CubeTexture: CubeTexture.md
     Geometries:
-      Buffer: Buffer.md
-      BufferView: BufferView.md
-      ElementBufferView: ElementBufferView.md
       BaseGeometry: BaseGeometry.md
       Geometry: Geometry.md
       LineGeometry: LineGeometry.md
+    Cameras:
+      BaseCamera: BaseCamera.md
+      BasePerspectiveCamera: BasePerspectiveCamera.md
+      BaseOrthographicCamera: BaseOrthographicCamera.md
+      RotatePerspectiveCamera: RotatePerspectiveCamera.md
+      RotateOrthographicCamera: RotateOrthographicCamera.md
     Lights:
       BaseLight: BaseLight.md
       AmbientLight: AmbientLight.md

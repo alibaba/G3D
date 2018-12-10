@@ -1,5 +1,4 @@
-import Vec3 from '../../../matrix/G3D.Vec3';
-
+import Vec3 from "../../../matrix/vec3";
 
 const vertexPattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
 const normalPattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
@@ -14,7 +13,7 @@ const groupPattern = /^g/;
 
 const OBJParser = {
 
-    parse: function (data) {
+    parse(data) {
 
         const positions = [];
         const normals = [];
@@ -26,17 +25,17 @@ const OBJParser = {
             uvs: [],
             normals: [],
             indices: {},
-            mtls: data.mtl ? this.parseMtl(data.mtl) : {}
+            mtls: data.mtl ? this.parseMtl(data.mtl, data.images) : {},
         };
         let curPos = 0;
         let curMtl = null;
 
-        const lines = data.obj.split('\n');
+        const lines = data.obj.split("\n");
 
-        lines.forEach(line => {
+        lines.forEach((line) => {
             line = line.trim();
             let result;
-            if (line.length === 0 || line.charAt(0) === '#') {
+            if (line.length === 0 || line.charAt(0) === "#") {
                 return;
             } else if ((result = vertexPattern.exec(line)) !== null) {
                 positions.push(result.splice(1).map(Number));
@@ -60,7 +59,7 @@ const OBJParser = {
                 const groupName = line.substring(2).trim();
 
             } else {
-                console.log("Unhandled expression at line : " + line);
+                // console.log("Unhandled expression at line : " + line);
             }
         });
 
@@ -71,10 +70,10 @@ const OBJParser = {
             const triangles = getTriangles(face);
             // triangles is like ["5/5/2", "6/6/2", "1/7/2", "5/5/2", "1/7/2", "4/8/2", "5/5/2", "4/8/2", "7/9/2"]
 
-            triangles.forEach(vertex => {
-                const [iPos, iUV, iNorm] = vertex.split('/').map(k => Number(k) - 1);
+            triangles.forEach((vertex) => {
+                const [iPos, iUV, iNorm] = vertex.split("/").map((k) => Number(k) - 1);
                 setTarget(iPos, iUV, iNorm);
-            })
+            });
         }
 
         function setDataForCurrentFaceWithPattern2(face) {
@@ -85,14 +84,14 @@ const OBJParser = {
             let currentiNorm = 0;
 
             triangles.forEach((vertex, i, list) => {
-                const [iPos, iUV] = vertex.split('/').map(k => Number(k) - 1);
+                const [iPos, iUV] = vertex.split("/").map((k) => Number(k) - 1);
 
                 if (i % 3 === 0) {
 
                     const vc = Vec3.fromValues(positions[iPos][0], positions[iPos][1], positions[iPos][2]);
-                    const [iPos1] = list[i + 1].split('/').map(k => Number(k) - 1);
+                    const [iPos1] = list[i + 1].split("/").map((k) => Number(k) - 1);
                     const v1 = Vec3.fromValues(positions[iPos1][0], positions[iPos1][1], positions[iPos1][2]);
-                    const [iPos2] = list[i + 2].split('/').map(k => Number(k) - 1);
+                    const [iPos2] = list[i + 2].split("/").map((k) => Number(k) - 1);
                     const v2 = Vec3.fromValues(positions[iPos2][0], positions[iPos2][1], positions[iPos2][2]);
 
                     const arrow1 = Vec3.sub(Vec3.create(), v1, vc);
@@ -113,8 +112,8 @@ const OBJParser = {
                 tuple[iPos] = {
                     uvs: [iUV],
                     normals: [iNorm],
-                    pos: [curPos]
-                }
+                    pos: [curPos],
+                };
                 target.positions.push(positions[iPos]);
                 target.uvs.push(uvs[iUV]);
                 target.normals.push(normals[iNorm]);
@@ -146,9 +145,9 @@ const OBJParser = {
 
         function findMatchedIndex(arr1, value1, arr2, value2) {
             const idx1 = arr1.map((value, i) => {
-                return { value, i }
-            }).filter(item => item.value === value1)
-                .map(item => item.i);
+                return { value, i };
+            }).filter((item) => item.value === value1)
+                .map((item) => item.i);
             for (let i = 0; i < idx1.length; i++) {
                 if (arr2[idx1[i]] === value2) {
                     return idx1[i];
@@ -158,49 +157,48 @@ const OBJParser = {
         }
     },
 
-    parseMtl: function (mtl) {
+    parseMtl(mtl, images) {
 
-        const lines = mtl.split('\n');
+        const lines = mtl.split("\n");
         const target = {};
         let curMtl = null;
 
-        lines.forEach(line => {
+        lines.forEach((line) => {
 
             line = line.trim();
 
-            if (line.length === 0 || line.charAt(0) === '#') {
+            if (line.length === 0 || line.charAt(0) === "#") {
                 return;
             }
 
-            const pos = line.indexOf(' ');
+            const pos = line.indexOf(" ");
             const key = ((pos >= 0) ? line.substring(0, pos) : line).toLowerCase();
-            const value = (pos >= 0) ? line.substring(pos + 1).trim() : '';
+            const value = (pos >= 0) ? line.substring(pos + 1).trim() : "";
 
             if (key === "newmtl") {
                 target[value] = {};
                 curMtl = value;
-            } else if (key === 'kd') {
-                target[curMtl].diffuseColor = value.split(' ').map(Number);
-            } else if (key === 'ka') {
-                target[curMtl].ambientColor = value.split(' ').map(Number);
-            } else if (key === 'ks') {
-                target[curMtl].specularColor = value.split(' ').map(Number);
-            } else if (key === 'map_kd') {
-                target[curMtl].diffuseTexture = value;
-            } else if (key === 'map_ka') {
-                target[curMtl].ambientTexture = value;
-            } else if (key === 'map_ks') {
-                target[curMtl].specularTexture = value;
-            } else if (key === 'ns') {
+            } else if (key === "kd") {
+                target[curMtl].diffuseColor = value.split(" ").map(Number);
+            } else if (key === "ka") {
+                target[curMtl].ambientColor = value.split(" ").map(Number);
+            } else if (key === "ks") {
+                target[curMtl].specularColor = value.split(" ").map(Number);
+            } else if (key === "map_kd") {
+                target[curMtl].diffuseTexture = images[value];
+            } else if (key === "map_ka") {
+                target[curMtl].ambientTexture = images[value];
+            } else if (key === "map_ks") {
+                target[curMtl].specularTexture = images[value];
+            } else if (key === "ns") {
                 target[curMtl].glossiness = Number(value);
             } else {
-                console.log("Unhandled expression at line : " + line);
+                // console.log("Unhandled expression at line : " + line);
             }
         });
 
         return target;
-    }
-}
-
+    },
+};
 
 export default OBJParser;

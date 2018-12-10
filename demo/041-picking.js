@@ -1,5 +1,5 @@
 // G3D_TEMPLATE_GENERATED
-import G3D from '../src/G3D';
+import G3D from '../src/index';
 
 import main from './041-picking-main';
 import loader from './lib/loader';
@@ -18,7 +18,13 @@ main(G3D, {
     pbrAssets,
     loader,
     onClickCanvas: function (callback) {
-        canvas.addEventListener('click', callback)
+        canvas.addEventListener('click', function(e){
+            const dpr = window.devicePixelRatio;
+            callback({
+                offsetX: e.offsetX * dpr,
+                offsetY: e.offsetY * dpr
+            })
+        })
     },
 });
 

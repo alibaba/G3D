@@ -1,6 +1,6 @@
 # PBRMaterial
 
-Physical based rendering material, extends from [Material](./Material).
+Physical based rendering material.
 
 ## Constructor
 

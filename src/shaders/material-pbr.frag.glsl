@@ -2,7 +2,9 @@
 #extension GL_EXT_shader_texture_lod: enable
 #endif
 
+#ifdef EXT_DER
 #extension GL_OES_standard_derivatives : enable
+#endif
 
 #ifdef PRECISION_FLOAT_HIGHP
 precision highp float;
@@ -15,7 +17,6 @@ precision mediump float;
 #ifdef PRECISION_FLOAT_LOWP
 precision lowp float;
 #endif
-
 
 #define PI 3.1415926
 
@@ -38,10 +39,22 @@ uniform vec3 uMaterialAlbedoColor;
 uniform float uMaterialRoughness;
 uniform float uMaterialMetallic;
 
+#ifdef PBR_ENVIROMENT
 uniform samplerCube uSpecularMap;
 uniform samplerCube uDiffuseMap;
 uniform sampler2D uBRDFLUT;
 uniform int uSpecularMipLevel;
+
+uniform float uGreyness;
+vec3 greyness(vec3 c){
+    float m = (c[0] + c[1] + c[2])/3.0;
+    return vec3(
+        c[0] + (m - c[0]) * uGreyness,
+        c[1] + (m - c[1]) * uGreyness,
+        c[2] + (m - c[2]) * uGreyness
+    );
+}
+#endif
 
 varying vec3 vPosition;
 varying vec3 vNormal;
@@ -86,7 +99,9 @@ struct PBRLightInfo
     float intensity;
 };
 
+
 #ifdef PBR_NORMAL_TEXTURE
+#ifdef EXT_DER
 vec3 getNormal(){
     vec3 pos_dx = dFdx(vPosition);
     vec3 pos_dy = dFdy(vPosition);
@@ -102,6 +117,8 @@ vec3 getNormal(){
     return n;
 }
 #endif
+#endif
+
 
 vec3 L_direct(PBRInfo info, PBRLightInfo light){
     
@@ -134,6 +151,7 @@ vec3 L_direct(PBRInfo info, PBRLightInfo light){
     return (diffuse + specular) * NDotL * Li;
 }
 
+#ifdef PBR_ENVIROMENT
 vec3 L_env(PBRInfo info){
 
     float NdotV = clamp(dot(info.N, info.V), 0.0, 1.0);
@@ -145,6 +163,7 @@ vec3 L_env(PBRInfo info){
     vec3 R = -normalize(reflect(info.V, info.N));
     #ifdef EXT_TEX_LOD
     vec3 specularLight = textureCubeLodEXT(uSpecularMap, R, info.roughness * float(uSpecularMipLevel)).rgb;
+    specularLight = greyness(specularLight);
     #else
     vec3 specularLight = textureCube(uSpecularMap, R).rgb;
     #endif
@@ -157,6 +176,8 @@ vec3 L_env(PBRInfo info){
 
     return diffuse + specular;
 }
+#endif
+
 
 vec3 L(){
 
@@ -164,8 +185,12 @@ vec3 L(){
 
     PBRInfo pbrInputs = PBRInfo(
 
+        #ifdef EXT_DER
         #ifdef PBR_NORMAL_TEXTURE
         getNormal(),
+        #else
+        vNormal,
+        #endif
         #else
         vNormal,
         #endif
@@ -220,7 +245,9 @@ vec3 L(){
         }
     }
 
+    #ifdef PBR_ENVIROMENT
     fragColor += L_env(pbrInputs);
+    #endif
 
     #ifdef PBR_EMISSIVE_TEXTURE
     fragColor += texture2D(uMaterialEmissiveTexture, vEmissiveUV).rgb;

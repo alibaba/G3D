@@ -67,6 +67,7 @@ vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specular
     vec3 colorLighted = vec3(0.0);
 
     vec3 nNormal = normalize(vNormal);
+
     vec3 nViewDirection = normalize(uCameraPosition - vPosition);
 
     #ifdef PHONG_SPECULAR_ENV_MAP_TEXTURE

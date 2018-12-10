@@ -1,19 +1,21 @@
-import PBREnviroment from '../../../material/G3D.PBREnviroment';
-import Buffer from '../../../core/G3D.Buffer';
-import PBRMaterial from '../../../material/G3D.PBRMaterial';
-import Texture from '../../../texture/G3D.Texture';
-import Mesh from '../../../mesh/G3D.Mesh';
-import Mat4_2 from '../../../matrix/G3D.Mat4';
-import Vec3 from '../../../matrix/G3D.Vec3';
-import Quat_2 from '../../../matrix/G3D.Quat';
-import BufferView from '../../../core/G3D.BufferView';
-import ElementBufferView from '../../../core/G3D.ElementBufferView';
-import Geometry from '../../../geometry/G3D.Geometry';
-import GL from '../../../core/G3D.GL';
-import ElementBuffer from '../../../core/G3D.ElementBuffer';
+import Buffer from "../../../buffer/buffer";
+import BufferView from "../../../buffer/buffer-view";
+import ElementBuffer from "../../../buffer/element-buffer";
+import ElementBufferView from "../../../buffer/element-buffer-view";
+import GL from "../../../core/gl";
+import Geometry from "../../../geometry/geometry";
+import PBREnviroment from "../../../material/pbr-enviroment";
+import PBRMaterial from "../../../material/pbr-material";
+import Mat4_2 from "../../../matrix/mat4";
+import Quat_2 from "../../../matrix/quat";
+import Vec3 from "../../../matrix/vec3";
+import Mesh from "../../../mesh/mesh";
+import Texture from "../../../texture/texture";
 
 const Mat4: any = Mat4_2;
 const Quat: any = Quat_2;
+
+const isPowerOf2 = (n) => Math.log(n) / Math.log(2) % 1 === 0;
 
 function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
@@ -27,11 +29,11 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
         if (bv.target === gl.ELEMENT_ARRAY_BUFFER) {
             return new ElementBuffer({
-                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength)
+                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
         } else {
             return new Buffer({
-                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength)
+                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
         }
     });
@@ -42,14 +44,15 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
         return (sRGB = false) => {
             if (!gTextureCache[i]) {
                 const image = gltf.images[tex.source].data;
-                const texture = new Texture({ image, sRGB, flipY: false, repeat: true });
+                const repeat = isPowerOf2(image.width) && isPowerOf2(image.height);
+                const texture = new Texture({ image, sRGB, flipY: false, repeat });
                 gTextureCache[i] = texture;
             }
             return gTextureCache[i];
         };
     });
 
-    const gMaterials = gltf.materials.map(mtl => {
+    const gMaterials = gltf.materials.map((mtl) => {
 
         const material: any = new PBRMaterial();
 
@@ -59,14 +62,14 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
             material.albedoColor = {
                 r: mr.baseColorFactor[0] * 255,
                 g: mr.baseColorFactor[1] * 255,
-                b: mr.baseColorFactor[2] * 255
-            }
+                b: mr.baseColorFactor[2] * 255,
+            };
         } else {
             material.albedoColor = {
                 r: 255,
                 g: 255,
-                b: 255
-            }
+                b: 255,
+            };
         }
 
         if (mr.baseColorTexture) {
@@ -84,12 +87,12 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
             material.gltfMetallicRoughnessTexCoord = mr.metallicRoughnessTexture.texCoord || 0;
         }
 
-        if (typeof mr.metallicFactor === 'number') {
+        if (typeof mr.metallicFactor === "number") {
             material.metallic = mr.metallicFactor;
         } else {
             material.metallic = 1.0;
         }
-        if (typeof mr.roughnessFactor === 'number') {
+        if (typeof mr.roughnessFactor === "number") {
             material.roughness = mr.roughnessFactor;
         } else {
             material.roughness = 1.0;
@@ -131,25 +134,25 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                     uvs.aAlbedoUV = getBufferView(attributes[`TEXCOORD_${material.gltfAlbedoTexCoord}`]);
                 }
                 if (material.metallicRoughnessTexture) {
-                    uvs.aMetallicRoughnessUV = getBufferView(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
+                    uvs.aMetallicRoughnessUV =
+                        getBufferView(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
                 }
                 if (material.normalTexture) {
                     uvs.aNormalUV = getBufferView(attributes[`TEXCOORD_${material.gltfNormalTexCoord}`]);
                 }
                 if (material.emissiveTexture) {
                     uvs.aEmissiveUV = getBufferView(attributes[`TEXCOORD_${material.gltfEmissiveTexCoord}`]);
-                };
+                }
 
                 mesh.geometry = new Geometry({
-                    vertices: getBufferView(attributes['POSITION']),
-                    normals: getBufferView(attributes['NORMAL']),
-                    uvs: uvs,
+                    vertices: getBufferView(attributes.POSITION),
+                    normals: getBufferView(attributes.NORMAL),
+                    uvs,
                     indices: {
-                        default: getElementBufferView(indices)
-                    }
+                        default: getElementBufferView(indices),
+                    },
                 });
             }
-
 
             function getBufferView(accessorKey) {
 
@@ -171,14 +174,14 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                     buffer: gBuffers[accessor.bufferView],
                     byteOffset: accessor.byteOffset || 0,
                     count: accessor.count,
-                    mode: 'TRIANGLES',
-                    type: 'UNSIGNED_SHORT',
-                })
+                    mode: "TRIANGLES",
+                    type: "UNSIGNED_SHORT",
+                });
             }
 
             return mesh;
 
-        }
+        };
 
     });
 
@@ -198,20 +201,20 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
             mesh.position = {
                 x: trans[0],
                 y: trans[1],
-                z: trans[2]
+                z: trans[2],
             };
 
             mesh.rotation = {
                 x: euler[0],
                 y: euler[1],
-                z: euler[2]
+                z: euler[2],
             };
 
             mesh.scale = {
                 x: scale[0],
                 y: scale[1],
-                z: scale[2]
-            }
+                z: scale[2],
+            };
 
         }
         return mesh;
@@ -219,13 +222,13 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
     gltf.nodes.forEach((item, i) => {
         if (item.children) {
-            item.children.forEach(c => {
+            item.children.forEach((c) => {
                 gMeshes[c].parent = gMeshes[i];
-            })
+            });
         }
     });
 
-    return gMeshes.filter(m => !m.parent);
+    return gMeshes.filter((m) => !m.parent);
 }
 
 export default createMeshFromGLTF;

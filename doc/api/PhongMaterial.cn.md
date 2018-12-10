@@ -1,6 +1,6 @@
 # PhongMaterial
 
-冯氏面材质，遵循冯氏反射模型，继承自 [Material](./Material).
+冯氏面材质，遵循冯氏反射模型。
 
 ## 构造函数
 

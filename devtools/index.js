@@ -4,7 +4,7 @@ const dalaran = require('dalaran');
 const tasks = dalaran.libraryTasks({
     umdName: 'G3D',
     demo: './demo',
-    entry: './src/G3D.ts',
+    entry: './src/index.ts',
     port: 3000,
     loaders: [{
         test: /\.glsl$/,
@@ -13,12 +13,15 @@ const tasks = dalaran.libraryTasks({
             path.join(__dirname, './glsl-loader.js')
         ]
     }],
+    lint: true,
+    lintrcDir: path.join(__dirname, './lint-config/'),
     devCors: true,
     testEntryPattern: 'test/**/*.spec.js',
     liveReload: true,
     typescript: true,
     htmlTemplate: path.join(__dirname, './template/html.handlebars'),
-    jsTemplate: path.join(__dirname, './template/js.handlebars')
+    jsTemplate: path.join(__dirname, './template/js.handlebars'),
+    watchTest: true
 });
 
 const taskName = process.argv[2];
@@ -39,4 +42,3 @@ switch (taskName) {
         tasks.dev();
         break;
 }
-
