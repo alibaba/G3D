@@ -1,10 +1,6 @@
 {
   "name": "g3d",
-<<<<<<< HEAD
-  "version": "0.2.3",
-=======
   "version": "0.2.5",
->>>>>>> dev
   "description": "webgl render engine compatible with both browser and gcanvas",
   "main": "dist/g3d.min.js",
   "repository": {
