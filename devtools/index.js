@@ -21,7 +21,7 @@ const tasks = dalaran.libraryTasks({
     typescript: true,
     htmlTemplate: path.join(__dirname, './template/html.handlebars'),
     jsTemplate: path.join(__dirname, './template/js.handlebars'),
-    watchTest: true
+    watchTest: false
 });
 
 const taskName = process.argv[2];
