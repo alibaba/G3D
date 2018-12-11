@@ -11,6 +11,8 @@ describe('cube texture', function () {
 
     before(function (done) {
 
+        this.timeout(1000 * 20); // 20 secs
+
         GL.gl = initWebGL();
 
         pbrAssets('default', function (sp) {
@@ -55,8 +57,8 @@ describe('cube texture', function () {
         expect(
             () => {
                 const mip = [...images.mip];
-                mip[1] = {...mip[1]};
-                mip[2] = {...mip[2]};
+                mip[1] = { ...mip[1] };
+                mip[2] = { ...mip[2] };
                 mip[1].left = mip[2].left;
                 cubeTexture.setMipmaps(mip);
             }
