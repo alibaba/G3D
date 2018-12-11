@@ -1,4 +1,4 @@
-import expect from '../_helpers/expect';
+import expect from '../helpers/expect';
 
 import { findIndex, find } from '../../src/utils/lodash';
 

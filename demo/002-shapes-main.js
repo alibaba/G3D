@@ -55,7 +55,6 @@ function main(
     }
     render();
 
-
 }
 
 export default main;

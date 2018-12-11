@@ -1,4 +1,4 @@
-import expect from '../_helpers/expect';
+import expect from '../helpers/expect';
 
 import { rad2deg, deg2rad, isPowerOf2 } from '../../src/utils/math';
 
