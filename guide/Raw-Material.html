@@ -15,7 +15,7 @@
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
         <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item"><a class="link" href="/cn/">中文</a>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -31,51 +31,84 @@
               </li>
               <li class="item"><a href="./Create-Mesh.html">Create Mesh</a>
               </li>
+              <li class="item"><a href="./Create-Advanced-Mesh.html">Create Advanced Mesh</a>
+              </li>
               <li class="item"><a href="./Raw-Material.html">Raw Material</a>
-              </li>
-              <li class="item"><a href="./Standard-Material.html">Standard Material</a>
-              </li>
-              <li class="item"><a href="./Lights.html">Lights</a>
-              </li>
-              <li class="item"><a href="./Load-Models.html">Load Models</a>
-              </li>
-              <li class="item"><a href="./Text-Geometry.html">Text Geometry</a>
               </li>
             </ol>
           </div>
           <div class="body"><h1 id="raw-material">Raw Material</h1>
-<p>Material and Light decide what exact color each pixel is filled with. When we created a mesh, a StandardMaterial will be created and assigned to <code>mesh.materials.default</code>.</p>
-<p><code>StandardMaterial</code> works with lights, without light any face with <code>StandardMaterial</code> will be black. The <code>StandardMaterial</code> is a little difficult to explain, so this chapter we&#39;ll learn a much simpler material, the <code>RawMaterial</code>.</p>
-<p><code>RawMaterial</code> is the kind of material that is not affected by lights. No matter what the lights are, raw material face will looks its own color.</p>
-<p><code>RawMaterial</code>&#39;s structure is like:</p>
-<ul>
-<li><code>RawMaterial</code><ul>
-<li><code>color</code>: object, following <code>{r, g, b}</code> pattern.</li>
-<li><code>texture</code>: instance of <code>G3D.Texture</code>.<ul>
-<li><code>image</code>: instance of <code>G3D.Env.Image</code> (In browser, it&#39;s just <code>Image</code>, in hybrid envronment, it&#39;s defined by <code>GCanvas</code>).</li>
-</ul>
-</li>
-<li><code>source</code>: enum, value may be <code>G3D.Material.COLOR</code> or <code>G3D.Material.TEXTURE</code>.</li>
-</ul>
-</li>
-</ul>
-<p>If <code>material.source</code> is <code>G3D.Material.COLOR</code>, the rendered pixel color will be <code>material.color</code> assigned, otherwise, the rendered pixel color will be picked from the texture image (this is where <code>uv</code> makes sense).</p>
-<p>See the following example:</p>
-<iframe class="playground" src="https://alibaba.github.io/G3D/playground/?embed#item=raw-material"></iframe>
-
-<p>Notice that there&#39;s no lights in the scene. Every pixel of the cube is the same color, it&#39;s a little wired that you can hardly sense it&#39;s a 3D cube.</p>
-<p>Let&#39;s load an image as following and set the texture.</p>
-<p><img src="https://img.alicdn.com/tfs/TB11aE5XKSSBuNjy0FlXXbBpVXa-256-256.png" alt=""></p>
-<p>Uncomment these lines, see what happens.</p>
-<pre><code class="language-javascript">loadImage(
-    &#39;https://img.alicdn.com/tfs/TB1apiEb8HH8KJjy0FbXXcqlpXa-1024-1024.png&#39;,
-    function (image) {
-        mesh.materials.default.texture.image = image;
-        mesh.materials.default.source = G3D.Material.TEXTURE;
+<p>The geometry of a mesh determines which pixels will be rendered, and the materials of a mesh determine what color will be drawed on the pixel.</p>
+<p>Raw material is the simplest material in G3D. It does not depends on lighting, camera and the infomation about the 3D scene. We can specify some color to the raw material, and the rendered color will be exactly the same with what we just specified, no matter whether there&#39;s lights in the scene, and how the camera or the mesh is positioned.</p>
+<p>See the example:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/xebajay/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a></p>
+<p>In this demo, there&#39;s a square mesh inside X-Y plane, center at the origin point. The square are composed of two triangles, as the following picture shows. The square has 4 vertices (A,B,C,D) and 6 vertice indexes (ABC,ACD).</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1c54gvwDqK1RjSZSyXXaxEVXa-439-399.png" alt=""></p>
+<p>We make vertices array, normals array, uvs array and indices arrays to construct the mesh. Vertices values are shown in the picture above, and normals are all (0,0,1).</p>
+<pre><code class="language-javascript">const mesh = new G3D.Mesh(scene);
+mesh.geometry = new G3D.Geometry({
+    vertices: [
+        -1, -1, 0, // A
+        1, -1, 0,  // B
+        1, 1, 0,   // C
+        -1, 1, 0   // D
+    ],
+    normals: [
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1
+    ],
+    uvs: [
+        0, 0,  // A
+        1, 0,  // B
+        1, 1,  // C
+        0, 1   // D
+    ],
+    indices: {
+        default: [0, 1, 2, 0, 2, 3]
     }
-)</code></pre>
-<p>Wati until the image is loaded, set to the texture&#39;s <code>image</code> property, nothing changed. We need to switch the <code>source</code> flag from <code>COLOR</code> (which is the default option) to <code>TEXTURE</code>.</p>
-<p>OK, now we know how <code>RawMaterial</code> works, it&#39;s simple and effective, but not realistic. Next chapter we&#39;ll deal with <code>StandardMaterial</code>, a more complex type of material.</p>
+});</code></pre>
+<p>Then we create a RawMaterial instance <code>rMtl</code> and specify its color as (200,100,100). Assign <code>rMtl</code> to <code>mesh.materials.default</code>, cause when creating geometry, there&#39;s also a <code>default</code> array in indices. Actually, a mesh could have multiple parts, each part has a indices array and a material. The <code>default</code> could be any other meaningful names.</p>
+<pre><code class="language-javascript">const rMtl = new G3D.RawMaterial();
+rMtl.color = {r: 200, g: 100, b: 100};
+mesh.materials.default = rMtl;</code></pre>
+<p>So we get a light red square. Its material is RawMaterial, so the color rendered is exactly the same with <code>rMtl.coloc</code>. Changing <code>rMtl.color</code> would change the square color, as the following code shows:</p>
+<pre><code class="language-javascript">rMtl.color.r = 100;
+rMtl.color = {r: 100, g: 100, b: 100};</code></pre>
+<p>In this demo we use dat.GUI to draw some interactive slides on the right-top corner. Manually slide them to adjust color. Notice that each componet (R/G/B) should be limited in [0, 255].</p>
+<p>Raw material could have colors as well as textures. For example, we can load this picture:</p>
+<p><img src="https://img.alicdn.com/tfs/TB11aE5XKSSBuNjy0FlXXbBpVXa-256-256.png" alt=""></p>
+<p>And then create a texture within the image.</p>
+<pre><code class="language-javascript">loader.loadImage(
+    &#39;//img.alicdn.com/tfs/TB11aE5XKSSBuNjy0FlXXbBpVXa-256-256.png&#39;,
+    function(image){
+        // (image instanceOf Image) === true
+        const texture = new G3D.Texture({image});
+    }
+);</code></pre>
+<p>When we check the &#39;texture&#39; checkbox, the <code>texture</code> object will be assigned to <code>rMtl.texture</code>, and the texture will be attached to the square.</p>
+<pre><code>rMtl.texture = texture;</code></pre><p>You may find the color of the texture seems wired if the texture&#39;s color is not pure white (255,255,255). This is because, the ouput color will be effected by not only the texture color <code>rMtl.texture</code>, but also the color <code>rMtl.color</code>. To be precise, the output color will be the texture color multiply the normalized material color per component. For example, if the material color&#39;s R value is 127 (<code>rMtl.color.r === 127</code>), so the normalized color&#39;s R component is 0.5, so for every pixel in the texture, their R value would multiply by 0.5, then we get the color(&#39;s R component) rendered on screen.</p>
+<ul>
+<li>If rMtl.texture is not exist，the rendered color = color.</li>
+<li>If rMtl.texture exists，the rendered color = textureColor * color (per component).</li>
+</ul>
+<p>At last, let&#39;s study about UV. When creating the geometry, we pass in a uvs array, for each vertex, uvs array supply 2 values U and V. For vertex A, UV is (0,0), for B UV is (1,0). UV is the &#39;texture coordinate values&#39;, (0,0) is at the left-bottom corner, and (1,1) is at the right-top corner. In this demo, vertex A is mapped to the left-bottom corner of the texture, and vertex C is mapped to the right-top corner. By doing this, we tell WebGL how to attach the texture to mesh.</p>
+<pre><code class="language-javascript">uvs: [
+    0, 0,  // A
+    1, 0,  // B
+    1, 1,  // C
+    0, 1   // D
+]</code></pre>
+<p>Try changing UV value, as change vertex B values to (1,1) or (0.5,0), see what happend to the attached texture.</p>
+<p>Actually, in the texture coordinate system, (0,0) is not always at left-bottom corner. Actually, it&#39;s at left-top corner by default in WebGL system. Because most 3D applications consider (0,0) as the left-bottom coner, WebGL provide a option to enable flipping Y in the texture (UNPACK_FLIP_Y_WEBGL for pixelStorei). G3D enables the option by default, but if you want to disable it for some reason, you can pass flipY:false when creating the texture.</p>
+<pre><code class="language-javascript">new G3D.Texture({image, flipY: false}); // flipY is true by default</code></pre>
+<p>Raw materials is a basic material, which does not depend on lighting. It&#39;s simulating for reallity is limited. We can create a cube mesh within raw material to see what it looks like.</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/ludubot/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a></p>
+<p>We put a cube inside the 3D scene, because the cube&#39;s mesh is raw material with pure color, we can not even recongnize it&#39;s a 3d model, for it looks like a 2D hexagon. We&#39;ll introduce some advanced materials in the following sections, they&#39;ll make the mesh looks much better.</p>
+<h2 id="summary">Summary</h2>
+<p>In this section, we learned about basic usage about material and texture, and learned the simplest material in G3D: raw material.</p>
+<script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script>
 </div>
         </div>
       </div>

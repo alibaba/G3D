@@ -107,10 +107,11 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="linegeometry">LineGeometry</h1>
-<p>线型几何体。</p>
+          <div class="body"><h1 id="elementbuffer">ElementBuffer</h1>
+<p>顶点索引数据块。</p>
 <h2 id="-">构造函数</h2>
-<pre><code>new LineGeometry(config);</code></pre><h3 id="-">参数</h3>
+<pre><code class="language-javascript">new G3D.ElementBuffer(config);</code></pre>
+<h3 id="-">参数</h3>
 <table>
 <thead>
 <tr>
@@ -125,26 +126,14 @@
 <td>配置对象</td>
 </tr>
 <tr>
-<td>config.vertices</td>
-<td>G3D.BufferView | Array</td>
-<td>顶点数据</td>
-</tr>
-<tr>
-<td>config.indices</td>
-<td>{[key]: G3D.ElementBufferView | Array}</td>
-<td>顶点索引数据</td>
+<td>config.data</td>
+<td>UInt32Array | UInt16Array | ArrayBuffer</td>
+<td>数据</td>
 </tr>
 </tbody></table>
 <h2 id="-">示例</h2>
-<pre><code class="language-javascript">const lineGeometry = new G3D.LineGeomtry({
-    vertices: [
-        0, 0, 1,
-        0, 1, 1,
-        1, 1, 1
-    ],
-    indices: {
-        foo: [0, 1, 1, 2]
-    }
+<pre><code class="language-javascript">const buffer = new G3D.ElementBuffer({
+    data: new UInt32Array([0, 1, 2, 0, 2, 3])
 });</code></pre>
 </div>
         </div>

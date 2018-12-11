@@ -13,9 +13,9 @@
       <div class="menu">
         <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
         <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
-        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
         <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
-        <div class="item-right item language"><a class="link" href="/G3D/">English</a>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
         </div>
         <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
       </div>
@@ -107,44 +107,33 @@
               </li>
             </ol>
           </div>
-          <div class="body"><h1 id="linegeometry">LineGeometry</h1>
-<p>线型几何体。</p>
-<h2 id="-">构造函数</h2>
-<pre><code>new LineGeometry(config);</code></pre><h3 id="-">参数</h3>
+          <div class="body"><h1 id="elementbuffer">ElementBuffer</h1>
+<p>Vertex index data buffer.</p>
+<h2 id="constructor">Constructor</h2>
+<pre><code class="language-javascript">new G3D.ElementBuffer(config);</code></pre>
+<h3 id="arguments">Arguments</h3>
 <table>
 <thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>描述</th>
+<th>name</th>
+<th>type</th>
+<th>description</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>config</td>
 <td>Object</td>
-<td>配置对象</td>
+<td>config object</td>
 </tr>
 <tr>
-<td>config.vertices</td>
-<td>G3D.BufferView | Array</td>
-<td>顶点数据</td>
-</tr>
-<tr>
-<td>config.indices</td>
-<td>{[key]: G3D.ElementBufferView | Array}</td>
-<td>顶点索引数据</td>
+<td>config.data</td>
+<td>UInt32Array | UInt16Array | ArrayBuffer</td>
+<td>data source</td>
 </tr>
 </tbody></table>
-<h2 id="-">示例</h2>
-<pre><code class="language-javascript">const lineGeometry = new G3D.LineGeomtry({
-    vertices: [
-        0, 0, 1,
-        0, 1, 1,
-        1, 1, 1
-    ],
-    indices: {
-        foo: [0, 1, 1, 2]
-    }
+<h2 id="example">Example</h2>
+<pre><code class="language-javascript">const buffer = new G3D.ElementBuffer({
+    data: new UInt32Array([0, 1, 2, 0, 2, 3])
 });</code></pre>
 </div>
         </div>
