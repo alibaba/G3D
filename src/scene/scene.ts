@@ -6,6 +6,7 @@ import BaseMesh from "../mesh/base-mesh";
 import RenderManager from "../rendering/render-manager";
 import { IColorRGB } from "../types/raw";
 import Skybox from "./skybox";
+import LineMesh from "../mesh/line-mesh";
 
 class Scene {
 
