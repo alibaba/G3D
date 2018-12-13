@@ -89,7 +89,7 @@ vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specular
             vec3 diffuseIncrement = factorLambert * uLightColor[i] * uLightIntensity[i] * diffuseColorSource;
             colorLighted += diffuseIncrement;
 
-            float factorPhong = pow(max(dot(reflect(-nLightDir, nNormal), nViewDirection), 0.01), uGlossiness);
+            float factorPhong = pow(max(dot(reflect(-nLightDir, nNormal), nViewDirection), 0.0), uGlossiness) * factorLambert;
             vec3 specularIncrement = factorPhong * uLightColor[i] * uLightIntensity[i] * specularColorSource;
             colorLighted += specularIncrement;
 
@@ -105,7 +105,7 @@ vec3 applyLights(vec3 ambientColorSource, vec3 diffuseColorSource, vec3 specular
             vec3 diffuseIncrement = factorLambert * uLightColor[i] * decayedIntensity * diffuseColorSource;
             colorLighted += diffuseIncrement;
 
-            float factorPhong = pow(max(dot(reflect(-nLightDir, nNormal), nViewDirection), 0.0), uGlossiness);
+            float factorPhong = pow(max(dot(reflect(-nLightDir, nNormal), nViewDirection), 0.0), uGlossiness) * factorLambert;
             vec3 specularIncrement = factorPhong * uLightColor[i] * decayedIntensity * specularColorSource;
             colorLighted += specularIncrement;
 
