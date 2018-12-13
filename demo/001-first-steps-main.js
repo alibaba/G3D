@@ -13,16 +13,16 @@ function main(
     camera.radius = 8;
 
     const light1 = new G3D.DirectionalLight(scene);
-    light1.direction = {x: -1, y: 0, z: 1};
-    light1.intensity = 0.5;
+    light1.direction = { x: 1, y: 1, z: 1 };
+    light1.intensity = 0.4;
 
     const light2 = new G3D.AmbientLight(scene);
-    light2.intensity = 0.2;
+    light2.intensity = 0.15;
 
     const m1 = G3D.MeshBuilder.createPlane(scene, 6, 4);
     m1.position.z = -1;
 
-    const m2 = G3D.MeshBuilder.createSphere(scene, 1);
+    const m2 = G3D.MeshBuilder.createSphere(scene, 1, 64, 64);
     m2.position.z = 1;
 
     function render() {
