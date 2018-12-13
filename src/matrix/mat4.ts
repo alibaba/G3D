@@ -71,6 +71,7 @@ export function copy(out: IMat4, a: IMat4): IMat4 {
 }
 
 // Create a new mat4 with the given values
+export function fromValues(...args: number[]);
 export function fromValues(
     m00: number, m01: number, m02: number, m03: number,
     m10: number, m11: number, m12: number, m13: number,

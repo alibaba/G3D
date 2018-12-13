@@ -17,7 +17,8 @@ import { isPowerOf2 } from "../../../utils/math";
 
 interface IGltfTexture {
     index: number;
-    texCoord: number;
+    texCoord?: number;
+    strength?: number;
 }
 
 interface IGltf {
@@ -59,6 +60,7 @@ interface IGltf {
             baseColorTexture: IGltfTexture,
         };
         normalTexture: IGltfTexture;
+        occlusionTexture: IGltfTexture;
         emissiveTexture: IGltfTexture;
         emissiveFactor: number[];
     }>;
@@ -98,26 +100,42 @@ interface IGltfMaterialTexCoord {
     gltfMetallicRoughnessTexCoord?: number;
     gltfEmissiveTexCoord?: number;
     gltfNormalTexCoord?: number;
+    gltfOcclusionTexCoord?: number;
 }
 
 function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
     const { gl } = GL;
 
-    const buffers = gltf.bufferViews.map((bv) => {
+    const getBuffer = (() => {
 
-        const { data } = gltf.buffers[bv.buffer];
-
-        if (bv.target === gl.ELEMENT_ARRAY_BUFFER) {
-            return new ElementBuffer({
-                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
-            });
-        } else {
-            return new Buffer({
-                data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
-            });
+        function encode(i: number, isElement: boolean): string {
+            return i + "_" + isElement.toString();
         }
-    });
+
+        const buffers: Map<string, Buffer | ElementBuffer> = new Map();
+
+        return (i: number, isElement: boolean = false): Buffer | ElementBuffer => {
+            const bv = gltf.bufferViews[i];
+            const { data } = gltf.buffers[bv.buffer];
+            const key = encode(i, isElement);
+
+            if (!buffers.get(key)) {
+                if (isElement) {
+                    const buffer = new ElementBuffer({
+                        data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
+                    });
+                    buffers.set(key, buffer);
+                } else {
+                    const buffer = new Buffer({
+                        data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
+                    });
+                    buffers.set(key, buffer);
+                }
+            }
+            return buffers.get(key);
+        };
+    })();
 
     const getTexture = (() => {
 
@@ -150,7 +168,7 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
         const material = new PBRMaterial();
         const texCoord: IGltfMaterialTexCoord = {};
 
-        const { pbrMetallicRoughness: pbrMRInfo, normalTexture, emissiveTexture } = mtl;
+        const { pbrMetallicRoughness: pbrMRInfo, normalTexture, emissiveTexture, occlusionTexture } = mtl;
 
         if (pbrMRInfo.baseColorFactor) {
             material.albedoColor = {
@@ -191,6 +209,13 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
         if (emissiveTexture) {
             material.emissiveTexture = getTexture(emissiveTexture.index, true);
             texCoord.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
+        }
+
+        if (occlusionTexture) {
+            material.occlusionTexture = getTexture(occlusionTexture.index, false);
+            material.occlusionStrength =
+                typeof occlusionTexture.strength === "number" ? occlusionTexture.strength : 1.0;
+            texCoord.gltfOcclusionTexCoord = occlusionTexture.texCoord || 0;
         }
 
         if (normalTexture) {
@@ -237,6 +262,11 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
                         attributes[`TEXCOORD_${texCoordMap.get(material).gltfNormalTexCoord}`],
                     );
                 }
+                if (material.occlusionTexture) {
+                    uvs.aOcclusionUV = getBufferView(
+                        attributes[`TEXCOORD_${texCoordMap.get(material).gltfOcclusionTexCoord}`],
+                    );
+                }
                 if (material.emissiveTexture) {
                     uvs.aEmissiveUV = getBufferView(
                         attributes[`TEXCOORD_${texCoordMap.get(material).gltfEmissiveTexCoord}`],
@@ -259,8 +289,10 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
                 const accessor = gltf.accessors[accessorKey];
 
+                const buffer = getBuffer(accessor.bufferView, false);
+
                 return new BufferView({
-                    buffer: buffers[accessor.bufferView],
+                    buffer,
                     byteStride: accessor.byteStride || 0,
                     byteOffset: accessor.byteOffset || 0,
                 });
@@ -271,8 +303,10 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
                 const accessor = gltf.accessors[accessorKey];
 
+                const buffer = getBuffer(accessor.bufferView, true);
+
                 return new ElementBufferView({
-                    buffer: buffers[accessor.bufferView],
+                    buffer,
                     byteOffset: accessor.byteOffset || 0,
                     count: accessor.count,
                     mode: "TRIANGLES",
@@ -290,7 +324,7 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
         if (item.matrix) {
 
-            const mMatrix = (Mat4 as any).fromValues(...item.matrix);
+            const mMatrix = Mat4.fromValues(...item.matrix);
 
             const trans = Mat4.getTranslation(Vec3.create(), mMatrix);
             const quat = Mat4.getRotation(Quat.create(), mMatrix);

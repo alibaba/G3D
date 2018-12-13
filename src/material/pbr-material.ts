@@ -23,6 +23,10 @@ class PBRMaterial extends ShaderMaterial {
 
     public emissiveTexture: Texture;
 
+    public occlusionTexture: Texture;
+
+    public occlusionStrength: number = 0.0;
+
     public normalTexture: Texture;
 
     public pbrEnviroment: PBREnviroment;
@@ -41,6 +45,7 @@ class PBRMaterial extends ShaderMaterial {
                 "PBR_ALBEDO_TEXTURE",
                 "PBR_METALLIC_ROUGHNESS_TEXTURE",
                 "PBR_EMISSIVE_TEXTURE",
+                "PBR_OCCLUSION_TEXTURE",
                 "PBR_ENVIROMENT",
             ],
             uniforms: [
@@ -50,6 +55,8 @@ class PBRMaterial extends ShaderMaterial {
                 "uMaterialMetallic",
                 "uMaterialMetallicRoughnessTexture",
                 "uMaterialEmissiveTexture",
+                "uMaterialOcclusionTexture",
+                "uMaterialOcclusionStrength",
                 "uMaterialNormalTexture",
                 "uSpecularMap",
                 "uSpecularMipLevel",
@@ -74,6 +81,8 @@ class PBRMaterial extends ShaderMaterial {
                 return !!this.metallicRoughnessTexture;
             case "PBR_EMISSIVE_TEXTURE":
                 return !!this.emissiveTexture;
+            case "PBR_OCCLUSION_TEXTURE":
+                return !!this.occlusionTexture;
             case "PBR_ENVIROMENT":
                 return !!this.pbrEnviroment;
             default:
@@ -102,6 +111,10 @@ class PBRMaterial extends ShaderMaterial {
                 return this.getSpecularMap();
             case "uDiffuseMap":
                 return this.getDiffuseMap();
+            case "uMaterialOcclusionTexture":
+                return this.getOcclusionTexture();
+            case "uMaterialOcclusionStrength":
+                return this.getOcclusionStrength();
             case "uBRDFLUT":
                 return this.getBRDFLUT();
             case "uSpecularMipLevel":
@@ -150,6 +163,18 @@ class PBRMaterial extends ShaderMaterial {
         } else {
             return null;
         }
+    }
+
+    private getOcclusionTexture(): WebGLTexture {
+        if (this.occlusionTexture) {
+            return this.occlusionTexture.glTexture;
+        } else {
+            return null;
+        }
+    }
+
+    private getOcclusionStrength(): number[] {
+        return [this.occlusionStrength];
     }
 
     private getNormalTexture(): WebGLTexture {
