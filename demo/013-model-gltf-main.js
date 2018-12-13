@@ -27,7 +27,9 @@ function main(
     camera.far = model.cameraRadius * 3;
     camera.radius = model.cameraRadius;
 
-    pbrAssets((specular, diffuse, lut) => {
+    pbrAssets((specular, diffuse, brdfLUT) => {
+
+        const pbrEnv = new G3D.PBREnviroment({specular, diffuse, brdfLUT});
 
         loader.loadText(model.uri, (text) => {
 
@@ -69,19 +71,19 @@ function main(
 
             function check() {
                 if (i === gltf.buffers.length + gltf.images.length) {
-                    init(gltf, { specular, diffuse, lut });
+                    init(gltf, pbrEnv);
                 }
             }
         });
     });
 
-    function init(gltf, { specular, diffuse, lut }) {
+    function init(gltf, pbrEnv) {
 
         const light1 = new G3D.DirectionalLight(scene);
         light1.direction = { x: 1, y: -1, z: 0 };
         light1.intensity = 0.2;
 
-        const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
+        const meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, pbrEnv);
 
         meshes.forEach(m => m.rotation.y = 225);
 

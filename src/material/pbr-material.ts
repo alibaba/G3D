@@ -168,7 +168,7 @@ class PBRMaterial extends ShaderMaterial {
         }
     }
 
-    private getSpecularMipLevel(): any {
+    private getSpecularMipLevel(): number[] {
         if (this.pbrEnviroment) {
             return [this.pbrEnviroment.specular.mipLevel];
         } else {

@@ -57,17 +57,16 @@ class CubeTexture {
 
         const extensionSRGB = extensions.get("SRGB");
 
-        sRGB = this.sRGB && extensionSRGB;
-
+        this.sRGB = sRGB = sRGB && !!extensionSRGB;
         this.size = images.left.width;
-        this.sRGB = sRGB;
+        this.mipLevel = Math.log2(this.size);
 
         // wrap
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
         // filter
-        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
         // fill
@@ -77,10 +76,6 @@ class CubeTexture {
         for (const [key, value] of this.targets) {
             gl.texImage2D(value, 0, format, format, gl.UNSIGNED_BYTE, images[key]);
         }
-
-        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-
-        this.mipLevel = Math.log2(this.size);
 
         if (images.mip) {
             this.setMipmaps(images.mip);
@@ -99,6 +94,8 @@ class CubeTexture {
 
         const { gl, extensions } = GL;
         const format = this.sRGB ? extensions.get("SRGB").SRGB_ALPHA_EXT : gl.RGBA;
+
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
         // fill
         for (let i = 0; i < mips.length; i++) {

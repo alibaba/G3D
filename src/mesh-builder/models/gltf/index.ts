@@ -1,27 +1,22 @@
+import GL from "../../../core/gl";
 import Buffer from "../../../buffer/buffer";
 import BufferView from "../../../buffer/buffer-view";
 import ElementBuffer from "../../../buffer/element-buffer";
 import ElementBufferView from "../../../buffer/element-buffer-view";
-import GL from "../../../core/gl";
 import Geometry from "../../../geometry/geometry";
 import PBREnviroment from "../../../material/pbr-enviroment";
 import PBRMaterial from "../../../material/pbr-material";
-import Mat4_2 from "../../../matrix/mat4";
-import Quat_2 from "../../../matrix/quat";
+import Mat4 from "../../../matrix/mat4";
+import Quat from "../../../matrix/quat";
 import Vec3 from "../../../matrix/vec3";
 import Mesh from "../../../mesh/mesh";
 import Texture from "../../../texture/texture";
 
-const Mat4: any = Mat4_2;
-const Quat: any = Quat_2;
+import { isPowerOf2 } from "../../../utils/math";
 
-const isPowerOf2 = (n) => Math.log(n) / Math.log(2) % 1 === 0;
-
-function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
+function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
 
     const { gl } = GL;
-
-    const pbrEnv = new PBREnviroment({ diffuse, specular, brdfLUT: lut });
 
     const gBuffers = gltf.bufferViews.map((bv) => {
 
@@ -32,6 +27,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
                 data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
         } else {
+
             return new Buffer({
                 data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
@@ -191,7 +187,7 @@ function createMeshFromGLTF(scene, gltf, { specular, diffuse, lut }) {
 
         if (item.matrix) {
 
-            const mMatrix = Mat4.fromValues(...item.matrix);
+            const mMatrix = (Mat4 as any).fromValues(...item.matrix);
 
             const trans = Mat4.getTranslation(Vec3.create(), mMatrix);
             const quat = Mat4.getRotation(Quat.create(), mMatrix);
