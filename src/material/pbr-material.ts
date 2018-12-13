@@ -11,7 +11,7 @@ import * as vertexShaderSource from "../shaders/material-pbr.vert.glsl";
 
 class PBRMaterial extends ShaderMaterial {
 
-    public albedoColor: IColorRGB = { r: 0, g: 0, b: 0 };
+    public albedoColor: IColorRGB = { r: 255, g: 255, b: 255 };
 
     public albedoTexture: Texture;
 

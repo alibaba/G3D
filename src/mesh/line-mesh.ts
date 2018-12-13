@@ -1,13 +1,16 @@
 import LineGeometry from "../geometry/line-geometry";
 import RawMaterial from "../material/raw-material";
 import BaseMesh from "./base-mesh";
+import ShaderMaterial from "../material/shader-material";
 
 class LineMesh extends BaseMesh {
 
     public geometry = new LineGeometry();
-    public materials: any = {
-        default: new RawMaterial(),
-    };
+    public materials: {
+        [prop: string]: ShaderMaterial,
+    } = {
+            default: new RawMaterial(),
+        };
     public lineWidth = 2.0;
 
     constructor(scene) {

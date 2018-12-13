@@ -2,6 +2,7 @@ import Mesh from "../../mesh/mesh";
 
 import LineGeometry from "../../geometry/line-geometry";
 import LineMesh from "../../mesh/line-mesh";
+import RawMaterial from "../../material/raw-material";
 
 function createCoordinate(scene, size) {
 
@@ -15,7 +16,9 @@ function createCoordinate(scene, size) {
                 default: [0, 1],
             },
         });
-        xc.materials.default.color = { r: 256, g: 0, b: 0 };
+        const redMtl = new RawMaterial();
+        redMtl.color = { r: 256, g: 0, b: 0 };
+        xc.materials.default = redMtl;
         xc.parent = mesh;
     }
 
@@ -27,7 +30,9 @@ function createCoordinate(scene, size) {
                 default: [0, 1],
             },
         });
-        yc.materials.default.color = { r: 0, g: 256, b: 0 };
+        const greenMtl = new RawMaterial();
+        greenMtl.color = { r: 0, g: 256, b: 0 };
+        yc.materials.default = greenMtl;
         yc.parent = mesh;
     }
 
@@ -39,7 +44,9 @@ function createCoordinate(scene, size) {
                 default: [0, 1],
             },
         });
-        zc.materials.default.color = { r: 0, g: 0, b: 256 };
+        const blueMtl = new RawMaterial();
+        blueMtl.color = { r: 0, g: 0, b: 256 };
+        zc.materials.default = blueMtl;
         zc.parent = mesh;
     }
 

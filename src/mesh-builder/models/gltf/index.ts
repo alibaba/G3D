@@ -1,24 +1,110 @@
 import GL from "../../../core/gl";
+import Mat4 from "../../../matrix/mat4";
+import Quat from "../../../matrix/quat";
+import Vec3 from "../../../matrix/vec3";
+import Scene from "../../../scene/scene";
 import Buffer from "../../../buffer/buffer";
 import BufferView from "../../../buffer/buffer-view";
 import ElementBuffer from "../../../buffer/element-buffer";
 import ElementBufferView from "../../../buffer/element-buffer-view";
-import Geometry from "../../../geometry/geometry";
-import PBREnviroment from "../../../material/pbr-enviroment";
-import PBRMaterial from "../../../material/pbr-material";
-import Mat4 from "../../../matrix/mat4";
-import Quat from "../../../matrix/quat";
-import Vec3 from "../../../matrix/vec3";
 import Mesh from "../../../mesh/mesh";
+import Geometry from "../../../geometry/geometry";
+import PBRMaterial from "../../../material/pbr-material";
+import PBREnviroment from "../../../material/pbr-enviroment";
 import Texture from "../../../texture/texture";
 
 import { isPowerOf2 } from "../../../utils/math";
 
-function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
+interface IGltfTexture {
+    index: number;
+    texCoord: number;
+}
+
+interface IGltf {
+    accessors: Array<{
+        bufferView: number;
+        byteOffset: number;
+        byteStride?: number;
+        componentType: number;
+        count: number;
+        max: number[];
+        min: number[];
+        name: string;
+        type: string;
+    }>;
+    bufferViews: Array<{
+        buffer: 0;
+        byteLength: number;
+        byteOffset: number;
+        byteStride: number;
+        name: string;
+        target: number;
+    }>;
+    buffers: Array<{
+        byteLength: number;
+        data: ArrayBuffer;
+        name: string;
+    }>;
+    images: Array<{
+        data: HTMLImageElement;
+        name: string;
+    }>;
+    materials: Array<{
+        name: string;
+        pbrMetallicRoughness: {
+            baseColorFactor: number[];
+            metallicFactor: number;
+            roughnessFactor: number;
+            metallicRoughnessTexture: IGltfTexture;
+            baseColorTexture: IGltfTexture,
+        };
+        normalTexture: IGltfTexture;
+        emissiveTexture: IGltfTexture;
+        emissiveFactor: number[];
+    }>;
+    meshes: Array<{
+        name: string;
+        primitives: Array<{
+            attributes: {
+                NORMAL: number;
+                POSITION: number;
+            };
+            indices: number;
+            material: number;
+            mode: number;
+        }>;
+    }>;
+    nodes: Array<{
+        name: string;
+        mesh: number;
+        children?: number[];
+        matrix?: number[];
+    }>;
+    samplers: Array<{
+        magFilter: number;
+        minFilter: number;
+        wrapS: number;
+        wrapT: number;
+    }>;
+    textures: Array<{
+        name: string;
+        sampler: number;
+        source: number;
+    }>;
+}
+
+interface IGltfMaterialTexCoord {
+    gltfAlbedoTexCoord?: number;
+    gltfMetallicRoughnessTexCoord?: number;
+    gltfEmissiveTexCoord?: number;
+    gltfNormalTexCoord?: number;
+}
+
+function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
     const { gl } = GL;
 
-    const gBuffers = gltf.bufferViews.map((bv) => {
+    const buffers = gltf.bufferViews.map((bv) => {
 
         const { data } = gltf.buffers[bv.buffer];
 
@@ -27,38 +113,50 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
                 data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
         } else {
-
             return new Buffer({
                 data: data.slice(bv.byteOffset, bv.byteOffset + bv.byteLength),
             });
         }
     });
 
-    const gTextureCache = [];
-    const gTextureCreators = gltf.textures.map((tex, i) => {
+    const getTexture = (() => {
 
-        return (sRGB = false) => {
-            if (!gTextureCache[i]) {
-                const image = gltf.images[tex.source].data;
-                const repeat = isPowerOf2(image.width) && isPowerOf2(image.height);
-                const texture = new Texture({ image, sRGB, flipY: false, repeat });
-                gTextureCache[i] = texture;
+        const textures: Map<string, Texture> = new Map();
+
+        function encode(i: number, sRGB: boolean): string {
+            return i + "_" + (!!sRGB).toString();
+        }
+
+        return (i: number, sRGB: boolean = false): Texture => {
+
+            const key = encode(i, sRGB);
+
+            if (!textures.get(key)) {
+                const image = gltf.images[gltf.textures[i].source].data;
+                const texture = new Texture({
+                    image, sRGB, flipY: false,
+                });
+                textures.set(key, texture);
             }
-            return gTextureCache[i];
+
+            return textures.get(key);
         };
-    });
+    })();
 
-    const gMaterials = gltf.materials.map((mtl) => {
+    const texCoordMap: Map<PBRMaterial, IGltfMaterialTexCoord> = new Map();
 
-        const material: any = new PBRMaterial();
+    const materials = gltf.materials.map((mtl) => {
 
-        const { pbrMetallicRoughness: mr, normalTexture, emissiveTexture } = mtl;
+        const material = new PBRMaterial();
+        const texCoord: IGltfMaterialTexCoord = {};
 
-        if (mr.baseColorFactor) {
+        const { pbrMetallicRoughness: pbrMRInfo, normalTexture, emissiveTexture } = mtl;
+
+        if (pbrMRInfo.baseColorFactor) {
             material.albedoColor = {
-                r: mr.baseColorFactor[0] * 255,
-                g: mr.baseColorFactor[1] * 255,
-                b: mr.baseColorFactor[2] * 255,
+                r: pbrMRInfo.baseColorFactor[0] * 255,
+                g: pbrMRInfo.baseColorFactor[1] * 255,
+                b: pbrMRInfo.baseColorFactor[2] * 255,
             };
         } else {
             material.albedoColor = {
@@ -68,76 +166,81 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
             };
         }
 
-        if (mr.baseColorTexture) {
-            material.albedoTexture = gTextureCreators[mr.baseColorTexture.index](true);
-            material.albedoTexture.sRGB = true;
-
-            material.gltfAlbedoTexCoord = mr.baseColorTexture.texCoord || 0;
+        if (pbrMRInfo.baseColorTexture) {
+            material.albedoTexture = getTexture(pbrMRInfo.baseColorTexture.index, true);
+            texCoord.gltfAlbedoTexCoord = pbrMRInfo.baseColorTexture.texCoord || 0;
         }
 
-        if (mr.metallicRoughnessTexture) {
-            material.metallicRoughnessTexture = gTextureCreators[mr.metallicRoughnessTexture.index]();
-            material.metallic = 1.0;
-            material.roughness = 1.0;
-
-            material.gltfMetallicRoughnessTexCoord = mr.metallicRoughnessTexture.texCoord || 0;
+        if (pbrMRInfo.metallicRoughnessTexture) {
+            material.metallicRoughnessTexture = getTexture(pbrMRInfo.metallicRoughnessTexture.index, false);
+            texCoord.gltfMetallicRoughnessTexCoord = pbrMRInfo.metallicRoughnessTexture.texCoord || 0;
         }
 
-        if (typeof mr.metallicFactor === "number") {
-            material.metallic = mr.metallicFactor;
+        if (typeof pbrMRInfo.metallicFactor === "number") {
+            material.metallic = pbrMRInfo.metallicFactor;
         } else {
             material.metallic = 1.0;
         }
-        if (typeof mr.roughnessFactor === "number") {
-            material.roughness = mr.roughnessFactor;
+
+        if (typeof pbrMRInfo.roughnessFactor === "number") {
+            material.roughness = pbrMRInfo.roughnessFactor;
         } else {
             material.roughness = 1.0;
         }
 
         if (emissiveTexture) {
-            material.emissiveTexture = gTextureCreators[emissiveTexture.index](true);
-            material.emissiveTexture.sRGB = true;
-            material.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
+            material.emissiveTexture = getTexture(emissiveTexture.index, true);
+            texCoord.gltfEmissiveTexCoord = emissiveTexture.texCoord || 0;
         }
 
         if (normalTexture) {
-            material.normalTexture = gTextureCreators[normalTexture.index]();
-            material.gltfNormalTexCoord = normalTexture.texCoord || 0;
+            material.normalTexture = getTexture(normalTexture.index, false);
+            texCoord.gltfNormalTexCoord = normalTexture.texCoord || 0;
         }
 
-        material.pbrEnviroment = pbrEnv;
+        if (pbrEnv) {
+            material.pbrEnviroment = pbrEnv;
+        }
+
+        texCoordMap.set(material, texCoord);
 
         return material;
     });
 
-    const gMeshCreators = gltf.meshes.map((item) => {
+    const getMesh = (() => {
 
-        return () => {
+        return (i: number): Mesh => {
 
             const mesh = new Mesh(scene);
 
-            const { primitives } = item;
+            const { primitives } = gltf.meshes[i];
             const { attributes, indices, mode, material: materialIndex } = primitives[0];
 
-            mesh.materials.default = gMaterials[materialIndex];
+            const material = materials[materialIndex];
 
             {
-                const material = mesh.materials.default as any;
 
                 const uvs = {} as any;
 
                 if (material.albedoTexture) {
-                    uvs.aAlbedoUV = getBufferView(attributes[`TEXCOORD_${material.gltfAlbedoTexCoord}`]);
+                    uvs.aAlbedoUV = getBufferView(
+                        attributes[`TEXCOORD_${texCoordMap.get(material).gltfAlbedoTexCoord}`],
+                    );
                 }
                 if (material.metallicRoughnessTexture) {
-                    uvs.aMetallicRoughnessUV =
-                        getBufferView(attributes[`TEXCOORD_${material.gltfMetallicRoughnessTexCoord}`]);
+                    uvs.aMetallicRoughnessUV = getBufferView(
+                        attributes[`TEXCOORD_${texCoordMap.get(material).gltfMetallicRoughnessTexCoord}`],
+                    );
                 }
                 if (material.normalTexture) {
-                    uvs.aNormalUV = getBufferView(attributes[`TEXCOORD_${material.gltfNormalTexCoord}`]);
+                    uvs.aNormalUV = getBufferView(
+                        attributes[`TEXCOORD_${texCoordMap.get(material).gltfNormalTexCoord}`],
+                    );
                 }
                 if (material.emissiveTexture) {
-                    uvs.aEmissiveUV = getBufferView(attributes[`TEXCOORD_${material.gltfEmissiveTexCoord}`]);
+                    uvs.aEmissiveUV = getBufferView(
+                        attributes[`TEXCOORD_${texCoordMap.get(material).gltfEmissiveTexCoord}`],
+                    );
                 }
 
                 mesh.geometry = new Geometry({
@@ -150,12 +253,14 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
                 });
             }
 
+            mesh.materials.default = material;
+
             function getBufferView(accessorKey) {
 
                 const accessor = gltf.accessors[accessorKey];
 
                 return new BufferView({
-                    buffer: gBuffers[accessor.bufferView],
+                    buffer: buffers[accessor.bufferView],
                     byteStride: accessor.byteStride || 0,
                     byteOffset: accessor.byteOffset || 0,
                 });
@@ -167,7 +272,7 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
                 const accessor = gltf.accessors[accessorKey];
 
                 return new ElementBufferView({
-                    buffer: gBuffers[accessor.bufferView],
+                    buffer: buffers[accessor.bufferView],
                     byteOffset: accessor.byteOffset || 0,
                     count: accessor.count,
                     mode: "TRIANGLES",
@@ -176,14 +281,12 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
             }
 
             return mesh;
-
         };
+    })();
 
-    });
+    const meshes = gltf.nodes.map((item, i) => {
 
-    const gMeshes = gltf.nodes.map((item, i) => {
-
-        const mesh = (item.mesh !== undefined) ? gMeshCreators[item.mesh]() : new Mesh(scene);
+        const mesh = (item.mesh !== undefined) ? getMesh(item.mesh) : new Mesh(scene);
 
         if (item.matrix) {
 
@@ -213,18 +316,19 @@ function createMeshFromGLTF(scene, gltf, pbrEnv?: PBREnviroment) {
             };
 
         }
+
         return mesh;
     });
 
     gltf.nodes.forEach((item, i) => {
         if (item.children) {
             item.children.forEach((c) => {
-                gMeshes[c].parent = gMeshes[i];
+                meshes[c].parent = meshes[i];
             });
         }
     });
 
-    return gMeshes.filter((m) => !m.parent);
+    return meshes.filter((m) => !m.parent);
 }
 
 export default createMeshFromGLTF;
