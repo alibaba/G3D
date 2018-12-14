@@ -20,9 +20,9 @@ describe('element buffer', function(){
         }
     })
 
-    it('create with uint32array', function(){
+    it('create with Uint16Array', function(){
 
-        const data = new Uint32Array([1,2,3]);
+        const data = new Uint16Array([1,2,3]);
 
         const ebuffer = new ElementBuffer({
             data
@@ -36,7 +36,7 @@ describe('element buffer', function(){
 
     it('create with arraybuffer', function(){
 
-        const data = (new Uint32Array([1,2,3])).buffer;
+        const data = (new Uint16Array([1,2,3])).buffer;
 
         const ebuffer = new ElementBuffer({
             data
