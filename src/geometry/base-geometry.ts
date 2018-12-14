@@ -93,17 +93,22 @@ class BaseGeometry {
         line: boolean = false,
     ): { [propName: string]: ElementBufferView } {
 
+        const { extensions } = GL;
+
+        const [TypedArray, type] = !!extensions.get("ELE_UNIT") ?
+            [Uint32Array, "UNSIGNED_INT"] : [Uint16Array, "UNSIGNED_SHORT"];
+
         const elementBufferViews = {};
 
         for (const key in data) {
 
             elementBufferViews[key] = Array.isArray(data[key]) ? new ElementBufferView({
                 buffer: new ElementBuffer({
-                    data: new Uint32Array(data[key] as number[]),
+                    data: new TypedArray(data[key] as number[]),
                 }),
                 mode: line ? "LINES" : "TRIANGLES",
                 count: (data[key] as number[]).length,
-                type: "UNSIGNED_INT",
+                type,
                 byteOffset: 0,
             }) : data[key];
 

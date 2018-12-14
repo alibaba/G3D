@@ -51,7 +51,7 @@ function main(
         });
 
         const i = [0, 1, 2, 3, 4, 5];
-        const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+        const iBuffer = new G3D.ElementBuffer({ data: new Uint16Array(i) });
         const iBufferView1 = new G3D.ElementBufferView({
             buffer: iBuffer,
             mode: 'TRIANGLES',
@@ -61,7 +61,7 @@ function main(
             buffer: iBuffer,
             mode: 'TRIANGLES',
             count: 3,
-            byteOffset: 4 * 3
+            byteOffset: 2 * 3
         });
 
         const m1 = new G3D.Mesh(scene);
@@ -79,8 +79,6 @@ function main(
             uvs: uvsBufferView,
             indices: { default: iBufferView2 }
         });
-
-        return [m1];
     }
 
     function render() {
