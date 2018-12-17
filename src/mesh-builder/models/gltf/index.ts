@@ -303,7 +303,7 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
 
                 const accessor = gltf.accessors[accessorKey];
 
-                const buffer = getBuffer(accessor.bufferView, true);
+                const buffer = getBuffer(accessor.bufferView, true) as ElementBuffer;
 
                 return new ElementBufferView({
                     buffer,
