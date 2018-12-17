@@ -204,7 +204,7 @@ vec3 L(){
         normalize(uCameraPosition - vPosition),
 
         #ifdef PBR_ALBEDO_TEXTURE
-        uMaterialAlbedoColor * texture2D(uMaterialAlbedoTexture, vAlbedoUV).rgb,
+        uMaterialAlbedoColor * texture2D(uMaterialAlbedoTexture, fract(vAlbedoUV)).rgb,
         #else
         uMaterialAlbedoColor,
         #endif
