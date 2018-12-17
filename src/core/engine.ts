@@ -69,17 +69,6 @@ class Engine {
         }
 
         // shaders
-        // this.shaders = {
-        //     picker: new Shader({
-        //         fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
-        //     }),
-        //     shadow: new Shader({
-        //         fShaderSource: fShaderShadow, vShaderSource: vShaderShadow,
-        //     }),
-        //     skybox: new Shader({
-        //         fShaderSource: fShaderSkybox, vShaderSource: vShaderSkybox,
-        //     }),
-        // };
         this.shaders.set("picker", new Shader({
             fShaderSource: fShaderPicker, vShaderSource: vShaderPicker,
         }));

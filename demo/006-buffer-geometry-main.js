@@ -60,7 +60,7 @@ function main(
         const v1Buffer = new G3D.Buffer({ data: new Float32Array(v1) });
         const v1BufferView = new G3D.BufferView({ buffer: v1Buffer });
         const i1 = [0, 1];
-        const i1Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i1) });
+        const i1Buffer = new G3D.ElementBuffer({ data: new Uint16Array(i1) });
         const i1BufferView = new G3D.ElementBufferView({
             buffer: i1Buffer,
             mode: 'LINES',
@@ -79,7 +79,7 @@ function main(
         const v2Buffer = new G3D.Buffer({ data: new Float32Array(v2) });
         const v2BufferView = new G3D.BufferView({ buffer: v2Buffer });
         const i2 = [0, 1];
-        const i2Buffer = new G3D.ElementBuffer({ data: new Uint32Array(i2) });
+        const i2Buffer = new G3D.ElementBuffer({ data: new Uint16Array(i2) });
         const i2BufferView = new G3D.ElementBufferView({ buffer: i2Buffer, mode: 'LINES', count: 2 });
         const m2 = new G3D.LineMesh(scene);
         m2.geometry = new G3D.LineGeometry({
@@ -100,7 +100,7 @@ function main(
         const vBuffer = new G3D.Buffer({ data: new Float32Array(v) });
         const vBufferView = new G3D.BufferView({ buffer: vBuffer });
         const i = [0, 1, 2, 3];
-        const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+        const iBuffer = new G3D.ElementBuffer({ data: new Uint16Array(i) });
 
         const iBufferView1 = new G3D.ElementBufferView({
             buffer: iBuffer,
@@ -144,7 +144,7 @@ function main(
             byteStride: 4 * 4
         });
         const i = [0, 1, 2, 3];
-        const iBuffer = new G3D.ElementBuffer({ data: new Uint32Array(i) });
+        const iBuffer = new G3D.ElementBuffer({ data: new Uint16Array(i) });
 
         const iBufferView1 = new G3D.ElementBufferView({
             buffer: iBuffer,
