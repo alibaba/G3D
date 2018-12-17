@@ -35,9 +35,10 @@ var loader = (function () {
   }
   var loadImageQueue = queue(loadImage);
   var loadTextQueue = queue(loadText);
+  var loadBlobQueue = queue(loadBlob);
   return {
     loadText: loadText, loadImage: loadImage, loadBlob: loadBlob,
-    loadImageQueue: loadImageQueue, loadTextQueue: loadTextQueue
+    loadImageQueue: loadImageQueue, loadTextQueue: loadTextQueue, loadBlobQueue: loadBlobQueue
   };
 })();
 

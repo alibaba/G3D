@@ -45,7 +45,7 @@ class Texture {
         const extensionSRGB = extensions.get("SRGB");
 
         repeat = repeat && isP2;
-        sRGB = sRGB && extensionSRGB && isP2;
+        sRGB = sRGB && extensionSRGB;
         mipmap = mipmap && isP2 && !sRGB;
 
         this.mipmap = mipmap;
