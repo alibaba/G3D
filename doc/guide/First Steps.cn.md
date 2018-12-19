@@ -17,10 +17,10 @@ import G3D from 'g3d';
 console.log(G3D);
 ```
 
-如果你希望通过 `script` 标签来引入 G3D, 你可以在 G3D 的 `dist` 目录下找到 `g3d.min.js` 文件。你可以把这个文件放在自己的服务器上，然后使用 `script` 标签引用；或者，你也可以直接引用 `https://unpkg.com/g3d@0.2.1/dist/g3d.min.js`。
+如果你希望通过 `script` 标签来引入 G3D, 你可以在 G3D 的 `dist` 目录下找到 `g3d.min.js` 文件。你可以把这个文件放在自己的服务器上，然后使用 `script` 标签引用；或者，你也可以直接引用 `https://unpkg.com/g3d@latest/dist/g3d.min.js`。
 
 ```html
-<script src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js"></script>
+<script src="https://unpkg.com/g3d@latest/dist/g3d.min.js"></script>
 
 <script>
     console.log(G3D);
