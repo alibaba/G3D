@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">教程</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/G3D/">English</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">万事开头难</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">平移和旋转</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">创建网格体</a>
+              </li>
+              <li class="item"><a href="./Create-Advanced-Mesh.html">创建网格体（高级用法）</a>
+              </li>
+              <li class="item"><a href="./Raw-Material.html">原始材质</a>
+              </li>
+              <li class="item"><a href="./Phong-Material.html">冯氏材质</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="-">冯氏材质</h1>
+<p>冯氏面是一种传统光照模型材质，这种材质受到光照和相机位置的影响。当光照比较强，或者光线直射在材质表面的时候，材质就会比较亮；反之，光照比较弱，或者光线斜射在材质表面上的时候，材质就会比较暗。在 G3D 中，以下三种光源会影响冯氏面材质。</p>
+<ol>
+<li>环境光：环境光会均匀地照亮物体的表面。不管物体表面的朝向如何，相机的位置如何，环境光会均匀地照亮材质的每一个像素。</li>
+<li>平行光：平行光是一种没有衰减的直射光，在场景中的任意一个位置，平行光的方向和强度都是一致的。</li>
+<li>点光：点光源是从某一个点发射出的直射光，光线的方向取决于材质的和点光源的相对位置，而且距离光源越远，光的强度越低。</li>
+</ol>
+<p>其中，平行光与直射光属于直射光。直射光具有「方向」，而方向与材质的交角（即直射与斜射）会影响最终材质的颜色。相比之下，环境光不属于直射光，没有方向的概念。</p>
+<p>G3D 中，冯氏面材质用 <code>G3D.PhongMaterial</code> 类表示。使用诸如 <code>G3D.MeshBuilder.createCube()</code> 等方法创建的网格体自带的材质就是 <code>PhongMaterial</code>。</p>
+<p>看下面这个例子：</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/mocufug/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a></p>
+<p>首先，我们创建了两个光源：一个环境光 <code>AmbientLight</code> 和一个平行光 <code>DirectionalLight</code>：</p>
+<pre><code class="language-javascript">const light1 = new G3D.AmbientLight(scene);
+light1.intensity = 0.3;
+
+const light2 = new G3D.DirectionalLight(scene);
+light2.direction = {x: 1, y: 2, z: 3};
+light2.intensity = 0.7;</code></pre>
+<p>然后，我们创建了一个立方体，然后为其指定了一个 <code>PhongMaterial</code> 对象。</p>
+<pre><code class="language-javascript">const cube = G3D.MeshBuilder.createCube(scene, 1);
+const pMtl = new G3D.PhongMaterial();
+cube.materials.default = pMtl;</code></pre>
+<p>使用 <a href="http://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage">dat.GUI</a> 生成一个控件区域，我们可以调整光源和材质上的参数。</p>
+<h2 id="-">光源参数</h2>
+<p>首先，我们可以调整光源的强度 <code>intensity</code> 滑块，将两个值都调为最低的 0，这个操作相当于以下代码：</p>
+<pre><code class="language-javascript">light1.intensity = 0;
+light2.intensity = 0;</code></pre>
+<p>此时，整个立方网格体变成了纯黑色。这是因为当两个光的强度都为 0 时，没有光照射到材质表面上，所以材质是没有反射任何光线，看上去就是纯黑色的。</p>
+<blockquote>
+<p>注意，背景色并不是黑色，而是通过 <code>scene.clearColor</code> 单独指定的。</p>
+</blockquote>
+<p>保持平行光的强度为 0，将环境光的强度调高一些，你会发现网格体是被均匀照亮的，你无法分辨面和面之间的区别，这正是环境光的特性。</p>
+<p>保持环境光的强度为 0，将平行光的强度调高一些，你会发现网格体的不同表面被不同程度地照亮了，你可以区分出立方体上不同的面。但是，那些完全没有被光照到的面：朝向 X 轴负半轴（左面），朝向 Y 轴负半轴（底面），朝向 Z 轴负半轴（背面）的面完全没有被照亮，而是纯黑色的。</p>
+<p>两个光源均保持一定亮度时，你既可以区分出不同的表面，而完全没有被光照到的面至少也被环境光照亮了。虽然这是最简单的对现实世界光照的模拟，但也可以为用户营造出一些置身 3D 场景中的感觉了。实际上，多个光源照射到材质表面时，材质的颜色为多个光源照射效果的线性叠加。</p>
+<p>光源不仅可以具备强度，也可以具备颜色。你可以调整光源的颜色，然后观察材质表面的颜色变化。比如，你可以将平行光颜色的绿色分量 g 调整为 120，蓝色分量 b 调整为 40，这时立方体表面就会变成一种棕黄色。这个操作相当于以下代码：</p>
+<pre><code class="language-javascript">light2.color.g = 120;
+light2.color.b = 40;</code></pre>
+<p>或（两者是等价的，因为 <code>DirectionalLight</code> 的初始颜色值为纯白色即 <code>{r:255, g:255, b:255}</code>）：</p>
+<pre><code class="language-javascript">light2.color = {r: 255, g: 120, b: 40};</code></pre>
+<p>光的颜色和材质的颜色（马上就会涉及）都会影响材质最终呈现出的颜色，它们间的关系更接近于一种「乘法」关系，比如白光照射到红色物体呈现出红色，红光照射到白色物体也呈现出红色，而纯粹的红光照射到纯粹的绿色物体上，呈现出……黑色。这也许和直觉有些不同（你可能会认为呈现出黄色），但实际上是符合物理规律的。关于光的颜色的物理知识，这里就不作展开了，你可以大概理解为：绿色物体反射绿色波段的光而吸收其他波段的光，红光被完全地吸收了。</p>
+<h2 id="-">材质参数</h2>
+<p>接下来，我们可以看一下冯氏面材质上的参数。冯氏面渲染分为三个通道：环境光通道（ambient），直射光散射通道（diffuse），直射光反射通道（specular），而最终呈现出的颜色就是这三个通道的线性叠加。</p>
+<h3 id="-">环境光通道</h3>
+<p>将直射光的亮度设为 0，然后调整材质环境光通道颜色的 R/G/B 值，会发现材质散射出的颜色发生了变化。比如，将环境光通道的颜色调整为 [100, 200, 200]，材质呈现出蓝绿色。这等价于以下代码：</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 100, g: 200, b: 200};</code></pre>
+<h3 id="-">散射通道</h3>
+<p>散射通道中，材质最终呈现的颜色取决于直射光的颜色、强度、方向，材质表面的颜色、方向（用垂直于材质的法线表示）。材质的法线与直射光的方向越接近平行（直射光越接近于垂直照射到材质上），材质就会越亮。</p>
+<p>在 Demo 中，将环境光的亮度设为 0，提高平行光的亮度，然后将 ambient 通道与 specular 通道全部设为 [0, 0, 0]，保留 diffuse 通道亮度。此时，立方体在视野中的三个表面具有明暗不同的颜色，而表面内部的颜色是完全一致的。相当于以下代码：</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 0, g: 0, b: 0};
+pMtl.diffuseColor = {r: 255, g: 255, b: 255};
+pMtl.specularColor = {r: 0, g: 0, b: 0};</code></pre>
+<p>散射通道不仅可以设置颜色，也可以设置纹理材质。比如，我们可以使用下面这张图创建一个材质，然后放置在散射通道上。</p>
+<p><img src="//gw.alicdn.com/tfs/TB1DJIZvxjaK1RjSZKzXXXVwXXa-256-256.png" alt=""></p>
+<p>勾选 diffuse -&gt; texture 复选框，可见这张图片被「贴」到了立方体上。相关代码如下：</p>
+<pre><code class="language-javascript">const texture = new G3D.Texture({image});
+pMtl.diffuseTexture = texture;</code></pre>
+<h3 id="-">反射通道</h3>
+<p>反射通道中，材质最终呈现的颜色取决于直射光的颜色、强度、方向，材质表面的颜色、方向（以上都与散射通道一致），<strong>以及相机的位置</strong>。也就是说，即使材质的方向与直射光方向的角度是固定的，从不同角度观察材质得到的颜色也是不同的。如果观察材质的角度更接近于直射光镜面反射的角度，那么材质就会比较亮，否则会偏暗。反射通道可以粗糙地模拟带有「光泽」的材质。</p>
+<p><img src="https://gw.alicdn.com/tfs/TB1AZhTw7voK1RjSZFDXXXY3pXa-365-158.png" alt=""></p>
+<p>在 Demo 中，将环境光的亮度设为 0，提高平行光的亮度，然后将 ambient 通道与 diffuse 通道全部设为 [0, 0, 0]，保留 specular 通道亮度。此时，立方体在视野中的三个表面具有明暗不同的颜色，而且<strong>表面内部似乎又一定光泽</strong>，这是因为即使在同一个表面上，不同的像素（代表的材质上的最小片元所处的位置）与相机的相对位置是不同的。这个操作相当于以下代码：</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 0, g: 0, b: 0};
+pMtl.diffuseColor = {r: 0, g: 0, b: 0};
+pMtl.specularColor = {r: 255, g: 255, b: 255};</code></pre>
+<p>可以调整 <code>pMtl.glossiness</code> 即光泽度参数。参数约大，材质的反射通道就约接近于镜面反射。（当然，如果你真的想模拟镜面，就还需要把另外两个通道关闭才行）。</p>
+<blockquote>
+<p>其实，对环境光通道和散射通道，对应的 <code>ambientTexture</code> 和 <code>specularTexture</code> 也是存在的，只不过它们没有 <code>diffuseTexture</code> 那么常用。</p>
+</blockquote>
+<h2 id="-">小结</h2>
+<p>这一节，我们了解了 G3D 中冯氏材质的原理和用法，以及基本类型光源的创建。</p>
+<script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>

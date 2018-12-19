@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta content="text/html">
+    <meta charset="utf-8">
+    <title>G3D - A pure WebGL-compatible 3D render engine, works without DOM API</title>
+    <link rel="icon" href="../assets/favicon-g3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/vs.min.css">
+  </head>
+  <body>
+    <div class="header">
+      <div class="menu">
+        <div class="item"><a class="link" href="../"><img class="logo" src=".././assets/logo-g3d.png"></a></div>
+        <div class="item"><a class="link" href="../api/Engine.html">API</a></div>
+        <div class="item"><a class="link" href="../guide/First-Steps.html">Guide</a></div>
+        <div class="item"><a class="link" href="https://github.com/alibaba/G3D" target="_blank"><img class="logo-small" src="../assets/logo-github.png"></a></div>
+        <div class="item-right item language"><a class="link" href="/G3D/cn/">中文</a>
+        </div>
+        <div class="item-right item"><a class="link" href="https://alibaba.github.io/GCanvas/">GCanvas</a></div>
+      </div>
+    </div>
+    <div class="g3d">
+      <div class="doc">
+        <div class="content">
+          <div class="index">
+            <ol>
+              <li class="item"><a href="./First-Steps.html">First Steps</a>
+              </li>
+              <li class="item"><a href="./Positions-and-Rotations.html">Positions and Rotations</a>
+              </li>
+              <li class="item"><a href="./Create-Mesh.html">Create Mesh</a>
+              </li>
+              <li class="item"><a href="./Create-Advanced-Mesh.html">Create Advanced Mesh</a>
+              </li>
+              <li class="item"><a href="./Raw-Material.html">Raw Material</a>
+              </li>
+              <li class="item"><a href="./Phong-Material.html">Phong Material</a>
+              </li>
+            </ol>
+          </div>
+          <div class="body"><h1 id="phong-material">Phong Material</h1>
+<p>Phong Material is a traditional lighting model material, its rendered color is affected by lighting and camera position. When the light is higher in intensity, or light is more perpendicular with the material face, the material would be lighted more. In G3D, these types of light play roles in lighting.</p>
+<ol>
+<li>Ambient light: ambient light lights the material evenly for each pixel. No matter how the face is facing, and where the camera is, each pixel of one material would be the same color.</li>
+<li>Directional light: direct light without attenuation. In any position in a scene, directional light&#39;s direction and intensity would be the same.</li>
+<li>Point light: emit light from one point. The direction of the light depends on the light&#39;s position and pixel&#39;s position. The intensity of light would be lower for farer positions.</li>
+</ol>
+<p>Direction light and point light are direct lights, they have the &#39;direction&#39;, and direction would envolve in computing the final color. Ambient light is not direct, it has no &#39;direction&#39; thing.</p>
+<p>In G3D, phong material is <code>G3D.PhongMaterial</code> class. Meshes created by <code>G3D.MeshBuilder.createCube()</code> have a default material, which is <code>PhongMaterial</code>.</p>
+<p>Check the example:</p>
+<p><a class="jsbin-embed" href="https://jsbin.com/mocufug/latest/embed?js,output&height=500px">JS Bin on jsbin.com</a></p>
+<p>First, we create two light source: one ambient light and one direction light:</p>
+<pre><code class="language-javascript">const light1 = new G3D.AmbientLight(scene);
+light1.intensity = 0.3;
+
+const light2 = new G3D.DirectionalLight(scene);
+light2.direction = {x: 1, y: 2, z: 3};
+light2.intensity = 0.7;</code></pre>
+<p>Then, we created a cube mesh, and specify a <code>PhongMaterial</code> object to it.</p>
+<pre><code class="language-javascript">const cube = G3D.MeshBuilder.createCube(scene, 1);
+const pMtl = new G3D.PhongMaterial();
+cube.materials.default = pMtl;</code></pre>
+<p>Using <a href="http://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage">dat.GUI</a> to generate a control panel, we can adjust light and material options on the panel.</p>
+<h2 id="light-options">Light options</h2>
+<p>We can adjust the <code>intensity</code> sliders of both lights, set them to 0. This is equal to:</p>
+<pre><code class="language-javascript">light1.intensity = 0;
+light2.intensity = 0;</code></pre>
+<p>We can see the whole cube mesh turns totally black, because no light is lighting the material.</p>
+<blockquote>
+<p>Notice that the background is not black, it&#39;s specified by <code>scene.clearColor</code>。</p>
+</blockquote>
+<p>Keep directional light&#39;s intensity as 0, and increase the intensity of ambient light, you&#39;ll find the cube mesh is lighted evenly, you would not be able to specify where each face is positioned. So this is what ambient color does.</p>
+<p>Keep ambient light&#39;s intensity as 0 and increase directional light&#39;s intensity, you&#39;ll found each face is lighted in different degrees, as you can specify different faces. But there&#39;re still three faces totally black: the left face, the bottom face and back face.</p>
+<p>Increase intensity of both lights, you can either specify each faces, and those three faces are lighted by ambient color at least. This is the simplest simulation of real world&#39;s lighting, but it can make some 3D feeling for users. Notice that when multiple lights are applied, their computed colors are linear combined to the final color.</p>
+<p>Lights have not only intensity but also colors. You can adjust light&#39;s color and see how the rendered color is changed. For example, you can set directional color&#39;s G component as 120 and B as 40, and the cube will turn tan. This is equal to:</p>
+<pre><code class="language-javascript">light2.color.g = 120;
+light2.color.b = 40;</code></pre>
+<p>or (they are equivalent, cause the inital color of  <code>DirectionalLigth</code> is <code>{r:255, g:255, b:255}</code>):</p>
+<pre><code class="language-javascript">light2.color = {r: 255, g: 120, b: 40};</code></pre>
+<p>Both lights&#39; color and material&#39;s color (we&#39;ll discuss soon) effects the final color, for example, white light and red material result in red, as red light and white material result in red too. The red light and green material result in black, for green material will absorb red light totally.</p>
+<h2 id="material-options">Material options</h2>
+<p>Next, let&#39;s check the options in phong material. There&#39;s 3 channels for phong material: ambient channel, diffuse channel and specular channel, the finnal color would be the channels added together.</p>
+<h3 id="ambient-channel">Ambient channel</h3>
+<p>Keep directional light&#39;s intensity as 0, and adjust R/G/B values of material&#39;s ambient channel, you&#39;ll see final color is changing. If you set ambient color as [100, 200, 200], the material turns turqoise, this is equal to:</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 100, g: 200, b: 200};</code></pre>
+<h3 id="diffuse-channel">Diffuse channel</h3>
+<p>In diffuse channel, the rendered color depends on light&#39;s color, intensity, direction, and material&#39;s color, direction. The more material and light is close to perpendicular, the lighter the color will be.</p>
+<p>In the demo, set ambient light&#39;s intensity to 0 and increase the intensity of directional light, set ambient color and specular color as [0, 0, 0], keep the diffuse color. You&#39;ll se three different lighted faces with is totally even inside the face. This equals to:</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 0, g: 0, b: 0};
+pMtl.diffuseColor = {r: 255, g: 255, b: 255};
+pMtl.specularColor = {r: 0, g: 0, b: 0};</code></pre>
+<p>You can set not only color but also texture for diffuse channel. For example, we can load the following image and create a texture, and specify to the diffuse channel.</p>
+<p><img src="//gw.alicdn.com/tfs/TB1DJIZvxjaK1RjSZKzXXXVwXXa-256-256.png" alt=""></p>
+<p>Check diffuse -&gt; texture checkbox, you&#39;ll see the image is &#39;pasted&#39; to the cube. The codes are:</p>
+<pre><code class="language-javascript">const texture = new G3D.Texture({image});
+pMtl.diffuseTexture = texture;</code></pre>
+<h3 id="specular-channel">Specular channel</h3>
+<p>In specular channel, the finnal color depends on light&#39;s color, intensity, direction, and material&#39;s color and direction(above is same with diffuse channel), and <strong>camera&#39;s position</strong>. Even if the light&#39;s direction and material&#39;s direction is fixed, the rendered color will be different for different camera positions. If the camera is closer to the specular reflecting light&#39;s road, the material would look lighter, otherwise it&#39;ll be dark. Specular channel can simulate gloss of the material.</p>
+<p><img src="https://gw.alicdn.com/tfs/TB186tKw9zqK1RjSZPxXXc4tVXa-364-150.png" alt=""></p>
+<p>In the demo, set ambient light&#39;s intensity as 0 and increase the directional light&#39;s intensity, set ambient color and diffuse color as [0, 0, 0], keep the specular color. You&#39;ll see three different lighted faces which seems to have a gloss on the surface. This is equal to:</p>
+<pre><code class="language-javascript">pMtl.ambientColor = {r: 0, g: 0, b: 0};
+pMtl.diffuseColor = {r: 0, g: 0, b: 0};
+pMtl.specularColor = {r: 255, g: 255, b: 255};</code></pre>
+<blockquote>
+<p>Actually, for ambient channel and diffuse channel, there&#39;s <code>ambientTexture</code> and <code>specularTexture</code>, but they&#39;re not commonly used as <code>diffuseTexture</code>.</p>
+</blockquote>
+<h2 id="summary">Summary</h2>
+<p>In this section, we learn about basic usage of phong material and lights in G3D.</p>
+<script src="https://static.jsbin.com/js/embed.min.js?4.1.7"></script></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="content"><a class="open-source-icon" href="http://opensource.alibaba.com/"><img src="http://zos.alipayobjects.com/rmsportal/OCGqTPRSXYMsKjGiHPuP.png"></a>
+        <div class="license">Released under Apache License</div>
+        <div class="copyright">Copyright ©️ 2018 Alibaba Inc.</div>
+      </div>
+    </div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115533379-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-115533379-1');
+    </script>
+  </body>
+</html>
