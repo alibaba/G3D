@@ -5,7 +5,7 @@ docs:
     Create Mesh: 创建网格体
     Create Advanced Mesh: 创建网格体（高级用法）
     Raw Material: 原始材质
-    Standard Material: 冯氏面材质
+    Phong Material: 冯氏材质
     Lights: 光照
     Load Models: 加载模型
     Text Geometry: 文字几何体
