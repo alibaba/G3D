@@ -1,9 +1,10 @@
-import CubeTexture from '../../src/texture/cube-texture';
-import GL from '../../src/core/gl';
+import pbrAssets from '../../helpers/pbr-assets';
+import expect from '../../helpers/expect';
+import { initWebGL } from '../../helpers/init';
+import G3D from '../../helpers/g3d';
 
-import pbrAssets from '../helpers/pbr-assets';
-import expect from '../helpers/expect';
-import { initWebGL } from '../helpers/init';
+const { CubeTexture, GL } = G3D;
+
 
 describe('cube texture', function () {
 

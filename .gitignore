@@ -4,5 +4,6 @@ node_modules/
 package-lock.json
 website/homepage-dist
 dist
+coverage
 demo/9*
 demo/assets
