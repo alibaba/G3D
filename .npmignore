@@ -3,7 +3,8 @@
 node_modules/
 package-lock.json
 website
+coverage
 test
 demo
 doc
-!dist
+src

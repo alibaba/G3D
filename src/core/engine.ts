@@ -226,7 +226,6 @@ class Engine {
             return [
                 pixels[0], pixels[1], pixels[2], pixels[3],
             ];
-
         }
     }
 }

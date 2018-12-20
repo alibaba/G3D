@@ -65,61 +65,57 @@ const PathParser = {
         while (i < list.length) {
 
             switch (list[i++]) {
-                case "m":
-                    {
-                        const x = Number(list[i++]);
-                        const y = Number(list[i++]);
+                case "m": {
+                    const x = Number(list[i++]);
+                    const y = Number(list[i++]);
 
-                        if (line.length) {
-                            checkLineRing(line);
-                            lines.push(line);
-                            line = [];
-                        }
+                    if (line.length) {
+                        checkLineRing(line);
+                        lines.push(line);
+                        line = [];
+                    }
 
-                        vertices.push(x, y);
+                    vertices.push(x, y);
+                    line.push(vertices.length / 2 - 1);
+
+                    current = [x, y];
+
+                    break;
+                }
+                case "q": {
+                    const [x0, y0] = current;
+                    const x2 = Number(list[i++]);
+                    const y2 = Number(list[i++]);
+                    const x1 = Number(list[i++]);
+                    const y1 = Number(list[i++]);
+                    const points = Quadratic(x0, y0, x1, y1, x2, y2, resolution);
+                    for (let j = 0; j < points.length; j += 2) {
+                        vertices.push(points[j], points[j + 1]);
                         line.push(vertices.length / 2 - 1);
-
-                        current = [x, y];
-
-                        break;
                     }
-                case "q":
-                    {
-                        const [x0, y0] = current;
-                        const x2 = Number(list[i++]);
-                        const y2 = Number(list[i++]);
-                        const x1 = Number(list[i++]);
-                        const y1 = Number(list[i++]);
-                        const points = Quadratic(x0, y0, x1, y1, x2, y2, resolution);
-                        for (let j = 0; j < points.length; j += 2) {
-                            vertices.push(points[j], points[j + 1]);
-                            line.push(vertices.length / 2 - 1);
-                        }
 
-                        current = [x2, y2];
+                    current = [x2, y2];
 
-                        break;
+                    break;
+                }
+                case "l": {
+                    const x = Number(list[i++]);
+                    const y = Number(list[i++]);
+
+                    const [x0, y0] = current;
+                    const points = Line(x0, y0, x, y, resolution);
+                    for (let j = 0; j < points.length; j += 2) {
+                        vertices.push(points[j], points[j + 1]);
+                        line.push(vertices.length / 2 - 1);
                     }
-                case "l":
-                    {
-                        const x = Number(list[i++]);
-                        const y = Number(list[i++]);
 
-                        const [x0, y0] = current;
-                        const points = Line(x0, y0, x, y, resolution);
-                        for (let j = 0; j < points.length; j += 2) {
-                            vertices.push(points[j], points[j + 1]);
-                            line.push(vertices.length / 2 - 1);
-                        }
-
-                        current = [x, y];
-                        break;
-                    }
-                case "z":
-                    {
-                        // line.push(line[0]);
-                        break;
-                    }
+                    current = [x, y];
+                    break;
+                }
+                case "z": {
+                    // line.push(line[0]);
+                    break;
+                }
                 default:
                     throw new Error("parse path failed, unhandled item " + list[i]);
             }

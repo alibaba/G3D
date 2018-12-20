@@ -1,6 +1,12 @@
 
 const path = require('path');
 const dalaran = require('dalaran');
+
+const [, , taskName, ...args] = process.argv;
+
+const testRender = args.indexOf('-render') !== -1;
+const testCoverage = args.indexOf('-coverage') !== -1;
+
 const tasks = dalaran.libraryTasks({
     umdName: 'G3D',
     demo: './demo',
@@ -16,7 +22,9 @@ const tasks = dalaran.libraryTasks({
     lint: true,
     lintrcDir: path.join(__dirname, './lint-config/'),
     devCors: true,
+    headlessMode: !testRender,
     testEntryPattern: 'test/**/*.spec.js',
+    coverageFilePattern: testCoverage ? '**/src/**/*.ts' : '',
     liveReload: true,
     typescript: true,
     htmlTemplate: path.join(__dirname, './template/html.handlebars'),
@@ -24,7 +32,6 @@ const tasks = dalaran.libraryTasks({
     watchTest: false
 });
 
-const taskName = process.argv[2];
 
 switch (taskName) {
 

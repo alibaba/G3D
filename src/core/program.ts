@@ -56,33 +56,29 @@ class Program {
             const { baseType, vecType, baseVecType, vecSize } = this.parseType(type);
 
             switch (baseVecType) {
-                case "VEC":
-                    {
-                        const uniformMethodName = ["uniform", vecSize, baseType === "FLOAT" ? "f" : "i", "v"].join("");
-                        gl[uniformMethodName](position, value);
-                        break;
-                    }
-                case "MAT":
-                    {
-                        const uniformMethodName = ["uniform", "Matrix", vecSize, "fv"].join("");
-                        gl[uniformMethodName](position, false, value);
-                        break;
-                    }
-                case "2D":
-                    {
-                        gl.activeTexture(gl[`TEXTURE${unit}`]);
-                        gl.bindTexture(gl.TEXTURE_2D, value);
-                        gl.uniform1i(position, unit);
-                        break;
-                    }
-                case "CUB":
-                    {
-                        gl.activeTexture(gl[`TEXTURE${unit}`]);
+                case "VEC": {
+                    const uniformMethodName = ["uniform", vecSize, baseType === "FLOAT" ? "f" : "i", "v"].join("");
+                    gl[uniformMethodName](position, value);
+                    break;
+                }
+                case "MAT": {
+                    const uniformMethodName = ["uniform", "Matrix", vecSize, "fv"].join("");
+                    gl[uniformMethodName](position, false, value);
+                    break;
+                }
+                case "2D": {
+                    gl.activeTexture(gl[`TEXTURE${unit}`]);
+                    gl.bindTexture(gl.TEXTURE_2D, value);
+                    gl.uniform1i(position, unit);
+                    break;
+                }
+                case "CUB": {
+                    gl.activeTexture(gl[`TEXTURE${unit}`]);
 
-                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, value);
-                        gl.uniform1i(position, unit);
-                        break;
-                    }
+                    gl.bindTexture(gl.TEXTURE_CUBE_MAP, value);
+                    gl.uniform1i(position, unit);
+                    break;
+                }
                 default:
                     throw new Error("baseVecType invalid " + baseVecType);
             }
