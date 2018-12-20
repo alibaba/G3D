@@ -30,6 +30,11 @@ attribute vec2 aEmissiveUV;
 varying vec2 vEmissiveUV;
 #endif
 
+#ifdef PBR_OCCLUSION_TEXTURE
+attribute vec2 aOcclusionUV;
+varying vec2 vOcclusionUV;
+#endif
+
 void main() {
 
     gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aPosition, 1.0);
@@ -49,6 +54,9 @@ void main() {
     vEmissiveUV = aEmissiveUV;
     #endif
 
+    #ifdef PBR_OCCLUSION_TEXTURE
+    vOcclusionUV = aOcclusionUV;
+    #endif
 
     #ifdef PBR_NORMAL_TEXTURE
     vNormalUV = aNormalUV;

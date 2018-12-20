@@ -79,6 +79,12 @@ varying vec2 vEmissiveUV;
 uniform sampler2D uMaterialEmissiveTexture;
 #endif
 
+#ifdef PBR_OCCLUSION_TEXTURE
+varying vec2 vOcclusionUV;
+uniform sampler2D uMaterialOcclusionTexture;
+uniform float uMaterialOcclusionStrength;
+#endif
+
 struct PBRInfo
 {
     vec3 N;
@@ -198,7 +204,7 @@ vec3 L(){
         normalize(uCameraPosition - vPosition),
 
         #ifdef PBR_ALBEDO_TEXTURE
-        uMaterialAlbedoColor * texture2D(uMaterialAlbedoTexture, vAlbedoUV).rgb,
+        uMaterialAlbedoColor * texture2D(uMaterialAlbedoTexture, fract(vAlbedoUV)).rgb,
         #else
         uMaterialAlbedoColor,
         #endif
@@ -249,6 +255,14 @@ vec3 L(){
     fragColor += L_env(pbrInputs);
     #endif
 
+    #ifdef PBR_OCCLUSION_TEXTURE
+    fragColor = mix(
+        fragColor, 
+        fragColor * texture2D(uMaterialOcclusionTexture, vOcclusionUV).r, 
+        uMaterialOcclusionStrength
+    );
+    #endif
+
     #ifdef PBR_EMISSIVE_TEXTURE
     fragColor += texture2D(uMaterialEmissiveTexture, vEmissiveUV).rgb;
     #endif
@@ -257,7 +271,6 @@ vec3 L(){
 
     return fragColor;
 }
-
 
 void main() {
 

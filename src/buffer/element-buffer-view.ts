@@ -21,7 +21,7 @@ class ElementBufferView {
         buffer,
         mode = "TRIANGLES",
         count = 0,
-        type = "UNSIGNED_INT",
+        type = buffer.u32 ? "UNSIGNED_INT" : "UNSIGNED_SHORT",
         byteOffset = 0,
     }: IElementBufferViewConfig) {
 

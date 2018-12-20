@@ -1,6 +1,6 @@
 {
   "name": "g3d",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "webgl render engine compatible with both browser and gcanvas",
   "main": "dist/g3d.min.js",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/alibaba/G3D"
   },
   "devDependencies": {
-    "dalaran": "^0.2.2",
+    "dalaran": "^0.2.5",
     "expect": "^23.6.0",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.3",
@@ -24,6 +24,8 @@
     "build": "node ./devtools/index.js build",
     "dev": "node ./devtools/index.js dev",
     "test": "node ./devtools/index.js test",
+    "test:render": "node ./devtools/index.js test -render",
+    "test:coverage": "node ./devtools/index.js test -coverage",
     "website": "node ./devtools/website.js",
     "prepublishOnly": "npm run build",
     "format": "node ./devtools/format-demo.js",

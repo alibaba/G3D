@@ -1,8 +1,8 @@
-import expect from '../helpers/expect';
-import { initWebGL } from '../helpers/init';
+import expect from '../../helpers/expect';
+import { initWebGL } from '../../helpers/init';
+import G3D from '../../helpers/g3d';
 
-import Buffer from '../../src/buffer/buffer';
-import GL from '../../src/core/gl';
+const { Buffer, GL } = G3D;
 
 describe('buffer', function () {
 

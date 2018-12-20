@@ -1,14 +1,12 @@
-import Texture from '../../src/texture/texture';
-import GL from '../../src/core/gl';
+import loader from '../../helpers/loader';
+import expect from '../../helpers/expect';
+import { initWebGL } from '../../helpers/init';
+import G3D from '../../helpers/g3d';
 
-import loader from '../helpers/loader';
-import expect from '../helpers/expect';
-import { initWebGL } from '../helpers/init';
-
+const { Texture, GL } = G3D;
 
 const imageUrl1000 = '//gw.alicdn.com/tfs/TB1YO_WtQvoK1RjSZFNXXcxMVXa-1000-1000.png';
 const imageUrl1024 = '//gw.alicdn.com/tfs/TB1_x5StSzqK1RjSZFpXXakSXXa-1024-1024.png';
-
 
 describe('texture', function () {
 

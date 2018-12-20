@@ -17,10 +17,10 @@ import G3D from 'g3d';
 console.log(G3D);
 ```
 
-If you want to load G3D through a `script` tag (thought we don't recommed you to do so), you can find a UMD file at `dist/g3d.min.js` inside the package. You may need put the file on your server and load it using a `script` tag. Or you can easily use `https://unpkg.com/g3d@0.2.1/dist/g3d.min.js`.
+If you want to load G3D through a `script` tag (thought we don't recommed you to do so), you can find a UMD file at `dist/g3d.min.js` inside the package. You may need put the file on your server and load it using a `script` tag. Or you can easily use `https://unpkg.com/g3d@latest/dist/g3d.min.js`.
 
 ```html
-<script src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js"></script>
+<script src="https://unpkg.com/g3d@latest/dist/g3d.min.js"></script>
 
 <script>
     console.log(G3D);
