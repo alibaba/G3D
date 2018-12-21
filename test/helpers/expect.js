@@ -29,8 +29,6 @@ expect.extend({
         const canvas = received;
         const image = value;
 
-        console.log(received, value);
-
         if (canvas.width !== image.width || canvas.height !== image.height) {
 
             return {
@@ -40,7 +38,7 @@ expect.extend({
             }
         } else {
 
-            const {width, height} = canvas;
+            const { width, height } = canvas;
 
             // read image pixels
 
@@ -72,16 +70,29 @@ expect.extend({
                 pass: true
             };
 
-            for (let i = 0; i < glPixels.length; i++) {
-                if (glPixels[i] !== imagePixels[i]) {
-                    res = {
-                        message: () => `pixel value not eqaul for index ${i}`,
-                        pass: false
+            let s = 0;
+            for (let i = 0; i < width; i++) {
+                for (let j = 0; j < height; j++) {
+
+                    const p = i * width + j;
+                    const q = p;
+
+                    const [r1, g1, b1, a1] = [glPixels[p], glPixels[p + 1], glPixels[p + 2], glPixels[p + 3]];
+                    const [r2, g2, b2, a2] = [imagePixels[q], imagePixels[q + 1], imagePixels[q + 2], imagePixels[q + 3]];
+
+                    if (r1 !== r2 || g1 !== g2 || b1 !== b2 || a1 !== a2) {
+                        console.log(`DIF: [${r1},${g1},${b1},${a1}] - [${r2},${g2},${b2},${a2}] - @[${i},${j}]`)
+                        s++;
+                        res = {
+                            message: () => `pixel value not eqaul for index ${i}`,
+                            pass: false
+                        }
+                        // return res;
                     }
-                    break;
                 }
             }
 
+            // console.log('DIF PIXEL COUNT ---', s);
             return res;
         }
     }

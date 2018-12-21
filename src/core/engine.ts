@@ -114,9 +114,9 @@ class Engine {
         textures.clear();
     }
 
-    public clearColorBuffer(color: IColorRGB): void {
+    public clearColorBuffer(color: IColorRGB, alpha: number = 1.0): void {
         const { gl } = GL;
-        gl.clearColor(color.r / 255, color.g / 255, color.b / 255, 1.0);
+        gl.clearColor(color.r / 255, color.g / 255, color.b / 255, alpha);
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
