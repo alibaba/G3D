@@ -6,17 +6,17 @@ function main(
     const engine = new G3D.Engine(canvas);
 
     const scene = new G3D.Scene(engine);
-    scene.clearColor = {r: 255, g:255, b:255};
+    scene.clearColor = { r: 255, g: 255, b: 255 };
 
     const camera = new G3D.RotatePerspectiveCamera(scene);
-    camera.alpha = 45;
-    camera.beta = 35;
+    camera.alpha = 180;
+    camera.beta = 30;
     camera.radius = 0.04;
     camera.near = 0.001;
     camera.far = 100;
 
     const light = new G3D.DirectionalLight(scene);
-    light.direction = {x: 0, y: 0, z: 1};
+    light.direction = { x: 0, y: 0, z: 1 };
     light.intensity = 0.1;
 
     pbrAssets('apartment', (specular, diffuse, lut) => {
@@ -57,21 +57,21 @@ function main(
                                         left: leftE, right: rightE, top: topE, bottom: bottomE, front: frontE, back: backE,
                                     };
 
-                                    const mesh1 = G3D.MeshBuilder.createFromStlModel(scene, m1);
-                                    mesh1.geometry.facing = G3D.Geometry.FACING.BACK;
-                                    const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, m2);
-                                    mesh2.geometry.facing = G3D.Geometry.FACING.BACK;
+                                    // const mesh1 = G3D.MeshBuilder.createFromStlModel(scene, m1);
+                                    // mesh1.geometry.facing = G3D.Geometry.FACING.BACK;
+                                    // const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, m2);
+                                    // mesh2.geometry.facing = G3D.Geometry.FACING.BACK;
                                     const mesh3 = G3D.MeshBuilder.createFromStlModel(scene, m3, { geometry: { mergeNormals: true } });
 
-                                    mesh1.materials.default = new G3D.GemMaterial({
-                                        refraction: new G3D.CubeTexture({ images: refractionMapImages, sRGB: false }),
-                                        env: new G3D.CubeTexture({ images: envMapImages, sRGB: false })
-                                    });
+                                    // mesh1.materials.default = new G3D.GemMaterial({
+                                    //     refraction: new G3D.CubeTexture({ images: refractionMapImages, sRGB: false }),
+                                    //     env: new G3D.CubeTexture({ images: envMapImages, sRGB: false })
+                                    // });
 
-                                    mesh2.materials.default = new G3D.GemMaterial({
-                                        refraction: new G3D.CubeTexture({ images: refractionMapImages, sRGB: false }),
-                                        env: new G3D.CubeTexture({ images: envMapImages, sRGB: false })
-                                    });
+                                    // mesh2.materials.default = new G3D.GemMaterial({
+                                    //     refraction: new G3D.CubeTexture({ images: refractionMapImages, sRGB: false }),
+                                    //     env: new G3D.CubeTexture({ images: envMapImages, sRGB: false })
+                                    // });
 
                                     const pbrEnv = new G3D.PBREnviroment({
                                         diffuse,
@@ -81,16 +81,27 @@ function main(
 
                                     const mtl = new G3D.PBRMaterial();
                                     mtl.pbrEnviroment = pbrEnv;
-                                    mtl.albedoColor = { r: 256 * 4.7, g: 256 * 4.7, b: 1300 };
+                                    mtl.albedoColor = { r: 256, g: 256, b: 256 };
 
                                     mtl.metallic = 0.99;
                                     mtl.roughness = 0.1;
 
                                     mesh3.materials.default = mtl;
 
+                                    if (location.href.indexOf('new-metal-material') !== -1) {
+                                        loader.loadImage(
+                                            'https://gw.alicdn.com/tfs/TB1MToUx6TpK1RjSZKPXXa3UpXa-500-500.png',
+                                            // 'https://gw.alicdn.com/tfs/TB15QddyXzqK1RjSZSgXXcpAVXa-500-500.png',
+                                            image => {
+                                                mesh3.materials.default = new G3D.MetalMaterial(image);
+                                            }
+                                        )
+                                    }
+
+
                                     const mesh = new G3D.Mesh(scene);
-                                    mesh1.parent = mesh;
-                                    mesh2.parent = mesh;
+                                    // mesh1.parent = mesh;
+                                    // mesh2.parent = mesh;
                                     mesh3.parent = mesh;
 
                                     mesh.rotation.x = 270;
@@ -98,7 +109,7 @@ function main(
                                     // G3D.MeshBuilder.createCoordinate(scene, 300);
 
                                     function render() {
-                                        // mesh.rotation.y += 0.2;
+                                        mesh.rotation.y += 0.3;
                                         scene.render();
                                         requestAnimationFrame(render);
                                     }
