@@ -108,10 +108,10 @@ expect.extend({
                     }
                     console.log(value);
                 }
-                // res = {
-                //     message: () => `color is not equal for ${diffCount}/${width * height} pixels.`,
-                //     pass: false
-                // }
+                res = {
+                    message: () => `color is not equal for ${diffCount}/${width * height} pixels.`,
+                    pass: false
+                }
             }
 
             return res;

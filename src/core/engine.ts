@@ -56,7 +56,12 @@ class Engine {
             extensions.set("ELE_UNIT", gl.getExtension("OES_element_index_uint"));
 
             extensions.set("SRGB", gl.getExtension("EXT_SRGB"));
+
+            console.log('extensions:');
+            console.log(extensions.get("TEX_LOD"));
+            console.log(extensions.get("SRGB"));
         }
+
 
         // precisions
         {

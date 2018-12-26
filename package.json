@@ -23,7 +23,7 @@
     "new": "node ./devtools/index.js new",
     "build": "node ./devtools/index.js build",
     "dev": "node ./devtools/index.js dev",
-    "test": "node ./devtools/index.js test",
+    "test": "node ./devtools/index.js test -render",
     "test:render": "node ./devtools/index.js test -render",
     "test:coverage": "node ./devtools/index.js test -coverage",
     "website": "node ./devtools/website.js",
