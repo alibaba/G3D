@@ -129,8 +129,9 @@ describe('pbr material', function () {
     let app;
     let canvas;
 
-    before(done => {
-        this.timeout(10000);
+    before(function (done) {
+        // load a large amount of images
+        this.timeout(30 * 1000);
         loader.loadImageQueue(imageUrls, result => {
             images = result;
             canvas = initCanvas(128, 128);
@@ -173,17 +174,17 @@ describe('pbr material', function () {
             app.env_mr_1();
             expect(canvas).toRenderAs(images.env_mr_1);
         });
-    
+
         it('env_mr_2', function () {
             app.env_mr_2();
             expect(canvas).toRenderAs(images.env_mr_2);
         });
-    
+
         it('env_mr_3', function () {
             app.env_mr_3();
             expect(canvas).toRenderAs(images.env_mr_3);
         });
-    
+
         it('env_mr_4', function () {
             app.env_mr_4();
             expect(canvas).toRenderAs(images.env_mr_4);
