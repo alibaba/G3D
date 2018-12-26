@@ -121,14 +121,14 @@ function init(canvas, callback) {
 }
 
 const imageUrls = {
-    default: 'https://gw.alicdn.com/tfs/TB1hx.iycfpK1RjSZFOXXa6nFXa-128-128.png',
-    dark: 'https://gw.alicdn.com/tfs/TB1GqobyhTpK1RjSZFGXXcHqFXa-128-128.png',
-    ambient: 'https://gw.alicdn.com/tfs/TB1i7P9ygDqK1RjSZSyXXaxEVXa-128-128.png',
-    ambientTexture: 'https://gw.alicdn.com/tfs/TB1dx.iycfpK1RjSZFOXXa6nFXa-128-128.png',
-    diffuse: 'https://gw.alicdn.com/tfs/TB1GAQbymzqK1RjSZFjXXblCFXa-128-128.png',
-    diffuseTexture: 'https://gw.alicdn.com/tfs/TB1dQwCyiLaK1RjSZFxXXamPFXa-128-128.png',
-    specular: 'https://gw.alicdn.com/tfs/TB1LAQbymzqK1RjSZFjXXblCFXa-128-128.png',
-    specularTexture: 'https://gw.alicdn.com/tfs/TB1qNEjygHqK1RjSZFEXXcGMXXa-128-128.png'
+    default: 'https://gw.alicdn.com/tfs/TB1VwVnypYqK1RjSZLeXXbXppXa-128-128.png',
+    dark: 'https://gw.alicdn.com/tfs/TB1o3tqyrvpK1RjSZFqXXcXUVXa-128-128.png',
+    ambient: 'https://gw.alicdn.com/tfs/TB1aBdpyrvpK1RjSZPiXXbmwXXa-128-128.png',
+    ambientTexture: 'https://gw.alicdn.com/tfs/TB18vxNyxjaK1RjSZKzXXXVwXXa-128-128.png',
+    diffuse: 'https://gw.alicdn.com/tfs/TB18UNuysfpK1RjSZFOXXa6nFXa-128-128.png',
+    diffuseTexture: 'https://gw.alicdn.com/tfs/TB13ihkyCzqK1RjSZFLXXcn2XXa-128-128.png',
+    specular: 'https://gw.alicdn.com/tfs/TB1_3JoysbpK1RjSZFyXXX_qFXa-128-128.png',
+    specularTexture: 'https://gw.alicdn.com/tfs/TB1GfhoyyrpK1RjSZFhXXXSdXXa-128-128.png',
 };
 
 describe('phong material', function () {
@@ -153,12 +153,10 @@ describe('phong material', function () {
         expect(canvas).toRenderAs(images.default);
     });
 
-
     it('dark', function () {
         app.dark();
         expect(canvas).toRenderAs(images.dark);
     });
-
 
     it('ambient', function () {
         app.ambient();
@@ -188,7 +186,6 @@ describe('phong material', function () {
         app.specular();
         expect(canvas).toRenderAs(images.specular);
     });
-
 
     it('specularTexture', function () {
         app.specularTexture();

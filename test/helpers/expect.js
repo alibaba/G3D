@@ -36,6 +36,7 @@ expect.extend({
                     `image size [${image.width}, ${image.height}]`,
                 pass: false
             }
+
         } else {
 
             const { width, height } = canvas;
@@ -70,29 +71,49 @@ expect.extend({
                 pass: true
             };
 
-            let s = 0;
-            for (let i = 0; i < width; i++) {
-                for (let j = 0; j < height; j++) {
+            const diffMap = {};
+            let diffCount = 0;
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
 
-                    const p = i * width + j;
-                    const q = p;
+                    const p = ((height - i - 1) * width + j) * 4;
+                    const q = (i * height + j) * 4;
 
                     const [r1, g1, b1, a1] = [glPixels[p], glPixels[p + 1], glPixels[p + 2], glPixels[p + 3]];
                     const [r2, g2, b2, a2] = [imagePixels[q], imagePixels[q + 1], imagePixels[q + 2], imagePixels[q + 3]];
 
-                    if (r1 !== r2 || g1 !== g2 || b1 !== b2 || a1 !== a2) {
-                        console.log(`DIF: [${r1},${g1},${b1},${a1}] - [${r2},${g2},${b2},${a2}] - @[${i},${j}]`)
-                        s++;
-                        res = {
-                            message: () => `pixel value not eqaul for index ${i}`,
-                            pass: false
-                        }
-                        // return res;
+                    const [dr, dg, db, da] = [r1 - r2, g1 - g2, b1 - b2, a1 - a2].map(v => Math.abs(v));
+
+                    const eps = 10;
+                    if (dr > eps || dg > eps || db > eps || da > eps) {
+                        // console.log(`DIF: [${r1},${g1},${b1},${a1}] - [${r2},${g2},${b2},${a2}] - @[${i},${j}]`);
+                        diffMap[`${i}-${j}`] = true;
+                        diffCount++;
                     }
                 }
             }
 
-            // console.log('DIF PIXEL COUNT ---', s);
+            const countEps = width * height * 0.02;
+            // const countEps = 0;
+            if (diffCount > countEps) {
+                console.log('===== DIFFERENCE MAP =====');
+                for (let i = 0; i < height; i++) {
+                    let value = `${i}`;
+                    for (let j = 0; j < width; j++) {
+                        if (diffMap[`${i}-${j}`]) {
+                            value += '*';
+                        } else {
+                            value += ' ';
+                        }
+                    }
+                    console.log(value);
+                }
+                // res = {
+                //     message: () => `color is not equal for ${diffCount}/${width * height} pixels.`,
+                //     pass: false
+                // }
+            }
+
             return res;
         }
     }
