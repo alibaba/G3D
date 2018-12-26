@@ -4,7 +4,6 @@ import expect from '../helpers/expect';
 import loader from '../helpers/loader';
 import pbrAssets from '../helpers/pbr-assets';
 
-
 function init(canvas, callback) {
 
     const engine = new G3D.Engine(canvas);
@@ -112,7 +111,6 @@ function init(canvas, callback) {
     });
 }
 
-
 const imageUrls = {
     default: '//gw.alicdn.com/tfs/TB1sptVyxTpK1RjSZFKXXa2wXXa-128-128.png',
     env_mr_1: '//gw.alicdn.com/tfs/TB1YzRWyCzqK1RjSZFHXXb3CpXa-128-128.png',
@@ -168,24 +166,28 @@ describe('pbr material', function () {
         expect(canvas).toRenderAs(images.mr_4);
     });
 
-    it('env_mr_1', function () {
-        app.env_mr_1();
-        expect(canvas).toRenderAs(images.env_mr_1);
-    });
+    // HeadlessChrome does support TEX_LOD and SRGB WebGL extensions
+    if (!/HeadlessChrome/.test(navigator.userAgent)) {
 
-    it('env_mr_2', function () {
-        app.env_mr_2();
-        expect(canvas).toRenderAs(images.env_mr_2);
-    });
+        it('env_mr_1', function () {
+            app.env_mr_1();
+            expect(canvas).toRenderAs(images.env_mr_1);
+        });
+    
+        it('env_mr_2', function () {
+            app.env_mr_2();
+            expect(canvas).toRenderAs(images.env_mr_2);
+        });
+    
+        it('env_mr_3', function () {
+            app.env_mr_3();
+            expect(canvas).toRenderAs(images.env_mr_3);
+        });
+    
+        it('env_mr_4', function () {
+            app.env_mr_4();
+            expect(canvas).toRenderAs(images.env_mr_4);
+        });
 
-    it('env_mr_3', function () {
-        app.env_mr_3();
-        expect(canvas).toRenderAs(images.env_mr_3);
-    });
-
-    it('env_mr_4', function () {
-        app.env_mr_4();
-        expect(canvas).toRenderAs(images.env_mr_4);
-    });
-
+    }
 });
