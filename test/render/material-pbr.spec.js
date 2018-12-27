@@ -4,6 +4,8 @@ import expect from '../helpers/expect';
 import loader from '../helpers/loader';
 import pbrAssets from '../helpers/pbr-assets';
 
+import { isHeadlessMode } from '../helpers/env';
+
 function init(canvas, callback) {
 
     const engine = new G3D.Engine(canvas);
@@ -168,7 +170,7 @@ describe('pbr material', function () {
     });
 
     // HeadlessChrome does support TEX_LOD and SRGB WebGL extensions
-    if (!/HeadlessChrome/.test(navigator.userAgent)) {
+    if (!isHeadlessMode) {
 
         it('env_mr_1', function () {
             app.env_mr_1();
