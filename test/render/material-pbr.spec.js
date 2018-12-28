@@ -132,8 +132,7 @@ describe('pbr material', function () {
     let canvas;
 
     before(function (done) {
-        // load a large amount of images
-        this.timeout(30 * 1000);
+        this.timeout(60 * 1000);
         loader.loadImageQueue(imageUrls, result => {
             images = result;
             canvas = initCanvas(128, 128);

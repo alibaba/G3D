@@ -36,7 +36,8 @@ describe('clear color', function () {
     let app;
     let canvas;
 
-    before(done => {
+    before(function (done) {
+        this.timeout(30000);
         loader.loadImageQueue(imageUrls, result => {
             images = result;
             canvas = initCanvas(128, 128);
