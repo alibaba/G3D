@@ -24,6 +24,34 @@ expect.extend({
         }
     },
 
+    toEqualArray(received, value, eps) {
+        if (typeof eps === 'undefined') {
+            eps = 0.000001;
+        }
+
+        if (typeof received.length !== 'number' || received.length !== value.length) {
+            return {
+                message: () => `length dose not match`,
+                pass: false
+            }
+        } else {
+            for (let i = 0; i < value.length; i++) {
+                if (Math.abs(received[i] - value[i]) > eps) {
+                    return {
+                        message: () =>
+                            `received value ${received} not equal with expected value ${value}`,
+                        pass: false
+                    }
+                }
+            }
+            return {
+                message: () => `pass`,
+                pass: true
+            }
+        }
+
+    },
+
     toRenderAs(received, value) {
 
         const canvas = received;
