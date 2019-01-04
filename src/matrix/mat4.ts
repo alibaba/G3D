@@ -5,7 +5,6 @@ export type IMat4 = Float32Array;
 
 const EPSILON = 0.000001;
 
-// Creates a new identity mat4
 function create(): IMat4 {
     const out = new Float32Array(16);
     out[0] = 1;
@@ -27,7 +26,7 @@ function create(): IMat4 {
     return out;
 }
 
-// Copy the values from one mat4 to another
+
 function copy(out: IMat4, a: IMat4): IMat4 {
     out[0] = a[0];
     out[1] = a[1];
@@ -48,7 +47,7 @@ function copy(out: IMat4, a: IMat4): IMat4 {
     return out;
 }
 
-// Create a new mat4 with the given values
+
 function fromValues(...values: number[]);
 function fromValues(
     m00: number, m01: number, m02: number, m03: number,
@@ -103,8 +102,7 @@ function set(
     return out;
 }
 
-// Set a mat4 to the identity matrix
-export function identity(out: IMat4): IMat4 {
+function identity(out: IMat4): IMat4 {
     out[0] = 1;
     out[1] = 0;
     out[2] = 0;
@@ -124,8 +122,8 @@ export function identity(out: IMat4): IMat4 {
     return out;
 }
 
-export function transpose(out: IMat4, a: IMat4): IMat4 {
-    // If we are transposing ourselves we can skip a few steps but have to cache some values
+function transpose(out: IMat4, a: IMat4): IMat4 {
+
     if (out === a) {
         const a01 = a[1], a02 = a[2], a03 = a[3];
         const a12 = a[6], a13 = a[7];
@@ -165,7 +163,7 @@ export function transpose(out: IMat4, a: IMat4): IMat4 {
     return out;
 }
 
-export function invert(out: IMat4, a: IMat4): IMat4 {
+function invert(out: IMat4, a: IMat4): IMat4 {
     const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
     const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
     const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
@@ -184,7 +182,7 @@ export function invert(out: IMat4, a: IMat4): IMat4 {
     const b10 = a21 * a33 - a23 * a31;
     const b11 = a22 * a33 - a23 * a32;
 
-    // Calculate the determinant
+
     let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
     if (!det) {
@@ -212,13 +210,12 @@ export function invert(out: IMat4, a: IMat4): IMat4 {
     return out;
 }
 
-export function multiply(out: IMat4, a: IMat4, b: IMat4): IMat4 {
+function multiply(out: IMat4, a: IMat4, b: IMat4): IMat4 {
     const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
     const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
     const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
     const a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
 
-    // Cache only the current line of the second matrix
     let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
     out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -272,8 +269,8 @@ function getScaling(out: IVec3, mat: IMat4): IVec3 {
 }
 
 function getRotation(out: IQuat, mat: IMat4): IQuat {
-    // Algorithm taken from
-    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+
+
     const trace = mat[0] + mat[5] + mat[10];
     let S = 0;
 
@@ -307,7 +304,7 @@ function getRotation(out: IQuat, mat: IMat4): IQuat {
 }
 
 function fromRotationTranslationScale(out: IMat4, q: IQuat, v: IVec3, s: IVec3): IMat4 {
-    // Quaternion math
+
     const x = q[0], y = q[1], z = q[2], w = q[3];
     const x2 = x + x;
     const y2 = y + y;

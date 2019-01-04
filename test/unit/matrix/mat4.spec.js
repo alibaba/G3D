@@ -1,11 +1,11 @@
-import G3D from '../../helpers/g3d';
 import expect from '../../helpers/expect';
 
-const { Mat4, Quat } = G3D;
+import Mat4 from '../../../src/matrix/mat4';
+import Quat from '../../../src/matrix/quat';
 
-describe('matrix mat4', function () {
+describe('Mat4', function () {
 
-    it('create', function () {
+    it('#create', function () {
 
         const mat = Mat4.create();
 
@@ -18,7 +18,7 @@ describe('matrix mat4', function () {
         ])
     });
 
-    it('fromValues', function () {
+    it('#fromValues', function () {
         const values = [
             1, 2, 3, 4,
             11, 12, 13, 14,
@@ -30,7 +30,7 @@ describe('matrix mat4', function () {
         expect(mat).toEqualArray(values);
     });
 
-    it('copy', function () {
+    it('#copy', function () {
         const values = [
             1, 2, 3, 4,
             11, 12, 13, 14,
@@ -45,7 +45,7 @@ describe('matrix mat4', function () {
         expect(matCopied).toEqualArray(values);
     });
 
-    it('set', function () {
+    it('#set', function () {
 
         const values = [
             1, 2, 3, 4,
@@ -56,9 +56,9 @@ describe('matrix mat4', function () {
         const mat = Mat4.create();
         Mat4.set(mat, ...values);
         expect(mat).toEqualArray(values);
-    })
+    });
 
-    it('transpose', function () {
+    it('#transpose', function () {
 
         const values = [
             1, 2, 3, 4,
@@ -79,17 +79,25 @@ describe('matrix mat4', function () {
             4, 14, 40, 5
         ]);
 
+        Mat4.transpose(mat, mat);
+        expect(mat).toEqualArray([
+            1, 11, 31, 9,
+            2, 12, 33, 8,
+            3, 13, 35, 5,
+            4, 14, 40, 5
+        ]);
+
     });
 
-    it('multiply', function () {
+    it('#multiply', function () {
 
-        const mat_1 = Mat4.fromValues(
+        const mat1 = Mat4.fromValues(
             1, 0, 3, 1,
             2, 0, 3, -1,
             0, -1, 5, 3,
             0, 0, 1, 1
         );
-        const mat_2 = Mat4.fromValues(
+        const mat2 = Mat4.fromValues(
             0, 3, 2, -2,
             3, 0, 0, 0,
             -1, 2, 1, 1,
@@ -98,7 +106,7 @@ describe('matrix mat4', function () {
 
         const mat = Mat4.create();
 
-        Mat4.multiply(mat, mat_2, mat_1);
+        Mat4.multiply(mat, mat2, mat1);
 
         expect(mat).toEqualArray([
             -3, 9, 6, 2,
@@ -109,65 +117,70 @@ describe('matrix mat4', function () {
 
     });
 
-    it('from rotation translation scale', function () {
+    describe('#fromRotationTranslationScale', function () {
 
-        expect(Mat4.fromRotationTranslationScale(
-            Mat4.create(),
-            Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
-            [0, 0, 0],
-            [1, 1, 1]
-        )).toEqualArray([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ]);
+        it('identity', function () {
+            expect(Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
+                [0, 0, 0],
+                [1, 1, 1]
+            )).toEqualArray([
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]);
+        });
 
-        expect(Mat4.fromRotationTranslationScale(
-            Mat4.create(),
-            Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
-            [3, 5, 2],
-            [1, 1, 1]
-        )).toEqualArray([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            3, 5, 2, 1
-        ]);
+        it('from rotation', function () {
+            expect(Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                Quat.setAxisAngle(Quat.create(), [0, 0, 1], Math.PI / 2),
+                [0, 0, 0],
+                [1, 1, 1]
+            )).toEqualArray([
+                0, 1, 0, 0,
+                -1, 0, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]);
 
-        expect(Mat4.fromRotationTranslationScale(
-            Mat4.create(),
-            Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
-            [0, 0, 0],
-            [2, 1, 2]
-        )).toEqualArray([
-            2, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 2, 0,
-            0, 0, 0, 1
-        ]);
+        });
 
+        it('from translation', function () {
+            expect(Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
+                [3, 5, 2],
+                [1, 1, 1]
+            )).toEqualArray([
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                3, 5, 2, 1
+            ]);
+        });
 
-        expect(Mat4.fromRotationTranslationScale(
-            Mat4.create(),
-            Quat.setAxisAngle(Quat.create(), [0, 0, 1], Math.PI / 2),
-            [0, 0, 0],
-            [1, 1, 1]
-        )).toEqualArray([
-            0, 1, 0, 0,
-            -1, 0, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ]);
-
+        it('from scale', function () {
+            expect(Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
+                [0, 0, 0],
+                [2, 1, 2]
+            )).toEqualArray([
+                2, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 2, 0,
+                0, 0, 0, 1
+            ]);
+        });
     });
 
-    it('get translation - scale - rotation', function () {
+    it('#getTransaction', function () {
 
-        const mat = Mat4.create();
-
-        Mat4.fromRotationTranslationScale(
-            mat,
+        const mat = Mat4.fromRotationTranslationScale(
+            Mat4.create(),
             Quat.setAxisAngle(Quat.create(), [0, 0, 1], Math.PI * 0.3),
             [3, 2, 6],
             [3, 1, 2]
@@ -178,31 +191,82 @@ describe('matrix mat4', function () {
             mat
         )).toEqualArray([3, 2, 6]);
 
-        expect(Mat4.getScaling(
-            new Float32Array(3),
-            mat
-        )).toEqualArray([3, 1, 2]);
+    });
 
-        Mat4.fromRotationTranslationScale(
-            mat,
-            Quat.setAxisAngle(Quat.create(), [0, 0, 1], Math.PI * 0.3),
-            [3, 2, 6],
-            [1, 1, 1]
-        );
+    it('#getRotation', function () {
 
-        expect(Mat4.getTranslation(
-            new Float32Array(3),
-            mat
-        )).toEqualArray([3, 2, 6]);
+        rts(0, 0, 1, 90, 0, 0, 0, 1, 1, 1);
+        rts(0, 0, 1, 110, 0, 0, 0, 1, 1, 1);
+        rts(0, 0, 1, 180, 0, 0, 0, 1, 1, 1);
+        rts(0, 0, 1, 190, 0, 0, 0, 1, 1, 1);
+        rts(1, 0, 0, 190, 0, 0, 0, 1, 1, 1);
+        rts(0, 1, 0, 190, 0, 0, 0, 1, 1, 1);
+        rts(0.2, 1, 0.2, 190, 0, 0, 0, 1, 1, 1);
 
-        expect(Mat4.getRotation(
-            new Float32Array(4),
-            mat
-        )).toEqualArray(Quat.setAxisAngle(Quat.create(), [0, 0, 1], Math.PI * 0.3));
+        function rts(x, y, z, w, tx, ty, tz, sx, sy, sz) {
+
+            const len = Math.sqrt(x * x + y * y + z * z);
+            x /= len;
+            y /= len;
+            z /= len;
+
+            const mat = Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                Quat.setAxisAngle(Quat.create(), [x, y, z], w / 180 * Math.PI),
+                [tx, ty, tz],
+                [sx, sy, sz]
+            );
+
+            const trans = Mat4.getTranslation(
+                new Float32Array(3),
+                mat
+            );
+            const quat = Mat4.getRotation(
+                Quat.create(),
+                mat
+            );
+            const scale = Mat4.getScaling(
+                new Float32Array(3),
+                mat
+            );
+
+            expect(Mat4.fromRotationTranslationScale(
+                Mat4.create(),
+                quat,
+                trans,
+                scale
+            )).toEqualArray(mat);
+
+        }
+
+        // expect(Mat4.fromRotationTranslationScale(
+        //     Mat4.create(),
+        //     quat,
+        //     [3, 2, 6],
+        //     [1, 1, 1]
+        // )).toEqualArray(mat);
 
     });
 
-    it('perspective projection', function () {
+    it('#getScale', function () {
+
+        const mat = Mat4.fromRotationTranslationScale(
+            Mat4.create(),
+            Quat.setAxisAngle(Quat.create(), [0, 0, 1], 0),
+            [3, 2, 6],
+            [8, 4, 7]
+        );
+
+        expect(Mat4.getScaling(
+            new Float32Array(3),
+            mat
+        )).toEqualArray([
+            8, 4, 7
+        ]);
+
+    });
+
+    it('#perspective', function () {
 
         const mat = Mat4.create();
 
@@ -217,7 +281,7 @@ describe('matrix mat4', function () {
 
     });
 
-    it('ortho projection', function () {
+    it('#ortho', function () {
 
         const mat = Mat4.create();
 
@@ -232,43 +296,92 @@ describe('matrix mat4', function () {
 
     });
 
-    it('look at', function () {
+    describe('#lookAt', function(){
 
-        const mat = Mat4.create();
+        it('normal', function () {
+    
+            const mat = Mat4.lookAt(Mat4.create(), [0, 0, 1], [0, 0, 0], [0, 1, 0]);
+    
+            expect(mat).toEqualArray([
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, -1, 1
+            ]);
+    
+        });
 
-        Mat4.lookAt(mat, [0, 0, 1], [0, 0, 0], [0, 1, 0]);
+        it('when eye position are equal with target position', function(){
 
-        expect(mat).toEqualArray([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, -1, 1
-        ]);
+            const mat = Mat4.lookAt(Mat4.create(), [0, 1, 0], [0, 1, 0], [0, 1, 0]);
+    
+            expect(mat).toEqualArray([
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]);
+
+        });
+
+        it('when up vector is 0', function(){
+
+            const mat = Mat4.lookAt(Mat4.create(), [0, 0, 1], [0, 0, 0], [0, 0, 0]);
+    
+            expect(mat).toEqualArray([
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+                0, 0, 1, 0,
+                0, 0, -1, 1
+            ]);
+
+        });
 
     });
 
-    it('invert', function () {
 
-        const values = [
-            1, 2, 3, 4,
-            5, 7, 8, 6,
-            2, 2, 1, 9,
-            0, 7, 13, 5
-        ];
+    describe('#invert', function () {
 
-        const mat = Mat4.fromValues(...values);
+        it('invertable', function () {
 
-        const matInverted = Mat4.create();
-
-        Mat4.invert(matInverted, mat);
-
-        expect(Mat4.multiply(Mat4.create(), mat, matInverted)).toEqualArray([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ]);
-
+            const values = [
+                1, 2, 3, 4,
+                5, 7, 8, 6,
+                2, 2, 1, 9,
+                0, 7, 13, 5
+            ];
+    
+            const mat = Mat4.fromValues(...values);
+    
+            const matInverted = Mat4.create();
+    
+            Mat4.invert(matInverted, mat);
+    
+            expect(Mat4.multiply(Mat4.create(), mat, matInverted)).toEqualArray([
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]);
+        });
+    
+        it('uninvertable (det is 0)', function () {
+    
+            const values = [
+                1, 2, 3, 4,
+                5, 7, 8, 6,
+                1, 2, 3, 4,
+                0, 7, 13, 5
+            ];
+    
+            const mat = Mat4.fromValues(...values);
+    
+            const matInverted = Mat4.create();
+    
+            expect(Mat4.invert(matInverted, mat)).toEqual(null);
+    
+        });
     });
+
 
 });
