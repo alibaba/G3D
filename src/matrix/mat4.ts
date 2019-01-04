@@ -26,7 +26,6 @@ function create(): IMat4 {
     return out;
 }
 
-
 function copy(out: IMat4, a: IMat4): IMat4 {
     out[0] = a[0];
     out[1] = a[1];
@@ -46,7 +45,6 @@ function copy(out: IMat4, a: IMat4): IMat4 {
     out[15] = a[15];
     return out;
 }
-
 
 function fromValues(...values: number[]);
 function fromValues(
@@ -182,7 +180,6 @@ function invert(out: IMat4, a: IMat4): IMat4 {
     const b10 = a21 * a33 - a23 * a31;
     const b11 = a22 * a33 - a23 * a32;
 
-
     let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
     if (!det) {
@@ -270,7 +267,6 @@ function getScaling(out: IVec3, mat: IMat4): IVec3 {
 
 function getRotation(out: IQuat, mat: IMat4): IQuat {
 
-
     const trace = mat[0] + mat[5] + mat[10];
     let S = 0;
 
@@ -344,7 +340,7 @@ function fromRotationTranslationScale(out: IMat4, q: IQuat, v: IVec3, s: IVec3):
 }
 
 function perspective(
-    out: IMat4, fovy: number, aspect: number, near: number, far: number
+    out: IMat4, fovy: number, aspect: number, near: number, far: number,
 ): IMat4 {
     const f = 1.0 / Math.tan(fovy / 2);
     const nf = 1 / (near - far);
@@ -474,8 +470,9 @@ const Mat4 = {
 
     create,
     fromValues,
-    copy,
     set,
+    copy,
+
     transpose,
 
     multiply,
