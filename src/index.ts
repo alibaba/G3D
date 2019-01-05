@@ -26,8 +26,6 @@ import Mesh from "./mesh/mesh";
 import Geometry from "./geometry/geometry";
 import LineGeometry from "./geometry/line-geometry";
 
-import MetalMaterial from "./material/extra/metal-material";
-import GemMaterial from "./material/extra/gem-material";
 import PBREnviroment from "./material/pbr-enviroment";
 import PBRMaterial from "./material/pbr-material";
 import PhongMaterial from "./material/phong-material";
@@ -77,8 +75,6 @@ const G3D = {
 
     ShaderMaterial,
 
-    MetalMaterial,
-    GemMaterial,
     PBREnviroment,
     PBRMaterial,
     PhongMaterial,
