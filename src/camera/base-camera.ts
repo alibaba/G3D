@@ -24,7 +24,6 @@ class BaseCamera extends Node {
         Vec3.set(this.centerValues, this.center.x, this.center.y, this.center.z);
         Vec3.set(this.upValues, this.up.x, this.up.y, this.up.z);
         Mat4.lookAt(this.viewMatrixValues, this.cameraPositionValues, this.centerValues, this.upValues);
-
         return this.viewMatrixValues;
     }
 

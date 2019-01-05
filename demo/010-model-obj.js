@@ -1,7 +1,7 @@
 // G3D_TEMPLATE_GENERATED
 import G3D from '../src/index';
 
-import main from './024-gem-material-main';
+import main from './010-model-obj-main';
 import loader from './lib/loader';
 import pbrAssets from './lib/pbr-assets';
 import controlRotateCamera from './lib/attach-control';

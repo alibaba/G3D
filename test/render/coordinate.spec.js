@@ -9,28 +9,26 @@ function init(canvas, callback) {
 
     const scene = new G3D.Scene(engine);
 
-    new G3D.RotatePerspectiveCamera(scene);
+    const camera = new G3D.RotatePerspectiveCamera(scene);
+    camera.alpha = 20;
+    camera.beta = 20;
 
-    const res = {
+    const coordinate = G3D.MeshBuilder.createCoordinate(scene, 40);
+
+    const app = {
         default: () => {
-            scene.render();
-        },
-
-        custom: () => {
-            scene.clearColor = { r: 100, g: 120, b: 80 };
             scene.render();
         }
     }
 
-    callback(res);
+    callback(app);
 }
 
 const imageUrls = {
-    default: '//gw.alicdn.com/tfs/TB1jNl1xiLaK1RjSZFxXXamPFXa-128-128.png',
-    custom: '//gw.alicdn.com/tfs/TB1xNKWxkPoK1RjSZKbXXX1IXXa-128-128.png'
+    default: '//gw.alicdn.com/tfs/TB15pe5AXzqK1RjSZFCXXbbxVXa-128-128.png'
 };
 
-describe('clear color', function () {
+describe('coordinate', function () {
 
     let images;
     let app;
@@ -48,14 +46,9 @@ describe('clear color', function () {
         })
     })
 
-    it('default background color', function () {
+    it('default', function () {
         app.default();
         expect(canvas).toRenderAs(images.default);
-    });
-
-    it('custom background color', function () {
-        app.custom();
-        expect(canvas).toRenderAs(images.custom);
     });
 
 });

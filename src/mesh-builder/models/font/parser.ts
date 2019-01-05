@@ -567,8 +567,8 @@ const PathParser = {
         }
 
         function normal(v1, v2, v3) {
-            const a1 = Vec3.sub(Vec3.create(), v1, v2);
-            const a2 = Vec3.sub(Vec3.create(), v2, v3);
+            const a1 = Vec3.subtract(Vec3.create(), v1, v2);
+            const a2 = Vec3.subtract(Vec3.create(), v2, v3);
             return Vec3.cross(Vec3.create(), a1, a2);
         }
     },

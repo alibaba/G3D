@@ -14,7 +14,6 @@ function main(
     camera.far = 10000;
 
 
-
     const light0 = new G3D.AmbientLight(scene);
     light0.intensity = 0.7;
 
