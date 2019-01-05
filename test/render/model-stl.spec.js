@@ -33,7 +33,18 @@ function init(canvas, callback) {
             const app = {
                 default: () => {
                     scene.render();
-                }
+                },
+
+                mergeNormals: ()=>{
+                    mesh.dispose();
+
+                    const mesh2 = G3D.MeshBuilder.createFromStlModel(scene, text, { geometry: { mergeNormals: true } });
+                    mesh2.rotation.x = 270;
+                    mesh2.rotation.y = 180;
+                    mesh2.position.y = -50;
+
+                    scene.render();
+                },
             }
 
             callback(app);
@@ -43,6 +54,7 @@ function init(canvas, callback) {
 
 const imageUrls = {
     default: '//gw.alicdn.com/tfs/TB1eujLyq6qK1RjSZFmXXX0PFXa-128-128.png',
+    mergeNormals: '//gw.alicdn.com/tfs/TB1i5iWAXzqK1RjSZFvXXcB7VXa-128-128.png',
 };
 
 describe('parse stl model', function () {
@@ -66,6 +78,11 @@ describe('parse stl model', function () {
     it('default', function () {
         app.default();
         expect(canvas).toRenderAs(images.default);
+    });
+
+    it('mergeNormals', function(){
+        app.mergeNormals();
+        expect(canvas).toRenderAs(images.mergeNormals);
     });
 
 });
