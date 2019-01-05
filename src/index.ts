@@ -35,9 +35,9 @@ import RawMaterial from "./material/raw-material";
 import ShaderMaterial from "./material/shader-material";
 import MeshBuilder from "./mesh-builder/mesh-builder";
 
-import Mat3 from "./matrix/mat3";
 import Mat4 from "./matrix/mat4";
 import Quat from "./matrix/quat";
+import Vec2 from "./matrix/vec2";
 import Vec3 from "./matrix/vec3";
 import Vec4 from "./matrix/vec4";
 
@@ -86,9 +86,9 @@ const G3D = {
 
     MeshBuilder,
 
-    Mat3,
     Mat4,
     Quat,
+    Vec2,
     Vec3,
     Vec4,
 };

@@ -56,6 +56,7 @@ class Engine {
             extensions.set("ELE_UNIT", gl.getExtension("OES_element_index_uint"));
 
             extensions.set("SRGB", gl.getExtension("EXT_SRGB"));
+
         }
 
         // precisions

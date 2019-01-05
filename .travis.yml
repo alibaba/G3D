@@ -1,3 +1,7 @@
 language: node_js
 node_js:
   - 9.11.2
+script:
+  - npm run ci
+addons:
+  chrome: stable

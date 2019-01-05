@@ -13,8 +13,6 @@ function main(
     camera.near = 0.001;
     camera.far = 1000;
 
-
-
     loader.loadImageQueue({
         front: '//gw.alicdn.com/tfs/TB1qZBqATtYBeNjy1XdXXXXyVXa-1024-1024.png',
         back: '//gw.alicdn.com/tfs/TB1O4QUAqmWBuNjy1XaXXXCbXXa-1024-1024.png',
@@ -29,8 +27,6 @@ function main(
             left, right,
             top, bottom,
         });
-
-        G3D.MeshBuilder.createCoordinate(scene, 100);
 
         function render() {
             scene.render();
