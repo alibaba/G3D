@@ -8,6 +8,7 @@
     "url": "https://github.com/alibaba/G3D"
   },
   "devDependencies": {
+    "codecov": "^3.1.0",
     "dalaran": "^0.2.8",
     "expect": "^23.6.0",
     "fs-extra": "^7.0.1",
