@@ -38,7 +38,7 @@ class BasePerspectiveCamera extends BaseCamera {
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), pMatrix));
         Vec3.transformMat4(p2, p2, Mat4.invert(Mat4.create(), this.getVMatrix()));
 
-        const direction = Vec3.sub(
+        const direction = Vec3.subtract(
             Vec3.create(), p2,
             Vec3.fromValues(this.position.x, this.position.y, this.position.z),
         );

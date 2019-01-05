@@ -94,8 +94,8 @@ const OBJParser = {
                     const [iPos2] = list[i + 2].split("/").map((k) => Number(k) - 1);
                     const v2 = Vec3.fromValues(positions[iPos2][0], positions[iPos2][1], positions[iPos2][2]);
 
-                    const arrow1 = Vec3.sub(Vec3.create(), v1, vc);
-                    const arrow2 = Vec3.sub(Vec3.create(), v2, vc);
+                    const arrow1 = Vec3.subtract(Vec3.create(), v1, vc);
+                    const arrow2 = Vec3.subtract(Vec3.create(), v2, vc);
                     const norm = Vec3.cross(Vec3.create(), arrow1, arrow2);
 
                     normals.push(norm);

@@ -208,7 +208,7 @@ class RenderManager {
 
         const engine = Engine.instance;
 
-        engine.clearColorBuffer({ r: 0, g: 0, b: 0 });
+        engine.clearColorBuffer({ r: 0, g: 0, b: 0 }, 0.0);
 
         groups.forEach((meshes) => {
 

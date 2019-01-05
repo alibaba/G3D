@@ -15,6 +15,8 @@ describe('texture', function () {
 
     before(function (done) {
 
+        this.timeout(30000);
+
         const gl = initWebGL();
         GL.gl = gl;
 
