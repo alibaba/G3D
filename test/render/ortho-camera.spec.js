@@ -48,7 +48,7 @@ const imageUrls = {
     rotate: '//gw.alicdn.com/tfs/TB1nlWsAhnaK1RjSZFBXXcW7VXa-128-128.png'
 };
 
-describe.only('OrthoCamera', function () {
+describe('OrthoCamera', function () {
 
     let images;
     let app;
