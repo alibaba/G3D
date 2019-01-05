@@ -4,6 +4,7 @@
 
 <p align="center">
     <a href="https://travis-ci.org/alibaba/G3D"><img src ="https://travis-ci.org/alibaba/G3D.svg?branch=master" /></a>
+    <a href="https://codecov.io/github/alibaba/g3d?branch=master"><img src="https://img.shields.io/codecov/c/github/alibaba/g3d/master.svg"></a>
     <a href="https://www.npmjs.com/search?q=g3d"><img src="https://img.shields.io/npm/v/g3d.svg?style=flat"></a>
 </p>
 
