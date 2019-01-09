@@ -9,6 +9,7 @@ function create(): IVec2 {
     return out;
 }
 
+function fromValues(...values: number[]);
 function fromValues(x: number, y: number): IVec2 {
     const out = new Float32Array(2);
     out[0] = x;
