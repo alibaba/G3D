@@ -4,7 +4,6 @@ export type IVec3 = Float32Array;
 
 const EPSILON = 0.000001;
 
-// Creates a new, empty vec3
 function create(): IVec3 {
   const out = new Float32Array(3);
   out[0] = 0;
@@ -13,7 +12,6 @@ function create(): IVec3 {
   return out;
 }
 
-// Calculates the length of a vec3
 function length(a: IVec3): number {
   const x = a[0];
   const y = a[1];
@@ -21,7 +19,7 @@ function length(a: IVec3): number {
   return Math.sqrt(x * x + y * y + z * z);
 }
 
-// Creates a new vec3 initialized with the given values
+function fromValues(...values: number[]);
 function fromValues(x: number, y: number, z: number): IVec3 {
   const out = new Float32Array(3);
   out[0] = x;
@@ -30,7 +28,6 @@ function fromValues(x: number, y: number, z: number): IVec3 {
   return out;
 }
 
-// Copy the values from one vec3 to another
 function copy(out: IVec3, a: IVec3): IVec3 {
   out[0] = a[0];
   out[1] = a[1];
@@ -38,7 +35,6 @@ function copy(out: IVec3, a: IVec3): IVec3 {
   return out;
 }
 
-// Set the components of a vec3 to the given values
 function set(out: IVec3, x: number, y: number, z: number): IVec3 {
   out[0] = x;
   out[1] = y;
@@ -46,7 +42,6 @@ function set(out: IVec3, x: number, y: number, z: number): IVec3 {
   return out;
 }
 
-// Adds two vec3's
 function add(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   out[0] = a[0] + b[0];
   out[1] = a[1] + b[1];
@@ -54,7 +49,6 @@ function add(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   return out;
 }
 
-// Subtracts vector b from vector a
 function subtract(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   out[0] = a[0] - b[0];
   out[1] = a[1] - b[1];
@@ -62,7 +56,6 @@ function subtract(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   return out;
 }
 
-// Multiplies two vec3's
 function multiply(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   out[0] = a[0] * b[0];
   out[1] = a[1] * b[1];
@@ -70,7 +63,6 @@ function multiply(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   return out;
 }
 
-// Divides two vec3's
 function divide(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   out[0] = a[0] / b[0];
   out[1] = a[1] / b[1];
@@ -78,7 +70,6 @@ function divide(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   return out;
 }
 
-// Scales a vec3 by a scalar number
 function scale(out: IVec3, a: IVec3, b: number): IVec3 {
   out[0] = a[0] * b;
   out[1] = a[1] * b;
@@ -86,7 +77,6 @@ function scale(out: IVec3, a: IVec3, b: number): IVec3 {
   return out;
 }
 
-// Calculates the euclidian distance between two vec3's
 function distance(a: IVec3, b: IVec3): number {
   const x = b[0] - a[0];
   const y = b[1] - a[1];
@@ -94,7 +84,6 @@ function distance(a: IVec3, b: IVec3): number {
   return Math.sqrt(x * x + y * y + z * z);
 }
 
-// Negates the components of a vec3
 function negate(out: IVec3, a: IVec3): IVec3 {
   out[0] = -a[0];
   out[1] = -a[1];
@@ -102,14 +91,12 @@ function negate(out: IVec3, a: IVec3): IVec3 {
   return out;
 }
 
-// Normalize a vec3
 function normalize(out: IVec3, a: IVec3): IVec3 {
   const x = a[0];
   const y = a[1];
   const z = a[2];
   let l = x * x + y * y + z * z;
   if (l > 0) {
-    // TODO: evaluate use of glm_invsqrt here?
     l = 1 / Math.sqrt(l);
     out[0] = a[0] * l;
     out[1] = a[1] * l;
@@ -118,12 +105,10 @@ function normalize(out: IVec3, a: IVec3): IVec3 {
   return out;
 }
 
-// Calculates the dot product of two vec3's
 function dot(a: IVec3, b: IVec3): number {
   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-// Computes the cross product of two vec3's
 function cross(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   const ax = a[0], ay = a[1], az = a[2];
   const bx = b[0], by = b[1], bz = b[2];
@@ -134,10 +119,6 @@ function cross(out: IVec3, a: IVec3, b: IVec3): IVec3 {
   return out;
 }
 
-/**
- * Transforms the vec3 with a mat4.
- * 4th vector component is implicitly '1'
- */
 function transformMat4(out: IVec3, a: IVec3, m: IMat4): IVec3 {
   const x = a[0], y = a[1], z = a[2];
   let w = m[3] * x + m[7] * y + m[11] * z + m[15];

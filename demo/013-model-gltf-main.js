@@ -18,11 +18,11 @@ function main(
         },
         corset: {
             uri: '//g.alicdn.com/gama/assets/0.0.21/assets/gltf/Corset/Corset.gltf.json',
-            cameraRadius: 0.1
+            cameraRadius: 3
         }
     }
 
-    const model = models['damagedHelmet'];
+    const model = models['corset'];
 
     const engine = new G3D.Engine(canvas);
 
@@ -40,6 +40,8 @@ function main(
         const pbrEnv = new G3D.PBREnviroment({ specular, diffuse, brdfLUT });
 
         loader.loadText(model.uri, (text) => {
+
+            G3D.MeshBuilder.createCoordinate(scene, 500);
 
             const gltf = JSON.parse(text);
 

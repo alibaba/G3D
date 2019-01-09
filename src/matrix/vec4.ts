@@ -14,6 +14,7 @@ function create(): IVec4 {
     return out;
 }
 
+function fromValues(...values: number[]);
 function fromValues(x: number, y: number, z: number, w: number): IVec4 {
     const out = new Float32Array(4);
     out[0] = x;
