@@ -8,8 +8,6 @@ precision highp float;
 #define LIGHT_TYPE_DIRECTIONAL 3
 #define LIGHT_TYPE_POINT 4
 
-#define PI 3.1415926
-
 uniform vec3 uCameraPosition;
 
 uniform int uLightType[LIGHT_MAX_COUNT];
