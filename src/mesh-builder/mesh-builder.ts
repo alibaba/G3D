@@ -3,6 +3,7 @@ import createCone from "./primitives/cone";
 import createCoordinate from "./primitives/coordinate";
 import createCylinder from "./primitives/cylinder";
 import createPlane from "./primitives/plane";
+import createCircle from "./primitives/circle";
 import createSphere from "./primitives/sphere";
 
 import { createLineFromPath, createMeshFromPath } from "./models/font";
@@ -14,6 +15,7 @@ export default {
 
     createSphere,
     createPlane,
+    createCircle,
     createCylinder,
     createCone,
     createCube: (scene, width, height = width, depth = width) => {
