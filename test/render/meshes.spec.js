@@ -30,6 +30,18 @@ function init(canvas, callback) {
             scene.render();
         },
 
+        circle: () => {
+            if (mesh) {
+                mesh.dispose();
+            }
+            mesh = G3D.MeshBuilder.createCircle(scene, 3, 16);
+            mesh.materials.default = new G3D.RawMaterial();
+            mesh.materials.default.color = { r: 220, g: 120, b: 180 };
+            mesh.position.z = -1;
+            mesh.rotation.x = 30;
+            scene.render();
+        },
+
         sphere: () => {
             if (mesh) {
                 mesh.dispose();

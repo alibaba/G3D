@@ -22,6 +22,24 @@ Create a rectangle mesh on X-Y plane, center is the origin point.
 | -------- | ------------ |
 | G3D.Mesh | Created mesh |
 
+### createCircle(scene, radius, segs)
+
+Create a circle mesh on X-Y plane, center is the origin point.
+
+#### Arguments
+
+| name   | type      | description                           |
+| ------ | --------- | ------------------------------------- |
+| scene  | G3D.Scene | the scene you want to put the mesh in |
+| radius | Number    | the circle's radius                   |
+| segs   | Number    | the circle segements count            |
+
+#### Returns
+
+| type     | description  |
+| -------- | ------------ |
+| G3D.Mesh | Created mesh |
+
 ### createCube(scene, width, height, depth)
 
 Create a cube, center is the origin point.
