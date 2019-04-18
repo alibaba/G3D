@@ -30,7 +30,7 @@
         <div class="mask">                   </div>
       </div>
       <script>document.querySelector('.banner').style.height = document.documentElement.clientHeight - 64 + 'px';</script>
-      <script src="https://unpkg.com/g3d@0.2.1/dist/g3d.min.js"></script>
+      <script src="https://unpkg.com/g3d@0.2.9/dist/g3d.min.js"></script>
       <script>
         const loader = (function () {
         
@@ -276,7 +276,9 @@
         
                 function init(gltf, {specular, diffuse, lut}){
         
-                    meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, { specular, diffuse, lut });
+                    const pbrEnv = new G3D.PBREnviroment({ specular, diffuse, brdfLUT: lut });
+        
+                    meshes = G3D.MeshBuilder.createMeshFromGLTF(scene, gltf, pbrEnv);
         
                     new G3D.Skybox(scene, diffuse, 5.4);
         
