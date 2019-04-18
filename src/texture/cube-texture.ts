@@ -71,7 +71,7 @@ class CubeTexture {
 
         // fill
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
-        const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
+        const format = sRGB ? extensionSRGB.SRGB_EXT : gl.RGBA;
 
         for (const [key, value] of this.targets) {
             gl.texImage2D(value, 0, format, format, gl.UNSIGNED_BYTE, images[key]);
@@ -93,7 +93,7 @@ class CubeTexture {
         }
 
         const { gl, extensions } = GL;
-        const format = this.sRGB ? extensions.get("SRGB").SRGB_ALPHA_EXT : gl.RGBA;
+        const format = this.sRGB ? extensions.get("SRGB").SRGB_EXT : gl.RGBA;
 
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
