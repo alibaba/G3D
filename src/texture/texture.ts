@@ -64,7 +64,7 @@ class Texture {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
 
         // fill data
-        const format = sRGB ? extensionSRGB.SRGB_ALPHA_EXT : gl.RGBA;
+        const format = sRGB ? extensionSRGB.SRGB_EXT : gl.RGBA;
 
         gl.texImage2D(gl.TEXTURE_2D, 0, format, format, gl.UNSIGNED_BYTE, image);
 
@@ -89,7 +89,7 @@ class Texture {
 
             const { gl, extensions } = GL;
 
-            const format = this.sRGB ? extensions.get("SRGB").SRGB_ALPHA_EXT : gl.RGBA;
+            const format = this.sRGB ? extensions.get("SRGB").SRGB_EXT : gl.RGBA;
 
             if (mip.length === Math.log2(this.width)) {
                 for (let i = 0; i < mip.length; i++) {

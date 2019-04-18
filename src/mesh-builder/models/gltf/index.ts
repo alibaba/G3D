@@ -2,6 +2,7 @@ import GL from "../../../core/gl";
 import Mat4 from "../../../matrix/mat4";
 import Quat from "../../../matrix/quat";
 import Vec3 from "../../../matrix/vec3";
+import Vec4 from "../../../matrix/vec4";
 import Scene from "../../../scene/scene";
 import Buffer from "../../../buffer/buffer";
 import BufferView from "../../../buffer/buffer-view";
@@ -81,6 +82,9 @@ interface IGltf {
         mesh: number;
         children?: number[];
         matrix?: number[];
+        translation?: number[];
+        rotation?: number[];
+        scale?: number[];
     }>;
     samplers: Array<{
         magFilter: number;
@@ -349,6 +353,41 @@ function createMeshFromGLTF(scene: Scene, gltf: IGltf, pbrEnv?: PBREnviroment) {
                 z: scale[2],
             };
 
+        } else {
+            if (item.translation) {
+
+                const trans = item.translation;
+                mesh.position = {
+                    x: trans[0],
+                    y: trans[1],
+                    z: trans[2],
+                };
+
+            }
+
+            if (item.rotation) {
+
+                const quat = Vec4.fromValues(...item.rotation);
+                const euler = Quat.getEuler(Vec3.create(), quat);
+
+                mesh.rotation = {
+                    x: euler[0],
+                    y: euler[1],
+                    z: euler[2],
+                };
+
+            }
+
+            if (item.scale) {
+
+                const scale = item.scale;
+                mesh.scale = {
+                    x: scale[0],
+                    y: scale[1],
+                    z: scale[2],
+                };
+
+            }
         }
 
         return mesh;
